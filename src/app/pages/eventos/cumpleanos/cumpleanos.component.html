@@ -11,8 +11,7 @@
       el resto del año.
     </p>
     <div class="landing-hero__cta">
-      <a href="#contacto" class="btn btn--primary">Organizar mi cumpleaños</a>
-      <a [href]="waUrl" target="_blank" rel="noopener" class="btn btn--ghost">WhatsApp directo</a>
+      <a [href]="waUrl" target="_blank" rel="noopener" class="btn btn--primary">Organizar mi cumpleaños</a>
     </div>
   </div>
 </section>
@@ -27,113 +26,7 @@
   }
 </div>
 
-<!-- ════════════════════════════════════════════════════════════════════════ -->
-<!-- ░░░ VERSIÓN ANTERIOR ░░░ -->
-<!-- ════════════════════════════════════════════════════════════════════════ -->
-<div class="version-banner version-banner--anterior">Versión anterior</div>
-
-<!-- LEAD (anterior) -->
-<section class="section">
-  <div class="wrap">
-    <div class="lead-block">
-      <p class="section__eyebrow">¿Por qué aquí?</p>
-      <h2 class="lead-block__big">Un cumple que sí <em>quieren repetir</em></h2>
-      <p>
-        Dos horas de partidas, equipos, misiones y risas. Todo supervisado por un
-        monitor y con potencias adaptadas a la edad, para que sea seguro y para que
-        ganen todos.
-      </p>
-      <p>
-        A 15 minutos de Bilbao, en Larrabetzu. Aparcamiento gratuito, vestuarios y
-        cafetería para la merienda y la tarta.
-      </p>
-    </div>
-  </div>
-</section>
-
-<!-- PACK (anterior) -->
-<section class="section section--alt">
-  <div class="wrap">
-    <div class="pack">
-      <div class="pack__gallery">
-        <div class="img-placeholder" style="height:200px;"><span>FOTO CUMPLE 1</span></div>
-        <div class="img-placeholder" style="height:200px;"><span>FOTO CUMPLE 2</span></div>
-        <div class="img-placeholder" style="height:200px;"><span>FOTO CUMPLE 3</span></div>
-        <div class="img-placeholder" style="height:200px;"><span>FOTO CUMPLE 4</span></div>
-        <!-- TODO: cliente — 4 fotos reales de cumpleaños -->
-      </div>
-      <div class="pack__included">
-        <p class="section__eyebrow">El pack cumpleaños</p>
-        <h2 class="pack__title">Todo listo para celebrar</h2>
-        <ul class="check-list">
-          @for (i of incluye; track i) { <li>{{ i }}</li> }
-        </ul>
-        <p class="pack__precio">Desde <strong>XX€/persona</strong></p>
-        <!-- TODO: cliente — precio por persona -->
-        <a routerLink="/reserva" [queryParams]="{tipo: 'evento', pack: 'cumples'}" class="btn btn--primary">Reservar cumpleaños →</a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- PASOS (anterior) -->
-<section class="section">
-  <div class="wrap">
-    <div class="section__header">
-      <p class="section__eyebrow">Cómo funciona</p>
-      <h2 class="section__title">Tú invitas,<br>nosotros lo montamos</h2>
-    </div>
-    <div class="steps">
-      @for (p of pasos; track p.n) {
-        <div class="steps__item">
-          <div class="steps__num">{{ p.n }}</div>
-          <h3 class="steps__t">{{ p.t }}</h3>
-          <p class="steps__d">{{ p.d }}</p>
-        </div>
-      }
-    </div>
-  </div>
-</section>
-
-<!-- TXIKI (anterior) -->
-<section class="section section--alt">
-  <div class="wrap">
-    <div class="lead-block">
-      <p class="section__eyebrow">¿Peques de menos de 8 años?</p>
-      <h2 class="lead-block__big">También tenemos <em>Txiki Paintball</em></h2>
-      <p>
-        Para los más pequeños, una versión adaptada y aún más suave. Misma diversión,
-        máxima seguridad.
-      </p>
-      <a routerLink="/txikipaintball" class="btn btn--ghost">Ver Txiki Paintball →</a>
-    </div>
-  </div>
-</section>
-
-<!-- FAQ (anterior) -->
-<section class="section">
-  <div class="wrap">
-    <div class="section__header">
-      <p class="section__eyebrow">Dudas rápidas</p>
-      <h2 class="section__title">Lo que preguntan los padres</h2>
-    </div>
-    <div class="faq">
-      @for (f of faqs; track f.q) {
-        <details class="faq__item">
-          <summary>{{ f.q }}</summary>
-          <p>{{ f.a }}</p>
-        </details>
-      }
-    </div>
-  </div>
-</section>
-
-<!-- ════════════════════════════════════════════════════════════════════════ -->
-<!-- ░░░ VERSIÓN NUEVA (texto cliente) ░░░ -->
-<!-- ════════════════════════════════════════════════════════════════════════ -->
-<div class="version-banner">Versión nueva (texto cliente)</div>
-
-<!-- QUÉ PASA ESE DÍA (nuevo) -->
+<!-- QUÉ PASA ESE DÍA -->
 <section class="section">
   <div class="wrap">
     <div class="lead-block">
@@ -152,7 +45,7 @@
   </div>
 </section>
 
-<!-- LO QUE INCLUYE (nuevo) -->
+<!-- LO QUE INCLUYE -->
 <section class="section section--alt">
   <div class="wrap">
     <div class="section__header">
@@ -170,29 +63,79 @@
   </div>
 </section>
 
-<!-- PRECIO (nuevo) -->
+<!-- PACK / PRECIO -->
 <section class="section">
   <div class="wrap">
-    <div class="section__header">
-      <p class="section__eyebrow">Precio</p>
-      <h2 class="section__title">Un precio. Todo dentro</h2>
-    </div>
-    <div class="precio-block">
-      <p class="precio-block__num">
-        39,90 € <small>por persona — equipo completo incluido</small>
-      </p>
-      <p class="precio-block__note">
-        <strong>Sin señal para reservar.</strong> Pagas el día en tarjeta, efectivo o Bizum.
-      </p>
-      <p class="precio-block__note">
-        ¿Queréis comer en El Barracón después? Pizzas, hamburguesas y platos
-        combinados <strong>desde 9,90 €</strong>. Sin salir de las instalaciones.
-      </p>
+    <div class="pack">
+      <div class="pack__gallery">
+        <div class="img-placeholder" style="height:200px;"><span>FOTO CUMPLE 1</span></div>
+        <div class="img-placeholder" style="height:200px;"><span>FOTO CUMPLE 2</span></div>
+        <div class="img-placeholder" style="height:200px;"><span>FOTO CUMPLE 3</span></div>
+        <div class="img-placeholder" style="height:200px;"><span>FOTO CUMPLE 4</span></div>
+        <!-- TODO: cliente — 4 fotos reales de cumpleaños -->
+      </div>
+      <div class="pack__included">
+        <p class="section__eyebrow">El precio</p>
+        <h2 class="pack__title">Un precio. Todo dentro</h2>
+        <ul class="check-list" style="margin-bottom: 24px;">
+          <li><strong>Partida privada de 90 minutos:</strong> solo vuestro grupo</li>
+          <li><strong>Equipo completo:</strong> réplica, máscara, chaleco y bolas</li>
+          <li><strong>Monitores en campo:</strong> arbitraje y modos de juego continuos</li>
+          <li><strong>Duchas y vestuarios</strong> separados por sexos</li>
+          <li><strong>Seguro de accidentes</strong> incluido en el precio</li>
+        </ul>
+        <div class="precio-block" style="padding: 0; background: none; border: none; margin-bottom: 24px;">
+          <p class="precio-block__num" style="font-size: 2.5rem; text-align: left; margin: 0 0 8px 0;">
+            39,90 € <span style="font-size: 1rem; font-weight: normal; color: var(--color-text-muted);">/ persona</span>
+          </p>
+          <p class="precio-block__note" style="text-align: left; margin: 0 0 8px 0;">
+            <strong>Sin señal para reservar.</strong> Pagas el mismo día en tarjeta, efectivo o Bizum.
+          </p>
+          <p class="precio-block__note" style="text-align: left; margin: 0; font-size: 0.95rem; color: var(--color-text-muted);">
+            ¿Queréis comer después? Pizzas, hamburguesas y platos combinados en El Barracón <strong>desde 9,90 €</strong> sin salir del recinto.
+          </p>
+        </div>
+        <a [href]="waUrl" target="_blank" rel="noopener" class="btn btn--primary">Organizar mi cumpleaños por WhatsApp</a>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- PREGUNTAS RÁPIDAS (nuevo) -->
+<!-- CÓMO FUNCIONA / PASOS -->
+<section class="section section--alt">
+  <div class="wrap">
+    <div class="section__header">
+      <p class="section__eyebrow">Cómo funciona</p>
+      <h2 class="section__title">Tú invitas,<br>nosotros lo montamos</h2>
+    </div>
+    <div class="steps">
+      @for (p of pasos; track p.n) {
+        <div class="steps__item">
+          <div class="steps__num">{{ p.n }}</div>
+          <h3 class="steps__t">{{ p.t }}</h3>
+          <p class="steps__d">{{ p.d }}</p>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- TXIKI PAINTBALL UP-SELL -->
+<section class="section">
+  <div class="wrap">
+    <div class="lead-block">
+      <p class="section__eyebrow">¿Peques de menos de 8 años?</p>
+      <h2 class="lead-block__big">También tenemos <em>Txiki Paintball</em></h2>
+      <p>
+        Para los más pequeños, una versión adaptada y aún más suave. Misma diversión,
+        máxima seguridad.
+      </p>
+      <a routerLink="/txikipaintball" class="btn btn--ghost">Ver Txiki Paintball →</a>
+    </div>
+  </div>
+</section>
+
+<!-- PREGUNTAS RÁPIDAS -->
 <section class="section section--alt">
   <div class="wrap">
     <div class="section__header">
@@ -218,9 +161,5 @@
       tipoInicial="Cumpleaños"
       titulo="Cuéntanos tu idea <br> y le damos forma"
     ></app-evento-contacto>
-    <div class="landing-contact-info">
-      <a [href]="waUrl" target="_blank" rel="noopener">📱 WhatsApp: +34 688 73 14 74</a>
-      <span>📍 Larrabetzu (Bizkaia) · 15 min de Bilbao</span>
-    </div>
   </div>
 </section>

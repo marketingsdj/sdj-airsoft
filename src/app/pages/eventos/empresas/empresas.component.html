@@ -11,8 +11,7 @@
       los decide el equipo, no el PowerPoint.
     </p>
     <div class="landing-hero__cta">
-      <a href="#contacto" class="btn btn--primary">Pedir presupuesto</a>
-      <a [href]="waUrl" target="_blank" rel="noopener" class="btn btn--ghost">WhatsApp directo</a>
+      <a [href]="waUrl" target="_blank" rel="noopener" class="btn btn--primary">Pedir presupuesto</a>
     </div>
   </div>
 </section>
@@ -27,116 +26,7 @@
   }
 </div>
 
-<!-- ════════════════════════════════════════════════════════════════════════ -->
-<!-- ░░░ VERSIÓN ANTERIOR ░░░ -->
-<!-- ════════════════════════════════════════════════════════════════════════ -->
-<div class="version-banner version-banner--anterior">Versión anterior</div>
-
-<!-- LEAD (anterior) -->
-<section class="section">
-  <div class="wrap">
-    <div class="lead-block">
-      <p class="section__eyebrow">¿Por qué funciona?</p>
-      <h2 class="lead-block__big">El equipo se ve <em>de verdad</em> bajo presión</h2>
-      <p>
-        En el campo no hay jerarquía que valga si nadie se coordina. Las misiones
-        obligan a comunicarse, repartir roles y decidir rápido. Y al terminar, todo
-        el mundo se acuerda de la jornada.
-      </p>
-      <p>
-        A 15 minutos de Bilbao, en Larrabetzu. Campo en exclusiva, factura con IVA y
-        opción de comida o reunión posterior.
-      </p>
-    </div>
-  </div>
-</section>
-
-<!-- BENEFICIOS (anterior) -->
-<section class="section section--alt">
-  <div class="wrap">
-    <div class="section__header">
-      <p class="section__eyebrow">Qué se llevan</p>
-      <h2 class="section__title">Más que un día fuera<br>de la oficina</h2>
-    </div>
-    <div class="grid-3">
-      @for (b of beneficios; track b.t) {
-        <div class="card">
-          <div class="card__title">{{ b.t }}</div>
-          <p class="card__desc">{{ b.d }}</p>
-        </div>
-      }
-    </div>
-  </div>
-</section>
-
-<!-- PACK (anterior) -->
-<section class="section">
-  <div class="wrap">
-    <div class="pack">
-      <div class="pack__gallery">
-        <div class="img-placeholder" style="height:200px;"><span>FOTO EMPRESA 1</span></div>
-        <div class="img-placeholder" style="height:200px;"><span>FOTO EMPRESA 2</span></div>
-        <div class="img-placeholder" style="height:200px;"><span>FOTO EMPRESA 3</span></div>
-        <div class="img-placeholder" style="height:200px;"><span>FOTO EMPRESA 4</span></div>
-        <!-- TODO: cliente — 4 fotos reales de eventos de empresa -->
-      </div>
-      <div class="pack__included">
-        <p class="section__eyebrow">El pack empresa</p>
-        <h2 class="pack__title">Jornada llave en mano</h2>
-        <ul class="check-list">
-          @for (i of incluye; track i) { <li>{{ i }}</li> }
-        </ul>
-        <p class="pack__precio">Desde <strong>XX€/persona</strong></p>
-        <!-- TODO: cliente — precio por persona -->
-        <a routerLink="/reserva" [queryParams]="{tipo: 'evento', pack: 'empresas'}" class="btn btn--primary">Pedir presupuesto →</a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- PASOS (anterior) -->
-<section class="section section--alt">
-  <div class="wrap">
-    <div class="section__header">
-      <p class="section__eyebrow">Cómo lo organizamos</p>
-      <h2 class="section__title">De la llamada<br>a la jornada</h2>
-    </div>
-    <div class="steps">
-      @for (p of pasos; track p.n) {
-        <div class="steps__item">
-          <div class="steps__num">{{ p.n }}</div>
-          <h3 class="steps__t">{{ p.t }}</h3>
-          <p class="steps__d">{{ p.d }}</p>
-        </div>
-      }
-    </div>
-  </div>
-</section>
-
-<!-- FAQ (anterior) -->
-<section class="section">
-  <div class="wrap">
-    <div class="section__header">
-      <p class="section__eyebrow">Dudas rápidas</p>
-      <h2 class="section__title">Lo que pregunta RRHH</h2>
-    </div>
-    <div class="faq">
-      @for (f of faqs; track f.q) {
-        <details class="faq__item">
-          <summary>{{ f.q }}</summary>
-          <p>{{ f.a }}</p>
-        </details>
-      }
-    </div>
-  </div>
-</section>
-
-<!-- ════════════════════════════════════════════════════════════════════════ -->
-<!-- ░░░ VERSIÓN NUEVA (texto cliente) ░░░ -->
-<!-- ════════════════════════════════════════════════════════════════════════ -->
-<div class="version-banner">Versión nueva (texto cliente)</div>
-
-<!-- POR QUÉ FUNCIONA (nuevo) -->
+<!-- POR QUÉ FUNCIONA -->
 <section class="section">
   <div class="wrap">
     <div class="lead-block">
@@ -157,8 +47,26 @@
   </div>
 </section>
 
-<!-- QUÉ INCLUYE (nuevo) -->
+<!-- BENEFICIOS / QUÉ SE LLEVAN -->
 <section class="section section--alt">
+  <div class="wrap">
+    <div class="section__header">
+      <p class="section__eyebrow">Qué se llevan</p>
+      <h2 class="section__title">Más que un día fuera<br>de la oficina</h2>
+    </div>
+    <div class="grid-3">
+      @for (b of beneficios; track b.t) {
+        <div class="card">
+          <div class="card__title">{{ b.t }}</div>
+          <p class="card__desc">{{ b.d }}</p>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- QUÉ INCLUYE -->
+<section class="section">
   <div class="wrap">
     <div class="section__header">
       <p class="section__eyebrow">Qué incluye</p>
@@ -175,27 +83,62 @@
   </div>
 </section>
 
-<!-- PRECIO (nuevo) -->
-<section class="section">
+<!-- PACK / PRECIO -->
+<section class="section section--alt">
   <div class="wrap">
-    <div class="section__header">
-      <p class="section__eyebrow">Precio</p>
-      <h2 class="section__title">Presupuesto a medida</h2>
-    </div>
-    <div class="precio-block">
-      <p class="precio-block__num">
-        A medida <small>según personas, duración y servicios</small>
-      </p>
-      <p class="precio-block__note">
-        Sin tarifas cerradas que no encajan con lo que necesitáis. Nos decís cuántos
-        sois, si queréis media jornada o jornada completa, y si incluís comida — y os
-        enviamos propuesta.
-      </p>
+    <div class="pack">
+      <div class="pack__gallery">
+        <div class="img-placeholder" style="height:200px;"><span>FOTO EMPRESA 1</span></div>
+        <div class="img-placeholder" style="height:200px;"><span>FOTO EMPRESA 2</span></div>
+        <div class="img-placeholder" style="height:200px;"><span>FOTO EMPRESA 3</span></div>
+        <div class="img-placeholder" style="height:200px;"><span>FOTO EMPRESA 4</span></div>
+        <!-- TODO: cliente — 4 fotos reales de eventos de empresa -->
+      </div>
+      <div class="pack__included">
+        <p class="section__eyebrow">El precio</p>
+        <h2 class="pack__title">Presupuesto a medida</h2>
+        <ul class="check-list" style="margin-bottom: 24px;">
+          <li><strong>Campo en exclusiva:</strong> partida privada para vuestra empresa</li>
+          <li><strong>Equipo completo:</strong> material de primera para cada participante</li>
+          <li><strong>Monitores en campo:</strong> arbitraje, dinámicas y coordinación</li>
+          <li><strong>Restauración:</strong> opciones de catering con El Barracón (hasta 37 pax)</li>
+          <li><strong>Vestuarios y taquillas:</strong> duchas listas tras la actividad</li>
+          <li><strong>Seguro de accidentes:</strong> incluido para todos</li>
+        </ul>
+        <div class="precio-block" style="padding: 0; background: none; border: none; margin-bottom: 24px;">
+          <p class="precio-block__num" style="font-size: 2.5rem; text-align: left; margin: 0 0 8px 0;">
+            A medida <span style="font-size: 1rem; font-weight: normal; color: var(--color-text-muted);">/ según el grupo</span>
+          </p>
+          <p class="precio-block__note" style="text-align: left; margin: 0;">
+            Sin tarifas cerradas que no encajan. Nos decís cuántos sois, si queréis media jornada o jornada completa, y si incluís comida, y os enviamos propuesta detallada.
+          </p>
+        </div>
+        <a [href]="waUrl" target="_blank" rel="noopener" class="btn btn--primary">Pedir presupuesto por WhatsApp</a>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- PREGUNTAS RÁPIDAS (nuevo) -->
+<!-- CÓMO FUNCIONA / PASOS -->
+<section class="section">
+  <div class="wrap">
+    <div class="section__header">
+      <p class="section__eyebrow">Cómo lo organizamos</p>
+      <h2 class="section__title">De la llamada<br>a la jornada</h2>
+    </div>
+    <div class="steps">
+      @for (p of pasos; track p.n) {
+        <div class="steps__item">
+          <div class="steps__num">{{ p.n }}</div>
+          <h3 class="steps__t">{{ p.t }}</h3>
+          <p class="steps__d">{{ p.d }}</p>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- PREGUNTAS RÁPIDAS -->
 <section class="section section--alt">
   <div class="wrap">
     <div class="section__header">
@@ -221,10 +164,5 @@
       tipoInicial="Team building / Empresa"
       titulo="Cuéntanos tu idea <br> y le damos forma"
     ></app-evento-contacto>
-    <div class="landing-contact-info">
-      <a [href]="waUrl" target="_blank" rel="noopener">📱 WhatsApp / Telegram: +34 688 73 14 74</a>
-      <a href="mailto:soldadosdejuguete@gmail.com">📧 soldadosdejuguete&#64;gmail.com</a>
-      <span>📍 Larrabetzu (Bizkaia) · 15 min de Bilbao con parking gratuito</span>
-    </div>
   </div>
 </section>

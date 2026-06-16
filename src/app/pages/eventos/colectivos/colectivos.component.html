@@ -11,8 +11,7 @@
       y cualquier colectivo que quiera hacer algo que no sea lo de siempre.
     </p>
     <div class="landing-hero__cta">
-      <a href="#contacto" class="btn btn--primary">Organizar la excursión</a>
-      <a [href]="waUrl" target="_blank" rel="noopener" class="btn btn--ghost">WhatsApp directo</a>
+      <a [href]="waUrl" target="_blank" rel="noopener" class="btn btn--primary">Organizar la excursión</a>
     </div>
   </div>
 </section>
@@ -27,112 +26,7 @@
   }
 </div>
 
-<!-- ════════════════════════════════════════════════════════════════════════ -->
-<!-- ░░░ VERSIÓN ANTERIOR ░░░ -->
-<!-- ════════════════════════════════════════════════════════════════════════ -->
-<div class="version-banner version-banner--anterior">Versión anterior</div>
-
-<!-- PARA QUIÉN (anterior) -->
-<section class="section">
-  <div class="wrap">
-    <div class="section__header">
-      <p class="section__eyebrow">¿Para quién?</p>
-      <h2 class="section__title">Un plan para cada grupo</h2>
-    </div>
-    <div class="grid-3">
-      @for (p of paraQuien; track p.t) {
-        <div class="card">
-          <div class="card__title">{{ p.t }}</div>
-          <p class="card__desc">{{ p.d }}</p>
-        </div>
-      }
-    </div>
-  </div>
-</section>
-
-<!-- PACK (anterior) -->
-<section class="section section--alt">
-  <div class="wrap">
-    <div class="pack">
-      <div class="pack__gallery">
-        <div class="img-placeholder" style="height:200px;"><span>FOTO COLECTIVO 1</span></div>
-        <div class="img-placeholder" style="height:200px;"><span>FOTO COLECTIVO 2</span></div>
-        <div class="img-placeholder" style="height:200px;"><span>FOTO COLECTIVO 3</span></div>
-        <div class="img-placeholder" style="height:200px;"><span>FOTO COLECTIVO 4</span></div>
-        <!-- TODO: cliente — 4 fotos reales de colectivos -->
-      </div>
-      <div class="pack__included">
-        <p class="section__eyebrow">El pack colectivos</p>
-        <h2 class="pack__title">Actividad organizada y segura</h2>
-        <ul class="check-list">
-          @for (i of incluye; track i) { <li>{{ i }}</li> }
-        </ul>
-        <p class="pack__precio">Desde <strong>XX€/persona</strong></p>
-        <!-- TODO: cliente — precio por persona -->
-        <a routerLink="/reserva" [queryParams]="{tipo: 'evento', pack: 'colectivos'}" class="btn btn--primary">Reservar salida →</a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- PASOS (anterior) -->
-<section class="section">
-  <div class="wrap">
-    <div class="section__header">
-      <p class="section__eyebrow">Cómo lo organizamos</p>
-      <h2 class="section__title">Fácil de coordinar<br>para el responsable</h2>
-    </div>
-    <div class="steps">
-      @for (p of pasos; track p.n) {
-        <div class="steps__item">
-          <div class="steps__num">{{ p.n }}</div>
-          <h3 class="steps__t">{{ p.t }}</h3>
-          <p class="steps__d">{{ p.d }}</p>
-        </div>
-      }
-    </div>
-  </div>
-</section>
-
-<!-- TXIKI (anterior) -->
-<section class="section section--alt">
-  <div class="wrap">
-    <div class="lead-block">
-      <p class="section__eyebrow">¿Grupo de menos de 8 años?</p>
-      <h2 class="lead-block__big">Mira el <em>Txiki Paintball</em></h2>
-      <p>
-        Para los colectivos más pequeños, una versión adaptada, suave y igual de
-        divertida. Máxima seguridad para los peques.
-      </p>
-      <a routerLink="/txikipaintball" class="btn btn--ghost">Ver Txiki Paintball →</a>
-    </div>
-  </div>
-</section>
-
-<!-- FAQ (anterior) -->
-<section class="section">
-  <div class="wrap">
-    <div class="section__header">
-      <p class="section__eyebrow">Dudas rápidas</p>
-      <h2 class="section__title">Lo que pregunta el responsable</h2>
-    </div>
-    <div class="faq">
-      @for (f of faqs; track f.q) {
-        <details class="faq__item">
-          <summary>{{ f.q }}</summary>
-          <p>{{ f.a }}</p>
-        </details>
-      }
-    </div>
-  </div>
-</section>
-
-<!-- ════════════════════════════════════════════════════════════════════════ -->
-<!-- ░░░ VERSIÓN NUEVA (texto cliente) ░░░ -->
-<!-- ════════════════════════════════════════════════════════════════════════ -->
-<div class="version-banner">Versión nueva (texto cliente)</div>
-
-<!-- DE QUÉ VA ESTO (nuevo) -->
+<!-- DE QUÉ VA ESTO -->
 <section class="section">
   <div class="wrap">
     <div class="lead-block">
@@ -153,8 +47,26 @@
   </div>
 </section>
 
-<!-- QUÉ INCLUYE (nuevo) -->
+<!-- PARA QUIÉN -->
 <section class="section section--alt">
+  <div class="wrap">
+    <div class="section__header">
+      <p class="section__eyebrow">¿Para quién?</p>
+      <h2 class="section__title">Un plan para cada grupo</h2>
+    </div>
+    <div class="grid-3">
+      @for (p of paraQuien; track p.t) {
+        <div class="card">
+          <div class="card__title">{{ p.t }}</div>
+          <p class="card__desc">{{ p.d }}</p>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- QUÉ INCLUYE -->
+<section class="section">
   <div class="wrap">
     <div class="section__header">
       <p class="section__eyebrow">Qué incluye</p>
@@ -171,27 +83,78 @@
   </div>
 </section>
 
-<!-- PRECIO (nuevo) -->
-<section class="section">
+<!-- PACK / PRECIO -->
+<section class="section section--alt">
   <div class="wrap">
-    <div class="section__header">
-      <p class="section__eyebrow">Precio</p>
-      <h2 class="section__title">Presupuesto a medida</h2>
-    </div>
-    <div class="precio-block">
-      <p class="precio-block__num">
-        A medida <small>según participantes y servicios</small>
-      </p>
-      <p class="precio-block__note">
-        Nos decís cuántos sois, qué edades tienen y si queréis incluir comida — y os
-        mandamos propuesta.
-      </p>
+    <div class="pack">
+      <div class="pack__gallery">
+        <div class="img-placeholder" style="height:200px;"><span>FOTO COLECTIVO 1</span></div>
+        <div class="img-placeholder" style="height:200px;"><span>FOTO COLECTIVO 2</span></div>
+        <div class="img-placeholder" style="height:200px;"><span>FOTO COLECTIVO 3</span></div>
+        <div class="img-placeholder" style="height:200px;"><span>FOTO COLECTIVO 4</span></div>
+        <!-- TODO: cliente — 4 fotos reales de colectivos -->
+      </div>
+      <div class="pack__included">
+        <p class="section__eyebrow">El precio</p>
+        <h2 class="pack__title">Presupuesto a medida</h2>
+        <ul class="check-list" style="margin-bottom: 24px;">
+          <li><strong>El campo entero:</strong> partida privada sin mezclarse con otros</li>
+          <li><strong>Equipo completo:</strong> material de juego de primera incluido</li>
+          <li><strong>Briefing inicial:</strong> explicación de normas y seguridad</li>
+          <li><strong>Monitores dedicados:</strong> acompañamiento y guía constante</li>
+          <li><strong>Vestuarios con duchas:</strong> listos para arreglarse al terminar</li>
+          <li><strong>Opción de comida:</strong> cafetería y menús en El Barracón</li>
+        </ul>
+        <div class="precio-block" style="padding: 0; background: none; border: none; margin-bottom: 24px;">
+          <p class="precio-block__num" style="font-size: 2.5rem; text-align: left; margin: 0 0 8px 0;">
+            A medida <span style="font-size: 1rem; font-weight: normal; color: var(--color-text-muted);">/ según el grupo</span>
+          </p>
+          <p class="precio-block__note" style="text-align: left; margin: 0;">
+            Nos decís cuántos sois, las edades de los participantes y si queréis incluir comida, y os mandamos una propuesta adaptada a vuestros horarios y necesidades.
+          </p>
+        </div>
+        <a [href]="waUrl" target="_blank" rel="noopener" class="btn btn--primary">Solicitar presupuesto por WhatsApp</a>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- PREGUNTAS RÁPIDAS (nuevo) -->
+<!-- CÓMO FUNCIONA / PASOS -->
+<section class="section">
+  <div class="wrap">
+    <div class="section__header">
+      <p class="section__eyebrow">Cómo lo organizamos</p>
+      <h2 class="section__title">Fácil de coordinar<br>para el responsable</h2>
+    </div>
+    <div class="steps">
+      @for (p of pasos; track p.n) {
+        <div class="steps__item">
+          <div class="steps__num">{{ p.n }}</div>
+          <h3 class="steps__t">{{ p.t }}</h3>
+          <p class="steps__d">{{ p.d }}</p>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- TXIKI UP-SELL -->
 <section class="section section--alt">
+  <div class="wrap">
+    <div class="lead-block">
+      <p class="section__eyebrow">¿Grupo de menos de 8 años?</p>
+      <h2 class="lead-block__big">Mira el <em>Txiki Paintball</em></h2>
+      <p>
+        Para los colectivos más pequeños, una versión adaptada, suave y igual de
+        divertida. Máxima seguridad para los peques.
+      </p>
+      <a routerLink="/txikipaintball" class="btn btn--ghost">Ver Txiki Paintball →</a>
+    </div>
+  </div>
+</section>
+
+<!-- PREGUNTAS RÁPIDAS -->
+<section class="section">
   <div class="wrap">
     <div class="section__header">
       <p class="section__eyebrow">Preguntas rápidas</p>
@@ -216,10 +179,5 @@
       tipoInicial="Colectivos"
       titulo="Cuéntanos tu idea <br> y le damos forma"
     ></app-evento-contacto>
-    <div class="landing-contact-info">
-      <a [href]="waUrl" target="_blank" rel="noopener">📱 WhatsApp / Telegram: +34 688 73 14 74</a>
-      <a href="mailto:soldadosdejuguete@gmail.com">📧 soldadosdejuguete&#64;gmail.com</a>
-      <span>📍 Larrabetzu (Bizkaia) · 15 min de Bilbao · Parking para autobuses</span>
-    </div>
   </div>
 </section>

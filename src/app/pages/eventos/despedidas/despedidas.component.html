@@ -12,7 +12,6 @@
     </p>
     <div class="landing-hero__cta">
       <a [href]="waUrl" target="_blank" rel="noopener" class="btn btn--primary">Reservar por WhatsApp</a>
-      <a href="#contacto" class="btn btn--ghost">Pedir por formulario</a>
     </div>
   </div>
 </section>
@@ -27,31 +26,25 @@
   }
 </div>
 
-<!-- ════════════════════════════════════════════════════════════════════════ -->
-<!-- ░░░ VERSIÓN ANTERIOR ░░░ -->
-<!-- ════════════════════════════════════════════════════════════════════════ -->
-<div class="version-banner version-banner--anterior">Versión anterior</div>
-
-<!-- LEAD (anterior) -->
+<!-- POR QUÉ FUNCIONA -->
 <section class="section">
   <div class="wrap">
-    <div class="lead-block">
-      <p class="section__eyebrow">¿Por qué aquí?</p>
-      <h2 class="lead-block__big">Porque un airsoft une al grupo <em>de verdad</em></h2>
-      <p>
-        Se ríe todo el mundo, hay anécdotas para meses y el homenajeado se lleva
-        su ración especial. Campo en exclusiva para vosotros: nada de compartir
-        partida con desconocidos.
-      </p>
-      <p>
-        A 15 minutos de Bilbao, en Larrabetzu. Aparcamiento gratuito, vestuarios
-        con duchas y cafetería para el after.
-      </p>
+    <div class="section__header">
+      <p class="section__eyebrow">Por qué funciona</p>
+      <h2 class="section__title">Todo el sitio,<br>solo para vosotros</h2>
+    </div>
+    <div class="grid-3">
+      @for (i of incluyeNuevo; track i.t) {
+        <div class="card">
+          <div class="card__title">{{ i.t }}</div>
+          <p class="card__desc">{{ i.d }}</p>
+        </div>
+      }
     </div>
   </div>
 </section>
 
-<!-- PACK (anterior) -->
+<!-- PACK / PRECIO -->
 <section class="section section--alt">
   <div class="wrap">
     <div class="pack">
@@ -63,20 +56,30 @@
         <!-- TODO: cliente — 4 fotos reales de despedidas -->
       </div>
       <div class="pack__included">
-        <p class="section__eyebrow">El pack despedida</p>
-        <h2 class="pack__title">Todo incluido. Tú solo vienes</h2>
-        <ul class="check-list">
-          @for (i of incluye; track i) { <li>{{ i }}</li> }
+        <p class="section__eyebrow">El precio</p>
+        <h2 class="pack__title">Todo incluido. Sin sorpresas</h2>
+        <ul class="check-list" style="margin-bottom: 24px;">
+          <li><strong>Partida privada de 90 minutos</strong> (sin extraños en el campo)</li>
+          <li><strong>Equipo completo:</strong> réplica, máscara, chaleco y bolas</li>
+          <li><strong>Duchas y vestuarios</strong> en el propio campo</li>
+          <li><strong>El Barracón justo ahí:</strong> comida y bebida en el recinto</li>
+          <li><strong>Seguro de accidentes</strong> incluido en el precio</li>
         </ul>
-        <p class="pack__precio">Desde <strong>XX€/persona</strong></p>
-        <!-- TODO: cliente — precio por persona -->
-        <a routerLink="/reserva" [queryParams]="{tipo: 'evento', pack: 'despedidas'}" class="btn btn--primary">Reservar despedida →</a>
+        <div class="precio-block" style="padding: 0; background: none; border: none; margin-bottom: 24px;">
+          <p class="precio-block__num" style="font-size: 2.5rem; text-align: left; margin: 0 0 8px 0;">
+            39,90 € <span style="font-size: 1rem; font-weight: normal; color: var(--color-text-muted);">/ persona</span>
+          </p>
+          <p class="precio-block__note" style="text-align: left; margin: 0;">
+            <strong>Sin señal para reservar.</strong> Pagas el día del evento en tarjeta, efectivo o Bizum.
+          </p>
+        </div>
+        <a [href]="waUrl" target="_blank" rel="noopener" class="btn btn--primary">Reservar despedida por WhatsApp</a>
       </div>
     </div>
   </div>
 </section>
 
-<!-- PASOS (anterior) -->
+<!-- CÓMO FUNCIONA / PASOS -->
 <section class="section">
   <div class="wrap">
     <div class="section__header">
@@ -95,7 +98,7 @@
   </div>
 </section>
 
-<!-- GALERÍA (anterior) -->
+<!-- GALERÍA DE AMBIENTE -->
 <section class="section section--alt">
   <div class="wrap">
     <div class="section__header">
@@ -114,73 +117,11 @@
   </div>
 </section>
 
-<!-- FAQ (anterior) -->
+<!-- PREGUNTAS RÁPIDAS -->
 <section class="section">
   <div class="wrap">
     <div class="section__header">
       <p class="section__eyebrow">Dudas rápidas</p>
-      <h2 class="section__title">Lo que todos preguntan</h2>
-    </div>
-    <div class="faq">
-      @for (f of faqs; track f.q) {
-        <details class="faq__item">
-          <summary>{{ f.q }}</summary>
-          <p>{{ f.a }}</p>
-        </details>
-      }
-    </div>
-  </div>
-</section>
-
-<!-- ════════════════════════════════════════════════════════════════════════ -->
-<!-- ░░░ VERSIÓN NUEVA (texto cliente) ░░░ -->
-<!-- ════════════════════════════════════════════════════════════════════════ -->
-<div class="version-banner">Versión nueva (texto cliente)</div>
-
-<!-- POR QUÉ FUNCIONA (nuevo) -->
-<section class="section">
-  <div class="wrap">
-    <div class="section__header">
-      <p class="section__eyebrow">Por qué funciona</p>
-      <h2 class="section__title">Todo el sitio,<br>solo para vosotros</h2>
-    </div>
-    <div class="grid-3">
-      @for (i of incluyeNuevo; track i.t) {
-        <div class="card">
-          <div class="card__title">{{ i.t }}</div>
-          <p class="card__desc">{{ i.d }}</p>
-        </div>
-      }
-    </div>
-  </div>
-</section>
-
-<!-- PRECIO (nuevo) -->
-<section class="section section--alt">
-  <div class="wrap">
-    <div class="section__header">
-      <p class="section__eyebrow">Precio</p>
-      <h2 class="section__title">Todo incluido. Sin sorpresas</h2>
-    </div>
-    <div class="precio-block">
-      <p class="precio-block__num">
-        39,90 € <small>por persona — equipo completo incluido</small>
-      </p>
-      <p class="precio-block__note">
-        Réplica, máscara, chaleco y bolas. Todo.
-      </p>
-      <p class="precio-block__note">
-        <strong>Sin señal para reservar.</strong> Pagas el día: tarjeta, efectivo o Bizum.
-      </p>
-    </div>
-  </div>
-</section>
-
-<!-- PREGUNTAS RÁPIDAS (nuevo) -->
-<section class="section">
-  <div class="wrap">
-    <div class="section__header">
-      <p class="section__eyebrow">Preguntas rápidas</p>
       <h2 class="section__title">Lo que todos preguntan</h2>
     </div>
     <div class="faq">
@@ -202,9 +143,5 @@
       tipoInicial="Despedida"
       titulo="Cuéntanos tu idea <br> y le damos forma"
     ></app-evento-contacto>
-    <div class="landing-contact-info">
-      <a [href]="waUrl" target="_blank" rel="noopener">📱 WhatsApp: +34 688 73 14 74</a>
-      <span>📍 Larrabetzu (Bizkaia) · 15 min de Bilbao</span>
-    </div>
   </div>
 </section>
