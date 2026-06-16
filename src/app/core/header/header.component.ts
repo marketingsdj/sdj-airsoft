@@ -3,6 +3,13 @@ import { RouterLink, RouterLinkActive, Router, NavigationEnd } from '@angular/ro
 import { CommonModule } from '@angular/common';
 import { Subscription, filter } from 'rxjs';
 
+export interface Brand {
+  label: string;
+  active?: boolean;
+  disabled?: boolean;
+  url?: string;
+}
+
 @Component({
   selector: 'app-header',
   imports: [RouterLink, RouterLinkActive, CommonModule],
@@ -36,11 +43,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
     { label: 'FAQ', path: '/faq' },
   ];
 
-  brands: { label: string; active?: boolean; disabled?: boolean; url?: string }[] = [
+  brands: Brand[] = [
     { label: 'Airsoft', active: true },
     { label: 'Txikipaintball', url: '/txikipaintball' },
     { label: 'Restaurante', url: 'https://elbarraconrestaurante.com/' },
   ];
+  
 
   @HostListener('window:scroll')
   onScroll() {
