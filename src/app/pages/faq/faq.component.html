@@ -1,0 +1,101 @@
+<!-- HERO + BUSCADOR -->
+<section class="faq-hero">
+  <div class="wrap">
+    <p class="eyebrow">PREGUNTAS FRECUENTES</p>
+    <h1>Resuelve dudas antes<br>de coger el coche.</h1>
+    <div class="buscador">
+      <div class="buscador__field">
+        <svg class="buscador__lupa" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input class="buscador__input" type="text" [(ngModel)]="busqueda"
+          (focus)="busquedaActiva = true"
+          (input)="busquedaActiva = true; onBusqueda()"
+          placeholder="precio, edad, reserva, lluvia…" />
+        @if (busqueda) {
+          <button class="buscador__clear" (click)="limpiarBusqueda()" aria-label="Limpiar">✕</button>
+        }
+      </div>
+
+      <!-- Sugerencias autocomplete -->
+      @if (busquedaActiva && sugerencias.length > 0 && resultados.length === 0) {
+        <div class="buscador__sugerencias">
+          @for (s of sugerencias; track s) {
+            <button class="buscador__sugerencia" (click)="aplicarSugerencia(s)">
+              <span class="buscador__sugerencia-icon">↗</span> {{ s }}
+            </button>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Resultados en vivo -->
+    @if (busqueda.trim().length >= 2) {
+      <div class="busqueda-resultados">
+        @if (resultados.length > 0) {
+          <p class="busqueda-resultados__info">{{ resultados.length }} resultado{{ resultados.length !== 1 ? 's' : '' }} para "{{ busqueda }}"</p>
+          @for (r of resultados; track r.q) {
+            <div class="busqueda-item">
+              <span class="busqueda-item__cat">{{ r.cat }}</span>
+              <h4 class="busqueda-item__q">{{ r.q }}</h4>
+              <p class="busqueda-item__a">{{ r.a }}</p>
+            </div>
+          }
+        } @else {
+          <p class="busqueda-resultados__vacio">No hemos encontrado resultados para "{{ busqueda }}". Prueba con otras palabras o consulta las categorías.</p>
+        }
+      </div>
+    }
+  </div>
+</section>
+
+<!-- CONTENIDO -->
+<section class="section">
+  <div class="wrap faq-layout">
+
+    <!-- Sidebar categorías -->
+    <aside class="faq-sidebar">
+      @for (cat of categorias; track cat.key) {
+        <button class="faq-sidebar__btn" [class.faq-sidebar__btn--active]="categoriaActiva() === cat.key"
+          (click)="setCategoria(cat.key)">
+          <span>{{ cat.titulo }}</span>
+          <span class="faq-sidebar__count">{{ cat.count }}</span>
+        </button>
+      }
+    </aside>
+
+    <!-- Acordeón -->
+    <div class="faq-content">
+      <h3 class="faq-content__titulo">{{ categoriaData().titulo }}</h3>
+
+      @for (f of categoriaData().faqs; track f.q) {
+        <div class="faq-item" [class.faq-item--open]="f.open">
+          <button class="faq-item__trigger" (click)="toggle(f)">
+            <span>{{ f.q }}</span>
+            <span class="faq-item__arrow">{{ f.open ? '−' : '+' }}</span>
+          </button>
+          @if (f.open) {
+            <div class="faq-item__body">
+              <p>{{ f.a }}</p>
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+  </div>
+</section>
+
+<!-- NO ENCUENTRAS -->
+<section class="section section--alt faq-cta">
+  <div class="wrap faq-cta__inner">
+    <div>
+      <h2 class="section__title" style="font-size:clamp(22px,3vw,32px)">¿No encuentras<br>tu pregunta?</h2>
+      <p style="font-size:15px;color:rgba(239,246,235,0.65);margin:8px 0 0;">Escríbenos por WhatsApp y te respondemos en el día.</p>
+    </div>
+    <div class="faq-cta__btns">
+      <a href="https://wa.me/34688731474" target="_blank" rel="noopener" class="btn btn--primary">WhatsApp →</a>
+      <a href="mailto:info@soldadosdejuguete.com" class="btn btn--ghost">Email</a>
+    </div>
+  </div>
+</section>

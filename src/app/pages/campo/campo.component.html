@@ -1,0 +1,480 @@
+<!-- HERO -->
+<section class="campo-hero">
+  <div class="campo-hero__bg">
+    <video autoplay muted loop playsinline>
+      <source src="Campo/Web_campo.mp4" type="video/mp4" />
+    </video>
+  </div>
+  <div class="campo-hero__content wrap">
+    <p class="eyebrow">EL CAMPO</p>
+    <h1>45.000 m²<br>de terreno real.</h1>
+  </div>
+</section>
+
+<!-- ZONAS DEL CAMPO -->
+<section class="section section--alt">
+  <div class="wrap">
+    <div class="section__header">
+      <p class="section__eyebrow">El escenario</p>
+      <h2 class="section__title">Zonas del campo</h2>
+    </div>
+    <div class="mapa-interactivo" (click)="zonaSeleccionada ? puntoActivo = null : zonaActiva = null">
+      @if (!zonaSeleccionada) {
+      <span class="mapa-coords">43°15'15"N 2°49'24"W</span>
+      }
+
+      @if (!zonaSeleccionada) {
+      <!-- MAPA PRINCIPAL -->
+      <img src="Campo/Imagen aerea campo.svg" alt="Vista aérea del campo SDJ" loading="eager" fetchpriority="high" />
+      @for (z of zonas; track z.id) {
+      @if (z.rw > 0 && z.rh > 0) {
+      <div class="zona-rect" [class.zona-rect--activa]="zonaActiva === z.id" [style.left.%]="z.rx" [style.top.%]="z.ry"
+        [style.width.%]="z.rw" [style.height.%]="z.rh" (mouseenter)="zonaActiva = z.id" (mouseleave)="zonaActiva = null"
+        (click)="seleccionarZona($event, z)">
+        <div class="zona-rect__nombre">{{ z.titulo }}</div>
+      </div>
+      }
+      }
+
+      } @else {
+      <!-- CARRUSEL ZONA -->
+      <div class="carrusel">
+        <div class="carrusel__header">
+          <button class="mapa-back" (click)="cerrarZona($event)">← Volver</button>
+          <span class="carrusel__titulo">{{ zonaSeleccionada.titulo }}</span>
+          <span class="carrusel__contador">{{ imagenActual + 1 }} / {{ zonaSeleccionada.imagenes.length }}</span>
+        </div>
+
+        <div class="carrusel__imagen">
+          @if (zonaSeleccionada.imagenes.length > 0) {
+            <img [src]="zonaSeleccionada.imagenes[imagenActual]" [alt]="zonaSeleccionada.titulo" />
+          } @else {
+            <span class="carrusel__placeholder">Sin imagen disponible</span>
+          }
+        </div>
+
+        @if (zonaSeleccionada.imagenes.length > 1) {
+        <button class="carrusel__btn carrusel__btn--prev" (click)="anterior($event)">‹</button>
+        <button class="carrusel__btn carrusel__btn--next" (click)="siguiente($event)">›</button>
+
+        <div class="carrusel__dots" (click)="$event.stopPropagation()">
+          @for (img of zonaSeleccionada.imagenes; track $index) {
+          <button class="carrusel__dot" [class.carrusel__dot--activo]="imagenActual === $index"
+            (click)="irA($event, $index)">
+          </button>
+          }
+        </div>
+        }
+      </div>
+      }
+
+
+    </div>
+    <p class="mapa-caption">Mapa interactivo · Explora nuestras instalaciones zona por zona · Haz clic para verlo en detalle.</p>
+
+    <div class="privadas__banner" style="margin-top:48px;">
+      <img src="Campo/Campo privadas.svg" alt="Partidas privadas SDJ" loading="lazy" />
+      <div class="privadas__banner-overlay"></div>
+      <div class="privadas__banner-texto">
+        <p class="section__eyebrow">Campo privado</p>
+        <h2 class="section__title">¿Quieres el campo<br>para ti?</h2>
+        <p>Organizamos partidas privadas para grupos, empresas, despedidas y eventos especiales. Campo completo,
+          monitores incluidos y catering bajo petición.</p>
+        <a routerLink="/tarifas" [queryParams]="{tab:'grupo'}" class="btn btn--primary" style="margin-top:24px;">Ver
+          tarifas de grupo →</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- PARKING, CAFETERÍA Y VESTUARIOS -->
+<section class="section servicios-banda">
+  <div class="wrap">
+    <div class="servicios-grid">
+      @for (s of servicios; track s.titulo) {
+      <div class="servicio-card">
+        <div class="servicio-card__bg">
+          <img [src]="s.img" [alt]="s.titulo" loading="lazy" />
+        </div>
+        <div class="servicio-card__overlay"></div>
+        <div class="servicio-card__content">
+          <p class="servicio-card__eyebrow">{{ s.eyebrow }}</p>
+          <h2 class="servicio-card__titulo" [innerHTML]="s.titulo"></h2>
+          <p class="servicio-card__desc">{{ s.desc }}</p>
+          <ul class="list-tactical">
+            @for (d of s.detalle; track d) {
+            <li>{{ d }}</li>
+            }
+          </ul>
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- PLANEA TU VISITA -->
+<section class="section planea-section">
+  <div class="wrap">
+
+    <div class="planea-layout">
+
+      <div class="planea-izq">
+        <p class="section__eyebrow">Antes de venir</p>
+        <h2 class="section__title">Planea tu visita</h2>
+        <div class="planea-stats">
+          @for (d of datosVisita; track d.label) {
+          <div class="planea-stat">
+            <span class="planea-stat__label">{{ d.label }}</span>
+            <span class="planea-stat__valor">{{ d.valor }}</span>
+          </div>
+          }
+        </div>
+        <a routerLink="/reserva" class="btn btn--primary" style="margin-top:32px;">Reservar plaza →</a>
+      </div>
+
+      <div class="planea-mapa">
+        <iframe [src]="mapaUrl" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+          title="Soldados de Juguete — Larrabetzu, Bizkaia">
+        </iframe>
+        <div class="planea-mapa__pie">
+          <span class="planea-mapa__lugar">Larrabetzu, Barrio Legina · Bizkaia</span>
+          <a href="https://maps.google.com/?q=Soldados+de+Juguete+Larrabetzu+Bizkaia" target="_blank" rel="noopener"
+            class="planea-mapa__link">Abrir en Maps →</a>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<!-- MODOS DE JUEGO -->
+<section class="section section--alt">
+  <div class="wrap">
+    <div class="modos-cabecera">
+      <div class="section__header" style="margin-bottom:0;">
+        <p class="section__eyebrow">Cómo se juega</p>
+        <h2 class="section__title">Modos de juego</h2>
+        <p class="section__lead">No siempre se juega igual.</p>
+      </div>
+      <div class="modos-nav__controles">
+        <button class="modos-nav__btn" (click)="modosAnterior()" [disabled]="!hayModosAnteriores" aria-label="Anteriores">‹</button>
+        <span class="modos-nav__pag">{{ modosPagina + 1 }} / {{ Math.ceil(modos.length / modosPorPagina) }}</span>
+        <button class="modos-nav__btn" (click)="modosSiguiente()" [disabled]="!hayModosSiguientes" aria-label="Siguientes">›</button>
+      </div>
+    </div>
+    <div class="grid-4">
+      @for (m of modosPaginados; track m.nombre) {
+      <div class="modo-card" [class.modo-card--activo]="modoActivo === m.nombre" (click)="toggleModo(m.nombre)">
+        <div class="modo-card__img">
+            <img [src]="m.img" [alt]="m.nombre" loading="lazy" />
+          </div>
+        <div class="modo-card__info">
+          <h3 class="modo-card__titulo">{{ m.nombre }}</h3>
+          <p class="modo-card__desc">{{ m.desc }}</p>
+          <span class="modo-card__toggle">{{ modoActivo === m.nombre ? '↑ Cerrar' : '↓ Ver reglas' }}</span>
+        </div>
+      </div>
+      }
+    </div>
+
+    @if (modoActivo) {
+      @for (m of modosPaginados; track m.nombre) {
+        @if (modoActivo === m.nombre) {
+        <div class="modo-detalle">
+          <div class="modo-detalle__col">
+            <p class="modo-detalle__label">Objetivo</p>
+            <p class="modo-detalle__objetivo">{{ m.objetivo }}</p>
+          </div>
+          <div class="modo-detalle__col">
+            <p class="modo-detalle__label">Cómo se juega</p>
+            <ol class="modo-detalle__pasos">
+              @for (paso of m.pasos; track paso) {
+              <li>{{ paso }}</li>
+              }
+            </ol>
+          </div>
+          <div class="modo-detalle__col">
+            <p class="modo-detalle__label">Condición de victoria</p>
+            <p class="modo-detalle__victoria">{{ m.victoria }}</p>
+          </div>
+        </div>
+        }
+      }
+    }
+
+
+<div class="modos-redes">
+      <div class="modos-redes__izq">
+        <p class="modos-redes__eyebrow">Síguenos</p>
+        <p class="modos-redes__titulo">Descubre cómo se vive<br>una partida real.</p>
+      </div>
+      <div class="modos-redes__btns">
+        <a href="https://www.tiktok.com/@sdj_airsoft" target="_blank" rel="noopener" class="btn-red btn-red--tiktok">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.76a4.85 4.85 0 0 1-1.01-.07z"/></svg>
+          TikTok
+        </a>
+        <a href="https://www.instagram.com/sdj_airsoft/" target="_blank" rel="noopener" class="btn-red btn-red--instagram">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+          Instagram
+        </a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CROSS-LINK TIENDA -->
+<section class="section section--dark tienda-cross">
+
+  <div class="tienda-carrusel">
+    @for (img of tiendaImagenes; track img.src; let i = $index) {
+    <img class="tienda-carrusel__img" [class.tienda-carrusel__img--activa]="tiendaActivo === i"
+      [src]="img.src" [alt]="img.alt" loading="lazy" />
+    }
+    <button class="tienda-carrusel__btn tienda-carrusel__btn--prev" (click)="tiendaAnterior()">‹</button>
+    <button class="tienda-carrusel__btn tienda-carrusel__btn--next" (click)="tiendaSiguiente()">›</button>
+    <div class="tienda-carrusel__dots">
+      @for (img of tiendaImagenes; track img.src; let i = $index) {
+      <button class="tienda-carrusel__dot" [class.tienda-carrusel__dot--activo]="tiendaActivo === i"
+        (click)="tiendaActivo = i"></button>
+      }
+    </div>
+  </div>
+
+  <div class="wrap tienda-cross__contenido">
+    <div class="tienda-cross__texto">
+      <p class="section__eyebrow">SDJ Tienda</p>
+      <h2 class="tienda-cross__titulo">¿Ya enganchado?<br>Móntate tu equipo</h2>
+      <ul class="tienda-cross__lista">
+        <li>Réplicas y secundarias</li>
+        <li>Uniformes y chalecos tácticos</li>
+        <li>Gafas y protección homologada</li>
+        <li>Baterías, cargadores y accesorios</li>
+      </ul>
+      <p class="kit-disponible">
+        <span class="kit-disponible__dot"></span>
+        Disponible en tienda física
+      </p>
+    </div>
+  </div>
+
+</section>
+
+<!-- NORMAS -->
+<section class="section">
+  <div class="wrap">
+    <div class="section__header">
+      <p class="section__eyebrow">SEGURIDAD</p>
+      <h2 class="section__title">Normas del campo</h2>
+      <p class="section__lead">El cumplimiento de estas normas es obligatorio para todos los jugadores.</p>
+    </div>
+
+    <!-- Normas de seguridad -->
+    <div class="normas-bloque" [class.normas-bloque--abierto]="categoriaAbierta() === 'seguridad'">
+      <button class="normas-bloque__titulo" (click)="toggleCategoria('seguridad')">
+        Normas de seguridad
+        <span class="normas-bloque__chevron">{{ categoriaAbierta() === 'seguridad' ? '−' : '+' }}</span>
+      </button>
+      @if (categoriaAbierta() === 'seguridad') {
+        <div class="acord">
+          @for (n of normas; track n.num) {
+            <div class="acord-item" [class.acord-item--abierto]="normaAbierta() === 'seg-' + n.num">
+              <button class="acord-item__header" [class.acord-item__header--static]="!n.detalle" (click)="n.detalle ? toggleNorma('seg-' + n.num) : null">
+                <span class="acord-item__num">{{ n.num }}</span>
+                <span class="acord-item__texto">{{ n.norma }}</span>
+                @if (n.detalle) {
+                  <span class="acord-item__chevron">{{ normaAbierta() === 'seg-' + n.num ? '−' : '+' }}</span>
+                }
+              </button>
+              @if (normaAbierta() === 'seg-' + n.num && n.detalle) {
+                <div class="acord-item__body">
+                  <ul class="acord-detalle">
+                    @for (d of n.detalle; track d) { <li>{{ d }}</li> }
+                  </ul>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Normas de juego -->
+    <div class="normas-bloque" [class.normas-bloque--abierto]="categoriaAbierta() === 'juego'">
+      <button class="normas-bloque__titulo" (click)="toggleCategoria('juego')">
+        Normas de juego
+        <span class="normas-bloque__chevron">{{ categoriaAbierta() === 'juego' ? '−' : '+' }}</span>
+      </button>
+      @if (categoriaAbierta() === 'juego') {
+        <div class="acord">
+          @for (n of normasJuego; track n.num) {
+            <div class="acord-item">
+              <div class="acord-item__header acord-item__header--static">
+                <span class="acord-item__num">{{ n.num }}</span>
+                <span class="acord-item__texto">{{ n.norma }}</span>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Reglas por clase de arma -->
+    <div class="normas-bloque" [class.normas-bloque--abierto]="categoriaAbierta() === 'armas'">
+      <button class="normas-bloque__titulo" (click)="toggleCategoria('armas')">
+        Reglas por clase de arma
+        <span class="normas-bloque__chevron">{{ categoriaAbierta() === 'armas' ? '−' : '+' }}</span>
+      </button>
+      @if (categoriaAbierta() === 'armas') {
+        <div class="clases-grid">
+          <div class="clase-card clase-card--prohibido">
+            <p class="clase-card__titulo">Réplicas prohibidas</p>
+            <ul class="clase-material">
+              @for (m of materialProhibido; track m) { <li>{{ m }}</li> }
+            </ul>
+          </div>
+          <div class="clase-card clase-card--permitido">
+            <p class="clase-card__titulo">Granadas permitidas</p>
+            <ul class="clase-material">
+              @for (m of materialPermitido; track m) { <li>{{ m }}</li> }
+            </ul>
+          </div>
+          @for (c of clasesArma; track c.titulo) {
+            <div class="clase-card">
+              <p class="clase-card__titulo">{{ c.titulo }}</p>
+              <div class="clase-card__stats">
+                @for (s of c.stats; track s.label) {
+                  <div class="clase-stat">
+                    <span class="clase-stat__label">{{ s.label }}</span>
+                    <span class="clase-stat__valor">{{ s.valor }}</span>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- ¿Tienes dudas? -->
+    <div class="normas-cta">
+      <p class="normas-cta__titulo">¿Tienes dudas?</p>
+      <p class="normas-cta__desc">Contacta con nosotros por teléfono y te ayudaremos con cualquier consulta.</p>
+      <a href="https://wa.me/34688731474" target="_blank" rel="noopener" class="btn btn--ghost">Contactar por WhatsApp →</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- VIVE LA EXPERIENCIA + FILOSOFÍA -->
+<section class="section section--dark vive">
+  <div class="wrap vive__dos-col">
+
+    <div class="vive__col">
+      <div class="vive__col-header">
+        <p class="section__eyebrow">Vive la experiencia SDJ</p>
+      </div>
+      <div class="vive__narrativa">
+        <p class="vive__narrativa-lead">La primera vez que pisas el campo… probablemente pienses una cosa: "que no me
+          den".</p>
+        <p>Pero en cuanto empieza la partida entiendes por qué la gente vuelve cada fin de semana.</p>
+        <p>En SDJ cada partida es diferente. Hay momentos de tensión, adrenalina y estrategia,
+          pero también risas, compañerismo y esa sensación de equipo que convierte una simple mañana en una experiencia
+          que quieres repetir.</p>
+      </div>
+      <div class="vive__foto">
+        <img src="Fotos alquilados/5.svg" alt="Partida en SDJ" loading="lazy" />
+      </div>
+    </div>
+
+    <div class="vive__col">
+      <div class="vive__col-header">
+        <p class="section__eyebrow">Nuestra filosofía de juego</p>
+        <h2 class="vive__col-titulo">La diversión<br>está por encima<br>de todo</h2>
+      </div>
+      <div class="filosofia-texto">
+        <p>En SDJ creemos que la diversión está por encima de todo. Por eso diseñamos las partidas para que cualquier
+          jugador tenga opciones reales de disfrutar y competir, independientemente de su experiencia. No buscamos
+          humillar a quien acaba de empezar ni crear un entorno elitista.</p>
+        <p class="vive__statement">Queremos que vuelvas.</p>
+        <p>Nuestros monitores organizan partidas dinámicas durante todo el día, cambiando modos de juego y objetivos
+          para mantener siempre la emoción. Desde jugadores principiantes hasta equipos experimentados, todos encuentran su
+          espacio dentro del campo.</p>
+        <p>La estrategia, la comunicación y el trabajo en equipo son parte fundamental de cada partida.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── SOBRE NOSOTROS ─────────────────────────────────────────────────────── -->
+<section class="section section--dark nosotros">
+  <div class="wrap">
+    <div class="section__header">
+      <p class="section__eyebrow">Sobre nosotros</p>
+      <h2 class="section__title">Más de una década<br>creando experiencias</h2>
+    </div>
+    <div class="timeline">
+      <div class="timeline__linea"></div>
+      @for (h of hitos; track h.year) {
+      <div class="timeline__punto">
+        <div class="timeline__dot"></div>
+        <span class="timeline__year">{{ h.year }}</span>
+        <h4 class="timeline__titulo">{{ h.titulo }}</h4>
+        <p class="timeline__desc">{{ h.desc }}</p>
+      </div>
+      }
+    </div>
+    <button class="nosotros__toggle" (click)="nosotrosAbierto.update(v => !v)">
+      <span>{{ nosotrosAbierto() ? 'Leer menos' : 'Leer nuestra historia' }}</span>
+      <span class="nosotros__toggle-icon">{{ nosotrosAbierto() ? '↑' : '↓' }}</span>
+    </button>
+
+    @if (nosotrosAbierto()) {
+    <div class="nosotros__texto">
+      <div class="nosotros__col">
+        <p>Soldados de Juguete nació mucho antes de convertirse en uno de los campos de airsoft referentes en Bizkaia.
+          Todo empezó en 2008 con la apertura de una tienda en Santutxu, un pequeño espacio creado por y para amantes
+          del airsoft. Años después, en 2017, la tienda se trasladó a Zurbaranbarri, mientras seguíamos creciendo junto
+          a una comunidad cada vez más grande.</p>
+        <p>Pero queríamos ir más allá. En 2010 abrimos nuestro primer campo en Loiu, un proyecto construido con ilusión
+          y muchas ganas de ofrecer una experiencia diferente. Aquella etapa duró hasta 2021 y nos permitió entender
+          algo importante: el airsoft no va solo de competir, sino de crear comunidad.</p>
+      </div>
+      <div class="nosotros__col">
+        <p>Ese mismo año dimos un paso más y nació nuestro actual campo en Larrabetzu, un terreno de 45.000 m².
+          Nuevos escenarios, nuevas zonas de juego y nuevas experiencias que han convertido SDJ en mucho más que un
+          campo de airsoft.</p>
+        <p>Aunque todo empezó bajo el nombre "Soldados de Juguete", con el tiempo la propia comunidad empezó a llamarnos
+          simplemente "SDJ". Y así se quedó. Hoy, muchos de los que vienen cada fin de semana ya forman parte de la
+          familia SDJ.</p>
+      </div>
+    </div>
+    <blockquote class="cita-grande">
+      "Para nosotros el airsoft no es agresividad. Es estrategia, adrenalina, diversión y comunidad."
+    </blockquote>
+    }
+
+  </div>
+</section>
+
+<!-- ANTES DE VENIR -->
+<section class="section section--alt">
+  <div class="wrap">
+    <div class="section__header">
+      <p class="section__eyebrow">Dudas del campo</p>
+      <h2 class="section__title">Antes de venir</h2>
+    </div>
+    <div class="faq-grid">
+      @for (f of faqsCampo; track f.q) {
+      <div class="faq-item">
+        <h4 class="faq-item__q">{{ f.q }}</h4>
+        <p class="faq-item__a">{{ f.a }}</p>
+      </div>
+      }
+    </div>
+  </div>
+</section>

@@ -1,0 +1,1509 @@
+@use '../../../styles/variables' as *;
+
+// ── Placeholder ──────────────────────────────────────────────────────────────
+.img-placeholder {
+  background: rgba(255,255,255,0.03);
+  border: 1px dashed $line;
+  border-radius: $radius-md;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: $font-mono;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba($crema, 0.2);
+  text-align: center;
+  padding: 16px;
+}
+
+// ── Hero ──────────────────────────────────────────────────────────────────────
+.hero {
+  position: relative;
+  min-height: 85vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+
+  &__bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  &__video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &__bg-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(0,0,0,0.3) 0%,
+      rgba(0,0,0,0.45) 50%,
+      rgba(0,0,0,0.88) 100%
+    );
+  }
+
+  &__content {
+    position: relative;
+    z-index: 1;
+    padding-top: 0;
+    padding-bottom: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 80px;
+  }
+
+  &__eyebrow--top {
+    text-align: center;
+    width: 100%;
+  }
+
+  &__cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 96px;
+    align-items: center;
+
+    @media (max-width: $bp-md) {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+  }
+
+  &__col-left {
+    text-align: left;
+  }
+
+  &__col-right {
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 32px;
+  }
+
+  &__eyebrow {
+    font-family: $font-mono;
+    font-size: clamp(13px, 1.4vw, 18px);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: $naranja;
+    margin-bottom: 20px;
+  }
+
+  &__logo {
+    height: clamp(72px, 14vw, 160px);
+    width: auto;
+    display: block;
+  }
+
+  &__title {
+    font-family: $font-tight;
+    font-weight: 900;
+    font-size: clamp(72px, 14vw, 160px);
+    line-height: 0.92;
+    letter-spacing: -0.03em;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    em {
+      font-style: italic;
+      color: $crema;
+      font-weight: 900;
+    }
+  }
+
+  &__sub {
+    font-family: $font-narrow;
+    font-style: italic;
+    font-size: clamp(17px, 1.8vw, 24px);
+    color: $crema;
+    margin: 0;
+  }
+
+  &__cta-row {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    .btn {
+      white-space: nowrap;
+      font-size: clamp(10px, 1.1vw, 13px);
+      padding: 12px 16px;
+    }
+
+    .btn {
+      justify-content: center;
+    }
+  }
+
+  &__stats {
+    display: flex;
+    gap: 48px;
+    border-top: 1px solid $line;
+    padding-top: 28px;
+  }
+
+  &__stat {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  &__stat-num {
+    font-family: $font-tight;
+    font-weight: 900;
+    font-size: 36px;
+    color: $naranja;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+
+  &__stat-lbl {
+    font-family: $font-mono;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba($crema, 0.55);
+  }
+
+  &__scroll {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+  }
+
+  &__scroll-arrow-wrap {
+    display: block;
+    animation: arrow-fall 2s ease-in infinite;
+  }
+
+  &__scroll-arrow {
+    display: block;
+    width: 12px;
+    height: 12px;
+    border-right: 2px solid $naranja;
+    border-bottom: 2px solid $naranja;
+    transform: rotate(45deg);
+  }
+}
+
+@keyframes arrow-fall {
+  0%   { transform: translateY(-8px); opacity: 0; }
+  20%  { opacity: 1; }
+  80%  { opacity: 1; }
+  100% { transform: translateY(8px);  opacity: 0; }
+}
+
+// ── Panel público (desplegable compartido) ────────────────────────────────────
+.publico-panel {
+  margin-top: 8px;
+  border: 1px solid $line;
+  border-radius: $radius-md;
+  overflow: hidden;
+  animation: fadeDown 0.3s ease;
+
+  &__inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+
+    @media (max-width: $bp-md) {
+      grid-template-columns: 1fr;
+      position: relative;
+
+      &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(rgba($ink, 0.55) 0%, rgba($ink, 0.78) 100%);
+        z-index: 1;
+        pointer-events: none;
+        border-radius: inherit;
+      }
+    }
+  }
+
+  &__texto {
+    padding: 40px;
+    border-right: 1px solid $line;
+
+    p {
+      font-size: 15px;
+      color: rgba($crema, 0.75);
+      line-height: 1.7;
+      margin: 0 0 16px;
+      &:last-child { margin: 0; }
+    }
+
+    @media (max-width: $bp-md) {
+      border-right: none;
+      border-bottom: none;
+      position: relative;
+      z-index: 2;
+    }
+  }
+
+  &__titulo {
+    font-family: $font-tight;
+    font-weight: 900;
+    font-size: clamp(20px, 2.5vw, 30px);
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+    margin: 0 0 20px;
+  }
+
+  &__destacado {
+    font-family: $font-narrow;
+    font-style: italic;
+    font-size: 17px;
+    color: $crema;
+    border-left: 2px solid $naranja;
+    padding-left: 16px;
+    margin-top: 24px;
+    line-height: 1.6;
+  }
+
+  &__cta {
+    padding: 40px;
+    background: rgba(255,255,255,0.03);
+
+    p {
+      font-size: 14px;
+      color: rgba($crema, 0.7);
+      line-height: 1.7;
+      margin: 0 0 14px;
+    }
+  }
+
+  &__img {
+    overflow: hidden;
+    border-left: 1px solid $line;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    @media (max-width: $bp-md) {
+      position: absolute;
+      inset: 0;
+      height: auto;
+      border: none;
+      z-index: 0;
+    }
+  }
+
+  &__cita {
+    font-family: $font-narrow;
+    font-style: italic;
+    font-size: 16px;
+    color: $crema;
+    line-height: 1.65;
+    margin-bottom: 18px;
+  }
+
+  &__pasos {
+    list-style: none;
+    padding: 0;
+    margin: 12px 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    li {
+      display: flex;
+      gap: 12px;
+      font-size: 14px;
+      color: rgba($crema, 0.8);
+      line-height: 1.5;
+
+      span {
+        font-family: $font-mono;
+        font-size: 11px;
+        color: $naranja;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        flex-shrink: 0;
+        margin-top: 2px;
+      }
+    }
+  }
+
+  &__lista {
+    list-style: none;
+    padding: 0;
+    margin: 12px 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    li {
+      font-size: 14px;
+      color: rgba($crema, 0.8);
+      padding-left: 18px;
+      position: relative;
+      line-height: 1.4;
+
+      &::before {
+        content: '✓';
+        position: absolute;
+        left: 0;
+        color: $naranja;
+        font-size: 11px;
+      }
+    }
+  }
+}
+
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+// ── Público cards ─────────────────────────────────────────────────────────────
+.publico-card {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  cursor: pointer;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid $line;
+  border-radius: $radius-md;
+  padding: 24px;
+  color: $crema;
+  text-align: left;
+
+  &--active {
+    border-color: $naranja;
+    background: rgba($naranja, 0.07);
+  }
+
+  &__icon {
+    font-size: 24px;
+    color: $naranja;
+    display: block;
+    margin-bottom: 12px;
+  }
+
+  &__arrow {
+    margin-top: auto;
+    padding-top: 16px;
+    position: relative;
+    display: block;
+    width: 12px;
+    height: 12px;
+    transition: transform 0.25s ease;
+
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      left: 1px;
+      width: 8px;
+      height: 1.5px;
+      background: $naranja;
+      border-radius: 1px;
+    }
+
+    &::before { top: 2px;  transform: rotate(40deg);  transform-origin: left center; }
+    &::after  { bottom: 2px; transform: rotate(-40deg); transform-origin: left center; }
+  }
+
+  &--active &__arrow {
+    transform: rotate(90deg);
+  }
+
+  &--active {
+    border-color: $naranja;
+    background: rgba($naranja, 0.06);
+  }
+}
+
+// ── Kit lista ─────────────────────────────────────────────────────────────────
+.kit-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 16px 0 0;
+  border-top: 1px solid $line;
+
+  &__item {
+    font-size: 14px;
+    color: rgba($crema, 0.75);
+    padding: 9px 0;
+    border-bottom: 1px solid $line;
+    padding-left: 18px;
+    position: relative;
+    line-height: 1.4;
+
+    &::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: $naranja;
+      font-size: 11px;
+    }
+  }
+}
+
+// ── Disponible tienda ─────────────────────────────────────────────────────────
+.kit-disponible {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 16px 0 0;
+  font-family: $font-mono;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: $naranja;
+  font-weight: 700;
+
+  &__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: $naranja;
+    flex-shrink: 0;
+    animation: dot-pulse 2s ease-in-out infinite;
+  }
+}
+
+@keyframes dot-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.35; transform: scale(0.75); }
+}
+
+// ── Cross-sell tienda ─────────────────────────────────────────────────────────
+.tienda-cross {
+  &__inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: center;
+
+    @media (max-width: $bp-md) { grid-template-columns: 1fr; }
+  }
+
+  &__text {
+    @media (max-width: $bp-md) { display: none; }
+  }
+}
+
+// ── Prueba social ─────────────────────────────────────────────────────────────
+.repite {
+  &__inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: stretch;
+
+    @media (max-width: $bp-md) { grid-template-columns: 1fr; }
+  }
+
+  &__galeria { display: flex; flex-direction: column; }
+
+  &__testimonios {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.galeria-grid {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  grid-template-rows: auto;
+  gap: 8px;
+  margin-top: 24px;
+
+  &__main {
+    height: 280px;
+    border-radius: $radius-md;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+  }
+
+  &__secondary {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+
+    img {
+      width: 100%;
+      height: 134px;
+      object-fit: cover;
+      display: block;
+      border-radius: $radius-md;
+    }
+  }
+}
+
+.testimonios {
+  margin-top: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+// ── Carrusel testimonios ──────────────────────────────────────────────────────
+.carrusel {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 0;
+  margin-top: 32px;
+
+  .testimonio {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-bottom: 20px;
+
+    p { flex: 1; }
+  }
+
+  &__nav {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  &__btn {
+    width: 36px;
+    height: 36px;
+    border-radius: $radius-sm;
+    border: 1px solid $line;
+    background: rgba(255,255,255,0.04);
+    color: $crema;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: $transition;
+    flex-shrink: 0;
+
+    &:hover { border-color: $naranja; color: $naranja; }
+  }
+
+  &__dots {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+
+  &__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    border: none;
+    background: rgba($crema, 0.25);
+    cursor: pointer;
+    padding: 0;
+    transition: $transition;
+
+    &--active {
+      background: $naranja;
+      width: 18px;
+      border-radius: 3px;
+    }
+  }
+}
+
+.testimonios__google-link {
+  display: inline-block;
+  margin-top: 16px;
+  font-family: $font-mono;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba($crema, 0.45);
+  text-decoration: none;
+  transition: color $transition;
+
+  &:hover { color: $naranja; }
+}
+
+.testimonio {
+  margin: 0;
+  padding: 28px 32px;
+  background: rgba(255,255,255,0.04);
+  border-left: 2px solid $naranja;
+  border-radius: 0 $radius-sm $radius-sm 0;
+
+  &__estrellas {
+    color: $naranja;
+    font-size: 12px;
+    letter-spacing: 2px;
+    margin-bottom: 16px;
+  }
+
+  p {
+    font-family: $font-narrow;
+    font-style: italic;
+    font-size: 15px;
+    color: rgba($crema, 0.85);
+    margin: 0 0 24px;
+    line-height: 1.7;
+    line-height: 1.55;
+  }
+
+  &--maps {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-decoration: none;
+    cursor: pointer;
+    border-left-color: $naranja;
+    transition: background $transition;
+
+    &:hover { background: rgba($naranja, 0.06); }
+
+    &__texto {
+      font-family: $font-tight;
+      font-weight: 900;
+      font-size: clamp(22px, 3vw, 32px);
+      text-transform: uppercase;
+      letter-spacing: -0.01em;
+      color: $crema;
+      line-height: 1.1;
+      font-style: normal;
+      margin: 0 0 20px !important;
+    }
+  }
+
+  &--maps__cta {
+    font-family: $font-mono;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: $naranja;
+    margin-top: auto;
+  }
+
+  &__ver-mas {
+    font-style: normal;
+    font-family: $font-mono;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: $naranja;
+    text-decoration: none;
+    margin-left: 4px;
+    white-space: nowrap;
+
+    &:hover { text-decoration: underline; }
+  }
+
+  cite {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-style: normal;
+    font-size: 12px;
+    color: rgba($crema, 0.55);
+  }
+
+  &__avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: $naranja;
+    color: $ink;
+    font-family: $font-tight;
+    font-weight: 900;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  em { color: rgba($crema, 0.4); font-style: normal; }
+}
+
+// ── Timeline ──────────────────────────────────────────────────────────────────
+.timeline {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  margin-bottom: 40px;
+  padding-top: 16px;
+
+  // ── Mobile: vertical ────────────────────────────────────────────────────────
+  @media (max-width: $bp-md) {
+    grid-template-columns: 1fr;
+    padding-top: 0;
+    padding-left: 32px;
+  }
+
+  &__linea {
+    position: absolute;
+    top: 23px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: $naranja;
+    z-index: 0;
+
+    // En móvil: línea vertical por la izquierda
+    @media (max-width: $bp-md) {
+      top: 11px;    // centro del primer dot (margin-top:4 + radio:7)
+      bottom: 11px; // centrado en el último dot también
+      left: 7px;    // centro horizontal del dot (ancho 14px / 2)
+      right: auto;
+      width: 2px;
+      height: auto;
+    }
+  }
+
+  &__punto {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 0 12px 0;
+
+    // En móvil: fila horizontal con dot a la izquierda
+    @media (max-width: $bp-md) {
+      flex-direction: row;
+      align-items: flex-start;
+      text-align: left;
+      padding: 0 0 32px 0;
+      gap: 16px;
+    }
+  }
+
+  &__dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: $naranja;
+    border: 3px solid $verde-osc;
+    outline: 1px solid $naranja;
+    flex-shrink: 0;
+    margin-bottom: 16px;
+
+    @media (max-width: $bp-md) {
+      margin-bottom: 0;
+      margin-top: 4px;
+      position: absolute;
+      left: -32px;
+    }
+  }
+
+  &__year {
+    font-family: $font-tight;
+    font-weight: 900;
+    font-size: 28px;
+    color: $naranja;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  &__titulo {
+    font-family: $font-tight;
+    font-weight: 800;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin: 0 0 6px;
+  }
+
+  &__desc {
+    font-size: 11px;
+    color: rgba($crema, 0.55);
+    line-height: 1.5;
+    margin: 0;
+  }
+}
+
+.cita-grande {
+  font-family: $font-narrow;
+  font-style: italic;
+  font-size: clamp(18px, 2.5vw, 24px);
+  color: rgba($crema, 0.75);
+  border-left: 3px solid $naranja;
+  padding-left: 24px;
+  margin: 0;
+  line-height: 1.5;
+  max-width: 760px;
+}
+
+// ── Descubre ──────────────────────────────────────────────────────────────────
+.descubre {
+  &__header {
+    margin-bottom: 48px;
+  }
+
+  &__cuerpo {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: stretch;
+
+    @media (max-width: $bp-md) {
+      grid-template-columns: 1fr;
+      position: relative;
+      border-radius: $radius-md;
+      overflow: hidden;
+      border: 1px solid $line;
+
+      &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(rgba($ink, 0.55) 0%, rgba($ink, 0.78) 100%);
+        z-index: 1;
+        pointer-events: none;
+      }
+    }
+  }
+
+  &__cita-col {
+    display: flex;
+    flex-direction: column;
+
+    @media (max-width: $bp-md) {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+  }
+
+  &__cita {
+    font-family: $font-narrow;
+    font-style: italic;
+    font-size: 13px;
+    color: rgba($crema, 0.6);
+    line-height: 1.6;
+    border-left: 2px solid $naranja;
+    padding-left: 14px;
+    margin: 16px 0 0;
+  }
+
+  &__foto {
+    flex: 1;
+    min-height: 300px;
+    border-radius: $radius-md;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    @media (max-width: $bp-md) {
+      min-height: unset;
+      height: 100%;
+      border-radius: 0;
+    }
+  }
+
+  &__puntos-col {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    @media (max-width: $bp-md) {
+      position: relative;
+      z-index: 2;
+      padding: 32px;
+    }
+  }
+
+  &__puntos {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+
+    li {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+      padding: 20px 0;
+      border-bottom: 1px solid $line;
+
+      &:last-child { border-bottom: none; }
+
+      strong {
+        display: block;
+        font-family: $font-tight;
+        font-weight: 700;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        margin-bottom: 4px;
+      }
+
+      p {
+        font-size: 13px;
+        color: rgba($crema, 0.65);
+        line-height: 1.55;
+        margin: 0;
+      }
+    }
+  }
+
+  &__puntos-num {
+    font-family: $font-mono;
+    font-size: 11px;
+    color: $naranja;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+}
+
+
+// ── Kit carrusel ──────────────────────────────────────────────────────────────
+.kit-carrusel {
+  position: relative;
+  border: 1px solid $line;
+  border-radius: $radius-md;
+  overflow: hidden;
+
+  &__img {
+    display: none;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+
+    &--activa {
+      display: block;
+      animation: kitFade 0.5s ease;
+    }
+  }
+
+  &__cta {
+    display: none;
+
+    @media (max-width: $bp-md) {
+      display: block;
+      width: 100%;
+      text-align: center;
+      margin-top: -8px;
+    }
+  }
+
+  @keyframes kitFade {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  &__dots {
+    position: absolute;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 2;
+  }
+
+  &__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    border: none;
+    background: rgba($crema, 0.3);
+    cursor: pointer;
+    padding: 0;
+    transition: $transition;
+
+    &--activo {
+      background: $naranja;
+      width: 18px;
+      border-radius: 3px;
+    }
+  }
+}
+
+// ── Nosotros ──────────────────────────────────────────────────────────────────
+.nosotros__toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: none;
+  border: 1px solid $line;
+  border-radius: $radius-sm;
+  color: rgba($crema, 0.65);
+  font-family: $font-mono;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 10px 16px;
+  cursor: pointer;
+  margin: 24px 0 0;
+  transition: $transition;
+
+  &:hover { border-color: $naranja; color: $crema; }
+}
+
+.nosotros__toggle-icon {
+  color: $naranja;
+  font-size: 14px;
+}
+
+.nosotros {
+  &__texto {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    margin: 40px 0 36px;
+
+    @media (max-width: $bp-md) { grid-template-columns: 1fr; }
+  }
+
+  &__col {
+    p { font-size: 15px; color: rgba($crema, 0.7); line-height: 1.7; margin: 0 0 16px; &:last-child { margin: 0; } }
+  }
+}
+
+// ── La señal ──────────────────────────────────────────────────────────────────
+.senal-block {
+  background: $ink;
+  border-top: 2px solid $naranja;
+  padding: 80px 0;
+
+  &__inner {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 64px;
+    align-items: center;
+
+    @media (max-width: $bp-md) { grid-template-columns: 1fr; gap: 40px; }
+  }
+
+  &__eyebrow {
+    font-family: $font-mono;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: $naranja;
+    margin: 0 0 16px;
+  }
+
+  &__titulo {
+    font-family: $font-tight;
+    font-weight: 900;
+    font-size: clamp(40px, 6vw, 72px);
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+    line-height: 0.9;
+    margin: 0;
+    color: $crema;
+  }
+
+  &__texto {
+    font-size: 15px;
+    color: rgba($crema, 0.7);
+    line-height: 1.7;
+    margin: 0 0 14px;
+  }
+
+  &__subtexto {
+    font-family: $font-narrow;
+    font-style: italic;
+    font-size: 15px;
+    color: rgba($crema, 0.5);
+    margin: 0 0 32px;
+    line-height: 1.6;
+  }
+
+  &__cta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 24px 28px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid $line;
+    border-radius: $radius-md;
+
+    @media (max-width: $bp-sm) { flex-direction: column; align-items: flex-start; }
+  }
+
+  &__cta-titulo {
+    font-family: $font-tight;
+    font-weight: 900;
+    font-size: 18px;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    color: $crema;
+    margin: 0 0 4px;
+  }
+
+  &__cta-sub {
+    font-family: $font-mono;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba($crema, 0.4);
+    margin: 0;
+  }
+}
+
+// ── CTA band ─────────────────────────────────────────────────────────────────
+.cta-band {
+  p {
+    font-family: $font-narrow;
+    font-size: 16px;
+    color: rgba($ink, 0.7);
+    margin: -16px 0 24px;
+  }
+}
+
+// ── Agenda ────────────────────────────────────────────────────────────────────
+.agenda-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+
+  .section__title { margin: 0; }
+}
+
+.agenda-cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid $line;
+  flex-wrap: nowrap;
+
+  .btn { white-space: nowrap; flex-shrink: 0; }
+
+  &__texto {
+    font-family: $font-narrow;
+    font-style: italic;
+    font-size: 16px;
+    color: rgba($crema, 0.7);
+    white-space: nowrap;
+  }
+}
+
+.agenda-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+
+  @media (max-width: $bp-sm) { grid-template-columns: 1fr; }
+}
+
+.agenda-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 24px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid $line;
+  border-radius: $radius-md;
+  transition: border-color $transition;
+
+  &:hover { border-color: rgba($naranja, 0.4); }
+
+  &__fecha {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 48px;
+    flex-shrink: 0;
+    border-right: 1px solid $line;
+    padding-right: 20px;
+  }
+
+  &__dia {
+    font-family: $font-tight;
+    font-weight: 900;
+    font-size: 36px;
+    color: $naranja;
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+
+  &__mes {
+    font-family: $font-mono;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba($crema, 0.5);
+    margin-top: 2px;
+  }
+
+  &__dow {
+    font-family: $font-mono;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba($crema, 0.3);
+    margin-top: 1px;
+  }
+
+  &__body { flex: 1; }
+
+  &__modo {
+    font-family: $font-tight;
+    font-weight: 700;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin: 0 0 4px;
+    color: $crema;
+  }
+
+  &__meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: $font-mono;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba($crema, 0.45);
+    margin: 0;
+  }
+
+  &__dot {
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: rgba($crema, 0.3);
+    flex-shrink: 0;
+  }
+
+  &__btn {
+    flex-shrink: 0;
+    font-size: 11px;
+    padding: 10px 14px;
+    white-space: nowrap;
+  }
+}
+
+// ── Partidas (legacy, puede borrarse) ─────────────────────────────────────────
+.partidas-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border: 1px solid $line;
+  border-radius: $radius-md;
+  overflow: hidden;
+}
+
+.partida-row {
+  display: grid;
+  grid-template-columns: 160px 1fr 200px auto;
+  align-items: center;
+  gap: 24px;
+  padding: 20px 24px;
+  border-bottom: 1px solid $line;
+  transition: background $transition;
+
+  &:last-child { border-bottom: none; }
+  &:hover { background: rgba(255,255,255,0.03); }
+
+  &__fecha {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  &__dia {
+    font-family: $font-tight;
+    font-weight: 700;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  &__hora {
+    font-family: $font-mono;
+    font-size: 11px;
+    color: $naranja;
+  }
+
+  &__tipo {
+    font-family: $font-narrow;
+    font-size: 14px;
+    color: rgba($crema, 0.7);
+  }
+
+  &__plazas {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  @media (max-width: $bp-md) {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+
+    &__plazas { grid-column: 1 / -1; }
+    &__cta { grid-column: 1 / -1; }
+  }
+}
+
+.plazas-bar {
+  height: 4px;
+  background: rgba($crema, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+
+  &__fill {
+    height: 100%;
+    background: $naranja;
+    border-radius: 2px;
+    transition: width 0.6s ease;
+  }
+}
+
+.plazas-text {
+  font-family: $font-mono;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba($crema, 0.55);
+}
+
+// ── FAQ ───────────────────────────────────────────────────────────────────────
+.faq-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: $line;
+  border: 1px solid $line;
+  border-radius: $radius-md;
+  overflow: hidden;
+  margin-bottom: 32px;
+
+  @media (max-width: $bp-md) { grid-template-columns: 1fr; }
+}
+
+.faq-item {
+  background: rgba(255,255,255,0.03);
+  padding: 24px;
+
+  &__q {
+    font-family: $font-tight;
+    font-weight: 700;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin: 0 0 10px;
+    color: $crema;
+  }
+
+  &__a {
+    font-size: 13px;
+    color: rgba($crema, 0.65);
+    line-height: 1.55;
+    margin: 0;
+  }
+}
+
+.section-more {
+  margin-top: 32px;
+  text-align: center;
+}
+
+// ── Primera vez ───────────────────────────────────────────────────────────────
+.primera-vez-home {
+  &__inner {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: 64px;
+    align-items: center;
+
+    @media (max-width: $bp-md) { grid-template-columns: 1fr; }
+  }
+
+  &__img {
+    height: 380px;
+    @media (max-width: $bp-md) { height: 240px; }
+  }
+
+  &__precios {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    margin: 24px 0 10px;
+  }
+
+  &__precio { display: flex; flex-direction: column; gap: 3px; }
+
+  &__num {
+    font-family: $font-tight;
+    font-weight: 900;
+    font-size: 40px;
+    color: $naranja;
+    line-height: 1;
+
+    sup { font-size: 18px; vertical-align: super; }
+  }
+
+  &__lbl {
+    font-family: $font-mono;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba($crema, 0.45);
+  }
+
+  &__sep {
+    font-size: 28px;
+    color: rgba($crema, 0.2);
+    align-self: center;
+    padding-bottom: 16px;
+  }
+
+  &__aviso {
+    font-family: $font-mono;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    color: rgba($crema, 0.4);
+    margin: 0 0 20px;
+  }
+
+  &__cta {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+}

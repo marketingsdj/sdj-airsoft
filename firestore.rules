@@ -1,0 +1,22 @@
+rules_version = '2';
+
+// Reglas de seguridad para la colección de huecos reservados.
+// Pega esto en: Consola de Firebase → Firestore Database → pestaña "Reglas".
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /slots/{slotId} {
+      // Cualquiera puede LEER la disponibilidad (para pintar el calendario).
+      allow read: if true;
+
+      // Solo se puede CREAR un hueco si no existe ya.
+      // Esto evita que dos personas reserven la misma franja a la vez:
+      // la segunda escritura falla porque el documento ya existe.
+      allow create: if !exists(/databases/$(database)/documents/slots/$(slotId));
+
+      // Nadie puede modificar ni borrar huecos desde el navegador
+      // (esos cambios se harán desde la consola o un backend de confianza).
+      allow update, delete: if false;
+    }
+  }
+}

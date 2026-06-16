@@ -1,0 +1,104 @@
+@use '../../../styles/variables' as *;
+
+.img-placeholder {
+  background: rgba(255,255,255,0.03);
+  border: 1px dashed $line;
+  border-radius: $radius-md;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: $font-mono;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba($crema, 0.2);
+  text-align: center;
+  padding: 20px;
+}
+
+// ── Diferente ─────────────────────────────────────────────────────────────────
+.diferente {
+  &__inner {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 64px;
+    align-items: start;
+
+    @media (max-width: $bp-md) { grid-template-columns: 1fr; }
+  }
+
+  &__texto {
+    p { font-size: 15px; color: rgba($crema, 0.75); line-height: 1.7; margin: 0 0 14px; }
+  }
+
+  &__destacado {
+    font-family: $font-narrow;
+    font-style: italic;
+    font-size: 17px;
+    color: $crema;
+    border-left: 2px solid $naranja;
+    padding-left: 16px;
+    margin: 20px 0;
+    line-height: 1.6;
+  }
+}
+
+// ── Servicio block ────────────────────────────────────────────────────────────
+.servicio-block {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: center;
+  padding: 80px 0;
+  border-bottom: 1px solid $line;
+
+  &:last-child { border-bottom: none; }
+
+  &--alt {
+    direction: rtl;
+    > * { direction: ltr; }
+
+    @media (max-width: $bp-md) { direction: ltr; > * { direction: ltr; } }
+  }
+
+  @media (max-width: $bp-md) { grid-template-columns: 1fr; }
+
+  &__img { height: 380px; }
+
+  &__icon {
+    font-size: 40px;
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  &__titulo {
+    font-family: $font-tight;
+    font-weight: 900;
+    font-size: clamp(28px, 4vw, 40px);
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+    margin: 6px 0 14px;
+    line-height: 0.95;
+  }
+
+  &__desc {
+    font-size: 15px;
+    color: rgba($crema, 0.7);
+    line-height: 1.6;
+    margin: 0 0 24px;
+  }
+}
+
+// ── Cross tienda ──────────────────────────────────────────────────────────────
+.tienda-cross {
+  &__inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: center;
+
+    @media (max-width: $bp-md) { grid-template-columns: 1fr; }
+  }
+
+  &__img { height: 320px; }
+}

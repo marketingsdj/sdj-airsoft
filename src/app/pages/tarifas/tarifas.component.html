@@ -1,0 +1,386 @@
+<div class="page-hero">
+  <div class="wrap">
+    <p class="eyebrow">TARIFAS</p>
+    <h1>Tarifas claras.<br>Sin letra pequeña.</h1>
+    <p>Equipo siempre disponible. Lo que ves es lo que pagas.</p>
+  </div>
+</div>
+
+<section class="section">
+  <div class="wrap">
+    <!-- Tabs -->
+    <div class="tabs">
+      @for (t of tabs; track t.key) {
+        <button class="tabs__btn" [class.tabs__btn--active]="tab() === t.key" (click)="setTab(t.key)">
+          <span class="tabs__btn-icon">{{ t.icon }}</span>
+          <span class="tabs__btn-label">{{ t.label }}</span>
+          <span class="tabs__btn-desc">{{ t.desc }}</span>
+        </button>
+      }
+    </div>
+
+    <!-- Individual -->
+    @if (tab() === 'individual') {
+      <div class="tarifas-grid" style="margin-top:24px;">
+        @for (t of individual; track t.nombre) {
+          <div class="tarifa-card"
+               [class.tarifa-card--featured]="t.precio === 39.90"
+               [class.tarifa-card--premium]="t.premium">
+            @if (t.precio === 39.90 && !t.premium) {
+              <span class="tarifa-card__badge">Más popular</span>
+            }
+            <p class="tarifa-card__nombre">{{ t.nombre }}</p>
+            <p class="tarifa-card__precio">{{ t.precio | number:'1.2-2' }}<span>€</span></p>
+            <ul class="tarifa-card__incluye">
+              @for (item of t.incluye; track item) {
+                <li>{{ item }}</li>
+              }
+            </ul>
+            @if (t.key === 'alquiler') {
+              <button class="btn btn--primary tarifa-btn" (click)="modalAlquiler.set(true)">Reservar</button>
+            } @else {
+              <a routerLink="/reserva" [queryParams]="{tipo: 'individual', pack: t.key}" class="btn btn--primary tarifa-btn">Reservar</a>
+            }
+          </div>
+        }
+
+      </div>
+
+      <!-- Bonos -->
+      <div class="habitual-bonos" style="margin-top:40px;">
+
+        <!-- Vale 10 -->
+        <div class="habitual-vale">
+          <div class="habitual-vale__texto">
+            <p class="eyebrow">BONO HABITUAL</p>
+            <h3>Vale 10 SDJ — 179 €</h3>
+            <p>10 visitas de mañana con equipo propio.</p>
+            <ul class="habitual-lista">
+              <li>Válido 12 meses</li>
+              <li>Nominal e intransferible</li>
+              <li>Al comprar: <strong>parche SDJ oficial</strong></li>
+              <li><strong>Alta gratuita para convertirte en socio</strong></li>
+            </ul>
+          </div>
+          <a href="https://wa.me/34688731474?text=Quiero%20comprar%20el%20Vale%2010%20SDJ" target="_blank" rel="noopener" class="btn btn--primary">Comprar el Vale 10 →</a>
+        </div>
+
+        <!-- Bono 3 Visitas Premium -->
+        <div class="habitual-vale">
+          <div class="habitual-vale__texto">
+            <p class="eyebrow">BONO 3 VISITAS</p>
+            <h3>Bono 3 Visitas Premium — 99 €</h3>
+            <p>3 alquileres en modalidad premium — por separado serían <s>134,70 €</s>. Ahorras 35,70 €.</p>
+            <ul class="habitual-lista">
+              <li>Válido 6 meses · Nominal e intransferible</li>
+              <li>Si hoy jugaste en estándar → solo necesitas <strong>59,10 €</strong> más</li>
+              <li>Si jugaste en premium → solo <strong>54,10 €</strong> más</li>
+            </ul>
+            <p class="promo-aviso" style="font-size:8px;">Disponible en mostrador al salir o por WhatsApp en los 7 días siguientes a tu visita.</p>
+          </div>
+          <a href="https://wa.me/34688731474" target="_blank" rel="noopener" class="btn btn--primary">Comprar el Bono 3 →</a>
+        </div>
+
+      </div>
+    }
+
+    <!-- Grupo -->
+    @if (tab() === 'grupo') {
+      <div class="grupo-layout" style="margin-top:24px;">
+
+        <!-- Columna izquierda: calendario -->
+        <div class="grupo-layout__cal">
+          <p class="grupo-calendario__titulo">Elige fecha y franja horaria</p>
+          <p class="grupo-calendario__desc">Franjas de 2 horas. Solo fines de semana.</p>
+          <app-calendario-grupos></app-calendario-grupos>
+        </div>
+
+        <!-- Columna derecha: info + tarjetas -->
+        <div class="grupo-layout__info">
+
+          <!-- Precios por persona -->
+          <p class="grupo-precios__titulo">Precio por persona</p>
+          <div class="grupo-precios">
+            @for (t of individual; track t.key) {
+              <div class="grupo-precio-card">
+                <p class="grupo-precio-card__nombre">{{ t.nombre }}</p>
+                <p class="grupo-precio-card__precio">{{ t.precio | number:'1.2-2' }}<span>€</span></p>
+                <ul class="grupo-precio-card__incluye">
+                  @for (item of t.incluye; track item) { <li>{{ item }}</li> }
+                </ul>
+              </div>
+            }
+          </div>
+
+          <div class="grupo-aviso">
+            <span class="grupo-aviso__icono">◈</span>
+            <div>
+              <p class="grupo-aviso__titulo">Partida privada gratuita</p>
+              <p class="grupo-aviso__texto">A partir de 8 personas reserváis el campo entero con monitor incluido, <strong>sin coste extra</strong>. Solo pagas las tarifas individuales de cada jugador.</p>
+            </div>
+          </div>
+
+          @for (t of grupo; track t.nombre) {
+            <div class="tarifa-card">
+              <p class="tarifa-card__nombre">{{ t.nombre }}</p>
+              <ul class="tarifa-card__incluye">
+                @for (item of t.incluye; track item) {
+                  <li>{{ item }}</li>
+                }
+              </ul>
+              @if (t.key === 'grupo') {
+                <a routerLink="/reserva" [queryParams]="{tipo: 'grupo'}" class="btn btn--primary tarifa-btn">Reservar</a>
+              } @else {
+                <a routerLink="/eventos" [queryParams]="{tipo: 'grupo', pack: t.key}" class="btn btn--primary tarifa-btn">Solicitar info</a>
+              }
+            </div>
+          }
+        </div>
+
+      </div>
+    }
+
+    <!-- Socio -->
+    @if (tab() === 'socio') {
+      <div style="margin-top:24px;">
+
+        <!-- Abonos 2025 -->
+        <div class="socio-abonos">
+
+
+          <!-- Premium -->
+          <div class="socio-abono socio-abono--premium">
+            <p class="socio-abono__tipo">Abono Socio</p>
+            <div class="socio-abono__precios">
+              <div class="socio-abono__precio-fila">
+                <span>Mensual</span>
+                <div class="socio-abono__precio-col"><strong>38 €</strong><small>Alta 114 €</small></div>
+              </div>
+              <div class="socio-abono__precio-fila">
+                <span>Trimestral</span>
+                <div class="socio-abono__precio-col"><strong>114 €</strong><small>Alta 50% dto.</small></div>
+              </div>
+              <div class="socio-abono__precio-fila socio-abono__precio-fila--anual">
+                <span>Anual</span>
+                <div class="socio-abono__precio-col"><strong>380 €</strong><small>Alta 50% dto. · 2 meses gratis</small></div>
+              </div>
+            </div>
+            <ul class="socio-abono__lista">
+              <li><strong>Entrada gratuita para partidas abiertas</strong></li>
+              <li>15% dto. accesorios · 10% dto. réplicas en tienda</li>
+              <li>Taquilla nominal permanente</li>
+              <li>Tarjeta de acceso personalizada + parche SDJ</li>
+              <li>Comedor exclusivo socios</li>
+              <li>Acceso entre semana (19,90 €/sesión)</li>
+              <li>Plaza preferente en Hardcore Veteranos</li>
+              <li>Eventos exclusivos + Black Friday Socio</li>
+            </ul>
+            <button class="socio-beneficios-toggle" (click)="mostrarBeneficios.set(!mostrarBeneficios())">
+              {{ mostrarBeneficios() ? 'Ver menos' : 'Ver más' }}
+            </button>
+          </div>
+
+        </div>
+
+        <!-- Beneficios detallados -->
+        @if (mostrarBeneficios()) {
+        <div class="socio-beneficios-bloque">
+          <div class="socio-beneficios-grid">
+
+            <div class="socio-beneficio">
+              <span class="socio-beneficio__icon">◆</span>
+              <div>
+                <h4>Descuento en tienda</h4>
+                <p>15 % en accesorios, bolas, baterías y mantenimiento. 10 % en réplicas y kits. Se aplica automáticamente al escanear tu tarjeta de socio en tienda. Sin códigos ni complicaciones.</p>
+              </div>
+            </div>
+
+            <div class="socio-beneficio">
+              <span class="socio-beneficio__icon">◆</span>
+              <div>
+                <h4>Taquilla nominal</h4>
+                <p>Tu propia taquilla dentro de SDJ, con tu nombre o número de socio. Siempre la misma, siempre reservada para ti. No es por sorteo ni rotación.</p>
+              </div>
+            </div>
+
+
+            <div class="socio-beneficio">
+              <span class="socio-beneficio__icon">◆</span>
+              <div>
+                <h4>Acceso entre semana</h4>
+                <p>De lunes a viernes SDJ abre exclusivamente para socios. Mínimo 6 socios, sesiones privadas de 2-3 h con monitor, 19,90 €/socio. Sin mezcla con jugadores externos.</p>
+              </div>
+            </div>
+
+            <div class="socio-beneficio">
+              <span class="socio-beneficio__icon">◆</span>
+              <div>
+                <h4>Hardcore Veteranos — plaza preferente</h4>
+                <p>Los socios acceden a la inscripción 14 días antes que el resto. Si la demanda supera las 30 plazas, los socios tienen prioridad absoluta.</p>
+              </div>
+            </div>
+
+
+            <div class="socio-beneficio">
+              <span class="socio-beneficio__icon">◆</span>
+              <div>
+                <h4>Black Friday Socio</h4>
+                <p>Última semana de noviembre: catálogo especial con material hasta precio de coste, con acceso 5 días antes que el público general. Lo mejor vuela rápido.</p>
+              </div>
+            </div>
+
+            <div class="socio-beneficio">
+              <span class="socio-beneficio__icon">◆</span>
+              <div>
+                <h4>Invitado trimestral</h4>
+                <p>1 vez por trimestre puedes traer a alguien a jugar de manera gratuita con equipo premium incluido.</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        }
+
+        <!-- Intro hero -->
+        <div class="socio-cta-block">
+          <div class="socio-cta-block__izq">
+            <p class="socio-cta-block__eyebrow">Datos reales de socios SDJ</p>
+            <h2 class="socio-cta-block__titulo">Si vienes una vez al mes,<br>la cuenta es clara</h2>
+            <a href="https://wa.me/34688731474?text=Quiero%20información%20para%20hacerme%20socio%20de%20SDJ" target="_blank" rel="noopener" class="btn btn--primary">Quiero ser socio →</a>
+          </div>
+          <div class="socio-cta-block__stats">
+            <div class="socio-cta-block__stat">
+              <span class="socio-cta-block__stat-num">2×</span>
+              <span class="socio-cta-block__stat-lbl">visitas al mes de media</span>
+            </div>
+            <div class="socio-cta-block__stat">
+              <span class="socio-cta-block__stat-num">380€</span>
+              <span class="socio-cta-block__stat-lbl">al año · todo incluido</span>
+            </div>
+            <div class="socio-cta-block__stat">
+              <span class="socio-cta-block__stat-num">∞</span>
+              <span class="socio-cta-block__stat-lbl">partidas abiertas sin coste extra</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Apadrinamiento -->
+        <div class="socio-apadrinamiento">
+          <div class="socio-apadrinamiento__texto">
+            <p class="eyebrow">APADRINAMIENTO DE SOCIOS</p>
+            <h3>Invita a 1 persona gratis por trimestre.<br>Si se hace socio, te descontamos 1 mes de tu cuota.</h3>
+            <p>Cada trimestre puedes traer a <strong>1 persona que no haya jugado nunca en SDJ</strong>. Disfrutará del día como si fuera socio. Y si le gusta tanto que se hace socio en los 6 meses siguientes, la recompensa es tuya.</p>
+            <p class="eyebrow" style="margin-top:20px;">¿Cómo funciona?</p>
+            <ul class="habitual-lista" style="margin-top:8px;">
+              <li>Puedes traer a 1 invitado por trimestre.</li>
+              <li>El invitado debe ser la primera vez que viene a SDJ.</li>
+              <li>Disfrutará de la jornada completa con acceso a todos los privilegios de socio.</li>
+              <li>Si se hace socio en los <strong>6 meses siguientes</strong> a su visita, recibes la recompensa.</li>
+            </ul>
+            <p class="eyebrow" style="margin-top:20px;">Recompensa por apadrinar</p>
+            <p class="socio-apadrinamiento__recompensa">1 MES GRATIS</p>
+            <p style="margin-top:8px; font-size:13px; color:rgba(239,246,235,0.5);">El descuento se aplica en tu siguiente renovación de cuota.</p>
+          </div>
+          <div class="socio-apadrinamiento__img">
+            <img src="Fotos alquilados/1.svg" alt="Dos jugadores en campo SDJ" loading="lazy" />
+          </div>
+        </div>
+
+        <!-- TODO: descomentar cuando esté listo el programa Embajador
+        <div class="socio-embajador">...</div>
+        -->
+
+        <!-- Comparador -->
+        <div class="comparador">
+          <h2 class="section__title" style="font-size:clamp(22px,3vw,32px);margin-bottom:24px;">¿Te sale a cuenta?</h2>
+          <div class="grid-2">
+            <div class="comparador__card comparador__card--suelto">
+              <p class="comparador__label">Pagando suelto</p>
+              <p class="comparador__num">{{ comparador.suelto.total | number:'1.2-2' }}€</p>
+              <p class="comparador__desc">{{ comparador.suelto.partidas }} partidas × {{ comparador.suelto.costePartida }}€</p>
+            </div>
+            <div class="comparador__card comparador__card--socio">
+              <p class="comparador__label">Como socio</p>
+              <p class="comparador__num">380 €/año</p>
+              <p class="comparador__desc">Partidas ilimitadas + taquilla + comedor exclusivo + descuentos tienda</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    }
+
+    <!-- ── SOY HABITUAL ──────────────────────────────────────────────────── -->
+    <!-- Tarifa reducida -->
+    @if (tab() === 'extras') {
+      <div class="tarifas-grid" style="margin-top:24px;">
+        @for (e of extras; track e.nombre) {
+          <div class="tarifa-card">
+            <p class="tarifa-card__nombre">{{ e.nombre }}</p>
+            <p class="tarifa-card__precio">{{ e.precio | number:'1.2-2' }}<span>€</span></p>
+            <ul class="tarifa-card__incluye">
+              @for (item of e.incluye; track item) {
+                <li>{{ item }}</li>
+              }
+            </ul>
+            <a routerLink="/reserva" [queryParams]="{tipo: 'reducida', pack: e.key}" class="btn btn--primary tarifa-btn">Reservar</a>
+          </div>
+        }
+      </div>
+    }
+
+    <!-- Política -->
+    <div class="politica">
+      <h3 class="politica__titulo">Letra (no tan) pequeña</h3>
+      <div class="grid-4">
+        @for (p of politica; track p.titulo) {
+          <div class="politica__item">
+            <h4>{{ p.titulo }}</h4>
+            <p>{{ p.desc }}</p>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Cross-link eventos -->
+    <div class="tarifas-eventos-link">
+      <div class="tarifas-eventos-link__texto">
+        <p class="tarifas-eventos-link__titulo">¿Vienes a celebrar algo?</p>
+        <p class="tarifas-eventos-link__desc">Despedidas, cumpleaños y team building tienen precio a medida.</p>
+      </div>
+      <a routerLink="/eventos" class="btn btn--primary">Ver packs de eventos</a>
+    </div>
+  </div>
+</section>
+
+<section class="cta-band">
+  @if (tab() === 'socio') {
+    <h2>¿Listo para hacerte socio?</h2>
+    <a href="https://wa.me/34688731474?text=Hola%2C%20quiero%20hacerme%20socio%20de%20SDJ.%20%C2%BFQu%C3%A9%20necesito%3F" target="_blank" rel="noopener" class="btn btn--primary">Quiero ser socio →</a>
+  } @else {
+    <h2>¿Ya tienes tu tarifa?</h2>
+    <a routerLink="/reserva" class="btn btn--primary">Reservar ahora</a>
+  }
+</section>
+
+<!-- MODAL ALQUILER PREMIUM -->
+@if (modalAlquiler()) {
+  <div class="modal-overlay" (click)="modalAlquiler.set(false)">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <button class="modal__cerrar" (click)="modalAlquiler.set(false)">✕</button>
+      <p class="section__eyebrow">Antes de continuar</p>
+      <h2 class="modal__titulo">¿Añadir el pack premium?</h2>
+      <p class="modal__desc">Por solo +5 € más llevas el mejor equipamiento del campo.</p>
+      <ul class="modal__lista">
+        @for (item of premiumIncluye; track item) {
+          <li>{{ item }}</li>
+        }
+      </ul>
+      <p class="modal__premium-hint">Pack premium: <strong>44,90 €</strong> en lugar de 39,90 €</p>
+      <div class="modal__cta">
+        <a routerLink="/reserva" [queryParams]="{tipo: 'individual', pack: 'alquiler', premium: true}" class="btn btn--primary" (click)="modalAlquiler.set(false)">Sí, quiero el pack premium</a>
+        <a routerLink="/reserva" [queryParams]="{tipo: 'individual', pack: 'alquiler'}" class="btn btn--ghost" (click)="modalAlquiler.set(false)">Continuar sin premium</a>
+      </div>
+    </div>
+  </div>
+}

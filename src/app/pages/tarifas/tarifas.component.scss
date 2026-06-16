@@ -1,0 +1,1420 @@
+@use '../../../styles/variables' as *;
+
+// ── Banner premium ────────────────────────────────────────────────────────────
+.premium-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: calc(100% + 56px);
+  margin: 8px -28px -28px;
+  padding: 14px 28px;
+  background: rgba($naranja, 0.12);
+  border: none;
+  border-top: 1px solid rgba($naranja, 0.3);
+  border-radius: 0 0 $radius-md $radius-md;
+  cursor: pointer;
+  transition: background $transition;
+
+  &:hover {
+    background: rgba($naranja, 0.22);
+  }
+
+  &__texto {
+    font-family: $font-tight;
+    font-weight: 800;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    color: $crema;
+  }
+
+  &__cta {
+    font-family: $font-mono;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: $naranja;
+    white-space: nowrap;
+  }
+}
+
+// ── Modal alquiler ────────────────────────────────────────────────────────────
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba($ink, 0.75);
+  backdrop-filter: blur(6px);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.modal {
+  background: $verde-osc;
+  border: 1px solid $line;
+  border-radius: $radius-lg;
+  padding: 40px;
+  width: 100%;
+  max-width: 480px;
+  position: relative;
+
+  &__cerrar {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: none;
+    border: none;
+    color: rgba($crema, 0.5);
+    font-size: 16px;
+    cursor: pointer;
+    transition: color $transition;
+    &:hover { color: $crema; }
+  }
+
+  &__titulo {
+    font-family: $font-tight;
+    font-weight: 900;
+    font-size: clamp(24px, 4vw, 36px);
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    margin: 8px 0 12px;
+    line-height: 1;
+  }
+
+  &__desc {
+    font-size: 14px;
+    color: $naranja;
+    line-height: 1.6;
+    margin: 0 0 24px;
+  }
+
+  &__lista {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 32px;
+    border-top: 1px solid $line;
+
+    li {
+      font-size: 14px;
+      color: rgba($crema, 0.8);
+      padding: 10px 0;
+      border-bottom: 1px solid $line;
+      padding-left: 18px;
+      position: relative;
+      &::before {
+        content: '✓';
+        position: absolute;
+        left: 0;
+        color: $naranja;
+        font-size: 11px;
+      }
+    }
+  }
+
+  &__premium-hint {
+    font-size: 13px;
+    color: rgba($crema, 0.6);
+    margin: 0 0 32px;
+    line-height: 1.4;
+    text-align: center;
+
+    strong { color: $naranja; }
+  }
+
+  &__cta {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    .btn { width: 100%; justify-content: center; }
+    .btn--ghost { border-width: 1px; }
+  }
+}
+
+.tabs {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 0;
+
+  @media (max-width: $bp-md) { grid-template-columns: 1fr 1fr; }
+  @media (max-width: $bp-sm) { grid-template-columns: 1fr; }
+
+  &__btn {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    padding: 20px 20px 18px;
+    background: rgba(255,255,255,0.04);
+    border: 1.5px solid $line;
+    border-radius: $radius-md;
+    cursor: pointer;
+    transition: $transition;
+    text-align: left;
+
+    &:hover {
+      background: rgba(255,255,255,0.08);
+      border-color: rgba($crema, 0.35);
+    }
+
+    &--active {
+      background: rgba($naranja, 0.1);
+      border-color: $naranja;
+
+      .tabs__btn-icon { color: $naranja; }
+      .tabs__btn-label { color: $crema; }
+    }
+  }
+
+  &__btn-icon {
+    font-size: 18px;
+    color: rgba($crema, 0.35);
+    line-height: 1;
+    transition: color $transition;
+  }
+
+  &__btn-label {
+    font-family: $font-tight;
+    font-weight: 800;
+    font-size: 15px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: rgba($crema, 0.7);
+    transition: color $transition;
+    line-height: 1;
+
+    .tabs__btn:hover & { color: $crema; }
+  }
+
+  &__btn-desc {
+    font-family: $font-mono;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba($crema, 0.35);
+    line-height: 1.3;
+  }
+}
+
+.tarifas-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-top: 24px;
+
+  @media (max-width: $bp-md) { grid-template-columns: 1fr; }
+}
+
+.tarifa-btn.btn--ghost { border-width: 1px; }
+
+.tarifa-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid $line;
+  border-radius: $radius-md;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+  transition: border-color $transition;
+
+  &:hover { border-color: rgba($naranja, 0.4); }
+
+  &--featured {
+    border-color: $naranja;
+    background: rgba($naranja, 0.06);
+  }
+
+  &__premium-link {
+    background: none;
+    border: none;
+    color: $naranja;
+    font-family: $font-mono;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    padding: 0;
+    text-align: left;
+    transition: opacity $transition;
+    &:hover { opacity: 0.7; }
+  }
+
+  &--premium {
+    border-color: $crema;
+    background: linear-gradient(135deg, rgba($crema, 0.07) 0%, rgba($naranja, 0.08) 100%);
+    box-shadow: 0 0 32px rgba($naranja, 0.15);
+  }
+
+  &__badge {
+    position: absolute;
+    top: -1px;
+    right: 20px;
+    background: $naranja;
+    color: $ink;
+    font-family: $font-mono;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 0 0 6px 6px;
+    font-weight: 700;
+
+    &--premium {
+      background: $crema;
+      color: $ink;
+    }
+  }
+
+  &__nombre {
+    font-family: $font-mono;
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: $naranja;
+    margin: 0;
+  }
+
+  &__desc {
+    font-size: 14px;
+    color: rgba($crema, 0.75);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  &__precio {
+    font-family: $font-tight;
+    font-weight: 900;
+    font-size: 48px;
+    color: $crema;
+    line-height: 1;
+    margin: 0;
+    letter-spacing: -0.02em;
+
+    span { font-size: 22px; font-weight: 600; margin-left: 2px; }
+  }
+
+  &__gratis {
+    font-family: $font-tight;
+    font-weight: 900;
+    font-size: 28px;
+    color: $naranja;
+  }
+
+  &__consultar {
+    font-family: $font-tight;
+    font-weight: 700;
+    font-size: 24px;
+    color: rgba($crema, 0.5);
+  }
+
+  &__incluye {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    li {
+      font-size: 15px;
+      color: rgba($crema, 0.7);
+      padding-left: 22px;
+      position: relative;
+      line-height: 1.4;
+
+      &::before {
+        content: '✓';
+        position: absolute;
+        left: 0;
+        color: $naranja;
+        font-size: 13px;
+      }
+    }
+  }
+}
+
+.tarifa-btn {
+  width: 100%;
+  justify-content: center;
+
+  &--white {
+    background: $crema;
+    color: $ink;
+    &:hover { background: #fff; }
+  }
+}
+
+
+// ── Socio ─────────────────────────────────────────────────────────────────────
+.socio-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: start;
+  margin-bottom: 48px;
+
+  @media (max-width: $bp-md) { grid-template-columns: 1fr; }
+}
+
+.socio-beneficios {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  li {
+    font-size: 15px;
+    color: rgba($crema, 0.85);
+    padding-left: 22px;
+    position: relative;
+    line-height: 1.4;
+
+    &::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: $naranja;
+      font-weight: 700;
+    }
+  }
+}
+
+.socio-card-dark {
+  background: $ink;
+  border: 1px solid $naranja;
+  border-radius: $radius-md;
+  padding: 32px;
+}
+
+// ── Comparador ────────────────────────────────────────────────────────────────
+.comparador {
+  margin-top: 48px;
+  padding-top: 48px;
+  border-top: 1px solid $line;
+
+  &__card {
+    border-radius: $radius-md;
+    padding: 28px;
+
+    &--suelto {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid $line;
+    }
+
+    &--socio {
+      background: $ink;
+      border: 2px solid $naranja;
+    }
+  }
+
+  &__label {
+    font-family: $font-mono;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba($crema, 0.45);
+    margin: 0 0 8px;
+  }
+
+  &__num {
+    font-family: $font-tight;
+    font-weight: 900;
+    font-size: 42px;
+    color: $naranja;
+    margin: 0 0 6px;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+
+  &__desc {
+    font-size: 13px;
+    color: rgba($crema, 0.6);
+    margin: 0;
+  }
+}
+
+// ── Política ──────────────────────────────────────────────────────────────────
+.politica {
+  margin-top: 64px;
+  padding-top: 48px;
+  border-top: 1px solid $line;
+
+  &__titulo {
+    font-family: $font-tight;
+    font-weight: 800;
+    font-size: 18px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin: 0 0 24px;
+    color: $naranja-soft;
+  }
+
+  &__item {
+    h4 {
+      font-family: $font-tight;
+      font-weight: 700;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin: 0 0 6px;
+    }
+
+    p {
+      font-size: 13px;
+      color: rgba($crema, 0.6);
+      line-height: 1.55;
+      margin: 0;
+    }
+  }
+}
+
+// ── Aviso grupo ───────────────────────────────────────────────────────────────
+.grupo-aviso {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 20px 24px;
+  background: rgba($naranja, 0.08);
+  border: 1px solid rgba($naranja, 0.35);
+  border-radius: $radius-md;
+
+  &__icono {
+    font-size: 22px;
+    color: $naranja;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  &__titulo {
+    font-family: $font-tight;
+    font-weight: 800;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: $naranja;
+    margin: 0 0 4px;
+  }
+
+  &__texto {
+    font-size: 14px;
+    color: rgba($crema, 0.8);
+    line-height: 1.55;
+    margin: 0;
+
+    strong { color: $crema; }
+  }
+}
+
+// ── Precios por persona (tab grupo) ──────────────────────────────────────────
+.grupo-precios {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.grupo-precios__titulo {
+  font-family: $font-mono;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba($crema, 0.5);
+  margin: 0 0 8px;
+}
+
+.grupo-precio-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid $line;
+  border-radius: $radius-md;
+  padding: 16px;
+
+  &__nombre {
+    font-family: $font-tight;
+    font-weight: 700;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: rgba($crema, 0.7);
+    margin: 0 0 8px;
+  }
+
+  &__precio {
+    font-family: $font-tight;
+    font-weight: 900;
+    font-size: 28px;
+    color: $naranja;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    margin: 0 0 12px;
+
+    span { font-size: 14px; vertical-align: super; }
+  }
+
+  &__incluye {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    li {
+      font-size: 12px;
+      color: rgba($crema, 0.6);
+      padding-left: 14px;
+      position: relative;
+      line-height: 1.4;
+
+      &::before {
+        content: '✓';
+        position: absolute;
+        left: 0;
+        color: $naranja;
+        font-size: 10px;
+      }
+    }
+  }
+}
+
+// ── Layout grupo ──────────────────────────────────────────────────────────────
+.grupo-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: stretch;
+
+  @media (max-width: $bp-md) { grid-template-columns: 1fr; }
+
+  &__info {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    .grupo-aviso { margin-bottom: 8px; }
+    .tarifa-card { flex: 1; }
+  }
+
+  &__cal {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+
+.grupo-calendario__titulo {
+  font-family: $font-tight;
+  font-weight: 800;
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin: 0 0 4px;
+}
+
+.grupo-calendario__desc {
+  font-family: $font-mono;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba($crema, 0.4);
+  margin: 0 0 16px;
+}
+
+// ── Cross eventos ─────────────────────────────────────────────────────────────
+.tarifas-eventos-link {
+  margin-top: 48px;
+  padding: 28px 32px;
+  border: 1.5px solid rgba($naranja, 0.4);
+  border-radius: $radius-md;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  background: rgba($naranja, 0.05);
+
+  &__titulo {
+    font-family: $font-tight;
+    font-weight: 800;
+    font-size: 18px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: $crema;
+    margin: 0 0 4px;
+  }
+
+  &__desc {
+    font-size: 14px;
+    color: rgba($crema, 0.65);
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  @media (max-width: $bp-md) { flex-direction: column; align-items: flex-start; }
+}
+
+// ── Placeholders (habitual / socio) ───────────────────────────────────────────
+.img-placeholder {
+  background: rgba(255,255,255,0.03);
+  border: 1px dashed rgba($crema, 0.12);
+  border-radius: $radius-md;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: $font-mono;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba($crema, 0.18);
+  text-align: center;
+  padding: 20px;
+}
+
+.promo-aviso {
+  font-family: $font-mono;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: rgba($crema, 0.4);
+  margin: 12px 0 0;
+  line-height: 1.5;
+}
+
+// ── Tab Habitual ──────────────────────────────────────────────────────────────
+.habitual-sublabel {
+  font-family: $font-mono;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: $naranja;
+  margin: 0 0 10px;
+}
+
+.habitual-lista {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 16px;
+
+  li {
+    font-size: 15px;
+    color: rgba($crema, 0.75);
+    padding: 8px 0 8px 22px;
+    border-bottom: 1px solid $line;
+    position: relative;
+    line-height: 1.4;
+
+    &:last-child { border-bottom: none; }
+
+    &::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: $naranja;
+      font-size: 12px;
+      line-height: 2;
+    }
+
+    strong { color: $crema; }
+  }
+}
+
+.habitual-bonos {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.habitual-vale {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 40px;
+  padding: 28px 32px;
+  background: rgba($naranja, 0.04);
+  border: 1px solid rgba($naranja, 0.3);
+  border-radius: $radius-md;
+
+  @media (max-width: $bp-md) { grid-template-columns: 1fr; }
+
+  &__img { height: 240px; }
+
+  &__texto {
+    h3 {
+      font-family: $font-tight;
+      font-weight: 900;
+      font-size: clamp(22px, 3vw, 30px);
+      text-transform: uppercase;
+      letter-spacing: -0.01em;
+      margin: 8px 0 12px;
+    }
+
+    p {
+      font-size: 15px;
+      color: rgba($crema, 0.8);
+      line-height: 1.6;
+      margin: 0 0 16px;
+      strong { color: $crema; }
+    }
+  }
+}
+
+.hardcore-block {
+  margin-top: 48px;
+  background: $ink;
+  border: 1px solid rgba($crema, 0.1);
+  border-radius: $radius-lg;
+  overflow: hidden;
+
+  &__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 24px;
+    padding: 36px 40px 28px;
+    border-bottom: 1px solid rgba($crema, 0.1);
+
+    @media (max-width: $bp-sm) { flex-direction: column; padding: 24px; }
+  }
+
+  &__titulo {
+    font-family: $font-tight;
+    font-weight: 900;
+    font-size: clamp(26px, 4vw, 40px);
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    margin: 8px 0 6px;
+  }
+
+  &__sub {
+    font-size: 15px;
+    color: rgba($crema, 0.6);
+    font-style: italic;
+    margin: 0;
+  }
+
+  &__precio-wrap { text-align: right; flex-shrink: 0; }
+
+  &__precio {
+    display: block;
+    font-family: $font-tight;
+    font-weight: 900;
+    font-size: 44px;
+    color: $naranja;
+    line-height: 1;
+
+    span { font-size: 20px; vertical-align: super; }
+  }
+
+  &__cuando {
+    display: block;
+    font-family: $font-mono;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba($crema, 0.45);
+    margin-top: 4px;
+    text-align: right;
+  }
+
+  &__cta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 40px;
+    background: rgba($naranja, 0.06);
+    border-top: 1px solid rgba($naranja, 0.2);
+    flex-wrap: wrap;
+
+    @media (max-width: $bp-sm) { padding: 20px 24px; }
+  }
+}
+
+.hardcore-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  padding: 32px 40px;
+
+  @media (max-width: $bp-md) { grid-template-columns: 1fr; }
+  @media (max-width: $bp-sm) { padding: 24px; }
+
+  > div + div { border-left: 1px solid rgba($crema, 0.08); padding-left: 32px;
+    @media (max-width: $bp-md) { border-left: none; border-top: 1px solid rgba($crema, 0.08); padding-left: 0; padding-top: 24px; margin-top: 24px; }
+  }
+}
+
+// ── Abonos 2025 ───────────────────────────────────────────────────────────────
+.socio-abonos {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin-bottom: 12px;
+
+  @media (max-width: $bp-md) { grid-template-columns: 1fr; }
+}
+
+.socio-abono {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid $line;
+  border-radius: $radius-md;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: relative;
+  transition: border-color $transition;
+
+  &:hover { border-color: rgba($naranja, 0.4); }
+
+  &--premium {
+    border-color: $naranja;
+    background: rgba($naranja, 0.06);
+  }
+
+  &__badge {
+    position: absolute;
+    top: -1px;
+    right: 20px;
+    background: $naranja;
+    color: $ink;
+    font-family: $font-mono;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 0 0 6px 6px;
+    font-weight: 700;
+  }
+
+  &__tipo {
+    font-family: $font-tight;
+    font-weight: 900;
+    font-size: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    margin: 0;
+  }
+
+  &__precios {
+    border: 1px solid $line;
+    border-radius: $radius-sm;
+    overflow: hidden;
+  }
+
+  &__precio-fila {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 9px 14px;
+    border-bottom: 1px solid $line;
+    font-size: 14px;
+
+    &:last-child { border-bottom: none; }
+
+    span { color: rgba($crema, 0.55); }
+
+    strong {
+      color: $crema;
+      font-family: $font-tight;
+      font-weight: 700;
+      font-size: 16px;
+    }
+
+    &--anual {
+      background: rgba($naranja, 0.07);
+      strong { color: $naranja; font-size: 18px; }
+    }
+  }
+
+  &__precio-col {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 1px;
+
+    small {
+      font-size: 10px;
+      color: rgba($crema, 0.4);
+      font-family: $font-mono;
+      letter-spacing: 0.04em;
+    }
+  }
+
+  &__lista {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    li {
+      font-size: 14px;
+      color: rgba($crema, 0.75);
+      padding-left: 20px;
+      position: relative;
+      line-height: 1.4;
+
+      &::before {
+        content: '✓';
+        position: absolute;
+        left: 0;
+        color: $naranja;
+        font-size: 12px;
+      }
+
+      strong { color: $crema; }
+    }
+  }
+}
+
+// ── Socio hero ────────────────────────────────────────────────────────────────
+// ── Socio CTA block ───────────────────────────────────────────────────────────
+.socio-cta-block {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: center;
+  margin-top: 56px;
+  margin-bottom: 40px;
+
+  @media (max-width: $bp-md) {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  &__izq {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: flex-start;
+  }
+
+  &__eyebrow {
+    font-family: $font-mono;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: $naranja;
+    margin: 0;
+  }
+
+  &__titulo {
+    font-family: $font-tight;
+    font-weight: 900;
+    font-size: clamp(32px, 4.5vw, 56px);
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    line-height: 0.95;
+    color: $crema;
+    margin: 0;
+  }
+
+  &__stats {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  &__stat {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid $line;
+    border-radius: $radius-md;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  &__stat-num {
+    font-family: $font-tight;
+    font-weight: 900;
+    font-size: clamp(20px, 2.5vw, 28px);
+    color: $naranja;
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  &__stat-lbl {
+    font-family: $font-mono;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba($crema, 0.45);
+  }
+}
+
+.socio-hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 320px;
+  border-radius: $radius-lg;
+  margin-bottom: 40px;
+  overflow: hidden;
+  text-align: center;
+  background-size: cover;
+  background-position: center;
+
+  &__placeholder-label {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: $font-mono;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba($crema, 0.18);
+    pointer-events: none;
+  }
+
+  &__contenido {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 56px 32px;
+    width: 100%;
+  }
+
+  &__titulo {
+    font-family: $font-tight;
+    font-weight: 900;
+    font-size: clamp(28px, 5vw, 52px);
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    line-height: 1.0;
+    margin: 0;
+    color: $crema;
+    text-shadow: 0 2px 16px rgba($ink, 0.6);
+  }
+
+  &__sub {
+    font-family: $font-mono;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba($crema, 0.55);
+    line-height: 1.5;
+    margin: 0;
+    text-shadow: 0 1px 8px rgba($ink, 0.5);
+
+    strong {
+      font-family: inherit;
+      font-weight: inherit;
+      font-size: inherit;
+      letter-spacing: inherit;
+      text-transform: inherit;
+      color: $naranja;
+    }
+  }
+}
+
+// ── Tab Socio ─────────────────────────────────────────────────────────────────
+.socio-intro {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: 56px;
+  align-items: center;
+  margin-bottom: 56px;
+
+  @media (max-width: $bp-md) { grid-template-columns: 1fr; }
+
+  &__img { height: 360px; }
+
+  &__cta {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 24px;
+  }
+}
+
+.socio-tarifas {
+  padding: 36px 40px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid $line;
+  border-radius: $radius-lg;
+  margin-bottom: 48px;
+
+  @media (max-width: $bp-sm) { padding: 24px; }
+}
+
+.socio-tarifas-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+
+  @media (max-width: $bp-md) { grid-template-columns: 1fr; }
+}
+
+.socio-tarifa-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid $line;
+  border-radius: $radius-md;
+  padding: 24px;
+  position: relative;
+  transition: border-color $transition;
+
+  &:hover { border-color: rgba($naranja, 0.4); }
+
+  &--featured {
+    border-color: rgba($naranja, 0.5);
+    background: rgba($naranja, 0.06);
+  }
+
+  &__nombre {
+    font-family: $font-mono;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba($crema, 0.5);
+    margin: 0 0 8px;
+  }
+
+  &__precio {
+    font-family: $font-tight;
+    font-weight: 900;
+    font-size: 36px;
+    color: $naranja;
+    line-height: 1;
+    margin: 0 0 10px;
+
+    sup { font-size: 14px; vertical-align: super; }
+  }
+
+  &__desc {
+    font-size: 15px;
+    color: rgba($crema, 0.6);
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  &__badge {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    background: $naranja;
+    color: $ink;
+    font-family: $font-mono;
+    font-size: 8px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 99px;
+  }
+}
+
+.socio-beneficios-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+
+  .eyebrow { margin: 0; }
+}
+
+.socio-beneficios-toggle {
+  background: none;
+  border: 1px solid rgba($naranja, 0.4);
+  border-radius: $radius-sm;
+  color: $naranja;
+  font-family: $font-mono;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 6px 14px;
+  cursor: pointer;
+  transition: $transition;
+  white-space: nowrap;
+
+  &:hover {
+    background: rgba($naranja, 0.08);
+    border-color: $naranja;
+  }
+}
+
+.socio-beneficios-bloque {
+  margin-top: 0;
+  margin-bottom: 48px;
+  padding: 36px 40px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid $line;
+  border-radius: $radius-md;
+
+  @media (max-width: $bp-sm) { padding: 24px; }
+}
+
+.socio-beneficios-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+
+  @media (max-width: $bp-md) { grid-template-columns: 1fr; }
+}
+
+.socio-beneficio {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  padding: 20px 0;
+  border-bottom: 1px solid $line;
+
+  &:nth-last-child(-n+2) { border-bottom: none; }
+  @media (max-width: $bp-md) { &:nth-last-child(-n+2) { border-bottom: 1px solid $line; } &:last-child { border-bottom: none; } }
+
+  &:nth-child(odd) { padding-right: 32px; }
+  &:nth-child(even) { padding-left: 32px; border-left: 1px solid $line;
+    @media (max-width: $bp-md) { padding-left: 0; border-left: none; }
+  }
+
+  &__icon {
+    color: $naranja;
+    font-size: 16px;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+
+  h4 {
+    font-family: $font-tight;
+    font-weight: 800;
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    margin: 0 0 6px;
+  }
+
+  p {
+    font-size: 15px;
+    color: rgba($crema, 0.65);
+    line-height: 1.55;
+    margin: 0;
+  }
+}
+
+.socio-apadrinamiento {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 48px;
+  align-items: center;
+  margin-bottom: 48px;
+  padding: 40px;
+  background: rgba($naranja, 0.04);
+  border: 1px solid rgba($naranja, 0.25);
+  border-radius: $radius-lg;
+
+  @media (max-width: $bp-md) { grid-template-columns: 1fr; padding: 24px; }
+
+  &__sub {
+    font-family: $font-narrow;
+    font-style: italic;
+    font-size: 17px;
+    color: $naranja;
+    margin: 0 0 20px;
+    line-height: 1.4;
+  }
+
+  &__img {
+    aspect-ratio: 3 / 4;
+    border-radius: $radius-md;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+  }
+
+  &__texto {
+    h3 {
+      font-family: $font-tight;
+      font-weight: 900;
+      font-size: clamp(22px, 3vw, 28px);
+      text-transform: uppercase;
+      letter-spacing: -0.01em;
+      margin: 8px 0 14px;
+      line-height: 1.1;
+    }
+
+    p {
+      font-size: 14px;
+      color: rgba($crema, 0.75);
+      line-height: 1.6;
+      margin: 0;
+      strong { color: $crema; }
+    }
+  }
+
+  &__recompensa {
+    font-family: $font-tight;
+    font-weight: 900;
+    font-size: clamp(28px, 4vw, 40px);
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+    color: $naranja;
+    margin: 12px 0 0;
+    line-height: 1;
+  }
+}
+
+.socio-embajador {
+  margin-bottom: 48px;
+  padding: 36px 40px;
+  background: $ink;
+  border: 1px solid rgba($crema, 0.1);
+  border-radius: $radius-lg;
+
+  @media (max-width: $bp-sm) { padding: 24px; }
+
+  h3 {
+    font-family: $font-tight;
+    font-weight: 900;
+    font-size: clamp(22px, 3vw, 30px);
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+    margin: 8px 0 4px;
+  }
+}
+
+.socio-embajador-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin: 20px 0 24px;
+
+  @media (max-width: $bp-sm) { grid-template-columns: 1fr; }
+}
+
+.socio-embajador-item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba($crema, 0.08);
+  border-radius: $radius-md;
+  padding: 14px 16px;
+  font-size: 15px;
+  color: rgba($crema, 0.75);
+  line-height: 1.4;
+
+  span:first-child {
+    color: $naranja;
+    font-size: 14px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+}

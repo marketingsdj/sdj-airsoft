@@ -1,0 +1,226 @@
+<!-- HERO -->
+<section class="landing-hero">
+  <div class="landing-hero__bg">
+    <!-- TODO: cliente — foto de grupo de cumpleaños jugando -->
+  </div>
+  <div class="landing-hero__content wrap">
+    <p class="landing-hero__eyebrow">Cumpleaños · 15 min de Bilbao</p>
+    <h1>Cumpleaños de los que se recuerdan al año siguiente</h1>
+    <p class="landing-hero__sub">
+      Con tu gente, el campo para vosotros y noventa minutos de los que hablar
+      el resto del año.
+    </p>
+    <div class="landing-hero__cta">
+      <a href="#contacto" class="btn btn--primary">Organizar mi cumpleaños</a>
+      <a [href]="waUrl" target="_blank" rel="noopener" class="btn btn--ghost">WhatsApp directo</a>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST -->
+<div class="trust-strip">
+  @for (s of stats; track s.lbl) {
+    <div class="trust-strip__item">
+      <div class="trust-strip__num">{{ s.num }}</div>
+      <div class="trust-strip__lbl">{{ s.lbl }}</div>
+    </div>
+  }
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+<!-- ░░░ VERSIÓN ANTERIOR ░░░ -->
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+<div class="version-banner version-banner--anterior">Versión anterior</div>
+
+<!-- LEAD (anterior) -->
+<section class="section">
+  <div class="wrap">
+    <div class="lead-block">
+      <p class="section__eyebrow">¿Por qué aquí?</p>
+      <h2 class="lead-block__big">Un cumple que sí <em>quieren repetir</em></h2>
+      <p>
+        Dos horas de partidas, equipos, misiones y risas. Todo supervisado por un
+        monitor y con potencias adaptadas a la edad, para que sea seguro y para que
+        ganen todos.
+      </p>
+      <p>
+        A 15 minutos de Bilbao, en Larrabetzu. Aparcamiento gratuito, vestuarios y
+        cafetería para la merienda y la tarta.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- PACK (anterior) -->
+<section class="section section--alt">
+  <div class="wrap">
+    <div class="pack">
+      <div class="pack__gallery">
+        <div class="img-placeholder" style="height:200px;"><span>FOTO CUMPLE 1</span></div>
+        <div class="img-placeholder" style="height:200px;"><span>FOTO CUMPLE 2</span></div>
+        <div class="img-placeholder" style="height:200px;"><span>FOTO CUMPLE 3</span></div>
+        <div class="img-placeholder" style="height:200px;"><span>FOTO CUMPLE 4</span></div>
+        <!-- TODO: cliente — 4 fotos reales de cumpleaños -->
+      </div>
+      <div class="pack__included">
+        <p class="section__eyebrow">El pack cumpleaños</p>
+        <h2 class="pack__title">Todo listo para celebrar</h2>
+        <ul class="check-list">
+          @for (i of incluye; track i) { <li>{{ i }}</li> }
+        </ul>
+        <p class="pack__precio">Desde <strong>XX€/persona</strong></p>
+        <!-- TODO: cliente — precio por persona -->
+        <a routerLink="/reserva" [queryParams]="{tipo: 'evento', pack: 'cumples'}" class="btn btn--primary">Reservar cumpleaños →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PASOS (anterior) -->
+<section class="section">
+  <div class="wrap">
+    <div class="section__header">
+      <p class="section__eyebrow">Cómo funciona</p>
+      <h2 class="section__title">Tú invitas,<br>nosotros lo montamos</h2>
+    </div>
+    <div class="steps">
+      @for (p of pasos; track p.n) {
+        <div class="steps__item">
+          <div class="steps__num">{{ p.n }}</div>
+          <h3 class="steps__t">{{ p.t }}</h3>
+          <p class="steps__d">{{ p.d }}</p>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- TXIKI (anterior) -->
+<section class="section section--alt">
+  <div class="wrap">
+    <div class="lead-block">
+      <p class="section__eyebrow">¿Peques de menos de 8 años?</p>
+      <h2 class="lead-block__big">También tenemos <em>Txiki Paintball</em></h2>
+      <p>
+        Para los más pequeños, una versión adaptada y aún más suave. Misma diversión,
+        máxima seguridad.
+      </p>
+      <a routerLink="/txikipaintball" class="btn btn--ghost">Ver Txiki Paintball →</a>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ (anterior) -->
+<section class="section">
+  <div class="wrap">
+    <div class="section__header">
+      <p class="section__eyebrow">Dudas rápidas</p>
+      <h2 class="section__title">Lo que preguntan los padres</h2>
+    </div>
+    <div class="faq">
+      @for (f of faqs; track f.q) {
+        <details class="faq__item">
+          <summary>{{ f.q }}</summary>
+          <p>{{ f.a }}</p>
+        </details>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+<!-- ░░░ VERSIÓN NUEVA (texto cliente) ░░░ -->
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+<div class="version-banner">Versión nueva (texto cliente)</div>
+
+<!-- QUÉ PASA ESE DÍA (nuevo) -->
+<section class="section">
+  <div class="wrap">
+    <div class="lead-block">
+      <p class="section__eyebrow">Qué pasa ese día</p>
+      <h2 class="lead-block__big">Llegas, te equipas y <em>al campo</em></h2>
+      <p>
+        Llegas con quien quieras, os equipáis en cinco minutos y os metéis en el
+        campo. Bases militares, castillos, vehículos, refinerías: 45.000 m² con
+        escenarios para que cada partida sea distinta. Los monitores están en campo
+        todo el rato y os organizan los modos de juego según cómo vaya el grupo.
+      </p>
+      <p>
+        Cuando acabáis, El Barracón está justo ahí para lo que queda de festejo.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- LO QUE INCLUYE (nuevo) -->
+<section class="section section--alt">
+  <div class="wrap">
+    <div class="section__header">
+      <p class="section__eyebrow">Lo que incluye</p>
+      <h2 class="section__title">Todo listo para celebrar</h2>
+    </div>
+    <div class="grid-3">
+      @for (i of incluyeNuevo; track i.t) {
+        <div class="card">
+          <div class="card__title">{{ i.t }}</div>
+          <p class="card__desc">{{ i.d }}</p>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- PRECIO (nuevo) -->
+<section class="section">
+  <div class="wrap">
+    <div class="section__header">
+      <p class="section__eyebrow">Precio</p>
+      <h2 class="section__title">Un precio. Todo dentro</h2>
+    </div>
+    <div class="precio-block">
+      <p class="precio-block__num">
+        39,90 € <small>por persona — equipo completo incluido</small>
+      </p>
+      <p class="precio-block__note">
+        <strong>Sin señal para reservar.</strong> Pagas el día en tarjeta, efectivo o Bizum.
+      </p>
+      <p class="precio-block__note">
+        ¿Queréis comer en El Barracón después? Pizzas, hamburguesas y platos
+        combinados <strong>desde 9,90 €</strong>. Sin salir de las instalaciones.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- PREGUNTAS RÁPIDAS (nuevo) -->
+<section class="section section--alt">
+  <div class="wrap">
+    <div class="section__header">
+      <p class="section__eyebrow">Preguntas rápidas</p>
+      <h2 class="section__title">Lo que preguntan antes de venir</h2>
+    </div>
+    <div class="faq">
+      @for (f of faqsNuevo; track f.q) {
+        <details class="faq__item">
+          <summary>{{ f.q }}</summary>
+          <p>{{ f.a }}</p>
+        </details>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL / CONTACTO -->
+<section id="contacto" class="section landing-contacto">
+  <div class="wrap">
+    <app-evento-contacto
+      origen="cumpleanos"
+      tipoInicial="Cumpleaños"
+      titulo="Cuéntanos tu idea <br> y le damos forma"
+    ></app-evento-contacto>
+    <div class="landing-contact-info">
+      <a [href]="waUrl" target="_blank" rel="noopener">📱 WhatsApp: +34 688 73 14 74</a>
+      <span>📍 Larrabetzu (Bizkaia) · 15 min de Bilbao</span>
+    </div>
+  </div>
+</section>

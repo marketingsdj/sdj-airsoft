@@ -1,0 +1,19 @@
+<div class="txiki-car">
+  <img [src]="'Txikipaintball/' + imagenes[activa()] + '.svg'"
+       alt="Txikipaintball en acción"
+       class="txiki-car__img" />
+
+  <button class="txiki-car__btn txiki-car__btn--prev" (click)="anterior()" aria-label="Anterior">‹</button>
+  <button class="txiki-car__btn txiki-car__btn--next" (click)="siguiente()" aria-label="Siguiente">›</button>
+
+  <div class="txiki-car__dots">
+    @for (img of imagenes; track $index) {
+      <button
+        class="txiki-car__dot"
+        [class.txiki-car__dot--activo]="activa() === $index"
+        (click)="activa.set($index)"
+        [attr.aria-label]="'Foto ' + ($index + 1)">
+      </button>
+    }
+  </div>
+</div>

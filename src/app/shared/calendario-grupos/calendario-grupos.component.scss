@@ -1,0 +1,443 @@
+@use '../../../styles/variables' as *;
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+.cal {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid $line;
+  border-radius: $radius-md;
+  max-width: 100%;
+  box-sizing: border-box;
+
+  &--simple &__izq { border-bottom: none; }
+
+  &__izq {
+    padding: 24px;
+    border-bottom: 1px solid $line;
+  }
+
+  &__der {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__der-vacio {
+    font-family: $font-mono;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba($crema, 0.25);
+    text-align: center;
+    margin: auto;
+  }
+
+  // ── Cabecera ────────────────────────────────────────────────────────────────
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+
+  &__mes {
+    font-family: $font-tight;
+    font-weight: 800;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  &__nav {
+    width: 32px;
+    height: 32px;
+    border: 1px solid $line;
+    border-radius: $radius-sm;
+    background: rgba(255,255,255,0.04);
+    color: $crema;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: $transition;
+
+    &:hover { border-color: $naranja; color: $naranja; }
+  }
+
+  // ── Días semana ─────────────────────────────────────────────────────────────
+  &__dias-semana {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    margin-bottom: 6px;
+
+    span {
+      font-family: $font-mono;
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba($crema, 0.35);
+      text-align: center;
+      padding: 4px 0;
+    }
+
+    &--finde { color: rgba($naranja, 0.7) !important; }
+  }
+
+  // ── Grid días ───────────────────────────────────────────────────────────────
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    margin-bottom: 16px;
+  }
+
+  &__dia {
+    aspect-ratio: 1;
+    min-width: 0;
+    overflow: hidden;
+    border: 1px solid transparent;
+    border-radius: $radius-sm;
+    background: none;
+    color: rgba($crema, 0.25);
+    cursor: default;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    transition: $transition;
+    padding: 2px;
+
+    &--otro-mes { opacity: 0.2; }
+
+    &--pasado { opacity: 0.2; }
+
+    &--disponible {
+      color: $crema;
+      cursor: pointer;
+      border-color: $line;
+      background: rgba(255,255,255,0.04);
+
+      &:hover {
+        border-color: $naranja;
+        background: rgba($naranja, 0.08);
+      }
+    }
+
+    &--completo {
+      color: rgba($crema, 0.2);
+      border-color: rgba($crema, 0.12);
+      background: rgba(255,255,255,0.08);
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    &--seleccionado {
+      border-color: $naranja !important;
+      background: rgba($naranja, 0.15) !important;
+      color: $crema;
+    }
+
+    // Laborable (grupos +10, bajo consulta): "negativo" de un día disponible —
+    // borde naranja y texto naranja sobre fondo transparente (outline).
+    &--laborable {
+      color: $naranja;
+      cursor: pointer;
+      background: transparent;
+      border: 1px solid $naranja;
+
+      &:hover { background: rgba($naranja, 0.12); }
+    }
+  }
+
+  &__dia-num {
+    font-family: $font-tight;
+    font-weight: 700;
+    font-size: 13px;
+    line-height: 1;
+  }
+
+  // ── Leyenda ─────────────────────────────────────────────────────────────────
+  &__leyenda {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+
+    span {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: $font-mono;
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba($crema, 0.45);
+    }
+  }
+
+  &__leyenda-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+
+    &--disponible { background: $naranja; }
+    &--laborable  { background: transparent; border: 1px solid $naranja; border-radius: 2px; }
+    &--reservado  { background: rgba($crema, 0.2); border: 1px solid $line; }
+    &--inactivo   { background: rgba($crema, 0.1); }
+  }
+
+  // ── Consulta grupos +10 (entre semana) ──────────────────────────────────────
+  &__consulta {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  &__consulta-aviso {
+    font-size: 12px;
+    line-height: 1.5;
+    color: rgba($crema, 0.8);
+    margin: 0;
+
+    strong { color: $naranja; }
+  }
+
+  &__consulta-lista {
+    margin: 0;
+    padding-left: 18px;
+
+    li {
+      font-family: $font-mono;
+      font-size: 11px;
+      color: rgba($crema, 0.6);
+      line-height: 1.7;
+    }
+  }
+
+  &__consulta-label {
+    font-family: $font-mono;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba($crema, 0.45);
+  }
+
+  // ── Desplegable custom (hora aproximada) ────────────────────────────────────
+  &__dropdown { position: relative; }
+
+  &__dropdown-toggle {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 10px 12px;
+    border: 1px solid $line;
+    border-radius: $radius-sm;
+    background: rgba(255,255,255,0.05);
+    color: $crema;
+    font-family: $font-tight;
+    font-size: 14px;
+    cursor: pointer;
+    transition: $transition;
+
+    &:hover,
+    &--abierto { border-color: $naranja; }
+  }
+
+  &__dropdown-placeholder { color: rgba($crema, 0.4); }
+
+  &__dropdown-arrow {
+    color: $crema;
+    font-size: 12px;
+    line-height: 1;
+  }
+
+  &__dropdown-list {
+    list-style: none;
+    margin: 4px 0 0;
+    padding: 4px;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 20;
+    max-height: 200px;
+    overflow-y: auto;
+    background: $ink;
+    border: 1px solid $line;
+    border-radius: $radius-sm;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  }
+
+  &__dropdown-option {
+    width: 100%;
+    text-align: left;
+    padding: 8px 10px;
+    border: none;
+    border-radius: $radius-sm;
+    background: transparent;
+    color: $crema;
+    font-family: $font-tight;
+    font-size: 14px;
+    cursor: pointer;
+    transition: $transition;
+
+    &:hover { background: rgba($naranja, 0.16); color: $naranja; }
+    &--activa { background: rgba($naranja, 0.22); color: $naranja; }
+  }
+
+  &__dia-slots {
+    font-family: $font-mono;
+    font-size: 8px;
+    letter-spacing: 0.06em;
+    color: $naranja;
+    text-transform: uppercase;
+    line-height: 1.1;
+    max-width: 100%;
+    text-align: center;
+  }
+
+  // ── Slots ───────────────────────────────────────────────────────────────────
+  &__slots {
+    border-top: 1px solid $line;
+    padding-top: 16px;
+  }
+
+  &__slots-titulo {
+    font-family: $font-mono;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: $naranja;
+    margin: 0 0 12px;
+  }
+
+  &__slots-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-auto-rows: 1fr;
+    gap: 8px;
+    flex: 1;
+  }
+
+  &__slot {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+    padding: 12px 14px;
+    border: none;
+    border-radius: $radius-sm;
+    background: rgba(255,255,255,0.05);
+    cursor: pointer;
+    text-align: left;
+    transition: background $transition, transform $transition;
+
+    &:hover:not(:disabled) {
+      background: rgba($naranja, 0.14);
+      transform: translateY(-2px);
+    }
+
+    &--activo {
+      background: rgba($naranja, 0.22);
+      outline: 1.5px solid $naranja;
+      outline-offset: -1px;
+    }
+
+    // No puede iniciar una doble (p. ej. la última franja): atenuada, sin cartel.
+    &--inactivo {
+      opacity: 0.32;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    &--reservada {
+      cursor: not-allowed;
+      pointer-events: none;
+      background: rgba(255,255,255,0.02);
+      opacity: 0.45;
+      position: relative;
+      overflow: hidden;
+
+      &::after {
+        content: 'RESERVADO';
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: $font-mono;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+        color: rgba($crema, 0.7);
+        background: rgba($gris, 0.85);
+      }
+    }
+  }
+
+  &__slot-hora {
+    font-family: $font-tight;
+    font-weight: 700;
+    font-size: 14px;
+    color: $crema;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    transition: color $transition;
+  }
+
+  &__slot-pista {
+    font-family: $font-mono;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba($crema, 0.45);
+    margin-bottom: 2px;
+    transition: color $transition;
+  }
+
+  &__slot-estado {
+    font-family: $font-mono;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: $naranja;
+    transition: color $transition;
+
+    .cal__slot--reservada & { color: rgba($crema, 0.4); }
+  }
+
+  // ── Responsive: que el calendario quepa y se centre sin scroll ────────────────
+  width: 100%;
+  margin-inline: auto;
+
+  @media (max-width: $bp-sm) {
+    &__izq,
+    &__der { padding: 16px; }
+
+    &__dias-semana { gap: 3px; }
+    &__grid        { gap: 3px; }
+
+    &__dias-semana span { font-size: 8px; padding: 3px 0; }
+    &__dia-num   { font-size: 12px; }
+    &__dia-slots { font-size: 7px; letter-spacing: 0; }
+
+    &__leyenda {
+      flex-wrap: wrap;
+      gap: 8px 14px;
+    }
+
+    &__slots-grid { gap: 6px; }
+    &__slot       { padding: 10px; }
+  }
+}

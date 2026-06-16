@@ -1,0 +1,115 @@
+<div class="cal" [class.cal--simple]="!mostrarSlots">
+  <div class="cal__izq">
+
+    <!-- Cabecera del mes -->
+    <div class="cal__header">
+      <button class="cal__nav" (click)="mesAnterior()" aria-label="Mes anterior">‹</button>
+      <span class="cal__mes">{{ nombreMes() | titlecase }}</span>
+      <button class="cal__nav" (click)="mesSiguiente()" aria-label="Mes siguiente">›</button>
+    </div>
+
+    <!-- Días de la semana -->
+    <div class="cal__dias-semana">
+      @for (d of ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom']; track d) {
+        <span [class.cal__dia-semana--finde]="d === 'Sáb' || d === 'Dom'">{{ d }}</span>
+      }
+    </div>
+
+    <!-- Grid días -->
+    <div class="cal__grid">
+      @for (semana of semanas(); track $index) {
+        @for (dia of semana; track dia.fecha.getTime()) {
+          <button
+            class="cal__dia"
+            [class.cal__dia--finde]="dia.esFinDeSemana"
+            [class.cal__dia--laborable]="permitirLaborables && dia.esLaborable && !dia.esPasado && dia.fecha.getMonth() === mesActual().getMonth()"
+            [class.cal__dia--pasado]="dia.esPasado"
+            [class.cal__dia--otro-mes]="dia.fecha.getMonth() !== mesActual().getMonth()"
+            [class.cal__dia--seleccionado]="diaSeleccionado() && esMismaFecha(diaSeleccionado()!.fecha, dia.fecha)"
+            [class.cal__dia--disponible]="dia.esDisponible && !dia.esPasado && dia.fecha.getMonth() === mesActual().getMonth() && (!mostrarSlots || slotDisponibles(dia) > 0)"
+            [class.cal__dia--completo]="mostrarSlots && dia.esDisponible && !dia.esPasado && dia.fecha.getMonth() === mesActual().getMonth() && slotDisponibles(dia) === 0"
+            [disabled]="!diaSeleccionable(dia)"
+            (click)="seleccionarDia(dia)">
+            <span class="cal__dia-num">{{ dia.fecha.getDate() }}</span>
+            @if (mostrarSlots && dia.esDisponible && !dia.esPasado && dia.fecha.getMonth() === mesActual().getMonth()) {
+              <span class="cal__dia-slots">{{ slotDisponibles(dia) }} horario{{ slotDisponibles(dia) !== 1 ? 's' : '' }}</span>
+            }
+          </button>
+        }
+      }
+    </div>
+
+    <!-- Leyenda -->
+    <div class="cal__leyenda">
+      <span><span class="cal__leyenda-dot cal__leyenda-dot--disponible"></span>Disponible</span>
+      @if (permitirLaborables) {
+        <span><span class="cal__leyenda-dot cal__leyenda-dot--laborable"></span>A consultar</span>
+      }
+      <span><span class="cal__leyenda-dot cal__leyenda-dot--reservado"></span>Reservado</span>
+      <span><span class="cal__leyenda-dot cal__leyenda-dot--inactivo"></span>No disponible</span>
+    </div>
+
+  </div>
+
+  <!-- Slots del día seleccionado (solo grupos ≥8) -->
+  @if (mostrarSlots) {
+    <div class="cal__der">
+      @if (diaSeleccionado()) {
+        <p class="cal__slots-titulo">
+          {{ diaSeleccionado()!.fecha.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' }) | titlecase }}
+        </p>
+
+        @if (diaSeleccionado()!.esLaborable) {
+          <!-- Grupos +10 entre semana: bajo consulta, hora aproximada de llegada -->
+          <div class="cal__consulta">
+            <p class="cal__consulta-aviso">Reserva entre semana para grupos de 10 o más personas. <strong>Pendiente de confirmar.</strong></p>
+            <ul class="cal__consulta-lista">
+              <li>30 min para cambiarse y explicación del juego</li>
+              <li>2 h de juego</li>
+              <li>30 min para ducharse</li>
+            </ul>
+            <label class="cal__consulta-label">Hora aproximada de llegada</label>
+            <div class="cal__dropdown">
+              <button type="button" class="cal__dropdown-toggle"
+                [class.cal__dropdown-toggle--abierto]="dropdownAbierto()"
+                (click)="toggleDropdown()">
+                <span [class.cal__dropdown-placeholder]="!horaAproxLaborable()">{{ horaAproxLaborable() || 'Elige una hora…' }}</span>
+                <span class="cal__dropdown-arrow">▾</span>
+              </button>
+              @if (dropdownAbierto()) {
+                <ul class="cal__dropdown-list">
+                  @for (h of HORAS_LLEGADA; track h) {
+                    <li>
+                      <button type="button" class="cal__dropdown-option"
+                        [class.cal__dropdown-option--activa]="horaAproxLaborable() === h"
+                        (click)="seleccionarHora(h)">{{ h }}</button>
+                    </li>
+                  }
+                </ul>
+              }
+            </div>
+          </div>
+        } @else {
+          <div class="cal__slots-grid">
+            @for (slot of diaSeleccionado()!.slots; track slot.hora + slot.pista) {
+              <button
+                class="cal__slot"
+                [class.cal__slot--reservada]="slot.reservada"
+                [class.cal__slot--activo]="slotEsActivo(diaSeleccionado()!, slot)"
+                [class.cal__slot--inactivo]="!slot.reservada && doble && !puedeIniciar(diaSeleccionado()!, slot) && !slotEsActivo(diaSeleccionado()!, slot)"
+                [disabled]="!puedeIniciar(diaSeleccionado()!, slot) && !slotEsActivo(diaSeleccionado()!, slot)"
+                (click)="reservarSlot(diaSeleccionado()!, slot)">
+                <span class="cal__slot-hora">{{ slot.hora }} – {{ slotHoraFinMostrada(diaSeleccionado()!, slot) }}</span>
+                <span class="cal__slot-pista">Pista {{ slot.pista }}</span>
+                <span class="cal__slot-estado">{{ slotEstadoTexto(diaSeleccionado()!, slot) }}</span>
+              </button>
+            }
+          </div>
+        }
+      } @else {
+        <p class="cal__der-vacio">Selecciona un día del calendario para ver las franjas disponibles.</p>
+      }
+    </div>
+  }
+
+</div>

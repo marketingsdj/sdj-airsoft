@@ -1,0 +1,409 @@
+@use 'variables' as *;
+
+// ════════════════════════════════════════════════════════════════════════════
+//  Landing primitives — base compartida por las landings de eventos.
+//  Cada landing puede sobreescribir el acento con `--accent` en el host.
+// ════════════════════════════════════════════════════════════════════════════
+:host { --accent: #{$naranja}; display: block; }
+
+// ── Hero ──────────────────────────────────────────────────────────────────────
+.landing-hero {
+  position: relative;
+  min-height: 78vh;
+  display: flex;
+  align-items: flex-end;
+  border-bottom: 1px solid $line;
+
+  &__bg {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba($verde-osc, 0.55) 0%, rgba($verde-osc, 0.35) 40%, rgba($verde-osc, 0.96) 100%),
+      repeating-linear-gradient(125deg, #2a3328 0 22px, #313a2e 22px 44px);
+    background-size: cover;
+    background-position: center;
+  }
+
+  &__content {
+    position: relative;
+    z-index: 1;
+    padding: 120px 0 64px;
+    max-width: 760px;
+  }
+
+  &__eyebrow {
+    font-family: $font-mono;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 16px;
+  }
+
+  h1 {
+    font-family: $font-tight;
+    font-weight: 900;
+    font-size: clamp(40px, 7vw, 76px);
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+    line-height: 0.9;
+    margin: 0 0 20px;
+  }
+
+  &__sub {
+    font-family: $font-narrow;
+    font-size: clamp(17px, 2.2vw, 21px);
+    color: rgba($crema, 0.82);
+    line-height: 1.5;
+    margin: 0 0 32px;
+    max-width: 560px;
+  }
+
+  &__cta {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+}
+
+// ── Tira de confianza ──────────────────────────────────────────────────────────
+.trust-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-bottom: 1px solid $line;
+  background: $ink;
+
+  @media (max-width: $bp-sm) { grid-template-columns: repeat(2, 1fr); }
+
+  &__item {
+    padding: 22px 24px;
+    text-align: center;
+    border-right: 1px solid $line;
+
+    &:last-child { border-right: none; }
+    @media (max-width: $bp-sm) {
+      &:nth-child(2) { border-right: none; }
+      border-bottom: 1px solid $line;
+    }
+  }
+
+  &__num {
+    font-family: $font-tight;
+    font-weight: 900;
+    font-size: clamp(22px, 3vw, 30px);
+    color: var(--accent);
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+
+  &__lbl {
+    font-family: $font-mono;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba($crema, 0.5);
+    margin-top: 8px;
+  }
+}
+
+// ── Bloque intro (para quién / el gancho) ──────────────────────────────────────
+.lead-block {
+  max-width: 720px;
+
+  &__big {
+    font-family: $font-tight;
+    font-weight: 800;
+    font-size: clamp(24px, 3.6vw, 38px);
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    margin: 0 0 20px;
+
+    em { color: var(--accent); font-style: normal; }
+  }
+
+  p {
+    font-size: 16px;
+    color: rgba($crema, 0.75);
+    line-height: 1.65;
+    margin: 0 0 14px;
+  }
+}
+
+// ── Pack: galería + qué incluye + precio ───────────────────────────────────────
+.pack {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 56px;
+  align-items: start;
+
+  @media (max-width: $bp-md) { grid-template-columns: 1fr; gap: 36px; }
+
+  &__gallery {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  &__included {
+    border: 1px solid rgba($crema, 0.14);
+    border-radius: $radius-md;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 28px;
+  }
+
+  &__title {
+    font-family: $font-tight;
+    font-weight: 800;
+    font-size: 22px;
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+    margin: 0 0 18px;
+  }
+
+  &__precio {
+    font-family: $font-mono;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba($crema, 0.5);
+    margin: 22px 0 22px;
+
+    strong {
+      display: block;
+      font-family: $font-tight;
+      font-size: 34px;
+      color: var(--accent);
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      margin-top: 4px;
+    }
+  }
+}
+
+.check-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+
+  li {
+    font-size: 15px;
+    color: rgba($crema, 0.85);
+    padding-left: 26px;
+    position: relative;
+    line-height: 1.45;
+
+    &::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      top: 1px;
+      color: var(--accent);
+      font-weight: 700;
+    }
+  }
+}
+
+// ── Pasos ──────────────────────────────────────────────────────────────────────
+.steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+
+  @media (max-width: $bp-md) { grid-template-columns: 1fr 1fr; }
+  @media (max-width: $bp-sm) { grid-template-columns: 1fr; }
+
+  &__item {
+    border: 1px solid $line;
+    border-radius: $radius-md;
+    padding: 24px;
+    transition: border-color $transition;
+
+    &:hover { border-color: rgba($naranja, 0.4); }
+  }
+
+  &__num {
+    font-family: $font-mono;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    margin-bottom: 14px;
+  }
+
+  &__t {
+    font-family: $font-tight;
+    font-weight: 800;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: -0.005em;
+    margin: 0 0 8px;
+  }
+
+  &__d {
+    font-size: 14px;
+    color: rgba($crema, 0.68);
+    line-height: 1.55;
+    margin: 0;
+  }
+}
+
+// ── Galería ────────────────────────────────────────────────────────────────────
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+
+  @media (max-width: $bp-sm) { grid-template-columns: 1fr 1fr; }
+
+  .img-placeholder { height: 220px; }
+}
+
+.img-placeholder {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px dashed $line;
+  border-radius: $radius-md;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: $font-mono;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba($crema, 0.2);
+  text-align: center;
+  padding: 16px;
+}
+
+// ── FAQ (nativo details/summary) ───────────────────────────────────────────────
+.faq {
+  max-width: 760px;
+  border-top: 1px solid $line;
+
+  &__item {
+    border-bottom: 1px solid $line;
+
+    summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 20px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      font-family: $font-tight;
+      font-weight: 700;
+      font-size: 16px;
+      color: $crema;
+
+      &::-webkit-details-marker { display: none; }
+
+      &::after {
+        content: '+';
+        font-family: $font-mono;
+        font-size: 20px;
+        color: var(--accent);
+        flex-shrink: 0;
+        transition: transform $transition;
+      }
+    }
+
+    &[open] summary::after { content: '−'; }
+
+    p {
+      margin: 0;
+      padding: 0 0 22px;
+      font-size: 15px;
+      color: rgba($crema, 0.68);
+      line-height: 1.6;
+    }
+  }
+}
+
+// ── Bloque de precio ───────────────────────────────────────────────────────────
+.precio-block {
+  border: 1px solid rgba($naranja, 0.35);
+  background: rgba($naranja, 0.05);
+  border-radius: $radius-md;
+  padding: 32px;
+  max-width: 560px;
+
+  &__num {
+    font-family: $font-tight;
+    font-weight: 900;
+    font-size: clamp(38px, 6vw, 54px);
+    letter-spacing: -0.03em;
+    line-height: 1;
+    color: var(--accent);
+    margin: 0;
+
+    small {
+      display: block;
+      font-family: $font-mono;
+      font-weight: 400;
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba($crema, 0.6);
+      margin-top: 10px;
+    }
+  }
+
+  &__note {
+    font-size: 15px;
+    color: rgba($crema, 0.75);
+    line-height: 1.55;
+    margin: 18px 0 0;
+
+    strong { color: $crema; }
+  }
+}
+
+// ── Línea de contacto ──────────────────────────────────────────────────────────
+.landing-contact-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 28px;
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 1px solid $line;
+  font-family: $font-mono;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  color: rgba($crema, 0.7);
+
+  a {
+    color: $crema;
+    transition: color $transition;
+    &:hover { color: var(--accent); }
+  }
+}
+
+// ── Banner de versión (temporal, para comparar ANTERIOR vs NUEVO) ──────────────
+.version-banner {
+  font-family: $font-mono;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 700;
+  text-align: center;
+  padding: 10px 16px;
+  background: var(--accent);
+  color: $ink;
+
+  &--anterior {
+    background: rgba($crema, 0.16);
+    color: $crema;
+  }
+}
+
+// ── Acento por sección ─────────────────────────────────────────────────────────
+.accent-eyebrow { color: var(--accent) !important; }
+
+// Hace que .section--alt herede el fondo gris ya definido globalmente.
+.landing-contacto {
+  background: $ink;
+  border-top: 2px solid var(--accent);
+}

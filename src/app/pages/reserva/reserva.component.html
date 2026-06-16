@@ -1,0 +1,697 @@
+<!-- Sin header extra, la página de reserva es limpia -->
+<div class="reserva-page">
+  <div class="reserva-wrap">
+
+    <!-- Éxito -->
+    @if (enviado()) {
+      <!-- Plantilla PDF (oculta en pantalla, visible solo al imprimir) -->
+      <div class="pdf-tpl">
+        <div class="pdf-tpl__header">
+          <div class="pdf-tpl__logo-block">
+            <span class="pdf-tpl__logo">SDJ</span>
+            <span class="pdf-tpl__logo-sub">Campo de Airsoft – Larrabetzu, Bizkaia</span>
+          </div>
+          <div class="pdf-tpl__titulo-block">
+            <h1>CONFIRMACIÓN DE RESERVA</h1>
+          </div>
+        </div>
+
+        <div class="pdf-tpl__seccion">
+          <h2>DATOS DE LA RESERVA</h2>
+          <table class="pdf-tpl__tabla">
+            <tr><td>Número de reserva</td><td>{{ numeroReserva() }}</td></tr>
+            <tr><td>Fecha de la reserva</td><td>{{ formatFecha(form.fecha) }}</td></tr>
+            @if (form.hora) {
+              <tr><td>Hora de inicio</td><td>{{ form.hora }}</td></tr>
+              <tr><td>Hora de finalización estimada</td><td>{{ horaFin }}</td></tr>
+            }
+            <tr><td>Tipo de partida</td><td>{{ resumen.tipo }}</td></tr>
+          </table>
+        </div>
+
+        <div class="pdf-tpl__seccion">
+          <h2>DATOS DEL JUGADOR</h2>
+          <table class="pdf-tpl__tabla">
+            @if (form.tipo !== 'individual') {
+              <tr><td>Nombre y apellidos</td><td>{{ form.nombre }}</td></tr>
+              <tr><td>Teléfono</td><td>{{ form.telefono }}</td></tr>
+              <tr><td>Correo electrónico</td><td>{{ form.email }}</td></tr>
+            }
+            <tr><td>{{ form.tipo === 'txiki' ? 'Número de niños/as incluidos en la reserva' : 'Número de jugadores incluidos en la reserva' }}</td><td>{{ form.personas }}</td></tr>
+            @if (form.tipo === 'txiki' && form.edadesNinos) {
+              <tr><td>Edades de los peques</td><td>{{ form.edadesNinos }}</td></tr>
+            }
+          </table>
+        </div>
+
+        <div class="pdf-tpl__seccion">
+          <h2>SERVICIOS CONTRATADOS</h2>
+          <table class="pdf-tpl__tabla">
+            <tr><td>Entrada</td><td>{{ resumen.modalidad || resumen.tipo }}</td></tr>
+            <tr><td>Alquiler de equipo</td><td>{{ alquilerEquipo }}</td></tr>
+            @if (form.doblePartida) {
+              <tr><td>Doble partida privada</td><td>Sí · 2 franjas seguidas (+15 €/persona · {{ doblePartidaTotal }} €)</td></tr>
+            }
+            <tr><td>Otros extras</td><td>{{ form.tipo === 'txiki' ? (form.merienda ? 'Merienda infantil (+9,90 €/niño)' : '—') : (form.premium ? 'Pack Premium (+5 €)' : '—') }}</td></tr>
+          </table>
+        </div>
+
+        <div class="pdf-tpl__seccion">
+          <h2>IMPORTE</h2>
+          <div class="pdf-tpl__desglose">
+            @for (l of desglose; track l.concepto) {
+              <div class="pdf-tpl__linea"><span>{{ l.concepto }}</span><span>{{ l.importe }}</span></div>
+            }
+            <div class="pdf-tpl__linea pdf-tpl__linea--total"><span>Total pendiente de pago</span><strong>{{ totalReservaTxt }}</strong></div>
+            <div class="pdf-tpl__linea pdf-tpl__linea--metodo"><span>Método de pago</span><span>Presencial</span></div>
+          </div>
+        </div>
+
+        <div class="pdf-tpl__seccion">
+          <h2>INFORMACIÓN IMPORTANTE</h2>
+          <ul class="pdf-tpl__lista">
+            @if (form.tipo === 'privada') {
+              <li>Tu grupo tiene acceso a la partida abierta incluido: podéis uniros a ella independientemente de la hora a la que vengáis.</li>
+            }
+            <li>Es obligatorio el uso de protección ocular en todo momento dentro de las zonas de juego.</li>
+            <li>Se recomienda acudir al campo con al menos 30 minutos de antelación.</li>
+            <li>Los menores de edad deberán presentar autorización firmada.</li>
+            <li>La organización se reserva el derecho de admisión y expulsión por incumplimiento de las normas.</li>
+            <li>En caso de cancelación, consultar las condiciones indicadas en la web.</li>
+          </ul>
+        </div>
+
+        <div class="pdf-tpl__seccion pdf-tpl__dos-col">
+          <div>
+            <h2>UBICACIÓN</h2>
+            <p>Soldados de Juguete – Larrabetzu, Bizkaia</p>
+            <p>Web: www.soldadosdejuguete.com</p>
+          </div>
+          <div>
+            <h2>CONTACTO</h2>
+            <p>Para cualquier duda o modificación de la reserva:</p>
+            <p>Teléfono: 688 731 474</p>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="reserva-exito">
+        <span class="reserva-exito__icon">✓</span>
+        <h2>¡Solicitud enviada!</h2>
+        <p>Te contactamos en menos de 24h para confirmar tu reserva. Revisa tu email y WhatsApp.</p>
+
+        <div class="exito-resumen">
+          <p class="exito-resumen__titulo">Resumen de tu reserva</p>
+          <div class="exito-resumen__filas">
+            @if (resumen.tipo) {
+              <div class="exito-fila">
+                <span>Tipo</span>
+                <strong>{{ resumen.tipo }}</strong>
+              </div>
+            }
+            @if (resumen.modalidad) {
+              <div class="exito-fila">
+                <span>Modalidad</span>
+                <strong>{{ resumen.modalidad }}</strong>
+              </div>
+            }
+            @if (resumen.premium) {
+              <div class="exito-fila">
+                <span>Equipo</span>
+                <strong>Pack premium +5€</strong>
+              </div>
+            }
+            @if (resumen.fecha) {
+              <div class="exito-fila">
+                <span>Fecha</span>
+                <strong>{{ formatFecha(resumen.fecha) }}</strong>
+              </div>
+            }
+            @if (resumen.hora) {
+              <div class="exito-fila">
+                <span>Hora</span>
+                <strong>{{ resumen.hora }}{{ form.doblePartida ? ' – ' + horaFin : '' }}</strong>
+              </div>
+            }
+            <div class="exito-fila">
+              <span>{{ form.tipo === 'txiki' ? 'Niños/as' : 'Personas' }}</span>
+              <strong>{{ resumen.personas }}</strong>
+            </div>
+            @if (form.doblePartida) {
+              <div class="exito-fila">
+                <span>Doble partida</span>
+                <strong>Sí (+15 €/persona)</strong>
+              </div>
+            }
+            @if (form.tipo === 'txiki' && form.edadesNinos) {
+              <div class="exito-fila">
+                <span>Edades</span>
+                <strong>{{ form.edadesNinos }}</strong>
+              </div>
+            }
+            @if (form.tipo === 'txiki' && form.merienda) {
+              <div class="exito-fila">
+                <span>Merienda</span>
+                <strong>Sí (+9,90 €/niño)</strong>
+              </div>
+            }
+            @if (form.nombre) {
+              <div class="exito-fila">
+                <span>Nombre</span>
+                <strong>{{ form.nombre }}</strong>
+              </div>
+            }
+            @if (form.email) {
+              <div class="exito-fila">
+                <span>Email</span>
+                <strong>{{ form.email }}</strong>
+              </div>
+            }
+            @if (form.telefono) {
+              <div class="exito-fila">
+                <span>Teléfono</span>
+                <strong>{{ form.telefono }}</strong>
+              </div>
+            }
+          </div>
+        </div>
+
+        <div class="exito-pdf-wrap">
+          <button class="exito-pdf-btn" (click)="imprimirResumen()">
+            <span class="exito-pdf-btn__left">
+              <span class="exito-pdf-btn__icono">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="7 10 12 15 17 10"/>
+                  <line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+              </span>
+            </span>
+            <span class="exito-pdf-btn__center">
+              <strong>Guardar copia de la reserva</strong>
+              <span>Guárdalo — es tu único justificante</span>
+            </span>
+            <span class="exito-pdf-btn__badge">PDF</span>
+          </button>
+        </div>
+
+        <p class="exito-aviso">¿Dudas o cambios? Escríbenos por WhatsApp.</p>
+        <div class="exito-ctas">
+          <a href="https://wa.me/34688731474" target="_blank" rel="noopener" class="btn btn--primary">Contactar por WhatsApp</a>
+          <a routerLink="/" class="btn btn--ghost">Volver al inicio</a>
+        </div>
+      </div>
+    }
+
+    @if (!enviado()) {
+
+      <!-- Header del formulario -->
+      <div class="reserva-header">
+        <p class="eyebrow">SDJ Airsoft · Reservas</p>
+        <h1>Reserva tu partida</h1>
+
+        <!-- Stepper -->
+        <div class="stepper">
+          @for (n of [1, 2, 3]; track n) {
+            <div class="stepper__item"
+               [class.stepper__item--active]="paso() === n"
+               [class.stepper__item--done]="paso() > n"
+               [class.stepper__item--clickable]="paso() > n"
+               (click)="irAPaso(n)">
+              <span class="stepper__num">{{ paso() > n ? '✓' : n }}</span>
+              <span class="stepper__lbl">{{ n === 1 ? '¿Qué?' : n === 2 ? '¿Cuándo?' : '¿Quién?' }}</span>
+            </div>
+            @if (n < 3) {
+              <div class="stepper__line" [class.stepper__line--done]="paso() > n"></div>
+            }
+          }
+        </div>
+      </div>
+
+      <!-- Layout formulario + resumen -->
+      <div class="reserva-cols">
+      <div class="reserva-layout">
+
+        <!-- PASO 1 · Tipo -->
+        @if (paso() === 1) {
+          <div class="reserva-step">
+            <h3 class="reserva-step__title">¿Qué tipo de reserva necesitas?</h3>
+            <div class="tipo-grid">
+              @for (t of tipos; track t.key) {
+                <button
+                  class="tipo-btn"
+                  [class.tipo-btn--selected]="form.tipo === t.key"
+                  (click)="seleccionarTipo(t.key)">
+                  <span class="tipo-btn__icon">{{ t.icono }}</span>
+                  <div class="tipo-btn__body">
+                    <strong>{{ t.label }}</strong>
+                    <span class="tipo-btn__desc">{{ t.desc }}</span>
+                  </div>
+                </button>
+              }
+              <button
+                class="tipo-btn"
+                [class.tipo-btn--selected]="form.tipo === 'txiki'"
+                (click)="seleccionarTipo('txiki')">
+                <span class="tipo-btn__icon">◉</span>
+                <div class="tipo-btn__body">
+                  <strong>Txikipaintball</strong>
+                  <span class="tipo-btn__desc">Paintball adaptado para peques de 8 a 14 años. Monitores y equipo incluido.</span>
+                </div>
+              </button>
+              <button class="tipo-btn tipo-btn--proximamente" disabled>
+                <span class="tipo-btn__icon">◆</span>
+                <div class="tipo-btn__body">
+                  <strong>Partida Hardcore <span class="tipo-btn__badge">Próximamente</span></strong>
+                  <span class="tipo-btn__desc">Partidas para veteranos · 17:30–21:30 · Solo jugadores con equipo propio.</span>
+                </div>
+              </button>
+            </div>
+
+            @if (form.tipo) {
+              <div class="reserva-personas">
+                <div class="reserva-personas__info">
+                  <strong class="reserva-personas__title">{{ form.tipo === 'txiki' ? '¿Cuántos niños/as?' : '¿Cuántas personas?' }}</strong>
+                  @if (minPersonas > 1) {
+                    <span class="reserva-personas__hint">Mínimo {{ minPersonas }} {{ form.tipo === 'txiki' ? 'niños/as' : 'personas' }}</span>
+                  }
+                </div>
+                <div class="personas-counter personas-counter--lg">
+                  <button type="button" class="personas-counter__btn" (click)="restarPersona()" [disabled]="form.personas <= minPersonas">−</button>
+                  <span class="personas-counter__num">{{ form.personas }}</span>
+                  <button type="button" class="personas-counter__btn" (click)="sumarPersona()" [disabled]="form.personas >= 80">+</button>
+                </div>
+              </div>
+            }
+
+            @if (form.tipo === 'individual') {
+              <div class="equipo-select">
+                <strong class="equipo-select__title">¿Qué equipo quieres?</strong>
+                <div class="equipo-grid">
+                  @for (e of equipos; track e.key) {
+                    <button type="button"
+                      class="equipo-btn"
+                      [class.equipo-btn--selected]="equipoSeleccionado === e.key"
+                      (click)="seleccionarEquipo(e.modalidad, e.premium)">
+                      <span class="equipo-btn__body">
+                        <span class="equipo-btn__label">{{ e.label }}</span>
+                        <span class="equipo-btn__desc">{{ e.desc }}</span>
+                      </span>
+                      <span class="equipo-btn__precio">{{ e.precio }}</span>
+                    </button>
+                  }
+                </div>
+              </div>
+            }
+
+          </div>
+        }
+
+        <!-- PASO 2 · Cuándo -->
+        @if (paso() === 2) {
+          <div class="reserva-step">
+            <h3 class="reserva-step__title">¿Cuándo quieres venir?</h3>
+
+            @if (form.tipo === 'privada' || form.tipo === 'evento') {
+              <button
+                type="button"
+                class="upgrade-card"
+                [class.upgrade-card--activo]="form.doblePartida"
+                [attr.aria-pressed]="form.doblePartida"
+                (click)="toggleDoblePartida()">
+                <span class="upgrade-card__icon" aria-hidden="true">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="9"/>
+                    <polyline points="12 7 12 12 15 14"/>
+                  </svg>
+                </span>
+                <span class="upgrade-card__body">
+                  <span class="upgrade-card__top">
+                    <span class="upgrade-card__title">Doble partida privada</span>
+                    <span class="upgrade-card__price">+15 € / persona</span>
+                  </span>
+                  <span class="upgrade-card__desc">2 h de juego en campo exclusivo, más 30 min de cambio y explicación y 30 min de ducha. Elige el horario de inicio y reservamos también la franja siguiente.</span>
+                </span>
+                <span class="upgrade-card__toggle" aria-hidden="true">
+                  {{ form.doblePartida ? 'Añadido ✓' : 'Añadir +' }}
+                </span>
+              </button>
+            }
+
+            <div class="form-field">
+              <label class="form-label">{{ form.doblePartida ? 'Elige fecha y franja de inicio (reservamos 2 seguidas)' : 'Selecciona fecha y franja horaria' }}</label>
+              <app-calendario-grupos
+                modo="seleccion"
+                [mostrarSlots]="mostrarFranjas"
+                [doble]="form.doblePartida"
+                [permitirLaborables]="permitirLaborables"
+                [preselect]="form.fecha ? {fecha: form.fecha, hora: form.hora, pista: form.pista} : null"
+                (slotSeleccionado)="onSlotSeleccionado($event)"
+                (fechaSeleccionada)="onFechaSeleccionada($event)"
+                (laborableSeleccionado)="onLaborableSeleccionado($event)">
+              </app-calendario-grupos>
+            </div>
+
+            @if (muestraTarifaReducida) {
+              <div class="tarifa-reducida">
+                <button type="button" class="tarifa-reducida__toggle"
+                  [class.tarifa-reducida__toggle--abierto]="mostrarReducida()"
+                  (click)="mostrarReducida.set(!mostrarReducida())">
+                  ¿Conoces la tarifa reducida?
+                  <span class="tarifa-reducida__chevron">{{ mostrarReducida() ? '▴' : '▾' }}</span>
+                </button>
+
+                @if (mostrarReducida()) {
+                  <div class="tarifa-reducida__panel">
+                    <p class="tarifa-reducida__desc">Sesión de tarde a precio reducido. Marca la opción para aplicarla a tu reserva.</p>
+                    <button type="button" class="tarifa-reducida__opcion"
+                      [class.tarifa-reducida__opcion--activa]="form.tarifaReducida"
+                      [attr.aria-pressed]="form.tarifaReducida"
+                      (click)="form.tarifaReducida = !form.tarifaReducida">
+                      <span class="tarifa-reducida__opcion-body">
+                        <span class="tarifa-reducida__opcion-titulo">Tarifa reducida (tarde) · {{ equipoReducidaLabel }}</span>
+                        <span class="tarifa-reducida__opcion-precio">{{ precioReducidaFmt }} € / persona</span>
+                      </span>
+                      <span class="tarifa-reducida__opcion-check">{{ form.tarifaReducida ? 'Aplicada ✓' : 'Aplicar +' }}</span>
+                    </button>
+                  </div>
+                }
+              </div>
+            }
+
+          </div>
+        }
+
+        <!-- PASO 3 · Confirmación (individual) -->
+        @if (paso() === 3 && form.tipo === 'individual') {
+          <div class="reserva-step">
+            <h3 class="reserva-step__title">Confirma tu asistencia</h3>
+            <p class="confirmacion-texto">
+              Apuntamos tu plaza para el <strong>{{ formatFecha(form.fecha) }}</strong> con <strong>{{ form.personas }} persona{{ form.personas !== 1 ? 's' : '' }}</strong>.
+              Te esperamos en el campo.
+            </p>
+
+            <label class="form-check" style="margin-top: 28px;">
+              <input type="checkbox" [(ngModel)]="form.aceptaEdad" name="aceptaEdad" />
+              <span>Confirmo que <strong style="color:#ff7300;font-weight:700">todos los jugadores tienen 14 años o más</strong>. Los menores de 18 llevarán autorización de su tutor legal.</span>
+            </label>
+            <label class="form-check">
+              <input type="checkbox" [(ngModel)]="form.acepta" name="acepta" />
+              <span>Acepto las <a href="#" (click)="mostrarNormas.set(true); analytics.trackEvent('normas_abiertas'); $event.preventDefault()">normas del campo</a>.</span>
+            </label>
+            <label class="form-check">
+              <input type="checkbox" [(ngModel)]="form.aceptaPrivacidad" name="aceptaPrivacidad" />
+              <span>Acepto la <a href="#" (click)="mostrarPrivacidad.set(true); $event.preventDefault()">política de privacidad</a>.</span>
+            </label>
+            <label class="form-check">
+              <input type="checkbox" [(ngModel)]="form.aceptaComunicaciones" name="aceptaComunicaciones" />
+              <span>Acepto recibir comunicaciones comerciales de SDJ.</span>
+            </label>
+          </div>
+        }
+
+        <!-- PASO 3 · Quién (grupos) -->
+        @if (paso() === 3 && form.tipo !== 'individual') {
+          <div class="reserva-step">
+            <h3 class="reserva-step__title">¿Cómo te llamamos?</h3>
+
+            <div class="form-field">
+              <label class="form-label">Nombre y apellidos *</label>
+              <input class="form-input" type="text" [(ngModel)]="form.nombre" name="nombre" placeholder="Tu nombre completo" />
+            </div>
+
+            <div class="form-row">
+              <div class="form-field">
+                <label class="form-label">Email *</label>
+                <input class="form-input" type="email" [(ngModel)]="form.email" name="email" placeholder="tu@email.com" />
+              </div>
+              <div class="form-field">
+                <label class="form-label">Teléfono *</label>
+                <input class="form-input" type="tel" [(ngModel)]="form.telefono" name="telefono" placeholder="+34 600 000 000" />
+              </div>
+            </div>
+
+
+            @if (form.tipo === 'txiki') {
+              <div class="form-row">
+                <div class="form-field">
+                  <label class="form-label">Edades de los peques *</label>
+                  <input class="form-input" type="text" [(ngModel)]="form.edadesNinos" name="edadesNinos" placeholder="Ej: 8, 9 y 11 años" />
+                </div>
+              </div>
+              <button
+                type="button"
+                class="upgrade-card"
+                [class.upgrade-card--activo]="form.merienda"
+                [attr.aria-pressed]="form.merienda"
+                (click)="form.merienda = !form.merienda">
+                <span class="upgrade-card__icon" aria-hidden="true">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 2v7c0 1.1.9 2 2 2h0a2 2 0 0 0 2-2V2"/>
+                    <path d="M7 2v20"/>
+                    <path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/>
+                  </svg>
+                </span>
+                <span class="upgrade-card__body">
+                  <span class="upgrade-card__top">
+                    <span class="upgrade-card__title">Merienda infantil</span>
+                    <span class="upgrade-card__price">+9,90 € / niño</span>
+                  </span>
+                  <span class="upgrade-card__desc">Pizza, nuggets con patatas fritas y refresco para terminar el día.</span>
+                </span>
+                <span class="upgrade-card__toggle" aria-hidden="true">
+                  {{ form.merienda ? 'Añadido ✓' : 'Añadir +' }}
+                </span>
+              </button>
+            }
+
+            @if (muestraMenu) {
+              <button
+                type="button"
+                class="upgrade-card"
+                [class.upgrade-card--activo]="form.menu"
+                [attr.aria-pressed]="form.menu"
+                (click)="form.menu = !form.menu">
+                <span class="upgrade-card__icon" aria-hidden="true">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 2v7c0 1.1.9 2 2 2h0a2 2 0 0 0 2-2V2"/>
+                    <path d="M7 2v20"/>
+                    <path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/>
+                  </svg>
+                </span>
+                <span class="upgrade-card__body">
+                  <span class="upgrade-card__top">
+                    <span class="upgrade-card__title">Añadir menú</span>
+                    <span class="upgrade-card__price">Precio por confirmar</span>
+                  </span>
+                  <span class="upgrade-card__desc">Menú para completar tu evento. Te confirmamos el precio al gestionar la reserva.</span>
+                </span>
+                <span class="upgrade-card__toggle" aria-hidden="true">
+                  {{ form.menu ? 'Añadido ✓' : 'Añadir +' }}
+                </span>
+              </button>
+            }
+
+            <div class="form-field">
+              <label class="form-label">Mensaje (opcional)</label>
+              <textarea class="form-input form-input--textarea" [(ngModel)]="form.mensaje" name="mensaje" placeholder="Peticiones especiales, información adicional..."></textarea>
+            </div>
+
+            <label class="form-check">
+              <input type="checkbox" [(ngModel)]="form.aceptaEdad" name="aceptaEdad" />
+              @if (form.tipo === 'txiki') {
+                <span>Confirmo que soy <strong style="color:#ff7300;font-weight:700">padre/madre o tutor legal</strong> de los peques y autorizo su participación en la actividad.</span>
+              } @else {
+                <span>Confirmo que <strong style="color:#ff7300;font-weight:700">todos los jugadores tienen 14 años o más</strong>. Los menores de 18 llevarán autorización de su tutor legal.</span>
+              }
+            </label>
+            <label class="form-check">
+              <input type="checkbox" [(ngModel)]="form.acepta" name="acepta" />
+              <span>Acepto las <a href="#" (click)="mostrarNormas.set(true); analytics.trackEvent('normas_abiertas'); $event.preventDefault()">normas del campo</a>.</span>
+            </label>
+            <label class="form-check">
+              <input type="checkbox" [(ngModel)]="form.aceptaPrivacidad" name="aceptaPrivacidad" />
+              <span>Acepto la <a href="#" (click)="mostrarPrivacidad.set(true); $event.preventDefault()">política de privacidad</a>.</span>
+            </label>
+            <label class="form-check">
+              <input type="checkbox" [(ngModel)]="form.aceptaComunicaciones" name="aceptaComunicaciones" />
+              <span>Acepto recibir comunicaciones comerciales de SDJ.</span>
+            </label>
+          </div>
+        }
+
+        </div>
+
+        <aside class="reserva-resumen">
+          <p class="reserva-resumen__title">Tu reserva</p>
+          @if (resumen.tipo) {
+            <div class="resumen-row"><span>Tipo</span><strong>{{ resumen.tipo }}</strong></div>
+          }
+          @if (resumen.modalidad) {
+            <div class="resumen-row"><span>Modalidad</span><strong>{{ resumen.modalidad }}</strong></div>
+          }
+          @if (resumen.premium) {
+            <div class="resumen-row"><span>Equipo</span><strong>Pack premium +5€</strong></div>
+          }
+          @if (resumen.fecha) {
+            <div class="resumen-row"><span>Fecha</span><strong>{{ formatFecha(resumen.fecha) }}</strong></div>
+          }
+          @if (resumen.hora) {
+            <div class="resumen-row">
+              <span>{{ form.laborableConsulta ? 'Llegada aprox.' : 'Hora' }}</span>
+              <strong>{{ resumen.hora }}{{ form.doblePartida ? ' – ' + horaFin : '' }}</strong>
+            </div>
+          }
+          @if (form.laborableConsulta) {
+            <div class="resumen-row"><span>Entre semana</span><strong>Pendiente de confirmar</strong></div>
+          }
+          <div class="resumen-row">
+            <span>{{ form.tipo === 'txiki' ? 'Niños/as' : 'Personas' }}</span>
+            <strong>{{ form.personas }}</strong>
+          </div>
+          @if (form.doblePartida) {
+            <div class="resumen-row"><span>Doble partida</span><strong>+15 €/persona</strong></div>
+          }
+          @if (form.tarifaReducida) {
+            <div class="resumen-row"><span>Tarifa reducida</span><strong>{{ precioReducidaFmt }} €/persona</strong></div>
+          }
+          @if (form.menu) {
+            <div class="resumen-row"><span>Menú</span><strong>Sí (precio por confirmar)</strong></div>
+          }
+          @if (form.tipo === 'txiki' && form.merienda) {
+            <div class="resumen-row"><span>Merienda</span><strong>+9,90 €/niño</strong></div>
+          }
+          @if (!resumen.tipo) {
+            <p class="resumen-vacio">Selecciona las opciones para ver el resumen aquí.</p>
+          }
+          @if (form.laborableConsulta) {
+            <p class="reserva-consulta-nota">
+              Reserva entre semana para grupos de 10 o más. La hora es aproximada y queda <strong>pendiente de confirmar</strong> por nuestro equipo.
+            </p>
+          }
+        </aside>
+      </div>
+
+      <!-- Navegación -->
+      <div class="reserva-nav">
+        @if (paso() > 1) {
+          <button class="btn btn--ghost" (click)="anterior()">← Anterior</button>
+        } @else {
+          <span></span>
+        }
+
+        @if (paso() < 3) {
+          <button class="btn btn--primary" (click)="siguiente()" [disabled]="!pasoValido">
+            Siguiente →
+          </button>
+        } @else {
+          <button class="btn btn--primary" (click)="enviar()" [disabled]="!pasoValido || enviando()">
+            {{ enviando() ? 'Enviando...' : form.tipo === 'individual' ? 'Confirmar asistencia' : 'Enviar solicitud' }}
+          </button>
+        }
+      </div>
+
+    }
+
+    <!-- Modal normas del campo -->
+    @if (mostrarNormas()) {
+      <div class="normas-overlay" (click)="mostrarNormas.set(false)">
+        <div class="normas-panel" (click)="$event.stopPropagation()">
+          <div class="normas-panel__header">
+            <p class="eyebrow">SDJ Airsoft</p>
+            <h2>Normas del campo</h2>
+            <button class="normas-panel__close" (click)="mostrarNormas.set(false)" aria-label="Cerrar">✕</button>
+          </div>
+          <div class="normas-panel__body">
+
+            <div class="normas-bloque">
+              <h3>Normas generales</h3>
+              <ul>
+                <li>Es obligatorio el uso de gafas de protección homologadas durante toda la estancia en el campo de juego.</li>
+                <li>Queda prohibido disparar a jugadores que hayan indicado su eliminación con la mano levantada.</li>
+                <li>El límite de velocidad de las réplicas es de <strong>350 fps</strong> para campo abierto y <strong>250 fps</strong> para CQB.</li>
+                <li>Se prohíbe el uso de pirotecnia real o cualquier elemento que pueda causar incendio.</li>
+                <li>El árbitro tiene la autoridad final en el campo; sus decisiones son inapelables.</li>
+                <li>Cualquier conducta antideportiva podrá resultar en expulsión sin derecho a devolución.</li>
+              </ul>
+            </div>
+
+            <div class="normas-bloque">
+              <h3>Normas de seguridad</h3>
+              <ul>
+                <li>Las réplicas deben estar siempre en modo seguro fuera de las zonas de juego.</li>
+                <li>Está prohibido apuntar o disparar fuera de los límites del campo.</li>
+                <li>El cañón de la réplica debe apuntar siempre hacia el suelo en las zonas de descanso y equipamiento.</li>
+                <li>En caso de accidente o lesión, comunicarlo inmediatamente al árbitro.</li>
+                <li>Está prohibido el consumo de alcohol o sustancias antes o durante las partidas.</li>
+                <li>Los menores de 18 años deben contar con autorización firmada por su tutor legal.</li>
+              </ul>
+            </div>
+
+            <div class="normas-bloque">
+              <h3>Equipamiento</h3>
+              <ul>
+                <li>Se recomienda ropa de camuflaje o colores oscuros; no se permite ropa completamente blanca.</li>
+                <li>El campo dispone de réplicas de alquiler sujetas a disponibilidad.</li>
+                <li>La organización no se responsabiliza de los daños producidos en el material personal.</li>
+              </ul>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- Modal política de privacidad -->
+    @if (mostrarPrivacidad()) {
+      <div class="normas-overlay" (click)="mostrarPrivacidad.set(false)">
+        <div class="normas-panel" (click)="$event.stopPropagation()">
+          <div class="normas-panel__header">
+            <p class="eyebrow">SDJ Airsoft</p>
+            <h2>Política de privacidad</h2>
+            <button class="normas-panel__close" (click)="mostrarPrivacidad.set(false)" aria-label="Cerrar">✕</button>
+          </div>
+          <div class="normas-panel__body">
+
+            <div class="normas-bloque">
+              <p>Soldados de Juguete SL está especialmente sensibilizada en la protección de los datos de los usuarios de los servicios a los que se accede a través de su web.</p>
+              <p>Mediante la presente Política de Privacidad, Soldados de Juguete SL informa a los usuarios del sitio web <strong>www.soldadosdejuguete.com</strong> del tratamiento y usos a los que se someten los datos de carácter personal que se recaban en la web, con el fin de que decidan, libre y voluntariamente, si desean facilitar la información solicitada.</p>
+            </div>
+
+            <div class="normas-bloque">
+              <h3>Titularidad del tratamiento</h3>
+              <p>Los datos recabados por Soldados de Juguete SL serán incorporados a ficheros titularidad de Soldados de Juguete SL, debidamente inscritos en el Registro General de Protección de Datos.</p>
+            </div>
+
+            <div class="normas-bloque">
+              <h3>Usos y finalidades</h3>
+              <p>La finalidad de la recogida y tratamiento de los datos personales es la gestión, prestación y personalización de los servicios y contenidos que el usuario utilice.</p>
+            </div>
+
+            <div class="normas-bloque">
+              <h3>Comunicación de los datos</h3>
+              <p>Los datos recabados a través de la web sólo serán cedidos en aquellos casos en que expresamente se informe de ello al usuario.</p>
+            </div>
+
+            <div class="normas-bloque">
+              <h3>Seguridad de los datos</h3>
+              <p>Soldados de Juguete SL ha adoptado las medidas técnicas y organizativas legalmente requeridas para garantizar la seguridad y confidencialidad de los datos almacenados.</p>
+            </div>
+
+            <div class="normas-bloque">
+              <h3>Derechos de los usuarios</h3>
+              <p>Puedes acceder a tus datos, rectificarlos, cancelarlos y oponerte a su tratamiento:</p>
+              <ul>
+                <li>Mediante solicitud con fotocopia de tu D.N.I. a: <strong>Soldados de Juguete SL — Barrio Legina S/N, C.P. 48195 - Larrabetzu (Bizkaia)</strong></li>
+                <li>Por email a: <a href="mailto:soldadosdejuguete@gmail.com">soldadosdejuguete&#64;gmail.com</a></li>
+              </ul>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    }
+
+  </div>
+</div>

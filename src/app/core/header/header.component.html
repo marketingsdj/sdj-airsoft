@@ -1,0 +1,53 @@
+<header class="header" [class.header--scrolled]="scrolled()">
+  <div class="header__inner wrap">
+
+    <!-- Logo -->
+    <a routerLink="/" class="header__logo" (click)="closeMenu()">
+      <img class="header__logo-img" src="/logo-sdj.svg" alt="SDJ Airsoft" />
+    </a>
+
+    <!-- Nav desktop -->
+    <nav class="header__nav" [class.header__nav--open]="menuOpen()">
+      @for (item of nav; track item.path) {
+        <a
+          class="header__nav-link"
+          [routerLink]="item.path"
+          routerLinkActive="header__nav-link--active"
+          (click)="closeMenu()">
+          {{ item.label }}
+        </a>
+      }
+    </nav>
+
+    <!-- Acciones -->
+    <div class="header__actions">
+      <!-- Selector marcas -->
+      <div class="header__brands">
+        @for (brand of brands; track brand.label) {
+          @if (brand.active) {
+            <span class="header__brand header__brand--active">{{ brand.label }}</span>
+          } @else if (brand.disabled) {
+            <span class="header__brand header__brand--disabled">{{ brand.label }}</span>
+          } @else {
+            <a class="header__brand" [href]="brand.url" target="_blank" rel="noopener">{{ brand.label }}</a>
+          }
+        }
+      </div>
+
+      <!-- CTA Reserva -->
+      <a routerLink="/reserva" class="btn btn--primary header__cta" (click)="closeMenu()">
+        Reservar
+      </a>
+
+      <!-- Hamburger móvil -->
+      <button class="header__burger" (click)="toggleMenu()" [attr.aria-label]="menuOpen() ? 'Cerrar menú' : 'Abrir menú'">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+
+  </div>
+</header>
+<!-- Spacer para que el contenido no quede debajo del header fijo -->
+<div class="header__spacer"></div>

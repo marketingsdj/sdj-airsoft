@@ -1,0 +1,42 @@
+@if (visible()) {
+  <div class="cookie-overlay">
+    <div class="cookie-banner" role="dialog" aria-label="Aviso de cookies">
+
+      <div class="cookie-banner__icono">🍪</div>
+
+      <div class="cookie-banner__texto">
+        <p class="cookie-banner__titulo">Usamos cookies</p>
+        <p class="cookie-banner__desc">
+          Utilizamos cookies propias y de terceros para analizar el tráfico y mejorar tu experiencia.
+          Estos datos nos ayudan a entender cómo se usa el campo y a ofrecerte mejor contenido.
+          <a routerLink="/cookies" (click)="soloNecesarias()">Más información</a>
+        </p>
+
+        @if (detalle()) {
+          <div class="cookie-banner__detalle">
+            <div class="cookie-tipo">
+              <span class="cookie-tipo__nombre">Necesarias</span>
+              <span class="cookie-tipo__tag cookie-tipo__tag--siempre">Siempre activas</span>
+              <p>Permiten el funcionamiento básico del sitio. No almacenan datos personales.</p>
+            </div>
+            <div class="cookie-tipo">
+              <span class="cookie-tipo__nombre">Analíticas</span>
+              <span class="cookie-tipo__tag">Opcionales</span>
+              <p>Google Analytics. Nos ayudan a saber cuántas visitas recibimos y qué secciones interesan más. Datos anónimos y agregados.</p>
+            </div>
+          </div>
+        }
+
+        <button class="cookie-banner__ver-mas" (click)="detalle.update(v => !v)">
+          {{ detalle() ? 'Ocultar detalle ↑' : 'Ver qué cookies usamos ↓' }}
+        </button>
+      </div>
+
+      <div class="cookie-banner__acciones">
+        <button class="btn btn--ghost" (click)="soloNecesarias()">Solo necesarias</button>
+        <button class="btn btn--primary" (click)="aceptar()">Aceptar todas</button>
+      </div>
+
+    </div>
+  </div>
+}

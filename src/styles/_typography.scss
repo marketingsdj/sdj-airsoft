@@ -1,0 +1,55 @@
+@use 'variables' as *;
+
+h1, h2, h3, h4 {
+  margin: 0;
+  line-height: 1;
+}
+
+.h1 {
+  font-family: $font-tight;
+  font-weight: 900;
+  font-size: clamp(48px, 7vw, 72px);
+  letter-spacing: -0.025em;
+  text-transform: uppercase;
+}
+
+.h2 {
+  font-family: $font-tight;
+  font-weight: 900;
+  font-size: clamp(28px, 4vw, 44px);
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
+.h3 {
+  font-family: $font-tight;
+  font-weight: 800;
+  font-size: clamp(18px, 2.5vw, 26px);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: $naranja-soft;
+}
+
+.lead {
+  font-family: $font-narrow;
+  font-style: italic;
+  font-size: 18px;
+  color: rgba($crema, 0.85);
+  max-width: 720px;
+  line-height: 1.5;
+}
+
+.body-text {
+  font-family: $font-narrow;
+  font-size: 16px;
+  line-height: 1.55;
+  color: rgba($crema, 0.85);
+}
+
+.mono-label {
+  font-family: $font-mono;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba($crema, 0.55);
+}

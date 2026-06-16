@@ -1,0 +1,378 @@
+<!-- ── HERO ────────────────────────────────────────────────────────────────── -->
+<section class="hero">
+  <div class="hero__bg">
+    <video #heroVideo class="hero__video" autoplay muted loop playsinline>
+      <source src="Inicio/WEB_INICIO.mp4" type="video/mp4" />
+    </video>
+    <div class="hero__bg-overlay"></div>
+  </div>
+  <div class="hero__content wrap">
+    <div class="hero__cols">
+      <div class="hero__col-left">
+        <h1 class="hero__title">
+          <img class="hero__logo" src="/logo-sdj.svg" alt="SDJ" />
+          <span>airsoft</span>
+        </h1>
+        <p class="hero__eyebrow hero__eyebrow--bottom">DISFRUTA DEL MEJOR CAMPO DE AIRSOFT Y PAINTBALL EN EL PAÍS VASCO
+        </p>
+      </div>
+      <div class="hero__col-right">
+        <p class="hero__sub">El campo más grande del norte.</p>
+        <div class="hero__cta-row">
+          <a routerLink="/reserva" class="btn btn--primary" (click)="onHeroCtaClick()">Reservar mi primera partida →</a>
+          <a routerLink="/campo" class="btn btn--ghost">Ver el campo</a>
+        </div>
+        <div class="hero__stats">
+          <div class="hero__stat"><span class="hero__stat-num">45.000</span><span class="hero__stat-lbl">m² de campo</span>
+          </div>
+          <div class="hero__stat"><span class="hero__stat-num">16</span><span class="hero__stat-lbl">Años</span></div>
+          <div class="hero__stat"><span class="hero__stat-num">80%</span><span class="hero__stat-lbl">Repiten</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="hero__scroll">
+    <span class="hero__scroll-arrow-wrap">
+      <span class="hero__scroll-arrow"></span>
+    </span>
+  </div>
+</section>
+
+<!-- ── ¿A QUÉ VIENES? ─────────────────────────────────────────────────────── -->
+<section class="section">
+  <div class="wrap">
+    <div class="section__header">
+      <p class="section__eyebrow">Encuentra tu plan</p>
+      <h2 class="section__title">¿A qué vienes?</h2>
+    </div>
+    <div class="grid-4" style="grid-auto-flow: row dense">
+      @for (p of publicos; track p.titulo) {
+        <button class="card publico-card" [class.publico-card--active]="publicoActivo() === p.key"
+          (click)="seleccionarPublico(p.key)">
+          <h3 class="card__title">{{ p.titulo }}</h3>
+          <p class="card__desc">{{ p.desc }}</p>
+          <span class="publico-card__arrow"></span>
+        </button>
+
+        @if (publicoActivo() === p.key) {
+
+          @if (p.key === 'primera') {
+          <div class="publico-panel" style="grid-column: 1 / -1">
+            <div class="publico-panel__inner">
+              <div class="publico-panel__texto">
+                <h2 class="publico-panel__titulo">Descubre el airsoft</h2>
+                <p>El airsoft es un juego de estrategia y acción en equipo donde cada partida mezcla adrenalina, comunicación
+                  y diversión en escenarios reales. No necesitas experiencia previa ni equipo propio: solo ganas de probar
+                  algo diferente.</p>
+                <p>Llevamos más de una década ayudando a nuevos jugadores a descubrir este deporte. Nuestras partidas están
+                  pensadas para que cualquiera disfrute desde el primer minuto, tanto si vienes solo como con amigos.</p>
+                <p class="publico-panel__destacado">Muchos llegan por curiosidad.<br>La mayoría termina repitiendo.</p>
+                <a routerLink="/partidas" class="btn btn--primary" style="margin-top:24px;">Saber más →</a>
+              </div>
+              <div class="publico-panel__img">
+                <img src="Inicio/Imagenes asi se vive una partida/1.svg" alt="Así se vive una partida en SDJ" />
+              </div>
+            </div>
+          </div>
+          }
+
+          @if (p.key === 'grupo') {
+          <div class="publico-panel" style="grid-column: 1 / -1">
+            <div class="publico-panel__inner">
+              <div class="publico-panel__texto">
+                <h2 class="publico-panel__titulo">Tu cuadrilla, tu día, tu campo</h2>
+                <p>A partir de 8 personas reserváis un campo privado para vosotros solos. Con
+                  monitor incluido y sin coste extra por la partida privada.</p>
+                <p>Decidís el horario, el modo de juego y cuánto tiempo queréis jugar. Nosotros ponemos el campo, el equipo y
+                  las ganas.</p>
+                <p>Tenéis además acceso a las partidas que se juegan con el resto de asistentes en el campo principal.</p>
+                <p class="publico-panel__destacado">Mínimo 8 personas.<br>Requiere reserva anticipada.</p>
+                <a routerLink="/reserva" class="btn btn--primary" style="margin-top:24px;">Solicitar partida privada →</a>
+              </div>
+              <div class="publico-panel__img">
+                <img src="Campo/Campo privadas.svg" alt="Partida privada en SDJ" />
+              </div>
+            </div>
+          </div>
+          }
+
+          @if (p.key === 'peques') {
+          <div class="publico-panel" style="grid-column: 1 / -1">
+            <div class="publico-panel__inner">
+              <div class="publico-panel__texto">
+                <h2 class="publico-panel__titulo">Para los más pequeños: Txikipaintball</h2>
+                <p>El airsoft tiene una edad mínima, pero los peques también merecen su adrenalina. Txikipaintball es nuestra
+                  propuesta para familias y colectivos: misma emoción, adaptada a ellos.</p>
+                <p>Instalaciones propias, monitores especializados en grupos jóvenes y una experiencia pensada para que padres
+                  e hijos disfruten juntos.</p>
+                <p class="publico-panel__destacado">Para niños de 8-14 años.<br>Requiere reserva anticipada.</p>
+                <a routerLink="/txikipaintball" class="btn btn--primary" style="margin-top:24px;">Ir a Txikipaintball →</a>
+              </div>
+              <div class="publico-panel__img">
+                <img src="Inicio/Vengo_con_peques.svg" alt="Txikipaintball SDJ" />
+              </div>
+            </div>
+          </div>
+          }
+
+          @if (p.key === 'jugado') {
+          <div class="publico-panel" style="grid-column: 1 / -1">
+            <div class="publico-panel__inner">
+              <div class="publico-panel__texto">
+                <h2 class="publico-panel__titulo">Si ya juegas, SDJ tiene más sentido</h2>
+                <p>Tanto si vienes de otro campo como si ya has jugado aquí alguna vez, la tarifa de propio es desde 19,90 €
+                  la mañana. Campo de 45.000 m², escenarios variados y partidas cada fin de semana.</p>
+                <p>Y si ya vienes más de 2 veces al mes, la membresía SDJ se amortiza sola: entrada gratuita en partidas
+                  abiertas, taquilla permanente, acceso a Hardcore Veteranos y descuentos en tienda.</p>
+                <p class="publico-panel__destacado">A 19,90 € la visita,<br>La membresía anual: 380 €.</p>
+                <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:24px;">
+                  <a routerLink="/tarifas" [queryParams]="{tab:'socio'}" class="btn btn--primary">Ver membresía →</a>
+                  <a routerLink="/partidas" class="btn btn--ghost">Ver partidas →</a>
+                </div>
+              </div>
+              <div class="publico-panel__img">
+                <img src="Campo/Modos de juego/3.svg" alt="Modos de juego SDJ" />
+              </div>
+            </div>
+          </div>
+          }
+
+        }
+      }
+    </div>
+  </div>
+</section>
+
+<!-- ── DESCUBRE EL AIRSOFT ────────────────────────────────────────────────── -->
+<section class="section section--alt descubre">
+  <div class="wrap">
+
+    <!-- Cabecera -->
+    <div class="descubre__header">
+      <p class="section__eyebrow">Descubre el airsoft en SDJ</p>
+      <h2 class="section__title">No necesitas<br>experiencia previa</h2>
+    </div>
+
+    <!-- Puntos clave / Cita + foto -->
+    <div class="descubre__cuerpo">
+
+      <div class="descubre__puntos-col">
+        <p class="section__eyebrow">La experiencia SDJ</p>
+        <ul class="descubre__puntos">
+          <li>
+            <span class="descubre__puntos-num">01</span>
+            <div>
+              <strong>45.000 m²</strong>
+              <p>Campo en Bizkaia con espacio de sobra para que cada partida sea diferente.</p>
+            </div>
+          </li>
+          <li>
+            <span class="descubre__puntos-num">02</span>
+            <div>
+              <strong>Escenarios variados</strong>
+              <p>Bosques, estructuras, coberturas y zonas urbanas simuladas en el mismo campo.</p>
+            </div>
+          </li>
+          <li>
+            <span class="descubre__puntos-num">03</span>
+            <div>
+              <strong>Monitores en cada partida</strong>
+              <p>Te explican las reglas, te guían y hacen que el juego fluya desde el primer minuto.</p>
+            </div>
+          </li>
+          <li>
+            <span class="descubre__puntos-num">04</span>
+            <div>
+              <strong>Comunidad activa</strong>
+              <p>Jugadores de todos los niveles que hacen que siempre quieras volver.</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="descubre__cita-col">
+        <div class="descubre__foto">
+          <img src="Inicio/No necesitas experiencia previa.svg" alt="No necesitas experiencia previa" loading="lazy" />
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── PRUEBA SOCIAL ───────────────────────────────────────────────────────── -->
+<section class="section repite">
+  <div class="wrap repite__inner">
+    <div class="repite__galeria">
+      <p class="section__eyebrow">Así se vive una partida</p>
+      <h3 class="section__title" style="font-size: clamp(22px,3vw,32px);">Así se vive<br>una partida.</h3>
+      <div class="galeria-grid">
+        <div class="galeria-grid__main">
+          <img src="Inicio/Imagenes asi se vive una partida/1.svg" alt="Partida en acción" loading="lazy" />
+        </div>
+        <div class="galeria-grid__secondary">
+          <img src="Inicio/Imagenes asi se vive una partida/2.svg" alt="Partida en acción" loading="lazy" />
+          <img src="Inicio/Imagenes asi se vive una partida/3.svg" alt="Partida en acción" loading="lazy" />
+          <img src="Inicio/Imagenes asi se vive una partida/4.svg" alt="Partida en acción" loading="lazy" />
+          <img src="Inicio/Imagenes asi se vive una partida/5.svg" alt="Partida en acción" loading="lazy" />
+        </div>
+      </div>
+    </div>
+    <div class="repite__testimonios">
+      <p class="section__eyebrow">Esto es lo que cuentan quienes ya han vivido la experiencia.</p>
+      <h3 class="section__title" style="font-size: clamp(22px,3vw,32px);">Lo que dicen.</h3>
+      <div class="carrusel">
+        @if (testimonioActivo() < testimonios.length) { <blockquote class="testimonio">
+          <div class="testimonio__estrellas">★★★★★</div>
+          <p>"{{ testimonios[testimonioActivo()].texto }}"</p>
+          <cite>
+            <span class="testimonio__avatar">{{ testimonios[testimonioActivo()].autor[0] }}</span>
+            <span>{{ testimonios[testimonioActivo()].autor }}</span>
+          </cite>
+          </blockquote>
+          } @else {
+          <a class="testimonio testimonio--maps" [href]="MAPS_URL" target="_blank" rel="noopener">
+            <div class="testimonio__estrellas">★★★★★</div>
+            <p class="testimonio--maps__texto">Ver todas las reseñas<br>en Google Maps</p>
+            <span class="testimonio--maps__cta">Abrir Google Maps →</span>
+          </a>
+          }
+          <div class="carrusel__nav">
+            <button class="carrusel__btn" (click)="testimonioAnterior()" aria-label="Anterior">‹</button>
+            <div class="carrusel__dots">
+              @for (t of testimonios; track t.autor; let i = $index) {
+              <button class="carrusel__dot" [class.carrusel__dot--active]="testimonioActivo() === i"
+                (click)="testimonioActivo.set(i)" [attr.aria-label]="'Reseña ' + (i + 1)"></button>
+              }
+              <button class="carrusel__dot" [class.carrusel__dot--active]="testimonioActivo() === testimonios.length"
+                (click)="testimonioActivo.set(testimonios.length)" aria-label="Ver todas"></button>
+            </div>
+            <button class="carrusel__btn" (click)="testimonioSiguiente()" aria-label="Siguiente">›</button>
+          </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CROSS-SELL TIENDA ──────────────────────────────────────────────────── -->
+<section class="section section--alt tienda-cross">
+  <div class="wrap">
+    <div class="section__header">
+      <p class="section__eyebrow">KIT DE INICIO · TIENDA</p>
+      <h2 class="section__title">¿Ya enganchado?<br>Móntate tu equipo</h2>
+    </div>
+  </div>
+  <div class="wrap tienda-cross__inner">
+    <div class="tienda-cross__text">
+      <p class="section__lead">El campo te espera. Solo falta que te equipes.</p>
+      <div class="kit-lista">
+        <span class="kit-lista__item">Réplica Rossi Sentinel</span>
+        <span class="kit-lista__item">Uniforme Multicam</span>
+        <span class="kit-lista__item">Chaleco 6094</span>
+        <span class="kit-lista__item">Batería Lipo 11,1 800mAh</span>
+        <span class="kit-lista__item">Cargador baterías lipo</span>
+        <span class="kit-lista__item">Correa 1 punto</span>
+        <span class="kit-lista__item">Bolas Bio 0,2g</span>
+        <span class="kit-lista__item">Gafas de seguridad</span>
+        <span class="kit-lista__item">Máscara de protección</span>
+      </div>
+      <p class="kit-disponible">
+        <span class="kit-disponible__dot"></span>
+        Disponible en tienda física
+      </p>
+    </div>
+    <div class="kit-carrusel">
+      @for (img of kitImagenes; track img.src; let i = $index) {
+      <img class="kit-carrusel__img" [class.kit-carrusel__img--activa]="kitActivo() === i" [src]="img.src"
+        [alt]="img.alt" />
+      }
+      <div class="kit-carrusel__dots">
+        @for (img of kitImagenes; track img.src; let i = $index) {
+        <button class="kit-carrusel__dot" [class.kit-carrusel__dot--activo]="kitActivo() === i"
+          (click)="kitActivo.set(i)" [attr.aria-label]="'Imagen ' + (i + 1)">
+        </button>
+        }
+      </div>
+    </div>
+    <a routerLink="/promos" class="btn btn--primary kit-carrusel__cta">Ver equipamiento →</a>
+  </div>
+</section>
+
+<!-- ── PRÓXIMAS PARTIDAS ──────────────────────────────────────────────────── -->
+<section class="section section--dark agenda-section">
+  <div class="wrap">
+    <div class="agenda-header">
+      <div>
+        <p class="section__eyebrow">Agenda</p>
+        <h2 class="section__title">Próximas partidas</h2>
+      </div>
+      <a routerLink="/partidas" class="btn btn--ghost">Ver todas →</a>
+    </div>
+    <div class="agenda-cards">
+      @for (p of partidas; track p.fecha) {
+      <div class="agenda-card">
+        <div class="agenda-card__fecha">
+          <span class="agenda-card__dia">{{ p.fecha.split(' ')[1] }}</span>
+          <span class="agenda-card__mes">{{ p.fecha.split(' ')[2] }}</span>
+          <span class="agenda-card__dow">{{ p.fecha.split(' ')[0] }}</span>
+        </div>
+        <div class="agenda-card__body">
+          <p class="agenda-card__modo">{{ p.modo }}</p>
+          <p class="agenda-card__meta">
+            <span>{{ p.hora }}</span>
+            <span class="agenda-card__dot"></span>
+            <span>{{ p.tipo }}</span>
+          </p>
+        </div>
+        <a routerLink="/reserva" class="btn btn--primary agenda-card__btn">Reservar →</a>
+      </div>
+      }
+    </div>
+  </div>
+</section>
+
+
+<!-- ── LA SEÑAL ───────────────────────────────────────────────────────────── -->
+<section class="senal-block">
+  <div class="wrap senal-block__inner">
+    <div class="senal-block__left">
+      <h2 class="senal-block__titulo">La siguiente<br>partida puede<br>ser la tuya</h2>
+    </div>
+    <div class="senal-block__right">
+      <p class="senal-block__eyebrow">La señal que estabas buscando</p>
+      <p class="senal-block__texto">Muchos jugadores vienen por primera vez pensando que será "una actividad más". Lo
+        que no esperan es encontrar un ambiente tan cercano, partidas tan dinámicas y una comunidad tan viva.</p>
+      <p class="senal-block__subtexto">Y ahora que has llegado hasta aquí… quizá no necesitas seguir buscando más
+        señales.</p>
+      <div class="senal-block__cta">
+        <div>
+          <p class="senal-block__cta-titulo">¿Listo para tu primera baja?</p>
+          <p class="senal-block__cta-sub">Descubre por qué tantos jugadores vuelven cada fin de semana.</p>
+        </div>
+        <a routerLink="/reserva" class="btn btn--primary">Reservar →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── MINI-FAQ ───────────────────────────────────────────────────────────── -->
+<section class="section">
+  <div class="wrap">
+    <div class="section__header">
+      <p class="section__eyebrow">Dudas frecuentes</p>
+      <h2 class="section__title">Preguntas frecuentes</h2>
+    </div>
+    <div class="faq-grid">
+      @for (f of faqs; track f.q) {
+      <div class="faq-item">
+        <h4 class="faq-item__q">{{ f.q }}</h4>
+        <p class="faq-item__a">{{ f.a }}</p>
+      </div>
+      }
+    </div>
+    <div class="section-more">
+      <a routerLink="/faq" class="btn btn--ghost">Más preguntas →</a>
+    </div>
+  </div>
+</section>

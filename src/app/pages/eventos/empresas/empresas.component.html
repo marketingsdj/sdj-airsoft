@@ -1,0 +1,230 @@
+<!-- HERO -->
+<section class="landing-hero">
+  <div class="landing-hero__bg">
+    <!-- TODO: cliente — foto de grupo de empresa en plena dinámica -->
+  </div>
+  <div class="landing-hero__content wrap">
+    <p class="landing-hero__eyebrow">Empresas · Team building · 15 min de Bilbao</p>
+    <h1>La actividad de empresa que el equipo va a recordar</h1>
+    <p class="landing-hero__sub">
+      En Soldados de Juguete el campo entero es vuestro y los próximos 60 minutos
+      los decide el equipo, no el PowerPoint.
+    </p>
+    <div class="landing-hero__cta">
+      <a href="#contacto" class="btn btn--primary">Pedir presupuesto</a>
+      <a [href]="waUrl" target="_blank" rel="noopener" class="btn btn--ghost">WhatsApp directo</a>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST -->
+<div class="trust-strip">
+  @for (s of stats; track s.lbl) {
+    <div class="trust-strip__item">
+      <div class="trust-strip__num">{{ s.num }}</div>
+      <div class="trust-strip__lbl">{{ s.lbl }}</div>
+    </div>
+  }
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+<!-- ░░░ VERSIÓN ANTERIOR ░░░ -->
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+<div class="version-banner version-banner--anterior">Versión anterior</div>
+
+<!-- LEAD (anterior) -->
+<section class="section">
+  <div class="wrap">
+    <div class="lead-block">
+      <p class="section__eyebrow">¿Por qué funciona?</p>
+      <h2 class="lead-block__big">El equipo se ve <em>de verdad</em> bajo presión</h2>
+      <p>
+        En el campo no hay jerarquía que valga si nadie se coordina. Las misiones
+        obligan a comunicarse, repartir roles y decidir rápido. Y al terminar, todo
+        el mundo se acuerda de la jornada.
+      </p>
+      <p>
+        A 15 minutos de Bilbao, en Larrabetzu. Campo en exclusiva, factura con IVA y
+        opción de comida o reunión posterior.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- BENEFICIOS (anterior) -->
+<section class="section section--alt">
+  <div class="wrap">
+    <div class="section__header">
+      <p class="section__eyebrow">Qué se llevan</p>
+      <h2 class="section__title">Más que un día fuera<br>de la oficina</h2>
+    </div>
+    <div class="grid-3">
+      @for (b of beneficios; track b.t) {
+        <div class="card">
+          <div class="card__title">{{ b.t }}</div>
+          <p class="card__desc">{{ b.d }}</p>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- PACK (anterior) -->
+<section class="section">
+  <div class="wrap">
+    <div class="pack">
+      <div class="pack__gallery">
+        <div class="img-placeholder" style="height:200px;"><span>FOTO EMPRESA 1</span></div>
+        <div class="img-placeholder" style="height:200px;"><span>FOTO EMPRESA 2</span></div>
+        <div class="img-placeholder" style="height:200px;"><span>FOTO EMPRESA 3</span></div>
+        <div class="img-placeholder" style="height:200px;"><span>FOTO EMPRESA 4</span></div>
+        <!-- TODO: cliente — 4 fotos reales de eventos de empresa -->
+      </div>
+      <div class="pack__included">
+        <p class="section__eyebrow">El pack empresa</p>
+        <h2 class="pack__title">Jornada llave en mano</h2>
+        <ul class="check-list">
+          @for (i of incluye; track i) { <li>{{ i }}</li> }
+        </ul>
+        <p class="pack__precio">Desde <strong>XX€/persona</strong></p>
+        <!-- TODO: cliente — precio por persona -->
+        <a routerLink="/reserva" [queryParams]="{tipo: 'evento', pack: 'empresas'}" class="btn btn--primary">Pedir presupuesto →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PASOS (anterior) -->
+<section class="section section--alt">
+  <div class="wrap">
+    <div class="section__header">
+      <p class="section__eyebrow">Cómo lo organizamos</p>
+      <h2 class="section__title">De la llamada<br>a la jornada</h2>
+    </div>
+    <div class="steps">
+      @for (p of pasos; track p.n) {
+        <div class="steps__item">
+          <div class="steps__num">{{ p.n }}</div>
+          <h3 class="steps__t">{{ p.t }}</h3>
+          <p class="steps__d">{{ p.d }}</p>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- FAQ (anterior) -->
+<section class="section">
+  <div class="wrap">
+    <div class="section__header">
+      <p class="section__eyebrow">Dudas rápidas</p>
+      <h2 class="section__title">Lo que pregunta RRHH</h2>
+    </div>
+    <div class="faq">
+      @for (f of faqs; track f.q) {
+        <details class="faq__item">
+          <summary>{{ f.q }}</summary>
+          <p>{{ f.a }}</p>
+        </details>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+<!-- ░░░ VERSIÓN NUEVA (texto cliente) ░░░ -->
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+<div class="version-banner">Versión nueva (texto cliente)</div>
+
+<!-- POR QUÉ FUNCIONA (nuevo) -->
+<section class="section">
+  <div class="wrap">
+    <div class="lead-block">
+      <p class="section__eyebrow">Por qué funciona</p>
+      <h2 class="lead-block__big">Más efectivo que <em>cualquier dinámica de sala</em></h2>
+      <p>
+        Meterse en 45.000 m² a trabajar en equipo con el campo para vosotros solos
+        es bastante más efectivo que cualquier dinámica en sala. Llevamos desde 2008
+        organizando actividades para empresas y el resultado es siempre el mismo:
+        grupos que llegaron en silencio se van contándose todo.
+      </p>
+      <p>
+        No hace falta que nadie haya hecho nada parecido antes. Los monitores adaptan
+        el juego al perfil del grupo, gestionan los equipos y hacen que la actividad
+        funcione desde el primero hasta el último.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- QUÉ INCLUYE (nuevo) -->
+<section class="section section--alt">
+  <div class="wrap">
+    <div class="section__header">
+      <p class="section__eyebrow">Qué incluye</p>
+      <h2 class="section__title">Jornada completa,<br>sin que falte nada</h2>
+    </div>
+    <div class="grid-3">
+      @for (i of incluyeNuevo; track i.t) {
+        <div class="card">
+          <div class="card__title">{{ i.t }}</div>
+          <p class="card__desc">{{ i.d }}</p>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- PRECIO (nuevo) -->
+<section class="section">
+  <div class="wrap">
+    <div class="section__header">
+      <p class="section__eyebrow">Precio</p>
+      <h2 class="section__title">Presupuesto a medida</h2>
+    </div>
+    <div class="precio-block">
+      <p class="precio-block__num">
+        A medida <small>según personas, duración y servicios</small>
+      </p>
+      <p class="precio-block__note">
+        Sin tarifas cerradas que no encajan con lo que necesitáis. Nos decís cuántos
+        sois, si queréis media jornada o jornada completa, y si incluís comida — y os
+        enviamos propuesta.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- PREGUNTAS RÁPIDAS (nuevo) -->
+<section class="section section--alt">
+  <div class="wrap">
+    <div class="section__header">
+      <p class="section__eyebrow">Preguntas rápidas</p>
+      <h2 class="section__title">Lo que pregunta RRHH</h2>
+    </div>
+    <div class="faq">
+      @for (f of faqsNuevo; track f.q) {
+        <details class="faq__item">
+          <summary>{{ f.q }}</summary>
+          <p>{{ f.a }}</p>
+        </details>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL / CONTACTO -->
+<section id="contacto" class="section landing-contacto">
+  <div class="wrap">
+    <app-evento-contacto
+      origen="empresas"
+      tipoInicial="Team building / Empresa"
+      titulo="Cuéntanos tu idea <br> y le damos forma"
+    ></app-evento-contacto>
+    <div class="landing-contact-info">
+      <a [href]="waUrl" target="_blank" rel="noopener">📱 WhatsApp / Telegram: +34 688 73 14 74</a>
+      <a href="mailto:soldadosdejuguete@gmail.com">📧 soldadosdejuguete&#64;gmail.com</a>
+      <span>📍 Larrabetzu (Bizkaia) · 15 min de Bilbao con parking gratuito</span>
+    </div>
+  </div>
+</section>

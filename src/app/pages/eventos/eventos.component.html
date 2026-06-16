@@ -1,0 +1,80 @@
+<!-- HERO -->
+<section class="eventos-hero">
+  <div class="eventos-hero__bg img-placeholder-hero">
+    <!-- TODO: cliente — foto grupo celebrando con gradiente oscuro -->
+  </div>
+  <div class="eventos-hero__content wrap">
+    <p class="eyebrow">EVENTOS Y CELEBRACIONES</p>
+    <h1>El plan que nadie esperaba.</h1>
+  </div>
+</section>
+
+<!-- 4 TIPOS -->
+<section class="section">
+  <div class="wrap">
+    <div class="section__header">
+      <p class="section__eyebrow">¿Qué celebramos?</p>
+      <h2 class="section__title">Elige tu plan</h2>
+      <p class="section__lead">Pincha en el plan que te interesa para ver los detalles y reservar.</p>
+    </div>
+    <div class="grid-4">
+      @for (t of tipos; track t.key) {
+        <a class="tipo-card" [routerLink]="t.ruta">
+          <div class="tipo-card__img img-placeholder">
+            <!-- TODO: cliente — {{ t.placeholder }} -->
+            <span>{{ t.placeholder }}</span>
+          </div>
+          <div class="tipo-card__body">
+            <span class="tipo-card__cat">{{ t.titulo }}</span>
+            <p class="tipo-card__tagline">{{ t.tagline }}</p>
+            <span class="tipo-card__cta">Ver plan <span class="tipo-card__arrow">→</span></span>
+          </div>
+        </a>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- DÍAS GRANDES -->
+<section class="section dias-grandes-section">
+  <div class="wrap">
+    <div class="section__header">
+      <p class="section__eyebrow">El calendario del año</p>
+      <h2 class="section__title">Días grandes en SDJ</h2>
+    </div>
+
+    <div class="dg-lista">
+      @for (d of diasGrandes; track d.mes; let even = $even) {
+        <div class="dg-item" [class.dg-item--estrella]="d.tipo === 'estrella'" [class.dg-item--alt]="even">
+          <div class="dg-item__mes">
+            <span class="dg-item__mes-txt">{{ d.mes }}</span>
+          </div>
+          <div class="dg-item__sep"></div>
+          <div class="dg-item__body">
+            <div class="dg-item__head">
+              <h3 class="dg-item__titulo">{{ d.titulo }}</h3>
+            </div>
+            <p class="dg-item__eventos">
+              @for (e of d.eventos; track e.nombre; let last = $last) {
+                <span class="dg-item__evento-nombre">{{ e.nombre }}</span>
+                @if (e.fecha) {<span class="dg-item__evento-fecha">{{ e.fecha }}</span>}
+                <span class="dg-item__evento-desc">{{ e.desc }}</span>
+                @if (!last) {<span class="dg-item__sep-inline"> · </span>}
+              }
+            </p>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- FORMULARIO CONTACTO -->
+<section class="section eventos-form-section">
+  <div class="wrap">
+    <app-evento-contacto
+      origen="eventos"
+      titulo="Cuéntanos tu idea <br> y le damos forma"
+    ></app-evento-contacto>
+  </div>
+</section>

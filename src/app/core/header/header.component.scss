@@ -1,0 +1,175 @@
+@use '../../../styles/variables' as *;
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: linear-gradient(to bottom, $verde-osc 80%, transparent 100%);
+  border-bottom: none;
+  transition: background $transition;
+
+  &__inner {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    height: 100px;
+    padding-bottom: 20px;
+  }
+
+  &__spacer {
+    height: 72px;
+  }
+
+  // ── Logo ────────────────────────────────────────────────────────────────────
+  &__logo {
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+    text-decoration: none;
+    flex-shrink: 0;
+  }
+
+  &__logo-img {
+    height: 38px;
+    width: auto;
+    display: block;
+  }
+
+  // ── Nav ─────────────────────────────────────────────────────────────────────
+  &__nav {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex: 1;
+  }
+
+  &__nav-link {
+    font-family: $font-tight;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba($crema, 0.6);
+    padding: 8px 12px;
+    border-radius: $radius-sm;
+    transition: color $transition, background $transition;
+    text-decoration: none;
+
+    &:hover {
+      color: $crema;
+      background: rgba($crema, 0.06);
+    }
+
+    &--active {
+      color: $crema;
+    }
+  }
+
+  // ── Acciones ─────────────────────────────────────────────────────────────────
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-left: auto;
+  }
+
+  // ── Selector marcas ──────────────────────────────────────────────────────────
+  &__brands {
+    display: flex;
+    gap: 2px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid $line;
+    border-radius: $radius-sm;
+    padding: 3px;
+
+    @media (max-width: $bp-md) {
+      display: none;
+    }
+  }
+
+  &__brand {
+    font-family: $font-mono;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba($crema, 0.5);
+    padding: 4px 8px;
+    border-radius: 2px;
+    text-decoration: none;
+    transition: color $transition;
+
+    &:hover:not(&--active) {
+      color: rgba($crema, 0.85);
+    }
+
+    &--active {
+      background: $naranja;
+      color: $ink;
+      font-weight: 700;
+    }
+
+    &--disabled {
+      color: rgba($crema, 0.2);
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+  }
+
+  &__cta {
+    font-size: 12px;
+    padding: 10px 18px;
+    flex-shrink: 0;
+  }
+
+  // ── Hamburger ────────────────────────────────────────────────────────────────
+  &__burger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+
+    span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: $crema;
+      border-radius: 2px;
+      transition: $transition;
+    }
+
+    @media (max-width: $bp-md) {
+      display: flex;
+    }
+  }
+
+  // ── Mobile ───────────────────────────────────────────────────────────────────
+  @media (max-width: $bp-md) {
+    &__nav {
+      display: none;
+      position: absolute;
+      top: 72px;
+      left: 0;
+      right: 0;
+      flex-direction: column;
+      align-items: stretch;
+      background: $verde-osc;
+      border-top: 1px solid $line;
+      padding: 16px 20px 24px;
+      gap: 4px;
+
+      &--open {
+        display: flex;
+      }
+    }
+
+    &__nav-link {
+      padding: 12px 16px;
+      font-size: 14px;
+    }
+  }
+}

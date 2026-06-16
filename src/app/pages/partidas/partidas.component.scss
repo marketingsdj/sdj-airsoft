@@ -1,0 +1,902 @@
+@use '../../../styles/variables' as *;
+
+.img-placeholder {
+  background: rgba(255,255,255,0.03);
+  border: 1px dashed $line;
+  border-radius: $radius-md;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: $font-mono;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba($crema, 0.2);
+  text-align: center;
+  padding: 16px;
+}
+
+// ── Hero ──────────────────────────────────────────────────────────────────────
+.partidas-hero {
+  position: relative;
+  min-height: 60vh;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+
+  &__bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 65%;
+      display: block;
+    }
+  }
+
+  &__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgba($ink, 0.2) 0%,
+      rgba($ink, 0.55) 50%,
+      rgba($ink, 0.92) 100%
+    );
+  }
+
+  &__content {
+    position: relative;
+    z-index: 1;
+    padding-bottom: 64px;
+
+    h1 {
+      font-family: $font-tight;
+      font-weight: 900;
+      font-size: clamp(40px, 6vw, 72px);
+      letter-spacing: -0.025em;
+      text-transform: uppercase;
+      line-height: 0.92;
+      margin: 12px 0 16px;
+    }
+
+    .lead {
+      font-size: 18px;
+      color: rgba($crema, 0.75);
+      max-width: 560px;
+    }
+  }
+}
+
+// ── Todo lo que necesitas saber ───────────────────────────────────────────────
+.seccion-necesitas {
+  background: $verde-osc;
+  padding: 80px 0;
+
+  .section__eyebrow { color: rgba($crema, 0.5); }
+  .section__title   { color: $crema; }
+}
+
+.necesitas-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  border: 1px solid rgba($crema, 0.14);
+  border-radius: $radius-md;
+  overflow: hidden;
+
+  @media (max-width: $bp-sm) { grid-template-columns: 1fr; }
+}
+
+.necesitas-item {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+  padding: 24px 28px;
+  border-right: 1px solid rgba($crema, 0.14);
+  border-bottom: 1px solid rgba($crema, 0.14);
+  transition: background $transition;
+
+  &:nth-child(2n)    { border-right: none; }
+  &:nth-child(5),
+  &:nth-child(6)     { border-bottom: none; }
+
+  @media (max-width: $bp-sm) {
+    border-right: none;
+    &:last-child { border-bottom: none; }
+    &:nth-child(5) { border-bottom: 1px solid rgba($crema, 0.14); }
+  }
+
+  &:hover { background: rgba(255,255,255,0.05); }
+
+  &__icon {
+    font-size: 22px;
+    color: $naranja;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+
+  &__label {
+    font-family: $font-mono;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: $naranja;
+    font-weight: 700;
+    margin: 0 0 6px;
+    display: block;
+  }
+
+  &__valor {
+    font-size: 14px;
+    color: rgba($crema, 0.8);
+    line-height: 1.55;
+    margin: 0;
+  }
+}
+
+// ── 3 Formas ──────────────────────────────────────────────────────────────────
+.forma-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid $line;
+  border-radius: $radius-md;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: border-color $transition;
+
+  &:hover { border-color: rgba($naranja, 0.4); }
+
+  &__tipo {
+    font-family: $font-mono;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: $naranja;
+    font-weight: 700;
+  }
+
+  &__icon {
+    font-size: 24px;
+    color: rgba($crema, 0.4);
+  }
+
+  &__titulo {
+    font-family: $font-tight;
+    font-weight: 800;
+    font-size: 18px;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    margin: 0;
+  }
+
+  &__desc {
+    font-size: 13px;
+    color: rgba($crema, 0.7);
+    line-height: 1.55;
+    margin: 0;
+  }
+}
+
+// ── Cabecera tabla + nav ──────────────────────────────────────────────────────
+.tabla-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 24px;
+
+  @media (max-width: $bp-sm) { flex-direction: column; align-items: flex-start; }
+}
+
+.tabla-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+
+  &__btn {
+    width: 38px;
+    height: 38px;
+    border-radius: $radius-sm;
+    border: 1px solid $line;
+    background: rgba(255,255,255,0.04);
+    color: $crema;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    transition: $transition;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover:not(:disabled) {
+      border-color: $naranja;
+      color: $naranja;
+    }
+
+    &:disabled {
+      opacity: 0.25;
+      cursor: not-allowed;
+    }
+  }
+
+  &__pag {
+    font-family: $font-mono;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: rgba($crema, 0.45);
+    min-width: 48px;
+    text-align: center;
+  }
+}
+
+// ── Tabla partidas ────────────────────────────────────────────────────────────
+.partidas-table {
+  border: 1px solid $line;
+  border-radius: $radius-md;
+  overflow: hidden;
+
+  &__head {
+    display: grid;
+    grid-template-columns: 140px 1fr 100px 140px;
+    gap: 16px;
+    padding: 12px 24px;
+    background: rgba(255,255,255,0.04);
+    border-bottom: 1px solid $line;
+    font-family: $font-mono;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba($crema, 0.4);
+
+    @media (max-width: $bp-md) { display: none; }
+  }
+
+  &__row {
+    display: grid;
+    grid-template-columns: 140px 1fr 100px 140px;
+    gap: 16px;
+    align-items: center;
+    padding: 18px 24px;
+    border-bottom: 1px solid $line;
+    transition: background $transition;
+
+    &:last-child { border-bottom: none; }
+    &:hover { background: rgba(255,255,255,0.03); }
+    &.agotado { opacity: 0.5; }
+
+    @media (max-width: $bp-md) {
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+  }
+
+  &__fecha {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    span { font-family: $font-tight; font-weight: 700; font-size: 13px; text-transform: uppercase; }
+    .hora { font-family: $font-mono; font-size: 11px; color: $naranja; font-weight: 400; text-transform: none; }
+  }
+
+  &__modo { font-size: 14px; color: rgba($crema, 0.85); }
+  &__precio { font-family: $font-tight; font-weight: 800; font-size: 17px; color: $naranja; text-align: center; }
+
+  .btn { margin: 0 auto; }
+
+  &__capacidad {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.capacidad-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: $font-mono;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba($crema, 0.5);
+  background: rgba(255,255,255,0.05);
+  border: 1px solid $line;
+  border-radius: 99px;
+  padding: 5px 10px;
+
+  svg { opacity: 0.6; flex-shrink: 0; }
+}
+
+.tipo-badge {
+  font-family: $font-mono;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 99px;
+  border: 1px solid $line;
+  color: rgba($crema, 0.6);
+
+  &--especial { border-color: $naranja; color: $naranja; background: rgba($naranja, 0.1); }
+}
+
+.plazas-bar {
+  height: 3px;
+  background: rgba($crema, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+
+  &__fill { height: 100%; background: $naranja; border-radius: 2px; }
+}
+
+.btn--disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
+
+// ── Tipo jugadores ────────────────────────────────────────────────────────────
+.jugadores-grid { align-items: stretch; }
+
+.jugador-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid $line;
+  border-radius: $radius-md;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: border-color $transition;
+
+  &:hover { border-color: rgba($naranja, 0.4); }
+
+  &__num {
+    font-family: $font-tight;
+    font-weight: 900;
+    font-size: 40px;
+    color: $naranja;
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+
+  &__titulo {
+    font-family: $font-tight;
+    font-weight: 800;
+    font-size: 17px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    margin: 0;
+  }
+
+  p { font-size: 13px; color: rgba($crema, 0.7); line-height: 1.55; margin: 0; }
+}
+
+// ── Días grandes ─────────────────────────────────────────────────────────────
+.dias-grandes {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-bottom: 32px;
+  border: 1px solid $line;
+  border-radius: $radius-md;
+  overflow: hidden;
+}
+
+.dia-grande {
+  background: rgba(255,255,255,0.03);
+  border-bottom: 1px solid $line;
+  padding: 20px 24px;
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 24px;
+  align-items: start;
+  transition: background $transition;
+
+  &:last-child { border-bottom: none; }
+  &:hover { background: rgba(255,255,255,0.05); }
+
+  &--especial { border-left: 3px solid rgba($naranja, 0.5); }
+
+  &--estrella { border-left: 3px solid $naranja; background: rgba($naranja, 0.04); }
+
+  @media (max-width: $bp-md) { grid-template-columns: 1fr; gap: 12px; }
+
+  &__header {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding-top: 2px;
+  }
+
+  &__mes {
+    font-family: $font-mono;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: $naranja;
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  &__titulo {
+    font-family: $font-tight;
+    font-weight: 800;
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    margin: 0;
+    color: $crema;
+  }
+
+  &__badge {
+    margin-left: auto;
+    flex-shrink: 0;
+    font-family: $font-mono;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: $naranja;
+    border: 1px solid $naranja;
+    padding: 3px 8px;
+    border-radius: 99px;
+    white-space: nowrap;
+  }
+
+  &__eventos {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    border-top: 1px solid $line;
+    padding-top: 12px;
+
+    li {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+  }
+
+  &__evento-nombre {
+    font-family: $font-tight;
+    font-weight: 700;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: $crema;
+
+    em {
+      font-style: normal;
+      color: $naranja;
+      font-family: $font-mono;
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+    }
+  }
+
+  &__evento-desc {
+    font-size: 12px;
+    color: rgba($crema, 0.6);
+    line-height: 1.5;
+  }
+}
+
+// ── Cómo funcionan ────────────────────────────────────────────────────────────
+.como-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+
+  @media (max-width: $bp-md) { grid-template-columns: 1fr 1fr; }
+  @media (max-width: $bp-sm) { grid-template-columns: 1fr; }
+}
+
+.como-item--hardcore {
+  opacity: 0.6;
+  border-style: dashed;
+  &:hover { border-color: $line; }
+}
+
+.como-item__cta--disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.como-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 28px;
+  padding: 36px 32px;
+  border: 1px solid $line;
+  border-radius: $radius-md;
+  background: rgba(255,255,255,0.03);
+  transition: border-color $transition;
+
+  &:hover { border-color: rgba($naranja, 0.35); }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  &__label {
+    font-family: $font-tight;
+    font-weight: 800;
+    font-size: 22px;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    color: $naranja;
+    display: block;
+  }
+
+  &__cta {
+    .btn { width: 100%; text-align: center; justify-content: center; }
+  }
+
+  p { font-size: 14px; color: rgba($crema, 0.65); line-height: 1.65; margin: 0; }
+}
+
+// ── Privadas ──────────────────────────────────────────────────────────────────
+.privadas-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: start;
+
+  @media (max-width: $bp-md) { grid-template-columns: 1fr; }
+}
+
+.privadas-img {
+  aspect-ratio: 4 / 3;
+  border-radius: $radius-md;
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+}
+
+.privadas-nota {
+  font-family: $font-mono;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba($crema, 0.4);
+  margin: 16px 0 0;
+}
+
+.pasos-lista {
+  list-style: none;
+  padding: 0;
+  margin: 24px 0 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  li {
+    display: flex;
+    gap: 14px;
+    font-size: 14px;
+    color: rgba($crema, 0.8);
+    line-height: 1.5;
+
+    span {
+      font-family: $font-mono;
+      font-size: 11px;
+      color: $naranja;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+  }
+}
+
+// ── Evento destacado ──────────────────────────────────────────────────────────
+.evento-destacado {
+  display: grid;
+  grid-template-columns: 120px 1fr auto;
+  gap: 32px;
+  align-items: center;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid $line;
+  border-radius: $radius-md;
+  padding: 28px 32px;
+
+  @media (max-width: $bp-md) { grid-template-columns: 1fr; }
+
+  &__fecha { text-align: center; }
+
+  &__dia {
+    font-family: $font-tight;
+    font-weight: 900;
+    font-size: 48px;
+    color: $naranja;
+    line-height: 1;
+    display: block;
+    letter-spacing: -0.02em;
+  }
+
+  &__mes {
+    font-family: $font-mono;
+    font-size: 11px;
+    color: rgba($crema, 0.5);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  &__info {
+    h3 {
+      font-family: $font-tight;
+      font-weight: 800;
+      font-size: 20px;
+      text-transform: uppercase;
+      margin: 4px 0 8px;
+    }
+    p { font-size: 13px; color: rgba($crema, 0.65); line-height: 1.55; margin: 0; }
+  }
+}
+
+// ── Monitores ─────────────────────────────────────────────────────────────────
+.monitores-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+
+  @media (max-width: $bp-md) { grid-template-columns: repeat(3, 1fr); }
+  @media (max-width: $bp-sm) { grid-template-columns: 1fr 1fr; }
+}
+
+.monitor-card {
+  &__foto { border-radius: $radius-sm; }
+
+  &__info { padding: 12px 0; }
+
+  &__nombre {
+    font-family: $font-tight;
+    font-weight: 700;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin: 0 0 2px;
+  }
+
+  &__rol {
+    font-size: 12px;
+    color: $naranja-soft;
+    margin: 0 0 2px;
+  }
+
+  &__desde {
+    font-family: $font-mono;
+    font-size: 10px;
+    color: rgba($crema, 0.4);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin: 0;
+  }
+}
+
+// ── Tipos de jornada ──────────────────────────────────────────────────────────
+.tipos-jornada {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 36px 0 40px;
+}
+
+.proximamente-badge {
+  display: inline-block;
+  font-family: $font-mono;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba($crema, 0.6);
+  border: 1px solid rgba($crema, 0.25);
+  border-radius: 99px;
+  padding: 2px 8px;
+  vertical-align: middle;
+  margin-left: 8px;
+  font-weight: 400;
+}
+
+.tipo-jornada {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  padding: 20px 24px;
+  border: 1px solid $line;
+  border-radius: $radius-md;
+  background: rgba(255,255,255,0.03);
+  transition: border-color $transition;
+
+  &:hover { border-color: rgba($naranja, 0.4); }
+
+  &--hardcore {
+    border-color: rgba($naranja, 0.3);
+    background: rgba($naranja, 0.04);
+  }
+
+  &__icon {
+    font-size: 20px;
+    color: $naranja;
+    flex-shrink: 0;
+    margin-top: 2px;
+    width: 24px;
+    text-align: center;
+  }
+
+  &__nombre {
+    font-family: $font-tight;
+    font-weight: 800;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    margin: 0 0 3px;
+  }
+
+  &__tarifa {
+    font-family: $font-mono;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: $naranja;
+    margin: 0 0 6px;
+  }
+
+  &__desc {
+    font-size: 14px;
+    color: rgba($crema, 0.65);
+    line-height: 1.55;
+    margin: 0;
+  }
+}
+
+// ── Cómo reservar ─────────────────────────────────────────────────────────────
+.como-reservar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 32px;
+  padding: 32px 40px;
+  background: rgba($naranja, 0.05);
+  border: 1px solid rgba($naranja, 0.3);
+  border-radius: $radius-lg;
+  flex-wrap: wrap;
+
+  @media (max-width: $bp-sm) { padding: 24px; }
+
+  &__texto {
+    h3 {
+      font-family: $font-tight;
+      font-weight: 900;
+      font-size: clamp(18px, 2.5vw, 24px);
+      text-transform: uppercase;
+      letter-spacing: -0.01em;
+      margin: 8px 0 14px;
+      line-height: 1.1;
+    }
+  }
+
+  &__lista {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 20px;
+
+    li {
+      font-size: 13px;
+      color: rgba($crema, 0.7);
+      padding: 5px 0 5px 16px;
+      position: relative;
+
+      &::before {
+        content: '✓';
+        position: absolute;
+        left: 0;
+        color: $naranja;
+        font-size: 10px;
+        line-height: 2;
+      }
+    }
+  }
+
+  &__alt {
+    text-align: center;
+    flex-shrink: 0;
+
+    @media (max-width: $bp-md) { width: 100%; text-align: left; }
+  }
+
+  &__alt-label {
+    font-family: $font-mono;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba($crema, 0.4);
+    margin: 0 0 10px;
+  }
+}
+
+// ── Primera vez ───────────────────────────────────────────────────────────────
+.primera-vez-home {
+  &__inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: center;
+
+    @media (max-width: $bp-md) { grid-template-columns: 1fr; }
+  }
+
+  &__img {
+    aspect-ratio: 4 / 3;
+    border-radius: $radius-md;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+  }
+
+  &__precios {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    margin: 24px 0 10px;
+  }
+
+  &__precio { display: flex; flex-direction: column; gap: 3px; }
+
+  &__num {
+    font-family: $font-tight;
+    font-weight: 900;
+    font-size: 40px;
+    color: $naranja;
+    line-height: 1;
+
+    sup { font-size: 18px; vertical-align: super; }
+  }
+
+  &__lbl {
+    font-family: $font-mono;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba($crema, 0.45);
+  }
+
+  &__sep {
+    font-size: 28px;
+    color: rgba($crema, 0.2);
+    align-self: center;
+    padding-bottom: 16px;
+  }
+
+  &__aviso {
+    font-family: $font-mono;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    color: rgba($crema, 0.4);
+    margin: 0 0 20px;
+  }
+
+  &__cta {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+}

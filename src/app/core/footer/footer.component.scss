@@ -1,0 +1,156 @@
+@use '../../../styles/variables' as *;
+
+.footer {
+  background: $ink;
+  border-top: 1px solid $line;
+  margin-top: 0;
+
+  &__inner {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr 1.2fr;
+    gap: 40px;
+    padding-top: 44px;
+    padding-bottom: 36px;
+
+    @media (max-width: $bp-md) {
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+
+    @media (max-width: $bp-sm) {
+      grid-template-columns: 1fr 1fr;
+      gap: 28px 24px;
+    }
+  }
+
+  // En móvil: marca y CTA a todo el ancho; las dos listas, lado a lado.
+  &__brand,
+  &__cta-col {
+    @media (max-width: $bp-sm) { grid-column: 1 / -1; }
+  }
+
+  &__logo {
+    font-family: $font-logo;
+    font-size: 32px;
+    color: $crema;
+    letter-spacing: 0.04em;
+    display: block;
+  }
+
+  &__tagline {
+    font-family: $font-narrow;
+    font-style: italic;
+    font-size: 17px;
+    color: rgba($crema, 0.6);
+    margin: 4px 0 12px;
+  }
+
+  &__address {
+    font-size: 13px;
+    color: rgba($crema, 0.55);
+    line-height: 1.65;
+    margin: 0 0 14px;
+
+    a {
+      color: rgba($crema, 0.55);
+      text-decoration: none;
+      &:hover { color: $crema; }
+    }
+  }
+
+  &__rrss {
+    display: flex;
+    gap: 8px;
+  }
+
+  &__rrss-link {
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: $radius-sm;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: $font-mono;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: rgba($crema, 0.55);
+    text-decoration: none;
+    transition: $transition;
+
+    &:hover {
+      border-color: $naranja;
+      color: $naranja;
+    }
+  }
+
+  &__col-title {
+    font-family: $font-mono;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: $naranja;
+    margin: 0 0 12px;
+  }
+
+  &__link {
+    display: block;
+    font-size: 13px;
+    color: rgba($crema, 0.55);
+    text-decoration: none;
+    padding: 3px 0;
+    transition: color $transition;
+
+    &:hover { color: $crema; }
+
+    &--active {
+      color: $naranja;
+      font-weight: 700;
+      cursor: default;
+    }
+  }
+
+  &__cta-text {
+    font-size: 13px;
+    color: rgba($crema, 0.6);
+    line-height: 1.5;
+    margin: 0 0 14px;
+  }
+
+  &__bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 16px;
+    padding-bottom: 20px;
+    border-top: 1px solid $line;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  &__copy {
+    font-family: $font-mono;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    color: rgba($crema, 0.35);
+    text-transform: uppercase;
+  }
+
+  &__legal {
+    display: flex;
+    gap: 20px;
+
+    a {
+      font-family: $font-mono;
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      color: rgba($crema, 0.35);
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: color $transition;
+
+      &:hover { color: rgba($crema, 0.7); }
+    }
+  }
+}

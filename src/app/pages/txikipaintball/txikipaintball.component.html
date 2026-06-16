@@ -1,0 +1,248 @@
+<!-- HERO -->
+<section class="txiki-hero">
+  <div class="txiki-hero__bg">
+    <img src="Txikipaintball/12.svg" alt="" aria-hidden="true" fetchpriority="high" loading="eager" />
+    <div class="txiki-hero__overlay"></div>
+  </div>
+  <div class="txiki-hero__content wrap">
+    <div class="txiki-hero__cols">
+      <div class="txiki-hero__col-left">
+        <p class="txiki-eyebrow">Soldados de Juguete presenta</p>
+        <h1 class="txiki-hero__titulo">TXIKI<br>PAINTBALL</h1>
+        <p class="txiki-hero__sub">La aventura más divertida y segura para niños y niñas de 8 a 14 años.</p>
+      </div>
+      <div class="txiki-hero__col-right">
+        <div class="txiki-hero__ctas">
+          <a [href]="waUrl" target="_blank" rel="noopener" class="btn btn--primary">Reservar por WhatsApp →</a>
+          <a routerLink="/reserva" [queryParams]="{ tipo: 'txikipaintball' }" class="btn btn--ghost">Ver disponibilidad</a>
+        </div>
+        <div class="txiki-hero__stats">
+          <div class="txiki-hero__stat"><span class="txiki-hero__stat-num">8–14</span><span class="txiki-hero__stat-lbl">Años</span></div>
+          <div class="txiki-hero__stat"><span class="txiki-hero__stat-num">100%</span><span class="txiki-hero__stat-lbl">Seguro</span></div>
+          <div class="txiki-hero__stat"><span class="txiki-hero__stat-num">+16</span><span class="txiki-hero__stat-lbl">Años de experiencia</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- HORARIOS -->
+<section class="section section--alt">
+  <div class="wrap">
+    <div class="txiki-horarios-layout">
+      <div>
+        <div class="section__header">
+          <p class="section__eyebrow">Cuándo</p>
+          <h2 class="section__title">Horarios</h2>
+        </div>
+        <div class="txiki-horarios">
+          @for (h of horarios; track h.dia) {
+            <div class="txiki-horarios__item">
+              <span class="txiki-horarios__dia">{{ h.dia }}</span>
+              <span class="txiki-horarios__horas">{{ h.horas }}</span>
+            </div>
+          }
+        </div>
+      </div>
+      <div>
+        <p class="section__eyebrow">Seguridad ante todo</p>
+        <h2 class="section__title">Diversión segura<br>y adaptada</h2>
+        <p class="txiki-intro-p" style="margin-top:16px;">Dentro de Soldados de Juguete nace TXIKIPAINTBALL, una experiencia diseñada especialmente para peques que quieren disfrutar de la emoción del paintball en un entorno familiar, controlado y adaptado a su edad.</p>
+        <p class="txiki-intro-p" style="margin-top:12px;">Partidas dinámicas, juegos por equipos, adrenalina y muchísimas risas… siempre acompañados por monitores especializados que harán que se lo pasen en grande desde el primer minuto.</p>
+      </div>
+    </div>
+    <div class="txiki-planes-wrap">
+      <div class="section__header">
+        <p class="section__eyebrow">¿Para quién es?</p>
+        <h2 class="section__title">Un plan perfecto para…</h2>
+      </div>
+      <div class="txiki-planes">
+        @for (p of planes; track p) {
+          <div class="txiki-planes__item">{{ p }}</div>
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TARIFA -->
+<section class="txiki-tarifa-section">
+
+  <div class="txiki-tarifa-carousel">
+    <img [src]="'Txikipaintball/' + galeriaImagenes[carruselActual] + '.svg'"
+         alt="Txikipaintball" class="txiki-tarifa-carousel__img" />
+    <div class="txiki-tarifa-carousel__overlay"></div>
+    <div class="txiki-tarifa-carousel__dots">
+      @for (n of galeriaImagenes; track $index) {
+        <button class="txiki-tarifa-carousel__dot"
+                [class.txiki-tarifa-carousel__dot--activo]="carruselActual === $index"
+                (click)="carruselActual = $index">
+        </button>
+      }
+    </div>
+
+    <div class="txiki-tarifa-info wrap">
+      <div class="txiki-tarifa-info__header">
+        <p class="txiki-tarifa-info__eyebrow">La actividad</p>
+        <h2 class="txiki-tarifa-info__titulo">¿Cómo funciona?</h2>
+      </div>
+      <div class="txiki-pasos txiki-pasos--overlay">
+        <div class="txiki-pasos__item">
+          <span class="txiki-pasos__num">+30 min</span>
+          <div>
+            <strong>Antes de la partida</strong>
+            <p>Organización y equipamiento de los peques.</p>
+          </div>
+        </div>
+        <div class="txiki-pasos__item txiki-pasos__item--main">
+          <span class="txiki-pasos__num">60 min</span>
+          <div>
+            <strong>Juego real</strong>
+            <p>60 minutos de partida con monitores.</p>
+          </div>
+        </div>
+        <div class="txiki-pasos__item">
+          <span class="txiki-pasos__num">+30 min</span>
+          <div>
+            <strong>Después de la partida</strong>
+            <p>Recogida, cambio y tiempo libre.</p>
+          </div>
+        </div>
+      </div>
+      <div class="txiki-tarifa-info__incluye">
+        @for (item of tarifaIncluye; track item) {
+          <span class="txiki-tarifa-info__tag">{{ item }}</span>
+        }
+      </div>
+      <div class="txiki-tarifa-info__footer">
+        <span class="txiki-tarifa-info__stat">
+          <strong>≈ 2 horas</strong>
+          <em>duración total</em>
+        </span>
+        <span class="txiki-tarifa-info__divider"></span>
+        <span class="txiki-tarifa-info__stat">
+          <strong>19€</strong>
+          <em>por jugador</em>
+        </span>
+        <span class="txiki-tarifa-info__divider"></span>
+        <a [href]="waUrl" target="_blank" rel="noopener" class="btn btn--primary">Reservar →</a>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+
+
+
+<!-- MERIENDA -->
+<section class="section section--alt">
+  <div class="wrap txiki-merienda">
+    <div>
+      <p class="section__eyebrow">Fin de fiesta</p>
+      <h2 class="section__title">Después de la batalla…<br>toca recuperar fuerzas</h2>
+      <p>La opción perfecta para cumpleaños y celebraciones para que los peques terminen el día cenados y felices.</p>
+    </div>
+    <div class="txiki-merienda__card">
+      <div class="txiki-merienda__card-top">
+        <div>
+          <p class="txiki-merienda__nombre">Merienda infantil</p>
+          <div class="txiki-merienda__precio">9,90<sup>€</sup></div>
+          <p class="txiki-merienda__por">por niño/a</p>
+        </div>
+        <div class="txiki-merienda__menu">
+          @for (item of meriendaIncluye; track item) {
+            <div class="txiki-merienda__menu-item">
+              <span class="txiki-merienda__menu-icon">◆</span>
+              <span>{{ item }}</span>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CUMPLEAÑOS -->
+<section class="section">
+  <div class="wrap txiki-cumple__inner">
+    <div>
+      <p class="section__eyebrow">Celebraciones</p>
+      <h2 class="section__title">Celebra un cumpleaños<br>diferente</h2>
+      <p class="section__lead">Si buscas algo más original que un parque de bolas o una merienda tradicional, TXIKIPAINTBALL es la opción perfecta.</p>
+      <p style="margin-top:20px; font-size:14px; color:rgba(234,224,212,0.7);">Vosotros disfrutáis del día. Nosotros nos encargamos del resto.</p>
+    </div>
+    <div class="txiki-timeline">
+      @for (b of cumpleaBeneficios; track b; let i = $index) {
+        <div class="txiki-timeline__item">
+          <div class="txiki-timeline__punto">
+            <span class="txiki-timeline__dot"></span>
+            @if (!$last) {
+              <span class="txiki-timeline__linea"></span>
+            }
+          </div>
+          <p class="txiki-timeline__texto">{{ b }}</p>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+
+<!-- TESTIMONIOS + FOTOS -->
+<section class="section repite">
+  <div class="wrap repite__inner">
+    <div class="repite__galeria">
+      <p class="section__eyebrow">Así se vive</p>
+      <h3 class="section__title" style="font-size: clamp(22px,3vw,32px);">Así se vive<br>Txikipaintball.</h3>
+      <app-txiki-carrusel></app-txiki-carrusel>
+    </div>
+    <div class="repite__testimonios">
+      <p class="section__eyebrow">Esto es lo que cuentan las familias que ya vinieron.</p>
+      <h3 class="section__title" style="font-size: clamp(22px,3vw,32px);">Lo que dicen.</h3>
+      <div class="carrusel">
+        <blockquote class="testimonio">
+          <div class="testimonio__estrellas">★★★★★</div>
+          <p>"{{ testimonios[testimonioActivo()].texto }}"</p>
+          <cite>
+            <span class="testimonio__avatar">{{ testimonios[testimonioActivo()].autor[0] }}</span>
+            <span>{{ testimonios[testimonioActivo()].autor }}</span>
+          </cite>
+        </blockquote>
+        <div class="carrusel__nav">
+          <button class="carrusel__btn" (click)="testimonioAnterior()" aria-label="Anterior">‹</button>
+          <div class="carrusel__dots">
+            @for (t of testimonios; track t.autor; let i = $index) {
+              <button class="carrusel__dot" [class.carrusel__dot--active]="testimonioActivo() === i"
+                (click)="testimonioActivo.set(i)" [attr.aria-label]="'Reseña ' + (i + 1)"></button>
+            }
+          </div>
+          <button class="carrusel__btn" (click)="testimonioSiguiente()" aria-label="Siguiente">›</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+<!-- CARRUSEL FOTOS -->
+<section class="section section--alt">
+  <div class="wrap">
+    <div class="section__header">
+      <p class="section__eyebrow">Así se vive</p>
+      <h2 class="section__title">Txikipaintball en acción</h2>
+    </div>
+    <app-txiki-carrusel></app-txiki-carrusel>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="cta-band txiki-cta-final">
+  <p class="txiki-cta-final__eyebrow">¿Preparados para la misión?</p>
+  <h2>Haz que su próximo cumpleaños<br>sea una aventura inolvidable</h2>
+  <p class="txiki-cta-final__sub">Diversión, seguridad y adrenalina adaptada para peques.</p>
+  <a [href]="waUrl" target="_blank" rel="noopener" class="btn btn--primary">Reservar por WhatsApp →</a>
+</section>

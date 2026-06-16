@@ -1,0 +1,52 @@
+@use '../../../styles/variables' as *;
+
+.wa-btn {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 900;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #25d366;
+  color: #fff;
+  padding: 14px 18px;
+  border-radius: 50px;
+  text-decoration: none;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+  transition: transform $transition, box-shadow $transition;
+  overflow: hidden;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.4);
+
+    .wa-btn__label { max-width: 100px; opacity: 1; }
+  }
+
+  &__icon {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+  }
+
+  &__label {
+    font-family: $font-tight;
+    font-weight: 800;
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    max-width: 0;
+    opacity: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    transition: max-width 0.3s ease, opacity 0.3s ease;
+  }
+
+  @media (max-width: $bp-sm) {
+    bottom: 84px; // encima de la barra sticky móvil de reserva
+    padding: 14px;
+    border-radius: 50%;
+    .wa-btn__label { display: none; }
+  }
+}

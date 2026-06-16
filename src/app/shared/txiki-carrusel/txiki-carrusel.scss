@@ -1,0 +1,70 @@
+@use '../../../styles/variables' as *;
+
+:host { display: block; }
+
+.txiki-car {
+  position: relative;
+  width: 100%;
+  height: 320px;
+  border-radius: $radius-md;
+  overflow: hidden;
+  background: rgba(255,255,255,0.03);
+
+  &__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  &__btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba($crema, 0.15);
+    color: $crema;
+    font-size: 24px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s ease;
+    z-index: 2;
+
+    &:hover { background: rgba($naranja, 0.6); }
+    &--prev { left: 12px; }
+    &--next { right: 12px; }
+  }
+
+  &__dots {
+    position: absolute;
+    bottom: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 6px;
+    z-index: 2;
+  }
+
+  &__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba($crema, 0.35);
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: background 0.2s ease, width 0.2s ease;
+
+    &--activo {
+      background: $naranja;
+      width: 20px;
+      border-radius: 3px;
+    }
+  }
+}

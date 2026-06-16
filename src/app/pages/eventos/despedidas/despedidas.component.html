@@ -1,0 +1,210 @@
+<!-- HERO -->
+<section class="landing-hero">
+  <div class="landing-hero__bg">
+    <!-- TODO: cliente — foto de grupo de despedida en plena partida -->
+  </div>
+  <div class="landing-hero__content wrap">
+    <p class="landing-hero__eyebrow">Despedidas · 15 min de Bilbao</p>
+    <h1>La despedida que nadie va a olvidar (y eso que habrá quien quiera)</h1>
+    <p class="landing-hero__sub">
+      En Soldados de Juguete os metéis en 45.000 m² de campo, con el sitio entero
+      para vosotros, y la próxima hora va a ser puro caos organizado.
+    </p>
+    <div class="landing-hero__cta">
+      <a [href]="waUrl" target="_blank" rel="noopener" class="btn btn--primary">Reservar por WhatsApp</a>
+      <a href="#contacto" class="btn btn--ghost">Pedir por formulario</a>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST -->
+<div class="trust-strip">
+  @for (s of stats; track s.lbl) {
+    <div class="trust-strip__item">
+      <div class="trust-strip__num">{{ s.num }}</div>
+      <div class="trust-strip__lbl">{{ s.lbl }}</div>
+    </div>
+  }
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+<!-- ░░░ VERSIÓN ANTERIOR ░░░ -->
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+<div class="version-banner version-banner--anterior">Versión anterior</div>
+
+<!-- LEAD (anterior) -->
+<section class="section">
+  <div class="wrap">
+    <div class="lead-block">
+      <p class="section__eyebrow">¿Por qué aquí?</p>
+      <h2 class="lead-block__big">Porque un airsoft une al grupo <em>de verdad</em></h2>
+      <p>
+        Se ríe todo el mundo, hay anécdotas para meses y el homenajeado se lleva
+        su ración especial. Campo en exclusiva para vosotros: nada de compartir
+        partida con desconocidos.
+      </p>
+      <p>
+        A 15 minutos de Bilbao, en Larrabetzu. Aparcamiento gratuito, vestuarios
+        con duchas y cafetería para el after.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- PACK (anterior) -->
+<section class="section section--alt">
+  <div class="wrap">
+    <div class="pack">
+      <div class="pack__gallery">
+        <div class="img-placeholder" style="height:200px;"><span>FOTO DESPEDIDA 1</span></div>
+        <div class="img-placeholder" style="height:200px;"><span>FOTO DESPEDIDA 2</span></div>
+        <div class="img-placeholder" style="height:200px;"><span>FOTO DESPEDIDA 3</span></div>
+        <div class="img-placeholder" style="height:200px;"><span>FOTO DESPEDIDA 4</span></div>
+        <!-- TODO: cliente — 4 fotos reales de despedidas -->
+      </div>
+      <div class="pack__included">
+        <p class="section__eyebrow">El pack despedida</p>
+        <h2 class="pack__title">Todo incluido. Tú solo vienes</h2>
+        <ul class="check-list">
+          @for (i of incluye; track i) { <li>{{ i }}</li> }
+        </ul>
+        <p class="pack__precio">Desde <strong>XX€/persona</strong></p>
+        <!-- TODO: cliente — precio por persona -->
+        <a routerLink="/reserva" [queryParams]="{tipo: 'evento', pack: 'despedidas'}" class="btn btn--primary">Reservar despedida →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PASOS (anterior) -->
+<section class="section">
+  <div class="wrap">
+    <div class="section__header">
+      <p class="section__eyebrow">Cómo funciona</p>
+      <h2 class="section__title">De la idea al campo<br>en 4 pasos</h2>
+    </div>
+    <div class="steps">
+      @for (p of pasos; track p.n) {
+        <div class="steps__item">
+          <div class="steps__num">{{ p.n }}</div>
+          <h3 class="steps__t">{{ p.t }}</h3>
+          <p class="steps__d">{{ p.d }}</p>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- GALERÍA (anterior) -->
+<section class="section section--alt">
+  <div class="wrap">
+    <div class="section__header">
+      <p class="section__eyebrow">El ambiente</p>
+      <h2 class="section__title">Esto es lo que os espera</h2>
+    </div>
+    <div class="gallery-grid">
+      <div class="img-placeholder"><span>FOTO 1</span></div>
+      <div class="img-placeholder"><span>FOTO 2</span></div>
+      <div class="img-placeholder"><span>FOTO 3</span></div>
+      <div class="img-placeholder"><span>FOTO 4</span></div>
+      <div class="img-placeholder"><span>FOTO 5</span></div>
+      <div class="img-placeholder"><span>FOTO 6</span></div>
+      <!-- TODO: cliente — galería de despedidas -->
+    </div>
+  </div>
+</section>
+
+<!-- FAQ (anterior) -->
+<section class="section">
+  <div class="wrap">
+    <div class="section__header">
+      <p class="section__eyebrow">Dudas rápidas</p>
+      <h2 class="section__title">Lo que todos preguntan</h2>
+    </div>
+    <div class="faq">
+      @for (f of faqs; track f.q) {
+        <details class="faq__item">
+          <summary>{{ f.q }}</summary>
+          <p>{{ f.a }}</p>
+        </details>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+<!-- ░░░ VERSIÓN NUEVA (texto cliente) ░░░ -->
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+<div class="version-banner">Versión nueva (texto cliente)</div>
+
+<!-- POR QUÉ FUNCIONA (nuevo) -->
+<section class="section">
+  <div class="wrap">
+    <div class="section__header">
+      <p class="section__eyebrow">Por qué funciona</p>
+      <h2 class="section__title">Todo el sitio,<br>solo para vosotros</h2>
+    </div>
+    <div class="grid-3">
+      @for (i of incluyeNuevo; track i.t) {
+        <div class="card">
+          <div class="card__title">{{ i.t }}</div>
+          <p class="card__desc">{{ i.d }}</p>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- PRECIO (nuevo) -->
+<section class="section section--alt">
+  <div class="wrap">
+    <div class="section__header">
+      <p class="section__eyebrow">Precio</p>
+      <h2 class="section__title">Todo incluido. Sin sorpresas</h2>
+    </div>
+    <div class="precio-block">
+      <p class="precio-block__num">
+        39,90 € <small>por persona — equipo completo incluido</small>
+      </p>
+      <p class="precio-block__note">
+        Réplica, máscara, chaleco y bolas. Todo.
+      </p>
+      <p class="precio-block__note">
+        <strong>Sin señal para reservar.</strong> Pagas el día: tarjeta, efectivo o Bizum.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- PREGUNTAS RÁPIDAS (nuevo) -->
+<section class="section">
+  <div class="wrap">
+    <div class="section__header">
+      <p class="section__eyebrow">Preguntas rápidas</p>
+      <h2 class="section__title">Lo que todos preguntan</h2>
+    </div>
+    <div class="faq">
+      @for (f of faqsNuevo; track f.q) {
+        <details class="faq__item">
+          <summary>{{ f.q }}</summary>
+          <p>{{ f.a }}</p>
+        </details>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL / CONTACTO -->
+<section id="contacto" class="section landing-contacto">
+  <div class="wrap">
+    <app-evento-contacto
+      origen="despedidas"
+      tipoInicial="Despedida"
+      titulo="Cuéntanos tu idea <br> y le damos forma"
+    ></app-evento-contacto>
+    <div class="landing-contact-info">
+      <a [href]="waUrl" target="_blank" rel="noopener">📱 WhatsApp: +34 688 73 14 74</a>
+      <span>📍 Larrabetzu (Bizkaia) · 15 min de Bilbao</span>
+    </div>
+  </div>
+</section>

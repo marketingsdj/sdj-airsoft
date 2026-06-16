@@ -1,0 +1,57 @@
+<div class="section__header">
+  <p class="section__eyebrow">{{ eyebrow }}</p>
+  <h2 class="section__title" [innerHTML]="titulo"></h2>
+</div>
+
+@if (formEnviado()) {
+  <div class="form-exito">
+    <span class="form-exito__icon">✓</span>
+    <p>Recibido. Te contactamos antes de 24h por teléfono o email.</p>
+  </div>
+} @else {
+  <form class="eventos-form" (ngSubmit)="enviar()">
+    <div class="form-row">
+      <div class="form-field">
+        <label class="form-label">Tipo de evento</label>
+        <select class="form-input form-input--select" [(ngModel)]="form.tipo" name="tipo" required>
+          <option value="" disabled>Selecciona...</option>
+          @for (t of tiposEvento; track t) {
+            <option [value]="t">{{ t }}</option>
+          }
+        </select>
+      </div>
+      <div class="form-field">
+        <label class="form-label">Fecha tentativa</label>
+        <input class="form-input" type="date" [(ngModel)]="form.fecha" name="fecha" />
+      </div>
+      <div class="form-field">
+        <label class="form-label">Nº de personas</label>
+        <input class="form-input" type="number" [(ngModel)]="form.personas" name="personas" min="1" placeholder="8" />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-field">
+        <label class="form-label">Nombre *</label>
+        <input class="form-input" type="text" [(ngModel)]="form.nombre" name="nombre" required placeholder="Tu nombre" />
+      </div>
+      <div class="form-field">
+        <label class="form-label">Teléfono *</label>
+        <input class="form-input" type="tel" [(ngModel)]="form.telefono" name="telefono" required placeholder="688 73 14 74" />
+      </div>
+      <div class="form-field">
+        <label class="form-label">Email *</label>
+        <input class="form-input" type="email" [(ngModel)]="form.email" name="email" required placeholder="tu@email.com" />
+      </div>
+    </div>
+    <div class="form-field">
+      <label class="form-label">Mensaje (opcional)</label>
+      <textarea class="form-input form-input--textarea" [(ngModel)]="form.mensaje" name="mensaje" placeholder="Cuéntanos más: horario preferido, si vais a necesitar catering, preguntas..."></textarea>
+    </div>
+    <button type="submit" class="btn btn--primary" [disabled]="!formularioValido || formEnviando()">
+      {{ formEnviando() ? 'Enviando...' : 'Enviar solicitud →' }}
+    </button>
+    @if (formError()) {
+      <p class="form-error">No se ha podido enviar. Inténtalo de nuevo o escríbenos por WhatsApp.</p>
+    }
+  </form>
+}
