@@ -150,143 +150,341 @@
   }
 }
 
-// ── Días grandes ─────────────────────────────────────────────────────────────
-.dias-grandes-section { background: $ink; }
+// ── Calendario / Timeline ─────────────────────────────────────────────────────
+.calendario-section { background: $ink; }
 
-.dg-lista { margin-bottom: 64px; }
-
-.dg-lista {
-  border: 1px solid $line;
-  border-radius: $radius-md;
-  overflow: hidden;
+.timeline {
+  display: flex;
+  flex-direction: column;
+  max-width: 720px;
 }
 
-.dg-item {
+.tl-item {
   display: grid;
-  grid-template-columns: 140px 1px 1fr;
-  align-items: center;
-  gap: 0;
-  border-bottom: 1px solid $line;
-  transition: background $transition;
+  grid-template-columns: 110px 32px 1fr;
+  align-items: start;
 
-  &:last-child { border-bottom: none; }
-  &:hover { background: rgba(255,255,255,0.05) !important; }
+  @media (max-width: $bp-sm) {
+    grid-template-columns: 28px 1fr;
 
-  &--alt { background: rgba(255,255,255,0.03); }
-
-  &--estrella {
-    background: rgba($naranja, 0.05);
-
-    .dg-item__mes-txt { color: $naranja; }
-    .dg-item__titulo  { color: $naranja; }
+    .tl-item__mes-col { display: none; }
   }
 
-  @media (max-width: $bp-md) {
-    grid-template-columns: 1fr;
-    gap: 0;
-    .dg-item__sep { display: none; }
-    .dg-item__action { padding: 0 20px 16px; }
+  // ── Columna mes ──
+  &__mes-col {
+    padding-top: 5px;
+    text-align: right;
+    padding-right: 0;
   }
 
-  // Mes
   &__mes {
-    padding: 20px 24px;
-    display: flex;
-    align-items: center;
-  }
-
-  &__mes-txt {
     font-family: $font-mono;
-    font-size: 11px;
+    font-size: 10px;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: rgba($crema, 0.45);
-    font-weight: 700;
+    color: rgba($crema, 0.35);
     white-space: nowrap;
   }
 
-  // Separador vertical
-  &__sep {
-    width: 1px;
-    height: 100%;
-    background: $line;
-    flex-shrink: 0;
-  }
-
-  // Body
-  &__body {
-    padding: 20px 24px;
+  // ── Columna conector (dot + línea) ──
+  &__connector {
     display: flex;
     flex-direction: column;
-    gap: 6px;
-
-    @media (max-width: $bp-md) { padding: 16px 20px 8px; }
+    align-items: center;
+    padding-top: 4px;
   }
 
-  &__head {
+  &__dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba($crema, 0.25);
+    border: 1.5px solid rgba($crema, 0.35);
+    flex-shrink: 0;
+    transition: background $transition, border-color $transition;
+  }
+
+  &__line {
+    width: 1px;
+    flex: 1;
+    min-height: 40px;
+    background: $line;
+    margin-top: 6px;
+  }
+
+  // ── Columna contenido ──
+  &__content {
+    padding: 0 0 44px 20px;
+
+    @media (max-width: $bp-sm) { padding-bottom: 32px; }
+  }
+
+  &__titulo {
+    font-family: $font-tight;
+    font-weight: 900;
+    font-size: clamp(18px, 2.5vw, 22px);
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+    color: $crema;
+    margin: 0 0 10px;
+    line-height: 1.05;
+  }
+
+  &__desc {
+    font-family: $font-narrow;
+    font-size: clamp(14px, 1.6vw, 15px);
+    color: rgba($crema, 0.62);
+    line-height: 1.7;
+    margin: 0;
+    max-width: 540px;
+  }
+
+  &__lista {
+    list-style: none;
+    padding: 0;
+    margin: 14px 0 0;
     display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 7px;
+
+    li {
+      font-size: 13px;
+      color: rgba($crema, 0.75);
+      padding-left: 18px;
+      position: relative;
+      line-height: 1.4;
+
+      &::before {
+        content: '✓';
+        position: absolute;
+        left: 0;
+        color: $naranja;
+        font-size: 11px;
+        top: 2px;
+      }
+    }
+  }
+
+  &__nota {
+    margin: 16px 0 0;
+    padding: 10px 14px;
+    border-left: 2px solid $naranja;
+    font-family: $font-narrow;
+    font-style: italic;
+    font-size: 14px;
+    color: rgba($naranja, 0.9);
+    line-height: 1.5;
+    max-width: 480px;
+    background: rgba($naranja, 0.05);
+    border-radius: 0 $radius-sm $radius-sm 0;
+  }
+
+  // ── Variante estrella (Halloween) ──
+  &--estrella &__dot {
+    width: 14px;
+    height: 14px;
+    background: $naranja;
+    border-color: $naranja;
+    box-shadow: 0 0 18px rgba($naranja, 0.55);
+    margin-top: -2px;
+  }
+
+  &--estrella &__mes { color: rgba($naranja, 0.6); }
+
+  &--estrella &__titulo { color: $naranja; }
+}
+
+// ── Cesión de campo ───────────────────────────────────────────────────────────
+.cesion-intro {
+  font-family: $font-narrow;
+  font-size: clamp(15px, 1.8vw, 17px);
+  color: rgba($crema, 0.7);
+  line-height: 1.7;
+  max-width: 760px;
+  margin: 0 0 36px;
+}
+
+.cesion-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  border: 1px solid $line;
+  border-radius: $radius-md;
+  overflow: hidden;
+  margin-bottom: 0;
+
+  @media (max-width: $bp-md) { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: $bp-sm) { grid-template-columns: 1fr; }
+}
+
+.cesion-item {
+  all: unset;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 24px 20px 20px;
+  cursor: pointer;
+  border-right: 1px solid $line;
+  background: transparent;
+  color: $crema;
+  text-align: left;
+  transition: background $transition;
+  box-sizing: border-box;
+
+  &:last-child { border-right: none; }
+
+  @media (max-width: $bp-md) {
+    &:nth-child(2) { border-right: none; }
+    &:nth-child(n+3) { border-top: 1px solid $line; }
+  }
+  @media (max-width: $bp-sm) {
+    border-right: none !important;
+    & + & { border-top: 1px solid $line; }
+  }
+
+  &:hover { background: rgba(255, 255, 255, 0.04); }
+  &--active { background: rgba($naranja, 0.06); }
+
+  &__num {
+    font-family: $font-mono;
+    font-size: 24px;
+    font-weight: 700;
+    color: rgba($naranja, 0.35);
+    line-height: 1;
+    letter-spacing: -0.04em;
   }
 
   &__titulo {
     font-family: $font-tight;
     font-weight: 800;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    line-height: 1.35;
+    color: $crema;
+    margin: 0;
+    flex: 1;
+  }
+
+  &__toggle {
+    align-self: flex-end;
+    width: 28px;
+    height: 28px;
+    border: 1.5px solid rgba($naranja, 0.4);
+    border-radius: 50%;
+    flex-shrink: 0;
+    position: relative;
+    transition: background $transition, border-color $transition;
+
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      background: $naranja;
+      border-radius: 2px;
+      transition: transform $transition, opacity $transition;
+    }
+    &::before { width: 10px; height: 1.5px; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+    &::after  { width: 1.5px; height: 10px; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+  }
+
+  &--active &__toggle {
+    background: $naranja;
+    border-color: $naranja;
+
+    &::before { background: $ink; }
+    &::after  { background: $ink; transform: translate(-50%, -50%) rotate(90deg); opacity: 0; }
+  }
+}
+
+.cesion-panel {
+  border: 1px solid $line;
+  border-top: none;
+  border-radius: 0 0 $radius-md $radius-md;
+  padding: 28px 32px;
+  background: rgba($naranja, 0.04);
+  margin-bottom: 32px;
+  display: flex;
+  gap: 40px;
+
+  @media (max-width: $bp-md) {
+    flex-direction: column;
+    gap: 16px;
+    padding: 24px 20px;
+  }
+
+  &__desc {
+    font-family: $font-narrow;
+    font-size: 15px;
+    color: rgba($crema, 0.75);
+    line-height: 1.65;
+    margin: 0;
+    flex: 1;
+    max-width: 420px;
+  }
+
+  &__lista {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+
+    li {
+      font-size: 13px;
+      color: rgba($crema, 0.85);
+      padding-left: 16px;
+      position: relative;
+      line-height: 1.4;
+
+      &::before {
+        content: '✓';
+        position: absolute;
+        left: 0;
+        color: $naranja;
+        font-size: 11px;
+        top: 2px;
+      }
+    }
+  }
+}
+
+.cesion-cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 24px 28px;
+  background: rgba($naranja, 0.06);
+  border: 1px solid rgba($naranja, 0.2);
+  border-radius: $radius-md;
+
+  @media (max-width: $bp-md) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  &__pregunta {
+    font-family: $font-tight;
+    font-weight: 800;
     font-size: 15px;
     text-transform: uppercase;
-    letter-spacing: 0.04em;
-    margin: 0;
+    letter-spacing: 0.03em;
     color: $crema;
+    margin: 0 0 5px;
   }
 
-  &__badge {
-    font-family: $font-mono;
-    font-size: 9px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: $naranja;
-    border: 1px solid rgba($naranja, 0.5);
-    padding: 3px 9px;
-    border-radius: 99px;
-    white-space: nowrap;
-  }
-
-  &__eventos {
+  &__desc {
     font-size: 13px;
-    color: rgba($crema, 0.55);
-    line-height: 1.6;
+    color: rgba($crema, 0.6);
+    line-height: 1.5;
     margin: 0;
   }
 
-  &__evento-nombre {
-    color: rgba($crema, 0.8);
-    font-weight: 600;
-  }
-
-  &__evento-fecha {
-    color: $naranja;
-    font-family: $font-mono;
-    font-size: 11px;
-    font-weight: 400;
-    letter-spacing: 0.06em;
-    margin: 0 2px;
-  }
-
-  &__evento-desc { color: rgba($crema, 0.5); }
-
-  &__sep-inline {
-    color: rgba($crema, 0.2);
-    margin: 0 4px;
-  }
-
-  // Botón
-  &__action {
-    padding: 20px 24px;
-    flex-shrink: 0;
-
-    .btn { white-space: nowrap; font-size: 11px; padding: 8px 14px; }
-  }
+  .btn { flex-shrink: 0; }
 }
 
 // ── Formulario ────────────────────────────────────────────────────────────────

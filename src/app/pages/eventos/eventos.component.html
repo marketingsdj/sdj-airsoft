@@ -35,33 +35,87 @@
   </div>
 </section>
 
-<!-- DÍAS GRANDES -->
-<section class="section dias-grandes-section">
+<!-- CESIÓN DE CAMPO -->
+<section class="section section--alt cesion-section">
+  <div class="wrap">
+    <div class="section__header">
+      <p class="section__eyebrow">Cesión de campo</p>
+      <h2 class="section__title">Eventos a Medida</h2>
+      <p class="section__lead">Convierte nuestro campo en el escenario de tu proyecto</p>
+    </div>
+
+    <p class="cesion-intro">¿Tienes una idea diferente? En Soldados de Juguete ponemos nuestras instalaciones a disposición de grupos, empresas y organizaciones que necesiten un entorno único para desarrollar sus actividades. Nuestro campo cuenta con amplias zonas de juego, edificaciones, espacios boscosos y escenarios que pueden adaptarse a múltiples usos más allá del airsoft recreativo.</p>
+
+    <div class="cesion-grid">
+      @for (item of cesionesCampo; track item.titulo; let i = $index) {
+        <button
+          class="cesion-item"
+          [class.cesion-item--active]="activeCesion() === i"
+          (click)="toggleCesion(i)"
+          type="button"
+        >
+          <span class="cesion-item__num">{{ i < 9 ? '0' + (i + 1) : (i + 1) }}</span>
+          <h3 class="cesion-item__titulo">{{ item.titulo }}</h3>
+          <span class="cesion-item__toggle" aria-hidden="true"></span>
+        </button>
+      }
+    </div>
+
+    @if (activeCesionItem) {
+      <div class="cesion-panel">
+        <p class="cesion-panel__desc">{{ activeCesionItem.desc }}</p>
+        @if (activeCesionItem.items.length) {
+          <ul class="cesion-panel__lista">
+            @for (punto of activeCesionItem.items; track punto) {
+              <li>{{ punto }}</li>
+            }
+          </ul>
+        }
+      </div>
+    }
+
+    <div class="cesion-cta">
+      <div class="cesion-cta__texto">
+        <p class="cesion-cta__pregunta">¿No encuentras tu actividad en esta lista?</p>
+        <p class="cesion-cta__desc">Estamos abiertos a colaborar en proyectos de todo tipo. Contacta con nosotros y valoraremos la viabilidad de tu propuesta.</p>
+      </div>
+      <a [href]="waUrl" target="_blank" rel="noopener" class="btn btn--primary">Contactar por WhatsApp →</a>
+    </div>
+  </div>
+</section>
+
+<!-- CALENDARIO DE EVENTOS -->
+<section class="section calendario-section">
   <div class="wrap">
     <div class="section__header">
       <p class="section__eyebrow">El calendario del año</p>
-      <h2 class="section__title">Días grandes en SDJ</h2>
+      <h2 class="section__title">Calendario de Eventos</h2>
+      <p class="section__lead">Durante todo el año organizamos partidas especiales, operativos temáticos y eventos únicos que convierten cada temporada en una experiencia diferente. Estas son algunas de las fechas más destacadas de nuestro calendario.</p>
     </div>
 
-    <div class="dg-lista">
-      @for (d of diasGrandes; track d.mes; let even = $even) {
-        <div class="dg-item" [class.dg-item--estrella]="d.tipo === 'estrella'" [class.dg-item--alt]="even">
-          <div class="dg-item__mes">
-            <span class="dg-item__mes-txt">{{ d.mes }}</span>
+    <div class="timeline">
+      @for (d of diasGrandes; track d.mes; let last = $last) {
+        <div class="tl-item" [class.tl-item--estrella]="d.tipo === 'estrella'">
+          <div class="tl-item__mes-col">
+            <span class="tl-item__mes">{{ d.mes }}</span>
           </div>
-          <div class="dg-item__sep"></div>
-          <div class="dg-item__body">
-            <div class="dg-item__head">
-              <h3 class="dg-item__titulo">{{ d.titulo }}</h3>
-            </div>
-            <p class="dg-item__eventos">
-              @for (e of d.eventos; track e.nombre; let last = $last) {
-                <span class="dg-item__evento-nombre">{{ e.nombre }}</span>
-                @if (e.fecha) {<span class="dg-item__evento-fecha">{{ e.fecha }}</span>}
-                <span class="dg-item__evento-desc">{{ e.desc }}</span>
-                @if (!last) {<span class="dg-item__sep-inline"> · </span>}
-              }
-            </p>
+          <div class="tl-item__connector">
+            <span class="tl-item__dot"></span>
+            @if (!last) { <span class="tl-item__line"></span> }
+          </div>
+          <div class="tl-item__content">
+            <h3 class="tl-item__titulo">{{ d.titulo }}</h3>
+            <p class="tl-item__desc">{{ d.desc }}</p>
+            @if (d.items.length) {
+              <ul class="tl-item__lista">
+                @for (p of d.items; track p) {
+                  <li>{{ p }}</li>
+                }
+              </ul>
+            }
+            @if (d.nota) {
+              <p class="tl-item__nota">{{ d.nota }}</p>
+            }
           </div>
         </div>
       }
