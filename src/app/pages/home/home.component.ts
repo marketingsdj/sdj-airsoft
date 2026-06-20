@@ -1,4 +1,5 @@
-import { Component, signal, OnInit, OnDestroy, AfterViewInit, ElementRef, ViewChild, inject } from '@angular/core';
+import { Component, signal, OnInit, OnDestroy, AfterViewInit, ElementRef, ViewChild, inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { AnalyticsService } from '../../core/services/analytics.service';
 
@@ -19,12 +20,16 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   ];
 
   private kitTimer: any;
+  private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
   ngAfterViewInit() {
-    this.heroVideo.nativeElement.play().catch(() => { });
+    if (this.isBrowser) {
+      this.heroVideo?.nativeElement.play().catch(() => { });
+    }
   }
 
   ngOnInit() {
+    if (!this.isBrowser) return;
     this.kitTimer = setInterval(() => {
       this.kitActivo.update(i => (i + 1) % this.kitImagenes.length);
     }, 3000);

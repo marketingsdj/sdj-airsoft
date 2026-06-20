@@ -1,10 +1,9 @@
 import { Component, signal, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { DecimalPipe } from '@angular/common';
 
 @Component({
   selector: 'app-partidas',
-  imports: [RouterLink, DecimalPipe],
+  imports: [RouterLink],
   templateUrl: './partidas.component.html',
   styleUrl: './partidas.component.scss'
 })

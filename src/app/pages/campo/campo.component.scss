@@ -1,3 +1,4 @@
+@use 'sass:color';
 @use '../../../styles/variables' as *;
 
 :host {
@@ -1789,7 +1790,7 @@
 .nosotros {
   padding-top: 0;
   margin-top: -4px;
-  border-top: 4px solid darken($gris, 8%);
+  border-top: 4px solid color.adjust($gris, $lightness: -8%);
 }
 
 // ── Timeline ──────────────────────────────────────────────────────────────────

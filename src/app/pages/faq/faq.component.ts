@@ -1,6 +1,5 @@
 import { Component, signal, computed, inject } from '@angular/core';
 import { AnalyticsService } from '../../core/services/analytics.service';
-import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
@@ -24,7 +23,7 @@ const SINONIMOS: Record<string, string[]> = {
 
 @Component({
   selector: 'app-faq',
-  imports: [RouterLink, FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './faq.component.html',
   styleUrl: './faq.component.scss'
 })

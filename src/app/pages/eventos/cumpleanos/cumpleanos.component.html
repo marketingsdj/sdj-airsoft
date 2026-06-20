@@ -9,7 +9,7 @@
       el resto del año.
     </p>
     <div class="landing-hero__cta">
-      <a [href]="waUrl" target="_blank" rel="noopener" class="btn btn--primary">Organizar mi cumpleaños</a>
+      <a routerLink="/reserva" [queryParams]="{ tipo: 'evento' }" class="btn btn--primary">Organizar mi cumpleaños</a>
     </div>
   </div>
 </section>

@@ -1,12 +1,11 @@
 import { Component, OnInit, OnDestroy, HostListener, signal, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { UpperCasePipe } from '@angular/common';
 import { AnalyticsService } from '../../core/services/analytics.service';
 
 @Component({
   selector: 'app-campo',
-  imports: [RouterLink, UpperCasePipe],
+  imports: [RouterLink],
   templateUrl: './campo.component.html',
   styleUrl: './campo.component.scss'
 })

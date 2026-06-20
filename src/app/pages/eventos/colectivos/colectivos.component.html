@@ -9,7 +9,7 @@
       y cualquier colectivo que quiera hacer algo que no sea lo de siempre.
     </p>
     <div class="landing-hero__cta">
-      <a [href]="waUrl" target="_blank" rel="noopener" class="btn btn--primary">Organizar la excursión</a>
+      <a routerLink="/reserva" [queryParams]="{ tipo: 'evento' }" class="btn btn--primary">Organizar la excursión</a>
     </div>
   </div>
 </section>

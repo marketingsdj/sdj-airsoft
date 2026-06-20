@@ -1,10 +1,11 @@
 import { Component, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { Title, Meta } from '@angular/platform-browser';
 import { EventoContactoComponent } from '../shared/evento-contacto.component';
 
 @Component({
   selector: 'app-despedidas',
-  imports: [EventoContactoComponent],
+  imports: [RouterLink, EventoContactoComponent],
   templateUrl: './despedidas.component.html',
   styleUrl: './despedidas.component.scss'
 })

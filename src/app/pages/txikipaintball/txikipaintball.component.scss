@@ -520,6 +520,29 @@
   }
 }
 
+// En móvil el contenido deja de ir superpuesto: la foto arriba (altura fija)
+// y la info en flujo normal debajo, para que nada se recorte.
+@media (max-width: $bp-md) {
+  .txiki-tarifa-carousel {
+    height: auto;
+    min-height: 0;
+
+    &__img { height: 280px; }
+    &__overlay { height: 280px; bottom: auto; }
+    &__btn { top: 140px; }
+    &__dots { top: 254px; bottom: auto; }
+  }
+
+  .txiki-tarifa-info {
+    position: static;
+    inset: auto;
+    justify-content: flex-start;
+    gap: 20px;
+    padding: 32px 20px 40px;
+    background: #000;
+  }
+}
+
 .txiki-tarifa-banda {
   display: grid;
   grid-template-columns: auto 1fr auto;

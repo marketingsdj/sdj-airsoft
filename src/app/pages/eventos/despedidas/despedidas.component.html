@@ -9,7 +9,7 @@
       para vosotros, y la próxima hora va a ser puro caos organizado.
     </p>
     <div class="landing-hero__cta">
-      <a [href]="waUrl" target="_blank" rel="noopener" class="btn btn--primary">Reservar por WhatsApp</a>
+      <a routerLink="/reserva" [queryParams]="{ tipo: 'evento' }" class="btn btn--primary">Reservar despedida</a>
     </div>
   </div>
 </section>

@@ -1,10 +1,9 @@
 import { Component, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import { AnalyticsService } from '../../core/services/analytics.service';
 
 @Component({
   selector: 'app-promos',
-  imports: [RouterLink],
+  imports: [],
   templateUrl: './promos.component.html',
   styleUrl: './promos.component.scss'
 })
