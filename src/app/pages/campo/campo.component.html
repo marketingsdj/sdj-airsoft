@@ -56,8 +56,8 @@
         </div>
 
         @if (zonaSeleccionada.imagenes.length > 1) {
-        <button class="carrusel__btn carrusel__btn--prev" (click)="anterior($event)">‹</button>
-        <button class="carrusel__btn carrusel__btn--next" (click)="siguiente($event)">›</button>
+        <button class="carrusel__btn carrusel__btn--prev" (click)="anterior($event)" aria-label="Imagen anterior">‹</button>
+        <button class="carrusel__btn carrusel__btn--next" (click)="siguiente($event)" aria-label="Imagen siguiente">›</button>
 
         <div class="carrusel__dots" (click)="$event.stopPropagation()">
           @for (img of zonaSeleccionada.imagenes; track $index) {
@@ -236,8 +236,8 @@
     <img class="tienda-carrusel__img" [class.tienda-carrusel__img--activa]="tiendaActivo === i"
       [src]="img.src" [alt]="img.alt" loading="lazy" />
     }
-    <button class="tienda-carrusel__btn tienda-carrusel__btn--prev" (click)="tiendaAnterior()">‹</button>
-    <button class="tienda-carrusel__btn tienda-carrusel__btn--next" (click)="tiendaSiguiente()">›</button>
+    <button class="tienda-carrusel__btn tienda-carrusel__btn--prev" (click)="tiendaAnterior()" aria-label="Imagen anterior">‹</button>
+    <button class="tienda-carrusel__btn tienda-carrusel__btn--next" (click)="tiendaSiguiente()" aria-label="Imagen siguiente">›</button>
     <div class="tienda-carrusel__dots">
       @for (img of tiendaImagenes; track img.src; let i = $index) {
       <button class="tienda-carrusel__dot" [class.tienda-carrusel__dot--activo]="tiendaActivo === i"

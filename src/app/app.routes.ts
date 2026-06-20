@@ -18,5 +18,5 @@ export const routes: Routes = [
   { path: 'cookies', loadComponent: () => import('./pages/cookies/cookies.component').then(m => m.CookiesComponent) },
   { path: 'aviso-legal', loadComponent: () => import('./pages/aviso-legal/aviso-legal.component').then(m => m.AvisoLegalComponent) },
   { path: 'privacidad', loadComponent: () => import('./pages/privacidad/privacidad.component').then(m => m.PrivacidadComponent) },
-  { path: '**', redirectTo: '' }
+  { path: '**', loadComponent: () => import('./pages/not-found/not-found.component').then(m => m.NotFoundComponent) }
 ];
