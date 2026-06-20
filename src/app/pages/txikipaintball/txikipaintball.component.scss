@@ -251,7 +251,9 @@
   &__item {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    align-items: center;
+    text-align: center;
+    gap: 6px;
     padding: 28px;
     background: rgba(255,255,255,0.03);
     border: 1px solid $line;
@@ -282,6 +284,18 @@
     color: $naranja;
     letter-spacing: -0.02em;
     line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: clamp(40px, 6vw, 56px);
+  }
+
+  &__item--main &__num {
+    font-size: clamp(40px, 6vw, 56px);
+  }
+
+  &__item--main strong {
+    font-size: 20px;
   }
 
   &__total {
@@ -390,6 +404,27 @@
       text-transform: uppercase;
       color: rgba($crema, 0.45);
       text-shadow: 0 1px 6px rgba(0,0,0,0.9);
+    }
+  }
+
+  &__stat--precio {
+    gap: 6px;
+    padding: 18px 28px;
+    background: rgba($naranja, 0.12);
+    border: 1px solid rgba($naranja, 0.45);
+    border-radius: $radius-md;
+    backdrop-filter: blur(10px);
+
+    strong {
+      font-size: clamp(40px, 6vw, 56px);
+      color: $naranja;
+      text-shadow: 0 2px 14px rgba(0,0,0,0.95);
+    }
+
+    em {
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      color: rgba($crema, 0.85);
     }
   }
 
@@ -621,128 +656,157 @@
   p { font-size: 15px; color: rgba($crema, 0.75); line-height: 1.7; margin: 0; }
 
   &__card {
-    background: rgba($naranja, 0.05);
-    border: 1px solid rgba($naranja, 0.2);
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    background: linear-gradient(160deg, rgba($naranja, 0.10), rgba(255, 255, 255, 0.02));
+    border: 1px solid rgba($naranja, 0.25);
     border-radius: $radius-md;
     padding: 32px;
   }
 
-  &__card-top {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 40px;
-    align-items: center;
-
-    @media (max-width: $bp-sm) { grid-template-columns: 1fr; gap: 24px; }
-  }
-
   &__nombre {
-    font-family: $font-mono;
-    font-size: 10px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: $naranja;
-    margin: 0 0 8px;
-  }
-
-  &__precio {
     font-family: $font-tight;
     font-weight: 900;
-    font-size: 56px;
-    color: $crema;
-    line-height: 1;
-    letter-spacing: -0.03em;
-    margin: 0;
-
-    sup { font-size: 0.4em; vertical-align: super; color: rgba($crema, 0.7); }
-  }
-
-  &__por {
-    font-family: $font-mono;
-    font-size: 10px;
-    letter-spacing: 0.12em;
+    font-size: 22px;
     text-transform: uppercase;
-    color: rgba($crema, 0.4);
-    margin: 6px 0 0;
+    letter-spacing: -0.01em;
+    color: #fff;
+    margin: 0;
   }
 
   &__menu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    border-left: 1px solid rgba($naranja, 0.2);
-    padding-left: 32px;
-
-    @media (max-width: $bp-sm) { border-left: none; padding-left: 0; border-top: 1px solid rgba($naranja, 0.2); padding-top: 20px; }
   }
 
   &__menu-item {
     display: flex;
     align-items: center;
-    gap: 12px;
-    font-size: 15px;
-    color: rgba($crema, 0.85);
+    gap: 14px;
+    font-size: 16px;
+    color: rgba($crema, 0.9);
+    padding: 13px 0;
+    border-bottom: 1px solid rgba($crema, 0.08);
+
+    &:first-child { padding-top: 0; }
+    &:last-child { border-bottom: none; padding-bottom: 0; }
   }
 
   &__menu-icon {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: rgba($naranja, 0.16);
     color: $naranja;
-    font-size: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
     flex-shrink: 0;
+  }
+
+  &__precio-box {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px;
+    width: 100%;
+    background: rgba($naranja, 0.12);
+    border: 1px solid rgba($naranja, 0.4);
+    border-radius: $radius-md;
+    padding: 14px 22px;
+  }
+
+  &__precio {
+    font-family: $font-tight;
+    font-weight: 900;
+    font-size: 22px;
+    text-transform: uppercase;
+    color: #fff;
+    line-height: 1;
+    letter-spacing: -0.01em;
+
+    sup { font-size: 0.45em; vertical-align: super; color: rgba(#fff, 0.7); }
+  }
+
+  &__por {
+    font-family: $font-mono;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba($crema, 0.45);
   }
 }
 
 // ── Timeline ─────────────────────────────────────────────────────────────────
 .txiki-timeline {
   display: flex;
-  flex-direction: column;
-  gap: 0;
+  align-items: flex-start;
+
+  @media (max-width: $bp-md) {
+    overflow-x: auto;
+    padding-bottom: 8px;
+  }
 }
 
 .txiki-timeline__item {
-  display: flex;
-  gap: 20px;
-  align-items: flex-start;
-}
-
-.txiki-timeline__punto {
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  flex-shrink: 0;
+  text-align: center;
+
+  @media (max-width: $bp-md) { min-width: 130px; }
+}
+
+.txiki-timeline__punto {
+  position: relative;
+  width: 100%;
+  height: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .txiki-timeline__dot {
-  width: 10px;
-  height: 10px;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
   background: $naranja;
-  flex-shrink: 0;
-  margin-top: 5px;
+  position: relative;
+  z-index: 2;
 }
 
 .txiki-timeline__linea {
-  width: 1px;
-  flex: 1;
-  min-height: 24px;
-  background: rgba($naranja, 0.2);
-  margin: 4px 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  right: -50%;
+  height: 1px;
+  background: rgba($naranja, 0.3);
+  transform: translateY(-50%);
 }
 
 .txiki-timeline__texto {
   font-size: 14px;
   color: rgba($crema, 0.8);
-  line-height: 1.5;
-  margin: 6px 0 20px;
+  line-height: 1.4;
+  margin: 16px 10px 0;
 }
 
 // ── Cumpleaños ────────────────────────────────────────────────────────────────
-.txiki-cumple__inner {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 64px;
-  align-items: start;
+.txiki-cumple {
+  margin-top: 72px;
+}
 
-  @media (max-width: $bp-md) { grid-template-columns: 1fr; }
+.txiki-cumple__head {
+  text-align: center;
+  margin-bottom: 44px;
 }
 
 // ── Horarios layout ───────────────────────────────────────────────────────────
@@ -798,6 +862,17 @@
     font-size: 13px;
     color: $naranja;
     letter-spacing: 0.06em;
+  }
+
+  &__item--consultar {
+    text-decoration: none;
+    color: inherit;
+    background: rgba($naranja, 0.08);
+    cursor: pointer;
+
+    &:hover { background: rgba($naranja, 0.16); }
+
+    .txiki-horarios__horas { font-weight: 700; }
   }
 }
 
@@ -897,7 +972,12 @@
     @media (max-width: $bp-md) { grid-template-columns: 1fr; }
   }
 
-  &__galeria { display: flex; flex-direction: column; }
+  &__galeria {
+    display: flex;
+    flex-direction: column;
+
+    app-txiki-carrusel { display: block; margin-top: 24px; }
+  }
   &__testimonios { display: flex; flex-direction: column; }
 }
 

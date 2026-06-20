@@ -37,6 +37,9 @@ export class CalendarioGruposComponent implements OnInit {
   // Grupos de 10 o más: habilita los días laborables (entre semana) como reserva
   // "bajo consulta" — el cliente elige día y hora aproximada de llegada.
   @Input() permitirLaborables = false;
+  // Txikipaintball: abre también los viernes y usa horarios propios
+  // (Viernes 16–20, Sábado/Domingo/festivo 9–18) en franjas de 2 h.
+  @Input() txiki = false;
   @Output() slotSeleccionado = new EventEmitter<{ fecha: string; hora: string; horaFin: string; pista: string }>();
   @Output() fechaSeleccionada = new EventEmitter<string>();
   @Output() laborableSeleccionado = new EventEmitter<{ fecha: string; horaAprox: string }>();
@@ -92,6 +95,26 @@ export class CalendarioGruposComponent implements OnInit {
     { hora: '15:00', horaFin: '17:00', pista: 'B' },
     { hora: '17:00', horaFin: '19:00', pista: 'A' },
     { hora: '17:00', horaFin: '19:00', pista: 'B' },
+  ];
+
+  // Txikipaintball — Sábado, Domingo y festivos (09:00–18:00) en franjas de 2 h.
+  private readonly SLOTS_TXIKI_FINDE = [
+    { hora: '09:00', horaFin: '11:00', pista: 'A' },
+    { hora: '09:00', horaFin: '11:00', pista: 'B' },
+    { hora: '11:00', horaFin: '13:00', pista: 'A' },
+    { hora: '11:00', horaFin: '13:00', pista: 'B' },
+    { hora: '13:00', horaFin: '15:00', pista: 'A' },
+    { hora: '13:00', horaFin: '15:00', pista: 'B' },
+    { hora: '15:00', horaFin: '17:00', pista: 'A' },
+    { hora: '15:00', horaFin: '17:00', pista: 'B' },
+  ];
+
+  // Txikipaintball — Viernes (16:00–20:00) en franjas de 2 h.
+  private readonly SLOTS_TXIKI_VIERNES = [
+    { hora: '16:00', horaFin: '18:00', pista: 'A' },
+    { hora: '16:00', horaFin: '18:00', pista: 'B' },
+    { hora: '18:00', horaFin: '20:00', pista: 'A' },
+    { hora: '18:00', horaFin: '20:00', pista: 'B' },
   ];
 
   // Horas aproximadas de llegada para grupos +10 entre semana, cada media hora.
@@ -323,14 +346,22 @@ export class CalendarioGruposComponent implements OnInit {
       const fecha = new Date(cursor);
       const dow = fecha.getDay();
       const esFinDeSemana = dow === 0 || dow === 6;
+      const esViernes = dow === 5;
       const esFestivo = this.FESTIVOS.has(this.localFecha(fecha));
-      const esDisponible = esFinDeSemana || esFestivo;
-      const esLaborable = !esDisponible;   // entre semana no festivo (consulta grupos +10)
+      // Txiki abre también los viernes; el resto solo finde/festivo.
+      const esDisponible = this.txiki
+        ? (esViernes || esFinDeSemana || esFestivo)
+        : (esFinDeSemana || esFestivo);
+      const esLaborable = !esDisponible;   // entre semana no festivo (consulta grupos +10 / txiki)
       const esPasado = fecha < hoy;
       const esEsteMes = fecha.getMonth() === ref.getMonth();
 
+      const slotsBase = this.txiki
+        ? (esViernes ? this.SLOTS_TXIKI_VIERNES : this.SLOTS_TXIKI_FINDE)
+        : this.SLOTS_BASE;
+
       const slots: Slot[] = esDisponible && !esPasado && esEsteMes
-        ? this.SLOTS_BASE.map(s => ({
+        ? slotsBase.map(s => ({
             ...s,
             reservada: this.slotsService.bloqueados().includes(
               `${this.localFecha(fecha)}_${s.hora}_${s.pista}`

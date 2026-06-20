@@ -13,8 +13,8 @@
       </div>
       <div class="txiki-hero__col-right">
         <div class="txiki-hero__ctas">
-          <a [href]="waUrl" target="_blank" rel="noopener" class="btn btn--primary">Reservar por WhatsApp →</a>
-          <a routerLink="/reserva" [queryParams]="{ tipo: 'txikipaintball' }" class="btn btn--ghost">Ver disponibilidad</a>
+          <a routerLink="/reserva" [queryParams]="{ tipo: 'txikipaintball' }" class="btn btn--primary" (click)="clickDisponibilidad()">Ver disponibilidad →</a>
+          <a [href]="waUrl" target="_blank" rel="noopener" class="btn btn--ghost" (click)="clickWhatsapp('hero')">Reservar por WhatsApp</a>
         </div>
         <div class="txiki-hero__stats">
           <div class="txiki-hero__stat"><span class="txiki-hero__stat-num">8–14</span><span class="txiki-hero__stat-lbl">Años</span></div>
@@ -43,6 +43,11 @@
               <span class="txiki-horarios__horas">{{ h.horas }}</span>
             </div>
           }
+          <a routerLink="/reserva" [queryParams]="{ tipo: 'txikipaintball' }"
+             class="txiki-horarios__item txiki-horarios__item--consultar" (click)="clickDisponibilidad()">
+            <span class="txiki-horarios__dia">Lunes a Jueves</span>
+            <span class="txiki-horarios__horas">A consultar →</span>
+          </a>
         </div>
       </div>
       <div>
@@ -50,6 +55,8 @@
         <h2 class="section__title">Diversión segura<br>y adaptada</h2>
         <p class="txiki-intro-p" style="margin-top:16px;">Dentro de Soldados de Juguete nace TXIKIPAINTBALL, una experiencia diseñada especialmente para peques que quieren disfrutar de la emoción del paintball en un entorno familiar, controlado y adaptado a su edad.</p>
         <p class="txiki-intro-p" style="margin-top:12px;">Partidas dinámicas, juegos por equipos, adrenalina y muchísimas risas… siempre acompañados por monitores especializados que harán que se lo pasen en grande desde el primer minuto.</p>
+        <p class="txiki-intro-p" style="margin-top:12px;">Si buscas algo original, TXIKIPAINTBALL es la opción perfecta.</p>
+        <p class="txiki-intro-p" style="margin-top:12px;">Vosotros disfrutáis del día. Nosotros nos encargamos del resto.</p>
       </div>
     </div>
     <div class="txiki-planes-wrap">
@@ -121,12 +128,12 @@
           <em>duración total</em>
         </span>
         <span class="txiki-tarifa-info__divider"></span>
-        <span class="txiki-tarifa-info__stat">
+        <span class="txiki-tarifa-info__stat txiki-tarifa-info__stat--precio">
           <strong>19€</strong>
           <em>por jugador</em>
         </span>
         <span class="txiki-tarifa-info__divider"></span>
-        <a [href]="waUrl" target="_blank" rel="noopener" class="btn btn--primary">Reservar →</a>
+        <a [href]="waUrl" target="_blank" rel="noopener" class="btn btn--primary" (click)="clickWhatsapp('tarifa')">Reservar →</a>
       </div>
     </div>
   </div>
@@ -145,33 +152,25 @@
       <p>La opción perfecta para cumpleaños y celebraciones para que los peques terminen el día cenados y felices.</p>
     </div>
     <div class="txiki-merienda__card">
-      <div class="txiki-merienda__card-top">
-        <div>
-          <p class="txiki-merienda__nombre">Merienda infantil</p>
-          <div class="txiki-merienda__precio">9,90<sup>€</sup></div>
-          <p class="txiki-merienda__por">por niño/a</p>
-        </div>
-        <div class="txiki-merienda__menu">
-          @for (item of meriendaIncluye; track item) {
-            <div class="txiki-merienda__menu-item">
-              <span class="txiki-merienda__menu-icon">◆</span>
-              <span>{{ item }}</span>
-            </div>
-          }
-        </div>
+      <p class="txiki-merienda__nombre">Merienda infantil</p>
+      <ul class="txiki-merienda__menu">
+        @for (item of meriendaIncluye; track item) {
+          <li class="txiki-merienda__menu-item">
+            <span class="txiki-merienda__menu-icon">✓</span>
+            <span>{{ item }}</span>
+          </li>
+        }
+      </ul>
+      <div class="txiki-merienda__precio-box">
+        <span class="txiki-merienda__precio">9,90<sup>€</sup></span>
+        <span class="txiki-merienda__por">por niño/a</span>
       </div>
     </div>
   </div>
-</section>
 
-<!-- CUMPLEAÑOS -->
-<section class="section">
-  <div class="wrap txiki-cumple__inner">
-    <div>
-      <p class="section__eyebrow">Celebraciones</p>
-      <h2 class="section__title">Celebra un cumpleaños<br>diferente</h2>
-      <p class="section__lead">Si buscas algo más original que un parque de bolas o una merienda tradicional, TXIKIPAINTBALL es la opción perfecta.</p>
-      <p style="margin-top:20px; font-size:14px; color:rgba(234,224,212,0.7);">Vosotros disfrutáis del día. Nosotros nos encargamos del resto.</p>
+  <div class="wrap txiki-cumple">
+    <div class="txiki-cumple__head">
+      <h2 class="section__title">Celebra un cumpleaños diferente</h2>
     </div>
     <div class="txiki-timeline">
       @for (b of cumpleaBeneficios; track b; let i = $index) {
@@ -228,21 +227,10 @@
 
 
 
-<!-- CARRUSEL FOTOS -->
-<section class="section section--alt">
-  <div class="wrap">
-    <div class="section__header">
-      <p class="section__eyebrow">Así se vive</p>
-      <h2 class="section__title">Txikipaintball en acción</h2>
-    </div>
-    <app-txiki-carrusel></app-txiki-carrusel>
-  </div>
-</section>
-
 <!-- CTA FINAL -->
 <section class="cta-band txiki-cta-final">
   <p class="txiki-cta-final__eyebrow">¿Preparados para la misión?</p>
   <h2>Haz que su próximo cumpleaños<br>sea una aventura inolvidable</h2>
   <p class="txiki-cta-final__sub">Diversión, seguridad y adrenalina adaptada para peques.</p>
-  <a [href]="waUrl" target="_blank" rel="noopener" class="btn btn--primary">Reservar por WhatsApp →</a>
+  <a [href]="waUrl" target="_blank" rel="noopener" class="btn btn--primary" (click)="clickWhatsapp('cta_final')">Reservar por WhatsApp →</a>
 </section>

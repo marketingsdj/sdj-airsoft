@@ -22,6 +22,14 @@ export class TxikipaintballComponent implements OnInit, OnDestroy {
     if (this.intervalo) clearInterval(this.intervalo);
   }
 
+  clickWhatsapp(ubicacion: string) {
+    this.analytics.trackEvent('txikipaintball_whatsapp_click', { ubicacion });
+  }
+
+  clickDisponibilidad() {
+    this.analytics.trackEvent('txikipaintball_disponibilidad_click');
+  }
+
   galeriaImagenes = [1,2,3,4,5,6,7,8,9,10,11,12,13];
   carruselActual = 0;
   fotoActiva = signal(0);
