@@ -1,0 +1,37 @@
+# ── SDJ Airsoft · Apache (GoDaddy cPanel) ───────────────────────────────────
+# SPA Angular prerenderizada (SSG). Sube el contenido de dist/sdj-airsoft/browser/
+# a public_html (este .htaccess incluido).
+
+# Forzar HTTPS y www → ajusta a tu dominio si hace falta
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # HTTPS
+  RewriteCond %{HTTPS} off
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# Todas las rutas válidas están prerenderizadas (existen como archivos), así que
+# las rutas inexistentes devuelven un 404 REAL y sirven la página 404 de Angular
+# (index.html arranca y el router muestra el NotFoundComponent).
+ErrorDocument 404 /index.html
+
+# ── Compresión (gzip) ───────────────────────────────────────────────────────
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/javascript application/javascript application/json image/svg+xml
+</IfModule>
+
+# ── Caché de estáticos ──────────────────────────────────────────────────────
+<IfModule mod_expires.c>
+  ExpiresActive On
+  # Los bundles de Angular llevan hash en el nombre → caché larga
+  ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 month"
+  ExpiresByType image/jpeg "access plus 1 month"
+  ExpiresByType image/png "access plus 1 month"
+  ExpiresByType video/mp4 "access plus 1 month"
+  # El HTML NO se cachea (para que siempre cargue la última versión)
+  ExpiresByType text/html "access plus 0 seconds"
+</IfModule>
