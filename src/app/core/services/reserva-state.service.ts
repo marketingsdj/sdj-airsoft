@@ -66,6 +66,7 @@ export class ReservaStateService {
 
   reset() {
     this.paso.set(1);
-    this.form = this.initialForm();
+    // Limpia en el mismo objeto para no romper las referencias del componente/template
+    Object.assign(this.form, this.initialForm());
   }
 }

@@ -74,7 +74,13 @@ export class ReservaComponent implements OnInit, OnDestroy {
       const doble     = params['doble'] === 'true';
 
       if (tipoParam && this.paramToTipo[tipoParam]) {
-        this.form.tipo      = this.paramToTipo[tipoParam];
+        const nuevoTipo = this.paramToTipo[tipoParam];
+        // Si se llega con una categoría distinta a la que se estaba rellenando,
+        // se limpia el formulario para empezar de cero en la nueva categoría.
+        if (this.form.tipo && this.form.tipo !== nuevoTipo) {
+          this.state.reset();
+        }
+        this.form.tipo      = nuevoTipo;
         this.form.modalidad = tipoParam === 'socio' ? 'socio' : pack;
         this.form.premium   = premium;
         this.form.doblePartida = doble && (this.form.tipo === 'privada' || this.form.tipo === 'evento');
@@ -85,6 +91,10 @@ export class ReservaComponent implements OnInit, OnDestroy {
         if (pista) this.form.pista = pista;
 
         this.paso.set(fecha && hora && pista ? 3 : 2);
+      } else {
+        // Entrada genérica a /reserva (sin categoría): empezar en el paso 1
+        // para elegir, en vez de quedarse a medias en una reserva anterior.
+        this.paso.set(1);
       }
       if (this.isBrowser) history.replaceState({ paso: this.paso() }, '');
     });
@@ -221,6 +231,14 @@ export class ReservaComponent implements OnInit, OnDestroy {
   }
 
   seleccionarTipo(tipo: TipoReserva) {
+    // Al cambiar de categoría, la fecha/franja elegida deja de ser válida
+    // (cada categoría tiene horarios distintos), así que se limpia la selección.
+    if (this.form.tipo !== tipo) {
+      this.form.fecha = '';
+      this.form.hora  = '';
+      this.form.pista = '';
+      this.form.laborableConsulta = false;
+    }
     this.form.tipo = tipo;
     if (tipo === 'privada' || tipo === 'evento' || tipo === 'txiki') { if (this.form.personas < 8) this.form.personas = 8; }
     else if (tipo === 'individual') this.form.personas = 1;
