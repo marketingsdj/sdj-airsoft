@@ -647,6 +647,17 @@
     background: rgba($naranja, 0.35);
   }
 
+  // Zona aún sin imágenes: no clicable, resaltado neutro
+  &--sin-imagenes {
+    cursor: default;
+
+    &:hover,
+    &.zona-rect--activa {
+      border-color: rgba($crema, 0.4);
+      background: rgba($crema, 0.12);
+    }
+  }
+
   &__nombre {
     position: absolute;
     inset: 0;

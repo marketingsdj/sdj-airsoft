@@ -1,8 +1,14 @@
 <!-- HERO -->
 <section class="eventos-hero">
-  <div class="eventos-hero__bg img-placeholder-hero">
-    <!-- TODO: cliente — foto grupo celebrando con gradiente oscuro -->
-  </div>
+  <video
+    class="eventos-hero__bg"
+    src="eventos/web_eventos.mp4"
+    autoplay
+    muted
+    loop
+    playsinline
+  ></video>
+  <div class="eventos-hero__overlay"></div>
   <div class="eventos-hero__content wrap">
     <p class="eyebrow">EVENTOS Y CELEBRACIONES</p>
     <h1>El plan que nadie esperaba</h1>
@@ -10,7 +16,7 @@
 </section>
 
 <!-- 4 TIPOS -->
-<section class="section">
+<section class="section planes-section">
   <div class="wrap">
     <div class="section__header">
       <p class="section__eyebrow">¿Qué celebramos?</p>
@@ -20,9 +26,8 @@
     <div class="grid-4">
       @for (t of tipos; track t.key) {
         <a class="tipo-card" [routerLink]="t.ruta">
-          <div class="tipo-card__img img-placeholder">
-            <!-- TODO: cliente — {{ t.placeholder }} -->
-            <span>{{ t.placeholder }}</span>
+          <div class="tipo-card__img">
+            <img [src]="t.img" [alt]="t.titulo" loading="lazy" />
           </div>
           <div class="tipo-card__body">
             <span class="tipo-card__cat">{{ t.titulo }}</span>
@@ -82,6 +87,7 @@
       <a [href]="waUrl" target="_blank" rel="noopener" class="btn btn--primary">Contactar por WhatsApp →</a>
     </div>
   </div>
+
 </section>
 
 <!-- CALENDARIO DE EVENTOS -->
@@ -90,34 +96,66 @@
     <div class="section__header">
       <p class="section__eyebrow">El calendario del año</p>
       <h2 class="section__title">Calendario de Eventos</h2>
-      <p class="section__lead">Durante todo el año organizamos partidas especiales, operativos temáticos y eventos únicos que convierten cada temporada en una experiencia diferente. Estas son algunas de las fechas más destacadas de nuestro calendario.</p>
     </div>
 
-    <div class="timeline">
-      @for (d of diasGrandes; track d.mes; let last = $last) {
-        <div class="tl-item" [class.tl-item--estrella]="d.tipo === 'estrella'">
-          <div class="tl-item__mes-col">
-            <span class="tl-item__mes">{{ d.mes }}</span>
-          </div>
-          <div class="tl-item__connector">
-            <span class="tl-item__dot"></span>
-            @if (!last) { <span class="tl-item__line"></span> }
-          </div>
-          <div class="tl-item__content">
-            <h3 class="tl-item__titulo">{{ d.titulo }}</h3>
-            <p class="tl-item__desc">{{ d.desc }}</p>
-            @if (d.items.length) {
-              <ul class="tl-item__lista">
-                @for (p of d.items; track p) {
-                  <li>{{ p }}</li>
-                }
-              </ul>
-            }
-            @if (d.nota) {
-              <p class="tl-item__nota">{{ d.nota }}</p>
-            }
-          </div>
+    <div class="cal-carrusel">
+      <button class="cal-carrusel__nav cal-carrusel__nav--prev" type="button" (click)="calendarioPrev()" aria-label="Evento anterior">‹</button>
+
+      <div class="cal-carrusel__viewport">
+        <div class="cal-carrusel__track" [style.transform]="'translateX(-' + carruselCalendario() * 100 + '%)'">
+          @for (d of diasGrandes; track d.mes) {
+            <div class="cal-slide" [class.cal-slide--estrella]="d.tipo === 'estrella'">
+              <div class="cal-slide__badge" aria-hidden="true">{{ d.icono }}</div>
+              <span class="cal-slide__mes">{{ d.mes }}</span>
+              <h3 class="cal-slide__titulo">{{ d.titulo }}</h3>
+              <p class="cal-slide__desc">{{ d.desc }}</p>
+              @if (d.items.length) {
+                <ul class="cal-slide__lista">
+                  @for (p of d.items; track p) {
+                    <li>{{ p }}</li>
+                  }
+                </ul>
+              }
+              @if (d.nota) {
+                <p class="cal-slide__nota">{{ d.nota }}</p>
+              }
+              @if (d.fotos?.length) {
+                <div class="cal-slide__fotos">
+                  @for (f of d.fotos; track f) {
+                    <img [src]="'eventos/navidades/' + f + '.svg'" [alt]="d.titulo + ' en SDJ'" loading="lazy" />
+                  }
+                </div>
+              }
+            </div>
+          }
         </div>
+      </div>
+
+      <button class="cal-carrusel__nav cal-carrusel__nav--next" type="button" (click)="calendarioNext()" aria-label="Evento siguiente">›</button>
+    </div>
+
+    <div class="cal-carrusel__dots">
+      @for (d of diasGrandes; track d.mes; let i = $index) {
+        <button
+          class="cal-carrusel__dot"
+          [class.is-active]="carruselCalendario() === i"
+          type="button"
+          (click)="irACalendario(i)"
+          [attr.aria-label]="'Ir a ' + d.mes"
+        ></button>
+      }
+    </div>
+
+    <p class="section__lead cal-carrusel__pie">Durante todo el año organizamos partidas especiales, operativos temáticos y eventos únicos que convierten cada temporada en una experiencia diferente.</p>
+  </div>
+
+  <div class="cesion-marquee">
+    <div class="cesion-marquee__track">
+      @for (n of galeriaCesion; track $index) {
+        <img [src]="'eventos/globo_negro/' + n + '.svg'" alt="Eventos a medida en SDJ" loading="lazy" />
+      }
+      @for (n of galeriaCesion; track $index) {
+        <img [src]="'eventos/globo_negro/' + n + '.svg'" alt="" aria-hidden="true" loading="lazy" />
       }
     </div>
   </div>

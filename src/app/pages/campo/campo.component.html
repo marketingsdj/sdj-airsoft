@@ -28,9 +28,10 @@
       <img src="Campo/Imagen aerea campo.svg" alt="Vista aérea del campo SDJ" loading="eager" fetchpriority="high" />
       @for (z of zonas; track z.id) {
       @if (z.rw > 0 && z.rh > 0) {
-      <div class="zona-rect" [class.zona-rect--activa]="zonaActiva === z.id" [style.left.%]="z.rx" [style.top.%]="z.ry"
+      <div class="zona-rect" [class.zona-rect--activa]="zonaActiva === z.id"
+        [class.zona-rect--sin-imagenes]="z.imagenes.length === 0" [style.left.%]="z.rx" [style.top.%]="z.ry"
         [style.width.%]="z.rw" [style.height.%]="z.rh" (mouseenter)="zonaActiva = z.id" (mouseleave)="zonaActiva = null"
-        (click)="seleccionarZona($event, z)">
+        (click)="z.imagenes.length ? seleccionarZona($event, z) : null">
         <div class="zona-rect__nombre">{{ z.titulo }}</div>
       </div>
       }
