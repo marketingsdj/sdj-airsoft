@@ -7,9 +7,11 @@
   RewriteEngine On
   RewriteBase /
 
-  # HTTPS
+  # Forzar www + HTTPS en un solo salto (sin www o sin https → https://www...)
+  RewriteCond %{HTTP_HOST} !^www\. [NC,OR]
   RewriteCond %{HTTPS} off
-  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+  RewriteCond %{HTTP_HOST} ^(?:www\.)?(.+)$ [NC]
+  RewriteRule ^ https://www.%1%{REQUEST_URI} [L,R=301]
 </IfModule>
 
 # Todas las rutas válidas están prerenderizadas (existen como archivos), así que
