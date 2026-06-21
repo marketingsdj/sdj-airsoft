@@ -47,41 +47,51 @@
       </div>
 
       <!-- Bonos -->
-      <div class="habitual-bonos" style="margin-top:40px;">
-
-        <!-- Vale 10 -->
-        <div class="habitual-vale">
-          <div class="habitual-vale__texto">
-            <p class="eyebrow">BONO HABITUAL</p>
-            <h3>Vale 10 SDJ — 179 €</h3>
-            <p>10 visitas de mañana con equipo propio.</p>
-            <ul class="habitual-lista">
-              <li>Válido 12 meses</li>
-              <li>Nominal e intransferible</li>
-              <li>Al comprar: <strong>parche SDJ oficial</strong></li>
-              <li><strong>Alta gratuita para convertirte en socio</strong></li>
-            </ul>
-          </div>
-          <a href="https://wa.me/34688731474?text=Quiero%20comprar%20el%20Vale%2010%20SDJ" target="_blank" rel="noopener" class="btn btn--primary">Comprar el Vale 10 →</a>
+      <ng-template #bonoHabContenido let-b>
+        <div class="habitual-vale__texto">
+          <p class="eyebrow">{{ b.tag }}</p>
+          <h3>{{ b.titulo }} — {{ b.precio }} €</h3>
+          <p [innerHTML]="b.desc"></p>
+          <ul class="habitual-lista">
+            @for (item of b.lista; track item) { <li [innerHTML]="item"></li> }
+          </ul>
+          @if (b.aviso) { <p class="promo-aviso" style="font-size:8px;">{{ b.aviso }}</p> }
         </div>
+        <a [href]="b.wa" target="_blank" rel="noopener" class="btn btn--primary">{{ b.cta }}</a>
+      </ng-template>
 
-        <!-- Bono 3 Visitas Premium -->
-        <div class="habitual-vale">
-          <div class="habitual-vale__texto">
-            <p class="eyebrow">BONO 3 VISITAS</p>
-            <h3>Bono 3 Visitas Premium — 99 €</h3>
-            <p>3 alquileres en modalidad premium — por separado serían <s>134,70 €</s>. Ahorras 35,70 €.</p>
-            <ul class="habitual-lista">
-              <li>Válido 6 meses · Nominal e intransferible</li>
-              <li>Si hoy jugaste en estándar → solo necesitas <strong>59,10 €</strong> más</li>
-              <li>Si jugaste en premium → solo <strong>54,10 €</strong> más</li>
-            </ul>
-            <p class="promo-aviso" style="font-size:8px;">Disponible en mostrador al salir o por WhatsApp en los 7 días siguientes a tu visita.</p>
+      <!-- Escritorio: tarjetas completas -->
+      <div class="habitual-bonos habitual-bonos--cards" style="margin-top:40px;">
+        @for (b of bonosHabitual; track b.titulo) {
+          <div class="habitual-vale">
+            <ng-container *ngTemplateOutlet="bonoHabContenido; context: { $implicit: b }"></ng-container>
           </div>
-          <a href="https://wa.me/34688731474" target="_blank" rel="noopener" class="btn btn--primary">Comprar el Bono 3 →</a>
-        </div>
-
+        }
       </div>
+
+      <!-- Móvil: resumen, abre el detalle en pop-up -->
+      <div class="bonos-compact" style="margin-top:32px;">
+        @for (b of bonosHabitual; track b.titulo; let i = $index) {
+          <button type="button" class="bono-compact" (click)="abrirBonoHabitual(i)">
+            <span class="bono-compact__info">
+              <span class="bono-compact__titulo">{{ b.titulo }}</span>
+              <span class="bono-compact__tag">{{ b.tag }}</span>
+            </span>
+            <span class="bono-compact__precio">{{ b.precio }} €</span>
+            <span class="bono-compact__chevron" aria-hidden="true">›</span>
+          </button>
+        }
+      </div>
+
+      <!-- Pop-up con el detalle completo -->
+      @if (bonoHabitualAbierto() !== null) {
+        <div class="bono-modal-overlay" (click)="cerrarBonoHabitual()">
+          <div class="habitual-vale bono-card--modal" (click)="$event.stopPropagation()">
+            <button class="bono-modal__cerrar" (click)="cerrarBonoHabitual()" aria-label="Cerrar">✕</button>
+            <ng-container *ngTemplateOutlet="bonoHabContenido; context: { $implicit: bonosHabitual[bonoHabitualAbierto()!] }"></ng-container>
+          </div>
+        </div>
+      }
     }
 
     <!-- Grupo -->

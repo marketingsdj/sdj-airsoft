@@ -1,5 +1,101 @@
 @use '../../../styles/variables' as *;
 
+// ── Bonos habituales: resumen + pop-up en móvil ────────────────────────────────
+.habitual-bonos.habitual-bonos--cards {
+  @media (max-width: $bp-md) { display: none; }
+}
+
+.bonos-compact {
+  display: none;
+
+  @media (max-width: $bp-md) {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+.bono-compact {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  text-align: left;
+  padding: 18px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid $line;
+  border-radius: $radius-md;
+  cursor: pointer;
+  transition: border-color $transition, background $transition;
+
+  &:hover { border-color: rgba($naranja, 0.4); }
+
+  &__info { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 0; }
+  &__titulo {
+    font-family: $font-tight;
+    font-weight: 900;
+    font-size: 17px;
+    text-transform: uppercase;
+    color: $crema;
+    line-height: 1.1;
+  }
+  &__tag {
+    font-family: $font-mono;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: $naranja;
+  }
+  &__precio {
+    font-family: $font-tight;
+    font-weight: 900;
+    font-size: 20px;
+    color: $crema;
+    flex-shrink: 0;
+  }
+  &__chevron { font-size: 24px; color: rgba($crema, 0.4); flex-shrink: 0; line-height: 1; }
+}
+
+.bono-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba($ink, 0.78);
+  backdrop-filter: blur(6px);
+  z-index: 1100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.habitual-vale.bono-card--modal {
+  width: 100%;
+  max-width: 460px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  background: $verde-osc;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+}
+
+.bono-modal__cerrar {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 2;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba($ink, 0.6);
+  border: 1px solid $line;
+  color: $crema;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 // ── Banner premium ────────────────────────────────────────────────────────────
 .premium-banner {
   display: flex;
@@ -139,8 +235,24 @@
   gap: 8px;
   margin-bottom: 0;
 
-  @media (max-width: $bp-md) { grid-template-columns: 1fr 1fr; }
-  @media (max-width: $bp-sm) { grid-template-columns: 1fr; }
+  // En móvil: las 4 pestañas en una sola línea, compactas
+  @media (max-width: $bp-md) {
+    gap: 5px;
+
+    .tabs__btn {
+      padding: 10px 5px;
+      align-items: center;
+      text-align: center;
+      gap: 0;
+    }
+    .tabs__btn-icon,
+    .tabs__btn-desc { display: none; }
+    .tabs__btn-label {
+      font-size: 11px;
+      letter-spacing: 0.02em;
+      line-height: 1.15;
+    }
+  }
 
   &__btn {
     display: flex;
@@ -165,7 +277,7 @@
       border-color: $naranja;
 
       .tabs__btn-icon { color: $naranja; }
-      .tabs__btn-label { color: $crema; }
+      .tabs__btn-label { color: $naranja; }
     }
   }
 

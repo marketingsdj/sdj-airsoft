@@ -27,6 +27,42 @@ export class TarifasComponent implements OnInit {
     'Seguro de actividad',
   ];
 
+  // Bonos habituales (resumen + pop-up en móvil, como en promos)
+  bonosHabitual = [
+    {
+      tag: 'Bono habitual',
+      titulo: 'Vale 10 SDJ',
+      precio: '179',
+      desc: '10 visitas de mañana con equipo propio.',
+      lista: [
+        'Válido 12 meses',
+        'Nominal e intransferible',
+        'Al comprar: <strong>parche SDJ oficial</strong>',
+        '<strong>Alta gratuita para convertirte en socio</strong>',
+      ],
+      aviso: '',
+      wa: 'https://wa.me/34688731474?text=Quiero%20comprar%20el%20Vale%2010%20SDJ',
+      cta: 'Comprar el Vale 10 →',
+    },
+    {
+      tag: 'Bono 3 visitas',
+      titulo: 'Bono 3 Visitas Premium',
+      precio: '99',
+      desc: '3 alquileres en modalidad premium — por separado serían <s>134,70 €</s>. Ahorras 35,70 €.',
+      lista: [
+        'Válido 6 meses · Nominal e intransferible',
+        'Si hoy jugaste en estándar → solo necesitas <strong>59,10 €</strong> más',
+        'Si jugaste en premium → solo <strong>54,10 €</strong> más',
+      ],
+      aviso: 'Disponible en mostrador al salir o por WhatsApp en los 7 días siguientes a tu visita.',
+      wa: 'https://wa.me/34688731474',
+      cta: 'Comprar el Bono 3 →',
+    },
+  ];
+  bonoHabitualAbierto = signal<number | null>(null);
+  abrirBonoHabitual(i: number) { this.bonoHabitualAbierto.set(i); }
+  cerrarBonoHabitual() { this.bonoHabitualAbierto.set(null); }
+
   private analytics = inject(AnalyticsService);
 
   constructor(private location: Location, private route: ActivatedRoute) {}
