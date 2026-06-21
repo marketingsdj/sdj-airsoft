@@ -103,6 +103,12 @@ section[id] {
     overflow-x: auto;
     scrollbar-width: none;
     &::-webkit-scrollbar { display: none; }
+
+    // En móvil los ítems se reparten en varias filas (sin scroll horizontal)
+    @media (max-width: $bp-md) {
+      flex-wrap: wrap;
+      overflow-x: visible;
+    }
   }
 
   &__item {
@@ -116,6 +122,9 @@ section[id] {
     border-bottom: 2px solid transparent;
     transition: $transition;
 
+    @media (max-width: $bp-md) { padding: 9px 12px; }
+    @media (max-width: $bp-sm) { padding: 8px 10px; font-size: 9px; }
+
     &:hover {
       color: $crema;
       border-bottom-color: $naranja;
@@ -126,16 +135,17 @@ section[id] {
 // ── Tags y avisos ─────────────────────────────────────────────────────────────
 .promo-tag {
   display: inline-block;
-  white-space: nowrap;
+  white-space: normal;
   font-family: $font-mono;
   font-size: 13px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  font-weight: 800;
+  font-weight: 900;
+  line-height: 1.35;
   color: $ink;
   background: $naranja;
   border: none;
-  border-radius: 99px;
+  border-radius: 12px;
   padding: 6px 14px;
   margin-bottom: 16px;
 }
@@ -443,6 +453,127 @@ section[id] {
   margin-top: 40px;
 
   @media (max-width: $bp-md) { grid-template-columns: 1fr; }
+}
+
+// En móvil, las tarjetas completas de bonos se sustituyen por un resumen + pop-up
+.bonos-grid--cards {
+  @media (max-width: $bp-md) { display: none; }
+}
+
+.bonos-compact {
+  display: none;
+
+  @media (max-width: $bp-md) {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 40px;
+  }
+}
+
+.bono-compact {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  text-align: left;
+  padding: 18px 18px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid $line;
+  border-radius: $radius-md;
+  cursor: pointer;
+  transition: border-color $transition, background $transition;
+
+  &:hover { border-color: rgba($naranja, 0.4); }
+
+  &__info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__titulo {
+    font-family: $font-tight;
+    font-weight: 900;
+    font-size: 18px;
+    text-transform: uppercase;
+    color: $crema;
+    line-height: 1.1;
+  }
+
+  &__tag {
+    font-family: $font-mono;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: $naranja;
+    line-height: 1.3;
+  }
+
+  &__precio {
+    font-family: $font-tight;
+    font-weight: 900;
+    font-size: 22px;
+    color: $crema;
+    flex-shrink: 0;
+  }
+
+  &__chevron {
+    font-size: 24px;
+    color: rgba($crema, 0.4);
+    flex-shrink: 0;
+    line-height: 1;
+  }
+}
+
+.bono-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba($ink, 0.78);
+  backdrop-filter: blur(6px);
+  z-index: 1100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+// Doble clase para ganar a la regla base .bono-card (que va después en el archivo)
+.bono-card.bono-card--modal {
+  width: 100%;
+  max-width: 460px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  background: $verde-osc;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+}
+
+// En el pop-up, la frase de ahorro puede partir en dos líneas
+.bono-card--modal .bono-card__ahorro {
+  max-width: 110px;
+  margin-left: auto;
+  line-height: 1.3;
+}
+
+.bono-modal__cerrar {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 2;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba($ink, 0.6);
+  border: 1px solid $line;
+  color: $crema;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .bono-card {
@@ -841,6 +972,83 @@ section[id] {
 
   @media (max-width: $bp-md) { grid-template-columns: 1fr 1fr; }
   @media (max-width: $bp-sm) { grid-template-columns: 1fr; }
+}
+
+// En móvil, las tarjetas completas se sustituyen por 3 compactas en fila
+.kits-grid--cards {
+  @media (max-width: $bp-md) { display: none; }
+}
+
+.kits-compact {
+  display: none;
+
+  @media (max-width: $bp-md) {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-top: 8px;
+  }
+}
+
+.kit-compact {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 6px;
+  padding: 16px 8px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid $line;
+  border-radius: $radius-md;
+
+  &--featured {
+    border-color: rgba($naranja, 0.5);
+    background: rgba($naranja, 0.06);
+  }
+
+  &__badge {
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: $font-mono;
+    font-size: 8px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: $ink;
+    background: $naranja;
+    border-radius: 99px;
+    padding: 2px 8px;
+    white-space: nowrap;
+  }
+
+  &__tag {
+    font-family: $font-mono;
+    font-size: 8px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: $naranja;
+    line-height: 1.2;
+  }
+
+  &__nombre {
+    font-family: $font-tight;
+    font-weight: 900;
+    font-size: 14px;
+    text-transform: uppercase;
+    color: $crema;
+    line-height: 1.05;
+  }
+
+  &__precio {
+    font-family: $font-tight;
+    font-weight: 900;
+    font-size: 18px;
+    color: $naranja;
+    margin-top: auto;
+  }
 }
 
 .kit-card {

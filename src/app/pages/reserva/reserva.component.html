@@ -289,10 +289,10 @@
               <div class="equipo-select">
                 <strong class="equipo-select__title">¿Qué equipo quieres?</strong>
                 <div class="equipo-grid">
-                  @for (e of equipos; track e.key) {
+                  @for (e of equiposVisibles; track e.key) {
                     <button type="button"
                       class="equipo-btn"
-                      [class.equipo-btn--selected]="equipoSeleccionado === e.key"
+                      [class.equipo-btn--selected]="equipoBaseSeleccionado === e.key"
                       (click)="seleccionarEquipo(e.modalidad, e.premium)">
                       <span class="equipo-btn__body">
                         <span class="equipo-btn__label">{{ e.label }}</span>
@@ -689,6 +689,28 @@
               </ul>
             </div>
 
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- Pop-up upsell a Premium (al pasar del paso 1 con alquiler estándar) -->
+    @if (modalPremium()) {
+      <div class="modal-overlay" (click)="rechazarPremium()">
+        <div class="modal" (click)="$event.stopPropagation()">
+          <button class="modal__cerrar" (click)="rechazarPremium()" aria-label="Cerrar">✕</button>
+          <p class="section__eyebrow">Antes de continuar</p>
+          <h2 class="modal__titulo">¿Añadir el pack premium?</h2>
+          <p class="modal__desc">Por solo +5 € más llevas el mejor equipamiento del campo.</p>
+          <ul class="modal__lista">
+            @for (item of premiumIncluye; track item) {
+              <li>{{ item }}</li>
+            }
+          </ul>
+          <p class="modal__premium-hint">Pack premium: <strong>44,90 €</strong> en lugar de 39,90 €</p>
+          <div class="modal__cta">
+            <button type="button" class="btn btn--primary" (click)="aceptarPremium()">Sí, quiero el pack premium</button>
+            <button type="button" class="btn btn--ghost" (click)="rechazarPremium()">Continuar sin premium</button>
           </div>
         </div>
       </div>

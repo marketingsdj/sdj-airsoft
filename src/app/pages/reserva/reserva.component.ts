@@ -28,7 +28,17 @@ export class ReservaComponent implements OnInit, OnDestroy {
   mostrarNormas      = signal(false);
   mostrarPrivacidad  = signal(false);
   mostrarReducida    = signal(false);   // disclosure "¿Conoces la tarifa reducida?"
+  modalPremium       = signal(false);   // pop-up de upsell a Premium al pasar del paso 1
+  private premiumOfrecido = false;      // para no repetir el pop-up en el mismo flujo
   numeroReserva = signal('');
+
+  premiumIncluye = [
+    'Réplica de gama alta',
+    'Máscara full-face premium',
+    'Chaleco táctico profesional',
+    'Munición ilimitada premium',
+    'Seguro de actividad',
+  ];
 
   constructor(private route: ActivatedRoute) {}
 
@@ -132,6 +142,19 @@ export class ReservaComponent implements OnInit, OnDestroy {
     { key: 'premium'  as const, modalidad: 'alquiler' as const, premium: true,  icono: '★', label: 'Alquiler Premium',  desc: 'Equipo de gama alta. Solo +5 €.',      precio: '44,90 €', recomendado: true  },
   ];
 
+  // En el paso 1 solo se muestran 2 opciones (propio / alquiler estándar); el
+  // Premium se ofrece después en un pop-up al pulsar "Siguiente".
+  get equiposVisibles() {
+    return this.equipos.filter(e => !e.premium);
+  }
+
+  // Resalta la opción base elegida (Premium también cuenta como "alquiler estándar").
+  get equipoBaseSeleccionado(): string {
+    if (this.form.modalidad === 'simple') return 'propio';
+    if (this.form.modalidad === 'alquiler') return 'estandar';
+    return '';
+  }
+
   get equipoSeleccionado(): string {
     if (this.form.modalidad === 'simple') return 'propio';
     if (this.form.modalidad === 'alquiler') return this.form.premium ? 'premium' : 'estandar';
@@ -141,6 +164,8 @@ export class ReservaComponent implements OnInit, OnDestroy {
   seleccionarEquipo(modalidad: 'simple' | 'alquiler', premium: boolean) {
     this.form.modalidad = modalidad;
     this.form.premium = premium;
+    // Si cambian de equipo, se vuelve a poder ofrecer el Premium al avanzar.
+    this.premiumOfrecido = false;
     this.analytics.trackEvent('reserva_equipo_seleccionado', { modalidad, premium: premium ? 'sí' : 'no' });
   }
 
@@ -294,12 +319,35 @@ export class ReservaComponent implements OnInit, OnDestroy {
   }
 
   siguiente() {
-    if (this.pasoValido) {
-      this.paso.update(p => Math.min(p + 1, 3));
-      history.pushState({ paso: this.paso() }, '');
-      window.scrollTo({ top: 0, behavior: 'instant' });
-      this.analytics.trackEvent('reserva_paso_completado', { paso: this.paso(), tipo: this.form.tipo });
+    if (!this.pasoValido) return;
+    // Al salir del paso 1 con alquiler estándar, ofrecer el Premium (+5 €) en un pop-up.
+    if (this.paso() === 1 && this.form.tipo === 'individual'
+        && this.form.modalidad === 'alquiler' && !this.form.premium && !this.premiumOfrecido) {
+      this.premiumOfrecido = true;
+      this.modalPremium.set(true);
+      return;
     }
+    this.avanzar();
+  }
+
+  private avanzar() {
+    this.paso.update(p => Math.min(p + 1, 3));
+    history.pushState({ paso: this.paso() }, '');
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    this.analytics.trackEvent('reserva_paso_completado', { paso: this.paso(), tipo: this.form.tipo });
+  }
+
+  aceptarPremium() {
+    this.form.modalidad = 'alquiler';
+    this.form.premium = true;
+    this.modalPremium.set(false);
+    this.analytics.trackEvent('reserva_premium_aceptado', {});
+    this.avanzar();
+  }
+
+  rechazarPremium() {
+    this.modalPremium.set(false);
+    this.avanzar();
   }
 
   anterior() {

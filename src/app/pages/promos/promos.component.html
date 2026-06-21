@@ -27,73 +27,68 @@
     <h2 class="section__title">Juega más.<br>Paga menos</h2>
     <p class="section__lead">Para los que ya saben que van a volver. Blindar las próximas visitas siempre sale a cuenta.</p>
 
-    <div class="bonos-grid">
-
-      <!-- Bono 3 Visitas -->
-      <div class="bono-card">
-        
-        <div class="bono-card__body">
-          <div class="bono-card__head">
-            <div>
-              <span class="promo-tag">Para el jugador con equipo alquilado</span>
-              <h3>3 Entradas Premium</h3>
-              <details class="promo-condiciones">
-                <summary>Condiciones</summary>
-                <ul>
-                  <li>Consulta condiciones en mostrador</li>
-                </ul>
-              </details>
-            </div>
-            <div class="bono-card__precio-wrap">
-              <span class="bono-card__precio">99<sup>€</sup></span>
-              <span class="bono-card__ahorro">Ahorras un 30%</span>
-            </div>
+    <!-- Plantilla reutilizable del contenido completo de un bono -->
+    <ng-template #bonoContenido let-b>
+      <div class="bono-card__body">
+        <div class="bono-card__head">
+          <div>
+            <span class="promo-tag">{{ b.tag }}</span>
+            <h3>{{ b.titulo }}</h3>
+            <details class="promo-condiciones">
+              <summary>Condiciones</summary>
+              <ul>
+                @for (c of b.condiciones; track c) { <li>{{ c }}</li> }
+              </ul>
+            </details>
           </div>
-          <p class="bono-card__desc">Alquila equipamiento y juega tres veces. Bono nominativo, a tu nombre.</p>
-          <ul class="promo-lista">
-            <li>Equipo premium incluido</li>
-            <li>Nominal e intransferible · Válido 12 meses</li>
-          </ul>
-          <div class="bono-card__nota">
-            <p>Si ya has jugado —aunque tu primera visita no fuera en premium— solo <strong class="bono-card__nota-precio">54 €</strong> para completarlo.</p>
+          <div class="bono-card__precio-wrap">
+            <span class="bono-card__precio">{{ b.precio }}<sup>€</sup></span>
+            <span class="bono-card__ahorro">{{ b.ahorro }}</span>
           </div>
-          <p class="promo-aviso">Disponible en la tienda SDJ: pídelo al salir de tu partida o cualquier día que abramos.</p>
         </div>
-      </div>
-
-      <!-- Vale 10 -->
-      <div class="bono-card">
-        
-        <div class="bono-card__body">
-          <div class="bono-card__head">
-            <div>
-              <span class="promo-tag">Para el jugador con equipo propio</span>
-              <h3>Vale 10 SDJ</h3>
-              <details class="promo-condiciones">
-                <summary>Condiciones</summary>
-                <ul>
-                  <li>Pendiente de completar</li>
-                </ul>
-              </details>
-            </div>
-            <div class="bono-card__precio-wrap">
-              <span class="bono-card__precio">179<sup>€</sup></span>
-              <span class="bono-card__ahorro">Ahorras 20 € + parche SDJ</span>
-            </div>
-          </div>
-          <p class="bono-card__desc">Juega diez mañanas con tu propio equipo. Bono nominativo, a tu nombre.</p>
-          <ul class="promo-lista">
-            <li>10 visitas de mañana con equipo propio — sueltas serían <s>199 €</s></li>
-            <li>Nominal e intransferible · Válido 12 meses</li>
-          </ul>
-          <div class="bono-card__nota">
-            <p>Al comprar el Vale 10: <strong>parche SDJ oficial</strong> para llevar en chaleco o uniforme.</p>
-          </div>
-          <p class="promo-aviso">Disponible en la tienda SDJ: pídelo al salir de tu partida o cualquier día que abramos.</p>
+        <p class="bono-card__desc">{{ b.desc }}</p>
+        <ul class="promo-lista">
+          @for (item of b.lista; track item) { <li [innerHTML]="item"></li> }
+        </ul>
+        <div class="bono-card__nota">
+          <p [innerHTML]="b.notaHtml"></p>
         </div>
+        <p class="promo-aviso">{{ b.aviso }}</p>
       </div>
+    </ng-template>
 
+    <!-- Escritorio: tarjetas completas -->
+    <div class="bonos-grid bonos-grid--cards">
+      @for (b of bonos; track b.titulo) {
+        <div class="bono-card">
+          <ng-container *ngTemplateOutlet="bonoContenido; context: { $implicit: b }"></ng-container>
+        </div>
+      }
     </div>
+
+    <!-- Móvil: resumen (qué / para qué), abre el detalle en pop-up -->
+    <div class="bonos-compact">
+      @for (b of bonos; track b.titulo; let i = $index) {
+        <button type="button" class="bono-compact" (click)="abrirBono(i)">
+          <span class="bono-compact__info">
+            <span class="bono-compact__titulo">{{ b.titulo }}</span>
+            <span class="bono-compact__tag">{{ b.tag }}</span>
+          </span>
+          <span class="bono-compact__precio">{{ b.precio }} €</span>
+          <span class="bono-compact__chevron" aria-hidden="true">›</span>
+        </button>
+      }
+    </div>
+
+    <!-- Pop-up con el detalle completo -->
+    @if (bonoAbierto() !== null) {
+      <div class="bono-modal-overlay" (click)="cerrarBono()">
+        <div class="bono-card bono-card--modal" (click)="$event.stopPropagation()">
+          <button class="bono-modal__cerrar" (click)="cerrarBono()" aria-label="Cerrar">✕</button>
+          <ng-container *ngTemplateOutlet="bonoContenido; context: { $implicit: bonos[bonoAbierto()!] }"></ng-container>
+        </div>
+      </div>
+    }
   </div>
 </section>
 
@@ -107,7 +102,7 @@
     <p class="section__lead">Alquilas 4 veces y gastas 159,60 € sin tener nada. Con 189 € tienes tu propio kit para siempre. Las matemáticas son fáciles.</p>
     <p class="promo-aviso" style="margin-bottom:40px;">Antes de comprar: prueba cualquier réplica en la galería de tiro. <strong>10 bolas gratis.</strong> Sin compromiso.</p>
 
-    <div class="kits-grid">
+    <div class="kits-grid kits-grid--cards">
 
       <!-- Kit Recluta -->
       <div class="kit-card">
@@ -123,12 +118,6 @@
             <li>1.000 bolas</li>
           </ul>
           <p class="kit-card__plazos">o 3 × 63 € sin intereses</p>
-          <details class="promo-condiciones">
-            <summary>Condiciones</summary>
-            <ul>
-              <li>Pendiente de completar</li>
-            </ul>
-          </details>
         </div>
       </div>
 
@@ -147,12 +136,6 @@
             <li>2.000 bolas + bandolera</li>
           </ul>
           <p class="kit-card__plazos">o 3 × 96,33 € sin intereses</p>
-          <details class="promo-condiciones">
-            <summary>Condiciones</summary>
-            <ul>
-              <li>Pendiente de completar</li>
-            </ul>
-          </details>
         </div>
       </div>
 
@@ -171,15 +154,29 @@
             <li>3.000 bolas + bolsa de transporte</li>
           </ul>
           <p class="kit-card__plazos">o 3 × 163 € sin intereses</p>
-          <details class="promo-condiciones">
-            <summary>Condiciones</summary>
-            <ul>
-              <li>Pendiente de completar</li>
-            </ul>
-          </details>
         </div>
       </div>
 
+    </div>
+
+    <!-- Móvil: los 3 kits en una fila compacta (sin especificaciones) -->
+    <div class="kits-compact">
+      <div class="kit-compact">
+        <span class="kit-compact__tag">Primera compra</span>
+        <span class="kit-compact__nombre">Kit Recluta</span>
+        <span class="kit-compact__precio">189 €</span>
+      </div>
+      <div class="kit-compact kit-compact--featured">
+        <span class="kit-compact__badge">Top</span>
+        <span class="kit-compact__tag">Estándar SDJ</span>
+        <span class="kit-compact__nombre">Kit Soldado</span>
+        <span class="kit-compact__precio">289 €</span>
+      </div>
+      <div class="kit-compact">
+        <span class="kit-compact__tag">Veteranos</span>
+        <span class="kit-compact__nombre">Kit Sargento</span>
+        <span class="kit-compact__precio">489 €</span>
+      </div>
     </div>
 
     <!-- Promos de kit -->
@@ -205,47 +202,55 @@
     <h2 class="section__title">Cuantos más venís,<br>menos pagas tú</h2>
     <p class="section__lead">Dos formas de que traer amigos nuevos a SDJ te salga rentable desde el primer día.</p>
 
-    <div class="bonos-grid">
-
-      <div class="bono-card">
-        <div class="bono-card__body">
-          <span class="promo-tag">Jugador con equipo + 1 amigo nuevo</span>
-          <h3>Tu entrada baja a la mitad</h3>
-          <ul class="promo-lista">
-            <li>1 amigo que <strong>nunca haya jugado en SDJ</strong></li>
-            <li>Tu entrada es <strong class="promo-precio">reducida</strong></li>
-            <li>El amigo nuevo paga tarifa de alquiler estándar (39,90 €)</li>
+    <!-- Plantilla reutilizable del contenido completo -->
+    <ng-template #amigoContenido let-a>
+      <div class="bono-card__body">
+        <span class="promo-tag">{{ a.tag }}</span>
+        <h3 [innerHTML]="a.tituloHtml"></h3>
+        <details class="promo-condiciones">
+          <summary>Condiciones</summary>
+          <ul>
+            @for (c of a.condiciones; track c) { <li>{{ c }}</li> }
           </ul>
-          <p class="promo-aviso">Díselo al llegar al mostrador. Sin trámites previos.</p>
-          <details class="promo-condiciones">
-            <summary>Condiciones</summary>
-            <ul>
-              <li>Pendiente de completar</li>
-            </ul>
-          </details>
-        </div>
+        </details>
+        <ul class="promo-lista">
+          @for (item of a.lista; track item) { <li [innerHTML]="item"></li> }
+        </ul>
+        <p class="promo-aviso">{{ a.aviso }}</p>
       </div>
+    </ng-template>
 
-      <div class="bono-card">
-        <div class="bono-card__body">
-          <span class="promo-tag">Jugador que alquila + 3 amigos</span>
-          <h3>Organiza la visita.<br>Tú entras gratis.</h3>
-          <ul class="promo-lista">
-            <li>3 amigos que pagan la entrada <strong>(39,90 € cada uno)</strong></li>
-            <li>Los 4 jugáis con <strong>equipo premium</strong> incluido</li>
-            <li>Tu entrada es <strong class="promo-precio">gratuita</strong></li>
-          </ul>
-          <p class="promo-aviso">Díselo al llegar al mostrador. Sin trámites previos.</p>
-          <details class="promo-condiciones">
-            <summary>Condiciones</summary>
-            <ul>
-              <li>Pendiente de completar</li>
-            </ul>
-          </details>
+    <!-- Escritorio: tarjetas completas -->
+    <div class="bonos-grid bonos-grid--cards">
+      @for (a of traeAmigos; track a.titulo) {
+        <div class="bono-card">
+          <ng-container *ngTemplateOutlet="amigoContenido; context: { $implicit: a }"></ng-container>
         </div>
-      </div>
-
+      }
     </div>
+
+    <!-- Móvil: resumen, abre el detalle en pop-up -->
+    <div class="bonos-compact">
+      @for (a of traeAmigos; track a.titulo; let i = $index) {
+        <button type="button" class="bono-compact" (click)="abrirAmigo(i)">
+          <span class="bono-compact__info">
+            <span class="bono-compact__titulo">{{ a.titulo }}</span>
+            <span class="bono-compact__tag">{{ a.tag }}</span>
+          </span>
+          <span class="bono-compact__chevron" aria-hidden="true">›</span>
+        </button>
+      }
+    </div>
+
+    <!-- Pop-up con el detalle completo -->
+    @if (amigoAbierto() !== null) {
+      <div class="bono-modal-overlay" (click)="cerrarAmigo()">
+        <div class="bono-card bono-card--modal" (click)="$event.stopPropagation()">
+          <button class="bono-modal__cerrar" (click)="cerrarAmigo()" aria-label="Cerrar">✕</button>
+          <ng-container *ngTemplateOutlet="amigoContenido; context: { $implicit: traeAmigos[amigoAbierto()!] }"></ng-container>
+        </div>
+      </div>
+    }
   </div>
 </section>
 

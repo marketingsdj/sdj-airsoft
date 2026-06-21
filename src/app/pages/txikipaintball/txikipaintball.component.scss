@@ -35,6 +35,8 @@
   align-items: flex-end;
   overflow: hidden;
 
+  @media (max-width: $bp-md) { min-height: 0; }
+
   &__bg {
     position: absolute;
     inset: 0;
@@ -64,7 +66,14 @@
   &__content {
     position: relative;
     z-index: 1;
-    padding: 120px 0 80px;
+    // Solo vertical: el horizontal lo pone la clase .wrap (márgenes laterales)
+    padding-top: 120px;
+    padding-bottom: 80px;
+
+    @media (max-width: $bp-md) {
+      padding-top: 110px;
+      padding-bottom: 56px;
+    }
   }
 
   &__cols {
@@ -85,6 +94,8 @@
     line-height: 0.9;
     margin: 12px 0 0;
     color: $crema;
+
+    @media (max-width: $bp-sm) { font-size: clamp(44px, 14vw, 64px); }
   }
 
   &__sub {
@@ -107,6 +118,8 @@
     gap: 32px;
     border-top: 1px solid rgba($crema, 0.15);
     padding-top: 24px;
+
+    @media (max-width: $bp-sm) { gap: 20px; flex-wrap: wrap; }
   }
 
   &__stat {
@@ -175,6 +188,8 @@
   border-radius: $radius-md;
   overflow: hidden;
 
+  @media (max-width: $bp-md) { flex-direction: column; }
+
   &__item {
     flex: 1;
     display: flex;
@@ -190,6 +205,13 @@
 
     &:last-child { border-right: none; }
     &:hover { background: rgba(255,255,255,0.03); }
+
+    @media (max-width: $bp-md) {
+      border-right: none;
+      border-bottom: 1px solid $line;
+      justify-content: flex-start;
+      &:last-child { border-bottom: none; }
+    }
   }
 
   &__dot {
@@ -771,9 +793,15 @@
   display: flex;
   align-items: flex-start;
 
+  // En móvil: cuadrícula estática (sin scroll horizontal), apilada en 2 columnas.
   @media (max-width: $bp-md) {
-    overflow-x: auto;
-    padding-bottom: 8px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px 16px;
+  }
+
+  @media (max-width: 360px) {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -784,7 +812,7 @@
   align-items: center;
   text-align: center;
 
-  @media (max-width: $bp-md) { min-width: 130px; }
+  @media (max-width: $bp-md) { min-width: 0; }
 }
 
 .txiki-timeline__punto {
@@ -813,6 +841,8 @@
   height: 1px;
   background: rgba($naranja, 0.3);
   transform: translateY(-50%);
+
+  @media (max-width: $bp-md) { display: none; }
 }
 
 .txiki-timeline__texto {

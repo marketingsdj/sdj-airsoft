@@ -24,10 +24,20 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   constructor(private router: Router) {}
 
+  enTxiki = signal(false);
+
   ngOnInit() {
+    this.actualizarMarca(this.router.url);
     this.routerSub = this.router.events
       .pipe(filter(e => e instanceof NavigationEnd))
-      .subscribe(() => this.menuOpen.set(false));
+      .subscribe(e => {
+        this.menuOpen.set(false);
+        this.actualizarMarca((e as NavigationEnd).urlAfterRedirects);
+      });
+  }
+
+  private actualizarMarca(url: string) {
+    this.enTxiki.set(url.startsWith('/txikipaintball'));
   }
 
   ngOnDestroy() {
@@ -43,12 +53,17 @@ export class HeaderComponent implements OnInit, OnDestroy {
     { label: 'FAQ', path: '/faq' },
   ];
 
-  brands: Brand[] = [
-    { label: 'Airsoft', active: true },
-    { label: 'Txikipaintball', url: '/txikipaintball' },
-    { label: 'Restaurante', url: 'https://elbarraconrestaurante.com/' },
-  ];
-  
+  // La marca activa depende de la página: en txikipaintball se activa esa y
+  // "Airsoft" pasa a ser un enlace a la home de SDJ (y viceversa).
+  get brands(): Brand[] {
+    const txiki = this.enTxiki();
+    return [
+      { label: 'Airsoft',        active: !txiki, url: txiki ? '/' : undefined },
+      { label: 'Txikipaintball', active: txiki,  url: txiki ? undefined : '/txikipaintball' },
+      { label: 'Restaurante',    url: 'https://elbarraconrestaurante.com/' },
+    ];
+  }
+
 
   @HostListener('window:scroll')
   onScroll() {

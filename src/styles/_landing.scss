@@ -26,7 +26,9 @@
   &__content {
     position: relative;
     z-index: 1;
-    padding: 120px 0 64px;
+    // Solo vertical: el horizontal lo aporta la clase .wrap (márgenes laterales)
+    padding-top: 120px;
+    padding-bottom: 64px;
     max-width: 760px;
   }
 

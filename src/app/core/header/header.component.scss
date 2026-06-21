@@ -147,6 +147,11 @@
     }
   }
 
+  // Bloque de marcas dentro del menú: solo visible en móvil
+  &__nav-brands {
+    display: none;
+  }
+
   // ── Mobile ───────────────────────────────────────────────────────────────────
   @media (max-width: $bp-md) {
     &__nav {
@@ -170,6 +175,34 @@
     &__nav-link {
       padding: 12px 16px;
       font-size: 14px;
+    }
+
+    &__nav-brands {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid $line;
+    }
+
+    &__nav-brands-title {
+      font-family: $font-mono;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba($crema, 0.4);
+      padding: 4px 16px;
+    }
+
+    &__nav-link--brand-active {
+      color: $naranja;
+      font-weight: 700;
+    }
+
+    &__nav-link--disabled {
+      color: rgba($crema, 0.25);
+      pointer-events: none;
     }
   }
 }

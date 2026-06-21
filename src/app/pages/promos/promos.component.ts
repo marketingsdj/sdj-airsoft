@@ -1,9 +1,10 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { AnalyticsService } from '../../core/services/analytics.service';
 
 @Component({
   selector: 'app-promos',
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './promos.component.html',
   styleUrl: './promos.component.scss'
 })
@@ -17,6 +18,80 @@ export class PromosComponent {
     const offset = el.getBoundingClientRect().top + window.scrollY - 120;
     window.scrollTo(0, offset);
     this.analytics.trackEvent('promo_seccion_vista', { seccion: id });
+  }
+
+  // ── Bonos (resumen + pop-up en móvil) ───────────────────────────────────────
+  bonoAbierto = signal<number | null>(null);
+
+  bonos = [
+    {
+      tag: 'Para el jugador con equipo alquilado',
+      titulo: '3 Entradas Premium',
+      precio: '99',
+      ahorro: 'Ahorras un 30%',
+      desc: 'Alquila equipamiento y juega tres veces. Bono nominativo, a tu nombre.',
+      lista: ['Equipo premium incluido', 'Nominal e intransferible · Válido 12 meses'],
+      notaHtml: 'Si ya has jugado —aunque tu primera visita no fuera en premium— solo <strong class="bono-card__nota-precio">54 €</strong> para completarlo.',
+      aviso: 'Disponible en la tienda SDJ: pídelo al salir de tu partida o cualquier día que abramos.',
+      condiciones: ['Consulta condiciones en mostrador'],
+    },
+    {
+      tag: 'Para el jugador con equipo propio',
+      titulo: 'Vale 10 SDJ',
+      precio: '179',
+      ahorro: 'Ahorras 20 € + parche SDJ',
+      desc: 'Juega diez mañanas con tu propio equipo. Bono nominativo, a tu nombre.',
+      lista: ['10 visitas de mañana con equipo propio — sueltas serían <s>199 €</s>', 'Nominal e intransferible · Válido 12 meses'],
+      notaHtml: 'Al comprar el Vale 10: <strong>parche SDJ oficial</strong> para llevar en chaleco o uniforme.',
+      aviso: 'Disponible en la tienda SDJ: pídelo al salir de tu partida o cualquier día que abramos.',
+      condiciones: ['Pendiente de completar'],
+    },
+  ];
+
+  abrirBono(i: number) {
+    this.bonoAbierto.set(i);
+    this.analytics.trackEvent('promo_bono_abierto', { bono: this.bonos[i].titulo });
+  }
+  cerrarBono() {
+    this.bonoAbierto.set(null);
+  }
+
+  // ── Trae amigos (resumen + pop-up en móvil) ─────────────────────────────────
+  amigoAbierto = signal<number | null>(null);
+
+  traeAmigos = [
+    {
+      tag: 'Jugador con equipo + 1 amigo nuevo',
+      titulo: 'Tu entrada baja a la mitad',
+      tituloHtml: 'Tu entrada baja a la mitad',
+      condiciones: ['Pendiente de completar'],
+      lista: [
+        '1 amigo que <strong>nunca haya jugado en SDJ</strong>',
+        'Tu entrada es <strong class="promo-precio">reducida</strong>',
+        'El amigo nuevo paga tarifa de alquiler estándar (39,90 €)',
+      ],
+      aviso: 'Díselo al llegar al mostrador. Sin trámites previos.',
+    },
+    {
+      tag: 'Jugador que alquila + 3 amigos',
+      titulo: 'Organiza la visita. Tú entras gratis.',
+      tituloHtml: 'Organiza la visita.<br>Tú entras gratis.',
+      condiciones: ['Pendiente de completar'],
+      lista: [
+        '3 amigos que pagan la entrada <strong>(39,90 € cada uno)</strong>',
+        'Los 4 jugáis con <strong>equipo premium</strong> incluido',
+        'Tu entrada es <strong class="promo-precio">gratuita</strong>',
+      ],
+      aviso: 'Díselo al llegar al mostrador. Sin trámites previos.',
+    },
+  ];
+
+  abrirAmigo(i: number) {
+    this.amigoAbierto.set(i);
+    this.analytics.trackEvent('promo_amigo_abierto', { promo: this.traeAmigos[i].titulo });
+  }
+  cerrarAmigo() {
+    this.amigoAbierto.set(null);
   }
 
   servicios = [

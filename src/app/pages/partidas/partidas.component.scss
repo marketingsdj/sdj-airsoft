@@ -117,6 +117,8 @@
     color: $naranja;
     flex-shrink: 0;
     margin-top: 3px;
+
+    @media (max-width: $bp-md) { display: none; }
   }
 
   &__label {
@@ -542,6 +544,14 @@
   }
 
   p { font-size: 14px; color: rgba($crema, 0.65); line-height: 1.65; margin: 0; }
+
+  @media (max-width: $bp-md) {
+    gap: 16px;
+    padding: 22px 20px;
+
+    &__label { font-size: 17px; }
+    p { font-size: 13px; line-height: 1.5; }
+  }
 }
 
 // ── Privadas ──────────────────────────────────────────────────────────────────
@@ -551,7 +561,13 @@
   gap: 64px;
   align-items: start;
 
-  @media (max-width: $bp-md) { grid-template-columns: 1fr; }
+  // En móvil: tarjeta con la foto de fondo y el texto + botón encima
+  @media (max-width: $bp-md) {
+    display: block;
+    position: relative;
+    border-radius: $radius-md;
+    overflow: hidden;
+  }
 }
 
 .privadas-img {
@@ -564,6 +580,28 @@
     height: 100%;
     object-fit: cover;
     display: block;
+  }
+
+  @media (max-width: $bp-md) {
+    position: absolute;
+    inset: 0;
+    aspect-ratio: auto;
+    border-radius: 0;
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba($ink, 0.45) 0%, rgba($ink, 0.88) 100%);
+    }
+  }
+}
+
+.privadas-texto {
+  @media (max-width: $bp-md) {
+    position: relative;
+    z-index: 1;
+    padding: 40px 24px;
   }
 }
 
@@ -836,13 +874,41 @@
     gap: 64px;
     align-items: center;
 
-    @media (max-width: $bp-md) { grid-template-columns: 1fr; }
+    // En móvil: tarjeta con la foto de fondo y el texto + botón encima
+    @media (max-width: $bp-md) {
+      display: block;
+      position: relative;
+      border-radius: $radius-md;
+      overflow: hidden;
+    }
+  }
+
+  &__texto {
+    @media (max-width: $bp-md) {
+      position: relative;
+      z-index: 1;
+      padding: 40px 24px;
+    }
   }
 
   &__img {
     aspect-ratio: 4 / 3;
     border-radius: $radius-md;
     overflow: hidden;
+
+    @media (max-width: $bp-md) {
+      position: absolute;
+      inset: 0;
+      aspect-ratio: auto;
+      border-radius: 0;
+
+      &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba($ink, 0.82) 0%, rgba($ink, 0.94) 100%);
+      }
+    }
 
     img {
       width: 100%;

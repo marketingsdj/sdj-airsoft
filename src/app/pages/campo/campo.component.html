@@ -13,13 +13,13 @@
 </section>
 
 <!-- ZONAS DEL CAMPO -->
-<section class="section section--alt">
+<section class="section section--alt zonas-section">
   <div class="wrap">
-    <div class="section__header">
+    <div class="section__header hide-mobile">
       <p class="section__eyebrow">El escenario</p>
       <h2 class="section__title">Zonas del campo</h2>
     </div>
-    <div class="mapa-interactivo" (click)="zonaSeleccionada ? puntoActivo = null : zonaActiva = null">
+    <div class="mapa-interactivo hide-mobile" (click)="zonaSeleccionada ? puntoActivo = null : zonaActiva = null">
       @if (!zonaSeleccionada) {
       <span class="mapa-coords">43°15'15"N 2°49'24"W</span>
       }
@@ -72,7 +72,7 @@
 
 
     </div>
-    <p class="mapa-caption">Mapa interactivo · Explora nuestras instalaciones zona por zona · Haz clic para verlo en detalle.</p>
+    <p class="mapa-caption hide-mobile">Mapa interactivo · Explora nuestras instalaciones zona por zona · Haz clic para verlo en detalle.</p>
 
     <div class="privadas__banner" style="margin-top:48px;">
       <img src="Campo/Campo privadas.svg" alt="Partidas privadas SDJ" loading="lazy" />
@@ -95,7 +95,7 @@
   <div class="wrap">
     <div class="servicios-grid">
       @for (s of servicios; track s.titulo) {
-      <div class="servicio-card">
+      <div class="servicio-card" [class.servicio-card--zoom]="s.titulo === 'Vestuarios'">
         <div class="servicio-card__bg">
           <img [src]="s.img" [alt]="s.titulo" loading="lazy" />
         </div>
@@ -104,7 +104,7 @@
           <p class="servicio-card__eyebrow">{{ s.eyebrow }}</p>
           <h2 class="servicio-card__titulo" [innerHTML]="s.titulo"></h2>
           <p class="servicio-card__desc">{{ s.desc }}</p>
-          <ul class="list-tactical">
+          <ul class="list-tactical hide-mobile">
             @for (d of s.detalle; track d) {
             <li>{{ d }}</li>
             }
@@ -136,7 +136,7 @@
         <a routerLink="/reserva" class="btn btn--primary" style="margin-top:32px;">Reservar plaza →</a>
       </div>
 
-      <div class="planea-mapa">
+      <div class="planea-mapa hide-mobile">
         <iframe [src]="mapaUrl" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"
           title="Soldados de Juguete — Larrabetzu, Bizkaia">
         </iframe>
@@ -372,7 +372,7 @@
 </section>
 
 <!-- VIVE LA EXPERIENCIA + FILOSOFÍA -->
-<section class="section section--dark vive">
+<section class="section section--dark vive hide-mobile">
   <div class="wrap vive__dos-col">
 
     <div class="vive__col">
@@ -413,7 +413,7 @@
 </section>
 
 <!-- ── SOBRE NOSOTROS ─────────────────────────────────────────────────────── -->
-<section class="section section--dark nosotros">
+<section class="section section--dark nosotros hide-mobile">
   <div class="wrap">
     <div class="section__header">
       <p class="section__eyebrow">Sobre nosotros</p>

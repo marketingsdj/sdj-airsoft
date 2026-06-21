@@ -17,6 +17,22 @@
           {{ item.label }}
         </a>
       }
+
+      <!-- Marcas SDJ (solo en el menú móvil; en escritorio van en el selector de la derecha) -->
+      <div class="header__nav-brands">
+        <span class="header__nav-brands-title">Familia SDJ</span>
+        @for (brand of brands; track brand.label) {
+          @if (brand.active) {
+            <span class="header__nav-link header__nav-link--brand-active">{{ brand.label }}</span>
+          } @else if (brand.disabled) {
+            <span class="header__nav-link header__nav-link--disabled">{{ brand.label }}</span>
+          } @else if (brand.url && brand.url.startsWith('/')) {
+            <a class="header__nav-link" [routerLink]="brand.url" (click)="closeMenu()">{{ brand.label }}</a>
+          } @else {
+            <a class="header__nav-link" [href]="brand.url" target="_blank" rel="noopener" (click)="closeMenu()">{{ brand.label }}</a>
+          }
+        }
+      </div>
     </nav>
 
     <!-- Acciones -->
@@ -28,6 +44,8 @@
             <span class="header__brand header__brand--active">{{ brand.label }}</span>
           } @else if (brand.disabled) {
             <span class="header__brand header__brand--disabled">{{ brand.label }}</span>
+          } @else if (brand.url && brand.url.startsWith('/')) {
+            <a class="header__brand" [routerLink]="brand.url">{{ brand.label }}</a>
           } @else {
             <a class="header__brand" [href]="brand.url" target="_blank" rel="noopener">{{ brand.label }}</a>
           }

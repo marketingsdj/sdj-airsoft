@@ -51,6 +51,11 @@ img {
   @media (max-width: $bp-sm) { padding: 0 20px; }
 }
 
+// Utilidad: oculta el elemento en móvil (para aligerar el scroll en responsive)
+.hide-mobile {
+  @media (max-width: $bp-md) { display: none !important; }
+}
+
 .eyebrow {
   font-family: $font-mono;
   font-size: 11px;

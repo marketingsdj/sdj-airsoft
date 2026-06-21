@@ -6,6 +6,15 @@
   background: $gris;
 }
 
+// Móvil: "Planea tu visita" encima de Campo privado
+@media (max-width: $bp-md) {
+  :host { display: flex; flex-direction: column; }
+  :host > section { order: 3; }
+  :host > .campo-hero     { order: 0; }
+  :host > .planea-section { order: 1; }
+  :host > .zonas-section  { order: 2; }
+}
+
 .section { background: $gris; }
 .section--alt { background: darken($gris, 4%); }
 .section--dark { background: darken($gris, 8%); }
@@ -1083,6 +1092,17 @@
     gap: 12px;
     flex-shrink: 0;
   }
+
+  @media (max-width: $bp-sm) {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+    padding: 28px 20px;
+
+    &__izq { align-items: center; }
+    &__btns { width: 100%; }
+    &__btns .btn-red { flex: 1; justify-content: center; }
+  }
 }
 
 .btn-red {
@@ -1661,6 +1681,8 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 2px;
+
+  @media (max-width: $bp-md) { grid-template-columns: 1fr; gap: 10px; }
 }
 
 .servicio-card {
@@ -1669,7 +1691,7 @@
   overflow: hidden;
   border-radius: $radius-md;
 
-  @media (max-width: $bp-md) { height: 360px; }
+  @media (max-width: $bp-md) { height: 190px; }
 
   &__bg {
     position: absolute;
@@ -1685,10 +1707,21 @@
     }
   }
 
+  // Vestuarios: recorte anclado abajo + zoom para llenar el marco
+  &--zoom &__bg img {
+    object-position: center bottom;
+    transform: translateY(40%) scale(2.4);
+    transform-origin: center bottom;
+  }
+
   &__overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(180deg, rgba($ink, 0.78) 0%, rgba($ink, 0.96) 60%, rgba($ink, 1) 100%);
+    background: linear-gradient(180deg, rgba($ink, 0.55) 0%, rgba($ink, 0.85) 100%);
+
+    @media (max-width: $bp-md) {
+      background: linear-gradient(180deg, rgba($ink, 0.15) 0%, rgba($ink, 0.45) 55%, rgba($ink, 0.85) 100%);
+    }
   }
 
   &__content {
