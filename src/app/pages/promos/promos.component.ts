@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AnalyticsService } from '../../core/services/analytics.service';
 
@@ -8,8 +8,9 @@ import { AnalyticsService } from '../../core/services/analytics.service';
   templateUrl: './promos.component.html',
   styleUrl: './promos.component.scss'
 })
-export class PromosComponent {
+export class PromosComponent implements OnInit, OnDestroy {
   private analytics = inject(AnalyticsService);
+  private tiendaInterval: ReturnType<typeof setInterval> | null = null;
 
   irA(id: string, e: Event) {
     e.preventDefault();
@@ -18,6 +19,29 @@ export class PromosComponent {
     const offset = el.getBoundingClientRect().top + window.scrollY - 120;
     window.scrollTo(0, offset);
     this.analytics.trackEvent('promo_seccion_vista', { seccion: id });
+  }
+
+  // ── Carrusel tienda física (mismo que en campo) ──────────────────────────────
+  tiendaActivo = 0;
+  tiendaImagenes = [
+    { src: 'Campo/Galeria sdj tienda/Tienda 1.svg', alt: 'Tienda SDJ' },
+    { src: 'Campo/Galeria sdj tienda/Tienda  2.svg', alt: 'Tienda SDJ' },
+    { src: 'Campo/Galeria sdj tienda/Tienda  3.svg', alt: 'Tienda SDJ' },
+    { src: 'Campo/Galeria sdj tienda/Tienda  4.svg', alt: 'Tienda SDJ' },
+    { src: 'Campo/Galeria sdj tienda/Tienda  5.svg', alt: 'Tienda SDJ' },
+    { src: 'Campo/Galeria sdj tienda/Tienda  6.svg', alt: 'Tienda SDJ' },
+    { src: 'Campo/Galeria sdj tienda/Tienda  7.svg', alt: 'Tienda SDJ' },
+  ];
+
+  tiendaSiguiente() { this.tiendaActivo = (this.tiendaActivo + 1) % this.tiendaImagenes.length; }
+  tiendaAnterior() { this.tiendaActivo = (this.tiendaActivo - 1 + this.tiendaImagenes.length) % this.tiendaImagenes.length; }
+
+  ngOnInit() {
+    this.tiendaInterval = setInterval(() => this.tiendaSiguiente(), 5000);
+  }
+
+  ngOnDestroy() {
+    if (this.tiendaInterval) clearInterval(this.tiendaInterval);
   }
 
   // ── Bonos (resumen + pop-up en móvil) ───────────────────────────────────────

@@ -39,6 +39,18 @@ export class EventoContactoComponent {
     if (this.tipoInicial) this.form.tipo = this.tipoInicial;
   }
 
+  // Solo se pueden escribir números, espacios y un "+" inicial (prefijo de país).
+  onTelefonoBeforeInput(event: InputEvent) {
+    if (event.data && /[^\d\s+]/.test(event.data)) event.preventDefault();
+  }
+
+  onTelefonoInput(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const limpio = input.value.replace(/[^\d\s+]/g, '');
+    if (limpio !== input.value) input.value = limpio;
+    this.form.telefono = limpio;
+  }
+
   get formularioValido(): boolean {
     return !!this.form.tipo &&
            !!this.form.nombre.trim() &&

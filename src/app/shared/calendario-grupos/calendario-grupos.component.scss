@@ -195,6 +195,13 @@
     &--inactivo   { background: rgba($crema, 0.1); }
   }
 
+  &__aviso {
+    margin: -8px 0 16px;
+    font-size: 12px;
+    color: rgba($crema, 0.55);
+    line-height: 1.4;
+  }
+
   // ── Consulta grupos +10 (entre semana) ──────────────────────────────────────
   &__consulta {
     display: flex;

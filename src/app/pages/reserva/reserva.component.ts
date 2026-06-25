@@ -4,7 +4,7 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterLink, ActivatedRoute } from '@angular/router';
 import { CalendarioGruposComponent } from '../../shared/calendario-grupos/calendario-grupos.component';
 import { SlotsService } from '../../core/services/slots.service';
-import { ReservaStateService, TipoReserva } from '../../core/services/reserva-state.service';
+import { ReservaStateService, TipoReserva, SubtipoEvento } from '../../core/services/reserva-state.service';
 import { AnalyticsService } from '../../core/services/analytics.service';
 
 @Component({
@@ -73,6 +73,29 @@ export class ReservaComponent implements OnInit, OnDestroy {
     colectivos:          'Colectivos',
   };
 
+  private readonly subtiposEvento: SubtipoEvento[] = ['despedidas', 'cumples', 'empresas', 'colectivos'];
+
+  private readonly tituloPorTipo: Record<string, string> = {
+    individual: 'Reserva tu partida',
+    privada:    'Reserva tu partida privada',
+    evento:     'Reserva tu evento',
+    txiki:      'Reserva tu Txikipaintball',
+  };
+
+  private readonly tituloPorSubtipo: Record<string, string> = {
+    despedidas: 'Reserva tu despedida',
+    cumples:    'Reserva tu cumpleaños',
+    empresas:   'Reserva tu team building',
+    colectivos: 'Reserva tu excursión',
+  };
+
+  get tituloReserva(): string {
+    if (this.form.tipo === 'evento' && this.form.subtipoEvento) {
+      return this.tituloPorSubtipo[this.form.subtipoEvento] || this.tituloPorTipo['evento'];
+    }
+    return this.tituloPorTipo[this.form.tipo] || 'Reserva tu partida';
+  }
+
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
       const tipoParam = params['tipo'];
@@ -82,6 +105,7 @@ export class ReservaComponent implements OnInit, OnDestroy {
       const hora      = params['hora']  || '';
       const pista     = params['pista'] || '';
       const doble     = params['doble'] === 'true';
+      const subtipo   = params['subtipo'] || '';
 
       if (tipoParam && this.paramToTipo[tipoParam]) {
         const nuevoTipo = this.paramToTipo[tipoParam];
@@ -93,6 +117,9 @@ export class ReservaComponent implements OnInit, OnDestroy {
         this.form.tipo      = nuevoTipo;
         this.form.modalidad = tipoParam === 'socio' ? 'socio' : pack;
         this.form.premium   = premium;
+        if (nuevoTipo === 'evento' && this.subtiposEvento.includes(subtipo as SubtipoEvento)) {
+          this.form.subtipoEvento = subtipo as SubtipoEvento;
+        }
         this.form.doblePartida = doble && (this.form.tipo === 'privada' || this.form.tipo === 'evento');
 
         if (this.minPersonas > 1 && this.form.personas < this.minPersonas) this.form.personas = this.minPersonas;
@@ -125,6 +152,14 @@ export class ReservaComponent implements OnInit, OnDestroy {
     { key: 'individual' as TipoReserva, label: 'Partida abierta',     desc: 'Acceso a las partidas con todos los jugadores, con diferentes dinámicas cada hora. Ven solo o acompañado.',  icono: '◎' },
     { key: 'privada'    as TipoReserva, label: 'Partida privada',      desc: 'Grupo propio, campo exclusivo. Mínimo 8 personas. Acceso a partida abierta incluido (fines de semana y festivos).',           icono: '◈' },
     { key: 'evento'     as TipoReserva, label: 'Evento / Celebración', desc: 'Despedida, cumpleaños, team building o colectivos.',          icono: '◆' },
+  ];
+
+  // Selector de subtipo de evento, visible al elegir "Evento / Celebración".
+  subtipoEventoOpciones: { key: SubtipoEvento; label: string; desc: string }[] = [
+    { key: 'despedidas', label: 'Despedida',    desc: 'Soltero/a, con sus extras propios (mono rosa incluido).' },
+    { key: 'cumples',    label: 'Cumpleaños',    desc: 'Misiones adaptadas y merienda opcional.' },
+    { key: 'empresas',   label: 'Empresa',       desc: 'Team building, factura con IVA.' },
+    { key: 'colectivos', label: 'Colectivo',     desc: 'Colegios, cuadrillas, asociaciones, equipos.' },
   ];
 
   hoy = new Date().toISOString().split('T')[0];
@@ -167,6 +202,7 @@ export class ReservaComponent implements OnInit, OnDestroy {
     if (this.paso() === 1) {
       if (!this.form.tipo) return false;
       if (this.form.tipo === 'individual') return !!this.form.modalidad;
+      if (this.form.tipo === 'evento') return !!this.form.subtipoEvento;
       return true;
     }
     if (this.paso() === 2) return this.mostrarFranjas
@@ -190,18 +226,24 @@ export class ReservaComponent implements OnInit, OnDestroy {
   }
 
   // Mínimo de personas por tipo: 8 para grupos (privada, evento, txiki), 1 para individual.
+  // Si se reservó un día entre semana ("a consultar"), el mínimo sube a 10.
   get minPersonas(): number {
-    return this.form.tipo === 'privada' || this.form.tipo === 'evento' || this.form.tipo === 'txiki' ? 8 : 1;
-  }
-
-  // Grupos de 10 o más (privada/evento) pueden reservar también entre semana, bajo consulta.
-  get permitirLaborables(): boolean {
-    return (this.form.tipo === 'privada' || this.form.tipo === 'evento') && this.form.personas >= 10;
+    const base = this.form.tipo === 'privada' || this.form.tipo === 'evento' || this.form.tipo === 'txiki' ? 8 : 1;
+    return this.form.laborableConsulta ? Math.max(base, 10) : base;
   }
 
   // La tarifa reducida (tarde) se ofrece en partida abierta y privada.
   get muestraTarifaReducida(): boolean {
     return this.form.tipo === 'individual' || this.form.tipo === 'privada';
+  }
+
+  // Aviso del calendario para los días "a consultar" (entre semana): el grupo
+  // mínimo de 10 no se confirma hasta el paso 3, así que se avisa en el propio
+  // calendario en vez de ocultar la opción.
+  get avisoLaborable(): string {
+    if (this.form.tipo === 'privada') return 'Entre semana disponible para grupos de 10 o más personas. Confirmaremos el número exacto en el último paso.';
+    if (this.form.tipo === 'txiki')   return 'Entre semana disponible para grupos de 10 o más niños/as. Confirmaremos el número exacto en el último paso.';
+    return '';
   }
 
   // El menú del evento se ofrece a partir de 10 personas.
@@ -230,8 +272,11 @@ export class ReservaComponent implements OnInit, OnDestroy {
 
   get resumen() {
     const modalidad = this.packLabels[this.form.modalidad] || '';
+    const tipo = this.form.tipo === 'evento' && this.form.subtipoEvento
+      ? this.packLabels[this.form.subtipoEvento]
+      : this.tipoNombres[this.form.tipo] || '';
     return {
-      tipo: this.tipoNombres[this.form.tipo] || '',
+      tipo,
       modalidad,
       premium:  this.form.premium,
       fecha:    this.form.fecha,
@@ -266,8 +311,20 @@ export class ReservaComponent implements OnInit, OnDestroy {
     else if (tipo === 'individual') this.form.personas = 1;
     if (tipo !== 'privada' && tipo !== 'evento') this.form.doblePartida = false;
     if (tipo !== 'individual' && tipo !== 'privada') { this.form.tarifaReducida = false; this.mostrarReducida.set(false); }
-    if (tipo !== 'evento') this.form.menu = false;
+    if (tipo !== 'evento') {
+      this.form.menu = false;
+      this.form.subtipoEvento = '';
+      this.form.monoRosa = false;
+      this.form.camisetasEquipo = false;
+      this.form.autorizacionLote = false;
+      this.form.certificadoActividad = false;
+    }
     this.analytics.trackEvent('reserva_tipo_seleccionado', { tipo });
+  }
+
+  seleccionarSubtipoEvento(subtipo: SubtipoEvento) {
+    this.form.subtipoEvento = subtipo;
+    this.analytics.trackEvent('reserva_subtipo_evento_seleccionado', { subtipo });
   }
 
   toggleDoblePartida() {
@@ -285,6 +342,7 @@ export class ReservaComponent implements OnInit, OnDestroy {
     this.form.hora  = event.hora;
     this.form.pista = event.pista;
     this.form.laborableConsulta = false;
+    if (this.form.tipo !== 'individual') this.form.personas = 8;
   }
 
   onFechaSeleccionada(fecha: string) {
@@ -292,6 +350,7 @@ export class ReservaComponent implements OnInit, OnDestroy {
     this.form.hora  = '';
     this.form.pista = '';
     this.form.laborableConsulta = false;
+    if (this.form.tipo !== 'individual') this.form.personas = 8;
     this.analytics.trackEvent('calendario_fecha_seleccionada', { fecha, tipo: this.form.tipo });
   }
 
@@ -301,6 +360,7 @@ export class ReservaComponent implements OnInit, OnDestroy {
     this.form.pista = '';
     this.form.doblePartida = false;
     this.form.laborableConsulta = true;
+    if (this.form.personas < 10) this.form.personas = 10;   // mínimo para entre semana
   }
 
   sumarPersona() {
@@ -322,6 +382,20 @@ export class ReservaComponent implements OnInit, OnDestroy {
     const value = (event.target as HTMLInputElement).value;
     const n = parseInt(value, 10);
     if (!isNaN(n)) this.form.personas = n;
+  }
+
+  // Solo se pueden escribir números, espacios y un "+" inicial (prefijo de país).
+  // beforeinput bloquea el carácter antes de que llegue a verse en pantalla;
+  // input limpia cualquier resto que se cuele por pegar texto o autocompletar.
+  onTelefonoBeforeInput(event: InputEvent) {
+    if (event.data && /[^\d\s+]/.test(event.data)) event.preventDefault();
+  }
+
+  onTelefonoInput(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const limpio = input.value.replace(/[^\d\s+]/g, '');
+    if (limpio !== input.value) input.value = limpio;
+    this.form.telefono = limpio;
   }
 
   personasAviso = signal('');
@@ -627,7 +701,7 @@ export class ReservaComponent implements OnInit, OnDestroy {
     }
 
     // Grupos (privada / evento): base a consultar + extras conocidos.
-    lineas.push({ concepto: `${this.tipoNombres[this.form.tipo]} · ${n} personas`, importe: 'A consultar' });
+    lineas.push({ concepto: `${this.resumen.tipo} · ${n} personas`, importe: 'A consultar' });
     if (this.form.doblePartida) lineas.push({ concepto: `Doble partida · +15 € × ${n}`, importe: fmt(15 * n) });
     if (this.form.menu) lineas.push({ concepto: 'Menú', importe: 'Por confirmar' });
     return lineas;
@@ -636,6 +710,21 @@ export class ReservaComponent implements OnInit, OnDestroy {
   get alquilerEquipo(): string {
     if (this.form.tipo === 'txiki') return 'Incluido';
     return this.form.modalidad?.includes('alquiler') || this.form.premium ? 'Sí' : 'No';
+  }
+
+  // Lista de extras sin coste adicional, para el PDF y el resumen.
+  get otrosExtrasTexto(): string {
+    const extras: string[] = [];
+    if (this.form.tipo === 'txiki' && this.form.merienda) extras.push('Merienda infantil (+9,90 €/niño)');
+    if (this.form.tipo === 'individual' && this.form.premium) extras.push('Pack Premium (+5 €)');
+    if (this.form.menu) extras.push('Menú (precio por confirmar)');
+    if (this.form.subtipoEvento === 'despedidas' && this.form.monoRosa) extras.push('Mono rosa para el/la protagonista');
+    if (this.form.subtipoEvento === 'colectivos') {
+      if (this.form.camisetasEquipo) extras.push('Camisetas por equipo');
+      if (this.form.autorizacionLote) extras.push('Autorización en lote');
+      if (this.form.certificadoActividad) extras.push('Certificado de la actividad');
+    }
+    return extras.length ? extras.join(', ') : '—';
   }
 
   formatFecha(fecha: string): string {

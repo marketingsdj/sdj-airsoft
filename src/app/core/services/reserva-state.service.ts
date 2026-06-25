@@ -1,9 +1,11 @@
 import { Injectable, signal } from '@angular/core';
 
 export type TipoReserva = 'individual' | 'privada' | 'evento' | 'txiki' | '';
+export type SubtipoEvento = 'despedidas' | 'cumples' | 'empresas' | 'colectivos' | '';
 
 export interface FormData {
   tipo: TipoReserva;
+  subtipoEvento: SubtipoEvento; // qué tipo de evento (despedida, cumpleaños, colectivo, empresa)
   modalidad: string;
   premium: boolean;
   fecha: string;
@@ -26,6 +28,10 @@ export interface FormData {
   laborableConsulta: boolean;   // grupo +10 entre semana, hora aproximada pendiente de confirmar
   tarifaReducida: boolean;      // tarifa reducida (tarde)
   menu: boolean;                // menú del evento (precio pendiente de confirmar)
+  monoRosa: boolean;            // despedidas: mono rosa para el/la protagonista, sin suplemento
+  camisetasEquipo: boolean;     // colectivos: camisetas/brazaletes de color por equipo, sin suplemento
+  autorizacionLote: boolean;    // colectivos: plantilla única de autorización para todo el grupo
+  certificadoActividad: boolean; // colectivos: certificado/resumen de la actividad para el centro
 }
 
 @Injectable({ providedIn: 'root' })
@@ -45,6 +51,7 @@ export class ReservaStateService {
   private initialForm(): FormData {
     return {
       tipo: '',
+      subtipoEvento: '',
       modalidad: '',
       premium: false,
       fecha: '',
@@ -67,6 +74,10 @@ export class ReservaStateService {
       laborableConsulta: false,
       tarifaReducida: false,
       menu: false,
+      monoRosa: false,
+      camisetasEquipo: false,
+      autorizacionLote: false,
+      certificadoActividad: false,
     };
   }
 

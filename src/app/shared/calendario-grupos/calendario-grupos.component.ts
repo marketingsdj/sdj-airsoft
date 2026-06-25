@@ -37,6 +37,9 @@ export class CalendarioGruposComponent implements OnInit {
   // Grupos de 10 o más: habilita los días laborables (entre semana) como reserva
   // "bajo consulta" — el cliente elige día y hora aproximada de llegada.
   @Input() permitirLaborables = false;
+  // Texto opcional que explica la condición de los días "a consultar"
+  // (p. ej. el mínimo de personas), mostrado junto a la leyenda del calendario.
+  @Input() avisoLaborable = '';
   // Txikipaintball: abre también los viernes y usa horarios propios
   // (Viernes 16–20, Sábado/Domingo/festivo 9–18) en franjas de 2 h.
   @Input() txiki = false;
@@ -226,10 +229,11 @@ export class CalendarioGruposComponent implements OnInit {
       return;
     }
 
-    // Finde/festivo sin franjas (partidas abiertas): basta con la fecha.
-    if (!this.mostrarSlots && this.modo === 'seleccion') {
+    // Finde/festivo: avisamos al formulario en cuanto se elige el día (para
+    // que salga del estado "laborable" aunque aún falte elegir una franja).
+    if (this.modo === 'seleccion') {
       const fecha = this.localFecha(dia.fecha);
-      this.slotActivoKey.set(fecha);
+      this.slotActivoKey.set(this.mostrarSlots ? null : fecha);
       this.fechaSeleccionada.emit(fecha);
     }
   }

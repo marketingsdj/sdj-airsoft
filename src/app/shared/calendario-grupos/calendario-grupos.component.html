@@ -49,6 +49,10 @@
       <span><span class="cal__leyenda-dot cal__leyenda-dot--inactivo"></span>No disponible</span>
     </div>
 
+    @if (permitirLaborables && avisoLaborable) {
+      <p class="cal__aviso">{{ avisoLaborable }}</p>
+    }
+
   </div>
 
   <!-- Slots del día seleccionado (solo grupos ≥8) -->

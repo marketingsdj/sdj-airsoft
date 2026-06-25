@@ -93,9 +93,48 @@
 </section>
 
 <!--  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+     TIENDA FÍSICA
+ . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  -->
+<section class="section section--dark tienda-cross" id="kits">
+
+  <div class="tienda-carrusel">
+    @for (img of tiendaImagenes; track img.src; let i = $index) {
+    <img class="tienda-carrusel__img" [class.tienda-carrusel__img--activa]="tiendaActivo === i"
+      [src]="img.src" [alt]="img.alt" loading="lazy" />
+    }
+    <button class="tienda-carrusel__btn tienda-carrusel__btn--prev" (click)="tiendaAnterior()" aria-label="Imagen anterior">‹</button>
+    <button class="tienda-carrusel__btn tienda-carrusel__btn--next" (click)="tiendaSiguiente()" aria-label="Imagen siguiente">›</button>
+    <div class="tienda-carrusel__dots">
+      @for (img of tiendaImagenes; track img.src; let i = $index) {
+      <button class="tienda-carrusel__dot" [class.tienda-carrusel__dot--activo]="tiendaActivo === i"
+        (click)="tiendaActivo = i"></button>
+      }
+    </div>
+  </div>
+
+  <div class="wrap tienda-cross__contenido">
+    <div class="tienda-cross__texto">
+      <p class="section__eyebrow">SDJ Tienda</p>
+      <h2 class="tienda-cross__titulo">También tenemos<br>tienda física</h2>
+      <ul class="tienda-cross__lista">
+        <li>Réplicas y secundarias</li>
+        <li>Uniformes y chalecos tácticos</li>
+        <li>Gafas y protección homologada</li>
+        <li>Baterías, cargadores y accesorios</li>
+      </ul>
+      <p class="kit-disponible">
+        <span class="kit-disponible__dot"></span>
+        Disponible en tienda física
+      </p>
+    </div>
+  </div>
+
+</section>
+
+<!--  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
      KITS / TIENDA
  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  -->
-<section class="section section--dark" id="kits">
+<section class="section section--dark">
   <div class="wrap">
     <p class="eyebrow">TIENDA SDJ</p>
     <h2 class="section__title">Empieza a jugar de verdad.<br>Deja de alquilar</h2>

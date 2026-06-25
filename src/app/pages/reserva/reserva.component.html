@@ -52,7 +52,7 @@
             @if (form.doblePartida) {
               <tr><td>Doble partida privada</td><td>Sí · 2 franjas seguidas (+15 €/persona · {{ doblePartidaTotal }} €)</td></tr>
             }
-            <tr><td>Otros extras</td><td>{{ form.tipo === 'txiki' ? (form.merienda ? 'Merienda infantil (+9,90 €/niño)' : '—') : (form.premium ? 'Pack Premium (+5 €)' : '—') }}</td></tr>
+            <tr><td>Otros extras</td><td>{{ otrosExtrasTexto }}</td></tr>
           </table>
         </div>
 
@@ -156,6 +156,18 @@
                 <strong>Sí (+9,90 €/niño)</strong>
               </div>
             }
+            @if (form.monoRosa) {
+              <div class="exito-fila">
+                <span>Mono rosa</span>
+                <strong>Incluido</strong>
+              </div>
+            }
+            @if (form.camisetasEquipo || form.autorizacionLote || form.certificadoActividad) {
+              <div class="exito-fila">
+                <span>Extras colectivo</span>
+                <strong>{{ otrosExtrasTexto }}</strong>
+              </div>
+            }
             @if (form.nombre) {
               <div class="exito-fila">
                 <span>Nombre</span>
@@ -233,7 +245,7 @@
       <!-- Header del formulario -->
       <div class="reserva-header">
         <p class="eyebrow">SDJ Airsoft · Reservas</p>
-        <h1>Reserva tu partida</h1>
+        <h1>{{ tituloReserva }}</h1>
 
         <!-- Stepper -->
         <div class="stepper">
@@ -305,33 +317,6 @@
               </button>
             </div>
 
-            @if (form.tipo) {
-              <div class="reserva-personas">
-                <div class="reserva-personas__info">
-                  <strong class="reserva-personas__title">{{ form.tipo === 'txiki' ? '¿Cuántos niños/as?' : '¿Cuántas personas?' }}</strong>
-                  @if (minPersonas > 1) {
-                    <span class="reserva-personas__hint">Mínimo {{ minPersonas }} {{ form.tipo === 'txiki' ? 'niños/as' : 'personas' }}</span>
-                  }
-                </div>
-                <div class="personas-counter personas-counter--lg">
-                  <button type="button" class="personas-counter__btn" (click)="restarPersona()" [disabled]="form.personas <= minPersonas">−</button>
-                  <input
-                    type="number"
-                    class="personas-counter__num"
-                    [value]="form.personas"
-                    (input)="onPersonasInput($event)"
-                    (blur)="onPersonasBlur()"
-                    inputmode="numeric"
-                    [min]="minPersonas"
-                    max="100" />
-                  <button type="button" class="personas-counter__btn" (click)="sumarPersona()" [disabled]="form.personas >= 100">+</button>
-                </div>
-                @if (personasAviso()) {
-                  <span class="reserva-personas__aviso">{{ personasAviso() }}</span>
-                }
-              </div>
-            }
-
             @if (form.tipo === 'individual') {
               <div class="equipo-select">
                 <strong class="equipo-select__title">¿Qué equipo quieres?</strong>
@@ -352,6 +337,25 @@
               </div>
             }
 
+            @if (form.tipo === 'evento') {
+              <div class="equipo-select">
+                <strong class="equipo-select__title">¿Qué tipo de evento es?</strong>
+                <div class="equipo-grid">
+                  @for (s of subtipoEventoOpciones; track s.key) {
+                    <button type="button"
+                      class="equipo-btn"
+                      [class.equipo-btn--selected]="form.subtipoEvento === s.key"
+                      (click)="seleccionarSubtipoEvento(s.key)">
+                      <span class="equipo-btn__body">
+                        <span class="equipo-btn__label">{{ s.label }}</span>
+                        <span class="equipo-btn__desc">{{ s.desc }}</span>
+                      </span>
+                    </button>
+                  }
+                </div>
+              </div>
+            }
+
           </div>
         }
 
@@ -359,31 +363,6 @@
         @if (paso() === 2) {
           <div class="reserva-step">
             <h3 class="reserva-step__title">¿Cuándo quieres venir?</h3>
-
-            @if (form.tipo === 'txiki') {
-              <div class="reserva-personas" style="margin-top:0; margin-bottom: 28px;">
-                <div class="reserva-personas__info">
-                  <strong class="reserva-personas__title">¿Cuántos niños/as?</strong>
-                  <span class="reserva-personas__hint">Mínimo {{ minPersonas }} niños/as</span>
-                </div>
-                <div class="personas-counter personas-counter--lg">
-                  <button type="button" class="personas-counter__btn" (click)="restarPersona()" [disabled]="form.personas <= minPersonas">−</button>
-                  <input
-                    type="number"
-                    class="personas-counter__num"
-                    [value]="form.personas"
-                    (input)="onPersonasInput($event)"
-                    (blur)="onPersonasBlur()"
-                    inputmode="numeric"
-                    [min]="minPersonas"
-                    max="100" />
-                  <button type="button" class="personas-counter__btn" (click)="sumarPersona()" [disabled]="form.personas >= 100">+</button>
-                </div>
-                @if (personasAviso()) {
-                  <span class="reserva-personas__aviso">{{ personasAviso() }}</span>
-                }
-              </div>
-            }
 
             @if (form.tipo === 'privada' || form.tipo === 'evento') {
               <button
@@ -418,7 +397,8 @@
                 [mostrarSlots]="mostrarFranjas"
                 [doble]="form.doblePartida"
                 [txiki]="form.tipo === 'txiki' || form.tipo === 'evento'"
-                [permitirLaborables]="permitirLaborables || form.tipo === 'txiki' || form.tipo === 'evento'"
+                [permitirLaborables]="form.tipo === 'privada' || form.tipo === 'txiki' || form.tipo === 'evento'"
+                [avisoLaborable]="avisoLaborable"
                 [preselect]="form.fecha ? {fecha: form.fecha, hora: form.hora, pista: form.pista} : null"
                 (slotSeleccionado)="onSlotSeleccionado($event)"
                 (fechaSeleccionada)="onFechaSeleccionada($event)"
@@ -460,6 +440,29 @@
         @if (paso() === 3 && form.tipo === 'individual') {
           <div class="reserva-step">
             <h3 class="reserva-step__title">Confirma tu asistencia</h3>
+
+            <div class="reserva-personas" style="margin-top:0; margin-bottom: 28px;">
+              <div class="reserva-personas__info">
+                <strong class="reserva-personas__title">¿Cuántas personas?</strong>
+              </div>
+              <div class="personas-counter personas-counter--lg">
+                <button type="button" class="personas-counter__btn" (click)="restarPersona()" [disabled]="form.personas <= minPersonas">−</button>
+                <input
+                  type="number"
+                  class="personas-counter__num"
+                  [value]="form.personas"
+                  (input)="onPersonasInput($event)"
+                  (blur)="onPersonasBlur()"
+                  inputmode="numeric"
+                  [min]="minPersonas"
+                  max="100" />
+                <button type="button" class="personas-counter__btn" (click)="sumarPersona()" [disabled]="form.personas >= 100">+</button>
+              </div>
+              @if (personasAviso()) {
+                <span class="reserva-personas__aviso">{{ personasAviso() }}</span>
+              }
+            </div>
+
             <p class="confirmacion-texto">
               Apuntamos tu plaza para el <strong>{{ formatFecha(form.fecha) }}</strong> con <strong>{{ form.personas }} persona{{ form.personas !== 1 ? 's' : '' }}</strong>.
               Te esperamos en el campo.
@@ -489,6 +492,31 @@
           <div class="reserva-step">
             <h3 class="reserva-step__title">¿Cómo te llamamos?</h3>
 
+            <div class="reserva-personas" style="margin-top:0; margin-bottom: 28px;">
+              <div class="reserva-personas__info">
+                <strong class="reserva-personas__title">{{ form.tipo === 'txiki' ? '¿Cuántos niños/as?' : '¿Cuántas personas?' }}</strong>
+                @if (minPersonas > 1) {
+                  <span class="reserva-personas__hint">Mínimo {{ minPersonas }} {{ form.tipo === 'txiki' ? 'niños/as' : 'personas' }}</span>
+                }
+              </div>
+              <div class="personas-counter personas-counter--lg">
+                <button type="button" class="personas-counter__btn" (click)="restarPersona()" [disabled]="form.personas <= minPersonas">−</button>
+                <input
+                  type="number"
+                  class="personas-counter__num"
+                  [value]="form.personas"
+                  (input)="onPersonasInput($event)"
+                  (blur)="onPersonasBlur()"
+                  inputmode="numeric"
+                  [min]="minPersonas"
+                  max="100" />
+                <button type="button" class="personas-counter__btn" (click)="sumarPersona()" [disabled]="form.personas >= 100">+</button>
+              </div>
+              @if (personasAviso()) {
+                <span class="reserva-personas__aviso">{{ personasAviso() }}</span>
+              }
+            </div>
+
             <div class="form-field">
               <label class="form-label">Nombre y apellidos <span class="form-label__req">*</span></label>
               <input class="form-input" type="text" [(ngModel)]="form.nombre" name="nombre" placeholder="Tu nombre completo" />
@@ -501,7 +529,7 @@
               </div>
               <div class="form-field">
                 <label class="form-label">Teléfono <span class="form-label__req">*</span></label>
-                <input class="form-input" type="tel" [(ngModel)]="form.telefono" name="telefono" placeholder="+34 600 000 000" />
+                <input class="form-input" type="tel" [ngModel]="form.telefono" (beforeinput)="onTelefonoBeforeInput($event)" (input)="onTelefonoInput($event)" name="telefono" inputmode="tel" placeholder="+34 600 000 000" />
               </div>
             </div>
 
@@ -562,6 +590,105 @@
                 </span>
                 <span class="upgrade-card__toggle" aria-hidden="true">
                   {{ form.menu ? 'Añadido ✓' : 'Añadir +' }}
+                </span>
+              </button>
+            }
+
+            @if (form.subtipoEvento === 'despedidas') {
+              <button
+                type="button"
+                class="upgrade-card"
+                [class.upgrade-card--activo]="form.monoRosa"
+                [attr.aria-pressed]="form.monoRosa"
+                (click)="form.monoRosa = !form.monoRosa">
+                <span class="upgrade-card__icon" aria-hidden="true">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23Z"/>
+                  </svg>
+                </span>
+                <span class="upgrade-card__body">
+                  <span class="upgrade-card__top">
+                    <span class="upgrade-card__title">Mono rosa para el/la protagonista</span>
+                    <span class="upgrade-card__price">Incluido</span>
+                  </span>
+                  <span class="upgrade-card__desc">Sin suplemento. Avísanos con antelación para tenerlo preparado en su talla.</span>
+                </span>
+                <span class="upgrade-card__toggle" aria-hidden="true">
+                  {{ form.monoRosa ? 'Añadido ✓' : 'Añadir +' }}
+                </span>
+              </button>
+            }
+
+            @if (form.subtipoEvento === 'colectivos') {
+              <button
+                type="button"
+                class="upgrade-card"
+                [class.upgrade-card--activo]="form.camisetasEquipo"
+                [attr.aria-pressed]="form.camisetasEquipo"
+                (click)="form.camisetasEquipo = !form.camisetasEquipo">
+                <span class="upgrade-card__icon" aria-hidden="true">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23Z"/>
+                  </svg>
+                </span>
+                <span class="upgrade-card__body">
+                  <span class="upgrade-card__top">
+                    <span class="upgrade-card__title">Camisetas por equipo</span>
+                    <span class="upgrade-card__price">Incluido</span>
+                  </span>
+                  <span class="upgrade-card__desc">Dividimos al grupo por colores para que el profesor o monitor controle mejor a los subequipos.</span>
+                </span>
+                <span class="upgrade-card__toggle" aria-hidden="true">
+                  {{ form.camisetasEquipo ? 'Añadido ✓' : 'Añadir +' }}
+                </span>
+              </button>
+
+              <button
+                type="button"
+                class="upgrade-card"
+                [class.upgrade-card--activo]="form.autorizacionLote"
+                [attr.aria-pressed]="form.autorizacionLote"
+                (click)="form.autorizacionLote = !form.autorizacionLote">
+                <span class="upgrade-card__icon" aria-hidden="true">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/>
+                    <path d="M14 2v6h6"/>
+                    <path d="M9 15l2 2 4-4"/>
+                  </svg>
+                </span>
+                <span class="upgrade-card__body">
+                  <span class="upgrade-card__top">
+                    <span class="upgrade-card__title">Autorización en lote</span>
+                    <span class="upgrade-card__price">Incluido</span>
+                  </span>
+                  <span class="upgrade-card__desc">Te enviamos una única plantilla para recoger las autorizaciones de todo el grupo, en vez de una por participante.</span>
+                </span>
+                <span class="upgrade-card__toggle" aria-hidden="true">
+                  {{ form.autorizacionLote ? 'Añadido ✓' : 'Añadir +' }}
+                </span>
+              </button>
+
+              <button
+                type="button"
+                class="upgrade-card"
+                [class.upgrade-card--activo]="form.certificadoActividad"
+                [attr.aria-pressed]="form.certificadoActividad"
+                (click)="form.certificadoActividad = !form.certificadoActividad">
+                <span class="upgrade-card__icon" aria-hidden="true">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="8" r="6"/>
+                    <path d="M9.5 13.5 7 22l5-3 5 3-2.5-8.5"/>
+                  </svg>
+                </span>
+                <span class="upgrade-card__body">
+                  <span class="upgrade-card__top">
+                    <span class="upgrade-card__title">Certificado de la actividad</span>
+                    <span class="upgrade-card__price">Incluido</span>
+                  </span>
+                  <span class="upgrade-card__desc">Resumen de la actividad para el centro, asociación o grupo organizador.</span>
+                </span>
+                <span class="upgrade-card__toggle" aria-hidden="true">
+                  {{ form.certificadoActividad ? 'Añadido ✓' : 'Añadir +' }}
                 </span>
               </button>
             }
@@ -634,6 +761,18 @@
           }
           @if (form.tipo === 'txiki' && form.merienda) {
             <div class="resumen-row"><span>Merienda</span><strong>+9,90 €/niño</strong></div>
+          }
+          @if (form.monoRosa) {
+            <div class="resumen-row"><span>Mono rosa</span><strong>Incluido</strong></div>
+          }
+          @if (form.camisetasEquipo) {
+            <div class="resumen-row"><span>Camisetas por equipo</span><strong>Incluido</strong></div>
+          }
+          @if (form.autorizacionLote) {
+            <div class="resumen-row"><span>Autorización en lote</span><strong>Incluido</strong></div>
+          }
+          @if (form.certificadoActividad) {
+            <div class="resumen-row"><span>Certificado de actividad</span><strong>Incluido</strong></div>
           }
           @if (!resumen.tipo) {
             <p class="resumen-vacio">Selecciona las opciones para ver el resumen aquí.</p>

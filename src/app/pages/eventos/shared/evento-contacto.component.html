@@ -36,7 +36,7 @@
       </div>
       <div class="form-field">
         <label class="form-label">Teléfono <span class="form-label__req">*</span></label>
-        <input class="form-input" type="tel" [(ngModel)]="form.telefono" name="telefono" required placeholder="688 73 14 74" />
+        <input class="form-input" type="tel" [ngModel]="form.telefono" (beforeinput)="onTelefonoBeforeInput($event)" (input)="onTelefonoInput($event)" name="telefono" required inputmode="tel" placeholder="688 73 14 74" />
       </div>
       <div class="form-field">
         <label class="form-label">Email <span class="form-label__req">*</span></label>

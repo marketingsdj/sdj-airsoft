@@ -4,22 +4,25 @@
   position: fixed;
   bottom: 28px;
   right: 28px;
-  z-index: 900;
+  z-index: 1500;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 0;
   background: #25d366;
   color: #fff;
-  padding: 14px 18px;
-  border-radius: 50px;
+  padding: 14px;
+  border-radius: 50%;
   text-decoration: none;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
-  transition: transform $transition, box-shadow $transition;
+  transition: transform $transition, box-shadow $transition, border-radius $transition, padding $transition, gap $transition;
   overflow: hidden;
 
   &:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 28px rgba(0, 0, 0, 0.4);
+    border-radius: 50px;
+    padding: 14px 18px;
+    gap: 10px;
 
     .wa-btn__label { max-width: 100px; opacity: 1; }
   }
@@ -45,8 +48,13 @@
 
   @media (max-width: $bp-sm) {
     bottom: 84px; // encima de la barra sticky móvil de reserva
-    padding: 14px;
-    border-radius: 50%;
+
+    &:hover {
+      border-radius: 50%;
+      padding: 14px;
+      gap: 0;
+    }
+
     .wa-btn__label { display: none; }
   }
 }
