@@ -22,15 +22,15 @@ export class ReservaComponent implements OnInit, OnDestroy {
   // Shared with the service — survives navigation
   form  = this.state.form;
   paso  = this.state.paso;
+  enviado       = this.state.enviado;
+  numeroReserva = this.state.numeroReserva;
 
-  enviado      = signal(false);
   enviando     = signal(false);
   mostrarNormas      = signal(false);
   mostrarPrivacidad  = signal(false);
   mostrarReducida    = signal(false);   // disclosure "¿Conoces la tarifa reducida?"
   modalPremium       = signal(false);   // pop-up de upsell a Premium al pasar del paso 1
   private premiumOfrecido = false;      // para no repetir el pop-up en el mismo flujo
-  numeroReserva = signal('');
 
   premiumIncluye = [
     'Réplica de gama alta',
@@ -120,12 +120,6 @@ export class ReservaComponent implements OnInit, OnDestroy {
 
   primeraVezOpciones    = ['Sí, es mi primera vez', 'Ya he venido antes', 'Soy socio/a'];
   comoConocidoOpciones  = ['Instagram', 'Google', 'Un amigo / familiar', 'Ya era cliente', 'Otro'];
-  readonly anosNacimiento = Array.from({ length: 2015 - 1940 + 1 }, (_, i) => 2015 - i);
-
-  get esMenorDe14(): boolean {
-    if (!this.form.anoNacimiento) return false;
-    return new Date().getFullYear() - this.form.anoNacimiento < 14;
-  }
 
   tipos = [
     { key: 'individual' as TipoReserva, label: 'Partida abierta',     desc: 'Acceso a las partidas con todos los jugadores, con diferentes dinámicas cada hora. Ven solo o acompañado.',  icono: '◎' },
@@ -170,7 +164,11 @@ export class ReservaComponent implements OnInit, OnDestroy {
   }
 
   get pasoValido(): boolean {
-    if (this.paso() === 1) return !!this.form.tipo;
+    if (this.paso() === 1) {
+      if (!this.form.tipo) return false;
+      if (this.form.tipo === 'individual') return !!this.form.modalidad;
+      return true;
+    }
     if (this.paso() === 2) return this.mostrarFranjas
       ? !!this.form.fecha && !!this.form.hora
       : !!this.form.fecha;
@@ -178,7 +176,6 @@ export class ReservaComponent implements OnInit, OnDestroy {
       if (!this.form.aceptaEdad) return false;
       if (!this.form.aceptaPrivacidad) return false;
       if (this.form.tipo === 'individual') {
-        if (!this.form.anoNacimiento || this.esMenorDe14) return false;
         return !!this.form.acepta;
       }
       return !!this.form.nombre && !!this.form.email && !!this.form.telefono && this.form.acepta;
@@ -307,7 +304,7 @@ export class ReservaComponent implements OnInit, OnDestroy {
   }
 
   sumarPersona() {
-    if (this.form.personas < 80) this.form.personas++;
+    if (this.form.personas < 100) this.form.personas++;
   }
 
   restarPersona() {
@@ -316,6 +313,34 @@ export class ReservaComponent implements OnInit, OnDestroy {
       if (!this.mostrarFranjas) { this.form.hora = ''; this.form.pista = ''; }
       if (!this.muestraMenu) this.form.menu = false;
     }
+  }
+
+  // Edición manual del número de personas (input numérico junto a +/-).
+  // Mientras se escribe no se fuerza el rango, para no interrumpir al usuario
+  // a mitad de tecleo; el rango se aplica al salir del campo (onPersonasBlur).
+  onPersonasInput(event: Event) {
+    const value = (event.target as HTMLInputElement).value;
+    const n = parseInt(value, 10);
+    if (!isNaN(n)) this.form.personas = n;
+  }
+
+  personasAviso = signal('');
+  private personasAvisoTimeout?: ReturnType<typeof setTimeout>;
+
+  onPersonasBlur() {
+    const valorEscrito = this.form.personas;
+    const clamped = Math.min(100, Math.max(this.minPersonas, valorEscrito || this.minPersonas));
+    this.form.personas = clamped;
+
+    if (clamped !== valorEscrito) {
+      const unidad = this.form.tipo === 'txiki' ? 'niños/as' : 'personas';
+      this.personasAviso.set(clamped === 100 ? `Máximo ${unidad}: 100` : `Mínimo ${unidad}: ${this.minPersonas}`);
+      clearTimeout(this.personasAvisoTimeout);
+      this.personasAvisoTimeout = setTimeout(() => this.personasAviso.set(''), 3000);
+    }
+
+    if (!this.mostrarFranjas) { this.form.hora = ''; this.form.pista = ''; }
+    if (!this.muestraMenu) this.form.menu = false;
   }
 
   siguiente() {
@@ -424,10 +449,24 @@ export class ReservaComponent implements OnInit, OnDestroy {
     this.enviando.set(false);
     this.enviado.set(true);
     this.analytics.trackEvent('reserva_enviada', { tipo: this.form.tipo, personas: this.form.personas });
+
+    // Abre solo el diálogo de imprimir/guardar como PDF, para que el cliente
+    // no tenga que acordarse de pulsar "Guardar copia de la reserva". El
+    // pequeño retraso deja que la pantalla de confirmación termine de
+    // renderizarse antes de abrir el diálogo del navegador.
+    if (this.isBrowser) setTimeout(() => this.imprimirResumen(), 400);
+  }
+
+  // Permite empezar una reserva nueva sin esperar a una sesión distinta
+  // (p. ej. un cliente que ya reservó y quiere reservar otro día para otro grupo).
+  nuevaReserva() {
+    this.state.reset();
+    if (this.isBrowser) window.scrollTo({ top: 0, behavior: 'instant' });
   }
 
   ngOnDestroy() {
-    if (this.paso() >= 2 && !this.enviado()) {
+    clearTimeout(this.personasAvisoTimeout);
+    if (!this.enviado() && this.paso() >= 2) {
       this.analytics.trackEvent('reserva_abandonada', { paso: this.paso(), tipo: this.form.tipo });
     }
   }
@@ -449,6 +488,95 @@ export class ReservaComponent implements OnInit, OnDestroy {
     // Doble partida = 3 h de juego (la partida no dura las 2 h del hueco).
     const fin = new Date(); fin.setHours(h + (this.form.doblePartida ? 3 : 2), m);
     return `${String(fin.getHours()).padStart(2,'0')}:${String(fin.getMinutes()).padStart(2,'0')}`;
+  }
+
+  // Fechas de inicio/fin del evento de calendario (compartidas por Google
+  // Calendar y el .ics): con franja horaria si la reserva la tiene, o evento
+  // de día completo si no (p. ej. partida abierta individual sin franja).
+  private eventoFechas(): { allDay: boolean; inicio: Date; fin: Date } {
+    const [y, m, d] = this.form.fecha.split('-').map(Number);
+    if (this.form.hora) {
+      const [h, min]   = this.form.hora.split(':').map(Number);
+      const [hf, minf] = this.horaFin.split(':').map(Number);
+      return { allDay: false, inicio: new Date(y, m - 1, d, h, min), fin: new Date(y, m - 1, d, hf, minf) };
+    }
+    return { allDay: true, inicio: new Date(y, m - 1, d), fin: new Date(y, m - 1, d + 1) };
+  }
+
+  private eventoTitulo(): string {
+    return `Reserva SDJ Airsoft · ${this.resumen.tipo}`;
+  }
+
+  private eventoUbicacion(): string {
+    return 'Barrio Legina S/N, 48195 Larrabetzu, Bizkaia';
+  }
+
+  private eventoDetalles(): string {
+    return [
+      `Reserva nº ${this.numeroReserva()}`,
+      `Personas: ${this.form.personas}`,
+      this.resumen.modalidad ? `Modalidad: ${this.resumen.modalidad}` : '',
+      'Dudas o cambios: 688 731 474',
+    ].filter(Boolean).join('\n');
+  }
+
+  // Enlace para que el cliente añada la reserva a su propio Google Calendar
+  // (sin backend: Google rellena el evento a partir de los parámetros de la URL).
+  get googleCalendarUrl(): string {
+    const { allDay, inicio, fin } = this.eventoFechas();
+    const pad = (n: number) => String(n).padStart(2, '0');
+    const fechaCompacta = (dt: Date) => `${dt.getFullYear()}${pad(dt.getMonth() + 1)}${pad(dt.getDate())}`;
+    const fmtUtc = (dt: Date) => dt.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+    const dates = allDay ? `${fechaCompacta(inicio)}/${fechaCompacta(fin)}` : `${fmtUtc(inicio)}/${fmtUtc(fin)}`;
+
+    const params = new URLSearchParams({
+      action: 'TEMPLATE',
+      text: this.eventoTitulo(),
+      dates,
+      details: this.eventoDetalles(),
+      location: this.eventoUbicacion(),
+    });
+    return `https://www.google.com/calendar/render?${params.toString()}`;
+  }
+
+  // Descarga un .ics (formato iCalendar) para Apple Calendar, Outlook y
+  // cualquier otra app que no use el enlace directo de Google Calendar.
+  descargarIcs() {
+    const { allDay, inicio, fin } = this.eventoFechas();
+    const pad = (n: number) => String(n).padStart(2, '0');
+    const fechaCompacta = (dt: Date) => `${dt.getFullYear()}${pad(dt.getMonth() + 1)}${pad(dt.getDate())}`;
+    const fmtUtc = (dt: Date) => dt.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+    const escapar = (s: string) => s.replace(/\\/g, '\\\\').replace(/\n/g, '\\n').replace(/,/g, '\\,').replace(/;/g, '\\;');
+
+    const dtstart = allDay ? `DTSTART;VALUE=DATE:${fechaCompacta(inicio)}` : `DTSTART:${fmtUtc(inicio)}`;
+    const dtend   = allDay ? `DTEND;VALUE=DATE:${fechaCompacta(fin)}`     : `DTEND:${fmtUtc(fin)}`;
+
+    const contenido = [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'PRODID:-//SDJ Airsoft//Reserva//ES',
+      'CALSCALE:GREGORIAN',
+      'METHOD:PUBLISH',
+      'BEGIN:VEVENT',
+      `UID:${this.numeroReserva()}@soldadosdejuguete.com`,
+      `DTSTAMP:${fmtUtc(new Date())}`,
+      dtstart,
+      dtend,
+      `SUMMARY:${escapar(this.eventoTitulo())}`,
+      `DESCRIPTION:${escapar(this.eventoDetalles())}`,
+      `LOCATION:${escapar(this.eventoUbicacion())}`,
+      'END:VEVENT',
+      'END:VCALENDAR',
+    ].join('\r\n');
+
+    const blob = new Blob([contenido], { type: 'text/calendar;charset=utf-8' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
+    a.download = `reserva-sdj-${this.numeroReserva()}.ics`;
+    a.click();
+    URL.revokeObjectURL(url);
+    this.analytics.trackEvent('reserva_ics_descargado');
   }
 
   get totalReserva(): string {

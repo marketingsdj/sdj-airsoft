@@ -196,11 +196,35 @@
           </button>
         </div>
 
+        <div class="exito-pdf-wrap">
+          <div class="exito-cal-card">
+            <a class="exito-cal-card__principal" [href]="googleCalendarUrl" target="_blank" rel="noopener" (click)="analytics.trackEvent('reserva_calendario_anadido')">
+              <span class="exito-pdf-btn__left">
+                <span class="exito-pdf-btn__icono">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                    <line x1="16" y1="2" x2="16" y2="6"/>
+                    <line x1="8" y1="2" x2="8" y2="6"/>
+                    <line x1="3" y1="10" x2="21" y2="10"/>
+                  </svg>
+                </span>
+              </span>
+              <span class="exito-pdf-btn__center">
+                <strong>Añadir a Google Calendar</strong>
+                <span>Para no olvidarte de la fecha</span>
+              </span>
+            </a>
+            <button type="button" class="exito-cal-card__secundario" (click)="descargarIcs()">¿Apple Calendar u Outlook? Descargar .ics</button>
+          </div>
+        </div>
+
         <p class="exito-aviso">¿Dudas o cambios? Escríbenos por WhatsApp.</p>
         <div class="exito-ctas">
           <a href="https://wa.me/34688731474" target="_blank" rel="noopener" class="btn btn--primary">Contactar por WhatsApp</a>
           <a routerLink="/" class="btn btn--ghost">Volver al inicio</a>
         </div>
+
+        <button type="button" class="exito-otra-reserva" (click)="nuevaReserva()">¿Quieres hacer otra reserva? Empieza aquí</button>
       </div>
     }
 
@@ -218,9 +242,21 @@
                [class.stepper__item--active]="paso() === n"
                [class.stepper__item--done]="paso() > n"
                [class.stepper__item--clickable]="paso() > n"
-               (click)="irAPaso(n)">
+               [attr.role]="paso() > n ? 'button' : null"
+               [attr.tabindex]="paso() > n ? 0 : null"
+               [attr.title]="paso() > n ? 'Editar' : null"
+               [attr.aria-label]="paso() > n ? 'Editar paso ' + n : null"
+               (click)="irAPaso(n)"
+               (keydown.enter)="irAPaso(n)">
               <span class="stepper__num">{{ paso() > n ? '✓' : n }}</span>
               <span class="stepper__lbl">{{ n === 1 ? '¿Qué?' : n === 2 ? '¿Cuándo?' : '¿Quién?' }}</span>
+              @if (paso() > n) {
+                <span class="stepper__edit" aria-hidden="true">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>
+                  </svg>
+                </span>
+              }
             </div>
             @if (n < 3) {
               <div class="stepper__line" [class.stepper__line--done]="paso() > n"></div>
@@ -279,9 +315,20 @@
                 </div>
                 <div class="personas-counter personas-counter--lg">
                   <button type="button" class="personas-counter__btn" (click)="restarPersona()" [disabled]="form.personas <= minPersonas">−</button>
-                  <span class="personas-counter__num">{{ form.personas }}</span>
-                  <button type="button" class="personas-counter__btn" (click)="sumarPersona()" [disabled]="form.personas >= 80">+</button>
+                  <input
+                    type="number"
+                    class="personas-counter__num"
+                    [value]="form.personas"
+                    (input)="onPersonasInput($event)"
+                    (blur)="onPersonasBlur()"
+                    inputmode="numeric"
+                    [min]="minPersonas"
+                    max="100" />
+                  <button type="button" class="personas-counter__btn" (click)="sumarPersona()" [disabled]="form.personas >= 100">+</button>
                 </div>
+                @if (personasAviso()) {
+                  <span class="reserva-personas__aviso">{{ personasAviso() }}</span>
+                }
               </div>
             }
 
@@ -312,6 +359,31 @@
         @if (paso() === 2) {
           <div class="reserva-step">
             <h3 class="reserva-step__title">¿Cuándo quieres venir?</h3>
+
+            @if (form.tipo === 'txiki') {
+              <div class="reserva-personas" style="margin-top:0; margin-bottom: 28px;">
+                <div class="reserva-personas__info">
+                  <strong class="reserva-personas__title">¿Cuántos niños/as?</strong>
+                  <span class="reserva-personas__hint">Mínimo {{ minPersonas }} niños/as</span>
+                </div>
+                <div class="personas-counter personas-counter--lg">
+                  <button type="button" class="personas-counter__btn" (click)="restarPersona()" [disabled]="form.personas <= minPersonas">−</button>
+                  <input
+                    type="number"
+                    class="personas-counter__num"
+                    [value]="form.personas"
+                    (input)="onPersonasInput($event)"
+                    (blur)="onPersonasBlur()"
+                    inputmode="numeric"
+                    [min]="minPersonas"
+                    max="100" />
+                  <button type="button" class="personas-counter__btn" (click)="sumarPersona()" [disabled]="form.personas >= 100">+</button>
+                </div>
+                @if (personasAviso()) {
+                  <span class="reserva-personas__aviso">{{ personasAviso() }}</span>
+                }
+              </div>
+            }
 
             @if (form.tipo === 'privada' || form.tipo === 'evento') {
               <button
@@ -394,6 +466,10 @@
             </p>
 
             <label class="form-check" style="margin-top: 28px;">
+              <input type="checkbox" [(ngModel)]="form.aceptaComunicaciones" name="aceptaComunicaciones" />
+              <span>Acepto recibir comunicaciones comerciales de SDJ.</span>
+            </label>
+            <label class="form-check">
               <input type="checkbox" [(ngModel)]="form.aceptaEdad" name="aceptaEdad" />
               <span>Confirmo que <strong style="color:#ff7300;font-weight:700">todos los jugadores tienen 14 años o más</strong>. Los menores de 18 llevarán autorización de su tutor legal.</span>
             </label>
@@ -405,10 +481,6 @@
               <input type="checkbox" [(ngModel)]="form.aceptaPrivacidad" name="aceptaPrivacidad" />
               <span>Acepto la <a href="#" (click)="mostrarPrivacidad.set(true); $event.preventDefault()">política de privacidad</a>.</span>
             </label>
-            <label class="form-check">
-              <input type="checkbox" [(ngModel)]="form.aceptaComunicaciones" name="aceptaComunicaciones" />
-              <span>Acepto recibir comunicaciones comerciales de SDJ.</span>
-            </label>
           </div>
         }
 
@@ -418,17 +490,17 @@
             <h3 class="reserva-step__title">¿Cómo te llamamos?</h3>
 
             <div class="form-field">
-              <label class="form-label">Nombre y apellidos *</label>
+              <label class="form-label">Nombre y apellidos <span class="form-label__req">*</span></label>
               <input class="form-input" type="text" [(ngModel)]="form.nombre" name="nombre" placeholder="Tu nombre completo" />
             </div>
 
             <div class="form-row">
               <div class="form-field">
-                <label class="form-label">Email *</label>
+                <label class="form-label">Email <span class="form-label__req">*</span></label>
                 <input class="form-input" type="email" [(ngModel)]="form.email" name="email" placeholder="tu@email.com" />
               </div>
               <div class="form-field">
-                <label class="form-label">Teléfono *</label>
+                <label class="form-label">Teléfono <span class="form-label__req">*</span></label>
                 <input class="form-input" type="tel" [(ngModel)]="form.telefono" name="telefono" placeholder="+34 600 000 000" />
               </div>
             </div>
@@ -437,7 +509,7 @@
             @if (form.tipo === 'txiki') {
               <div class="form-row">
                 <div class="form-field">
-                  <label class="form-label">Edades de los peques *</label>
+                  <label class="form-label">Edades de los peques <span class="form-label__req">*</span></label>
                   <input class="form-input" type="text" [(ngModel)]="form.edadesNinos" name="edadesNinos" placeholder="Ej: 8, 9 y 11 años" />
                 </div>
               </div>
@@ -500,6 +572,10 @@
             </div>
 
             <label class="form-check">
+              <input type="checkbox" [(ngModel)]="form.aceptaComunicaciones" name="aceptaComunicaciones" />
+              <span>Acepto recibir comunicaciones comerciales de SDJ.</span>
+            </label>
+            <label class="form-check">
               <input type="checkbox" [(ngModel)]="form.aceptaEdad" name="aceptaEdad" />
               @if (form.tipo === 'txiki') {
                 <span>Confirmo que soy <strong style="color:#ff7300;font-weight:700">padre/madre o tutor legal</strong> de los peques y autorizo su participación en la actividad.</span>
@@ -515,10 +591,6 @@
               <input type="checkbox" [(ngModel)]="form.aceptaPrivacidad" name="aceptaPrivacidad" />
               <span>Acepto la <a href="#" (click)="mostrarPrivacidad.set(true); $event.preventDefault()">política de privacidad</a>.</span>
             </label>
-            <label class="form-check">
-              <input type="checkbox" [(ngModel)]="form.aceptaComunicaciones" name="aceptaComunicaciones" />
-              <span>Acepto recibir comunicaciones comerciales de SDJ.</span>
-            </label>
           </div>
         }
 
@@ -533,7 +605,7 @@
             <div class="resumen-row"><span>Modalidad</span><strong>{{ resumen.modalidad }}</strong></div>
           }
           @if (resumen.premium) {
-            <div class="resumen-row"><span>Equipo</span><strong>Pack premium +5€</strong></div>
+            <div class="resumen-row"><span>Equipo</span><strong>Pack premium</strong></div>
           }
           @if (resumen.fecha) {
             <div class="resumen-row"><span>Fecha</span><strong>{{ formatFecha(resumen.fecha) }}</strong></div>

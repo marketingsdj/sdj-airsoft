@@ -177,7 +177,7 @@
             </div>
             <ul class="socio-abono__lista">
               <li><strong>Entrada gratuita para partidas abiertas</strong></li>
-              <li>15% dto. accesorios · 10% dto. réplicas en tienda</li>
+              <li>10% dto. accesorios y réplicas en tienda física</li>
               <li>Taquilla nominal permanente</li>
               <li>Tarjeta de acceso personalizada + parche SDJ</li>
               <li>Comedor exclusivo socios</li>
@@ -341,7 +341,38 @@
 
     <!-- Política -->
     <div class="politica">
-      <h3 class="politica__titulo">Letra (no tan) pequeña</h3>
+      <!-- Aviso aparte, visible en cualquier pestaña (no es una categoría más de partida abierta/grupo/socio) -->
+      <button type="button" class="txiki-banner" (click)="setTab('txiki')">
+        <span class="txiki-banner__icon" aria-hidden="true">◉</span>
+        <span class="txiki-banner__texto">
+          <span class="txiki-banner__eyebrow">Otra actividad · No es una tarifa de partida abierta</span>
+          <strong>¿Quieres venir con un peque de 8 a 14 años?</strong>
+          <span>Descubre las tarifas de Txikipaintball, pensadas para ellos.</span>
+        </span>
+        <span class="txiki-banner__cta">Ver tarifas →</span>
+      </button>
+
+      <!-- Tarifa de Txikipaintball: mismo estilo de tarjeta que el resto, pero
+           se muestra aquí mismo, debajo del aviso, sin saltar arriba -->
+      @if (tab() === 'txiki') {
+        <div class="tarifas-grid tarifas-grid--single" style="margin-top:24px;">
+          <div class="tarifa-card">
+            <p class="tarifa-card__nombre">{{ txikiTarifa.nombre }}</p>
+            <p class="tarifa-card__precio">{{ txikiTarifa.precio | number:'1.2-2' }}<span>€</span></p>
+            <ul class="tarifa-card__incluye">
+              @for (item of txikiTarifa.incluye; track item) {
+                <li>{{ item }}</li>
+              }
+            </ul>
+            <p class="txiki-mas-info">
+              <a routerLink="/txikipaintball">Ver horarios, fotos y todos los detalles de Txikipaintball →</a>
+            </p>
+            <a routerLink="/reserva" [queryParams]="{tipo: 'txikipaintball'}" class="btn btn--primary tarifa-btn">Reservar</a>
+          </div>
+        </div>
+      }
+
+      <h3 class="politica__titulo" style="margin-top:32px;">Letra (no tan) pequeña</h3>
       <div class="grid-4">
         @for (p of politica; track p.titulo) {
           <div class="politica__item">

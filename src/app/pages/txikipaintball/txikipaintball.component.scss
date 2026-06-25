@@ -1,5 +1,52 @@
 @use '../../../styles/variables' as *;
 
+// ── FAQ (mismo estilo que la home) ──────────────────────────────────────────────
+.faq-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: $line;
+  border: 1px solid $line;
+  border-radius: $radius-md;
+  overflow: hidden;
+  margin-bottom: 32px;
+
+  @media (max-width: $bp-md) { grid-template-columns: 1fr; }
+}
+
+.faq-item {
+  background: rgba(255,255,255,0.03);
+  padding: 24px;
+
+  &__q {
+    font-family: $font-tight;
+    font-weight: 700;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin: 0 0 10px;
+    color: $crema;
+  }
+
+  &__a {
+    font-size: 13px;
+    color: rgba($crema, 0.65);
+    line-height: 1.55;
+    margin: 0;
+  }
+}
+
+.section-more {
+  margin-top: 32px;
+  text-align: center;
+
+  &__texto {
+    font-size: 14px;
+    color: rgba($crema, 0.6);
+    margin: 0 0 12px;
+  }
+}
+
 // ── Galería ───────────────────────────────────────────────────────────────────
 .txiki-galeria {
   display: grid;

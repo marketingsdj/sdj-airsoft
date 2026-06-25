@@ -155,7 +155,8 @@ export class CalendarioGruposComponent implements OnInit {
   constructor(private router: Router) {}
 
   ngOnInit() {
-    this.seleccionarProximoDisponible();
+    // No pisar una fecha que ya viniera elegida (p. ej. al volver al paso 2).
+    if (!this.fechaSel()) this.seleccionarProximoDisponible();
   }
 
   // Devuelve YYYY-MM-DD en hora local (evita el desfase UTC en zonas +N)
@@ -165,6 +166,9 @@ export class CalendarioGruposComponent implements OnInit {
     return `${d.getFullYear()}-${mm}-${dd}`;
   }
 
+  // Preselecciona de verdad el primer día disponible (mismo camino que un
+  // clic), para que lo que se ve en naranja sea una selección real y no solo
+  // un resaltado visual sin avisar al formulario padre.
   private seleccionarProximoDisponible() {
     for (let offset = 0; offset <= 2; offset++) {
       const ref = new Date(this.mesActual());
@@ -172,9 +176,11 @@ export class CalendarioGruposComponent implements OnInit {
       const semanas = this.generarMes(ref);
       for (const semana of semanas) {
         for (const dia of semana) {
-          if (dia.esDisponible && !dia.esPasado && dia.fecha.getMonth() === ref.getMonth()) {
+          const seleccionable = dia.esDisponible && !dia.esPasado && dia.fecha.getMonth() === ref.getMonth()
+            && (!this.mostrarSlots || this.slotDisponibles(dia) > 0);
+          if (seleccionable) {
             if (offset > 0) this.mesActual.set(ref);
-            this.fechaSel.set(this.localFecha(dia.fecha));
+            this.seleccionarDia(dia);
             return;
           }
         }

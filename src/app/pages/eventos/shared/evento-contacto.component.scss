@@ -25,6 +25,8 @@
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: rgba($crema, 0.5);
+
+  &__req { color: $naranja; }
 }
 
 .form-input {
@@ -50,6 +52,13 @@
     background-repeat: no-repeat;
     background-position: right 12px center;
     padding-right: 32px;
+
+    option {
+      background: #1c1c1c;
+      color: #f0ebe0;
+
+      &:disabled { color: rgba(240,235,224,0.35); }
+    }
   }
 
   &--textarea {

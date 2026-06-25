@@ -13,7 +13,6 @@ export interface FormData {
   nombre: string;
   email: string;
   telefono: string;
-  anoNacimiento: number | null;
   comoConocido: string;
   primeraVez: string;
   acepta: boolean;
@@ -33,6 +32,14 @@ export interface FormData {
 export class ReservaStateService {
   paso = signal(1);
 
+  // Sobreviven a la navegación dentro de la misma sesión (pestaña), para que
+  // si el usuario va a otra página y vuelve a /reserva siga viendo la
+  // confirmación con el PDF/calendario descargable, en vez de un formulario
+  // vacío. Solo se limpian al empezar una sesión nueva (recarga completa) o
+  // al cambiar de categoría de reserva.
+  enviado = signal(false);
+  numeroReserva = signal('');
+
   form: FormData = this.initialForm();
 
   private initialForm(): FormData {
@@ -47,7 +54,6 @@ export class ReservaStateService {
       nombre: '',
       email: '',
       telefono: '',
-      anoNacimiento: null,
       comoConocido: '',
       primeraVez: '',
       acepta: false,
@@ -66,6 +72,8 @@ export class ReservaStateService {
 
   reset() {
     this.paso.set(1);
+    this.enviado.set(false);
+    this.numeroReserva.set('');
     // Limpia en el mismo objeto para no romper las referencias del componente/template
     Object.assign(this.form, this.initialForm());
   }

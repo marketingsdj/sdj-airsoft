@@ -5,8 +5,8 @@ import { AnalyticsService } from '../../core/services/analytics.service';
 import { CommonModule, DecimalPipe } from '@angular/common';
 import { CalendarioGruposComponent } from '../../shared/calendario-grupos/calendario-grupos.component';
 
-type Tab = 'individual' | 'grupo' | 'socio' | 'extras';
-const TABS_VALIDOS: Tab[] = ['individual', 'grupo', 'socio', 'extras'];
+type Tab = 'individual' | 'grupo' | 'socio' | 'extras' | 'txiki';
+const TABS_VALIDOS: Tab[] = ['individual', 'grupo', 'socio', 'extras', 'txiki'];
 
 @Component({
   selector: 'app-tarifas',
@@ -97,6 +97,14 @@ export class TarifasComponent implements OnInit {
       premium: false
     },
   ];
+
+  // Tarifa de Txikipaintball, mostrada con el mismo estilo que "Individual"
+  // al pulsar el aviso "¿Quieres venir con un peque de 8 a 14 años?".
+  txikiTarifa = {
+    nombre: 'Txikipaintball',
+    incluye: ['Munición ilimitada', 'Equipamiento completo adaptado', 'Monitor durante toda la actividad', 'Acceso a las zonas de juego', 'Seguro de actividad'],
+    precio: 19,
+  };
 
   grupo = [
     {

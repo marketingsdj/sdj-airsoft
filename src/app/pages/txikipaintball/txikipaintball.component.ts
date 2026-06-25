@@ -65,6 +65,13 @@ export class TxikipaintballComponent implements OnInit, OnDestroy {
     'Fines de semana diferentes',
   ];
 
+  faqs = [
+    { q: '¿Cuántos niños hacen falta para reservar?', a: 'El grupo mínimo es de 8 jugadores en total. Puede venir solo 1 niño/a y completar el resto con adultos — aunque lo ideal es que la mayoría sean peques.' },
+    { q: '¿Pueden los adultos jugar con los peques?', a: 'Sí, los adultos pueden jugar junto a los niños y niñas, tanto para completar el grupo mínimo como para unirse a la diversión.' },
+    { q: '¿A partir de qué edad pueden jugar?', a: 'Txikipaintball está pensado para niños y niñas de 8 a 14 años.' },
+    { q: '¿Qué pasa si llueve?', a: 'Jugamos con lluvia sin problema. Solo se cancela en caso de tormenta eléctrica o riesgo real.' },
+  ];
+
   beneficios = [
     'Equipamiento adaptado para menores',
     'Monitores durante toda la actividad',

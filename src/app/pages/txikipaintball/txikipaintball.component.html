@@ -59,17 +59,6 @@
         <p class="txiki-intro-p" style="margin-top:12px;">Vosotros disfrutáis del día. Nosotros nos encargamos del resto.</p>
       </div>
     </div>
-    <div class="txiki-planes-wrap">
-      <div class="section__header">
-        <p class="section__eyebrow">¿Para quién es?</p>
-        <h2 class="section__title">Un plan perfecto para…</h2>
-      </div>
-      <div class="txiki-planes">
-        @for (p of planes; track p) {
-          <div class="txiki-planes__item">{{ p }}</div>
-        }
-      </div>
-    </div>
   </div>
 </section>
 
@@ -224,7 +213,44 @@
   </div>
 </section>
 
+<!-- PARA QUIÉN ES -->
+<section class="section">
+  <div class="wrap">
+    <div class="txiki-planes-wrap">
+      <div class="section__header">
+        <p class="section__eyebrow">¿Para quién es?</p>
+        <h2 class="section__title">Un plan perfecto para…</h2>
+      </div>
+      <div class="txiki-planes">
+        @for (p of planes; track p) {
+          <div class="txiki-planes__item">{{ p }}</div>
+        }
+      </div>
+    </div>
+  </div>
+</section>
 
+<!-- PREGUNTAS RÁPIDAS -->
+<section class="section section--alt">
+  <div class="wrap">
+    <div class="section__header">
+      <p class="section__eyebrow">Dudas frecuentes</p>
+      <h2 class="section__title">Preguntas frecuentes</h2>
+    </div>
+    <div class="faq-grid">
+      @for (f of faqs; track f.q) {
+        <div class="faq-item">
+          <h4 class="faq-item__q">{{ f.q }}</h4>
+          <p class="faq-item__a">{{ f.a }}</p>
+        </div>
+      }
+    </div>
+    <div class="section-more">
+      <p class="section-more__texto">¿Tienes más dudas?</p>
+      <a [href]="waUrl" target="_blank" rel="noopener" class="btn btn--ghost" (click)="clickWhatsapp('faq')">Pregúntanos por WhatsApp →</a>
+    </div>
+  </div>
+</section>
 
 
 <!-- CTA FINAL -->
@@ -232,5 +258,5 @@
   <p class="txiki-cta-final__eyebrow">¿Preparados para la misión?</p>
   <h2>Haz que su próximo cumpleaños<br>sea una aventura inolvidable</h2>
   <p class="txiki-cta-final__sub">Diversión, seguridad y adrenalina adaptada para peques.</p>
-  <a [href]="waUrl" target="_blank" rel="noopener" class="btn btn--primary" (click)="clickWhatsapp('cta_final')">Reservar por WhatsApp →</a>
+  <a routerLink="/reserva" [queryParams]="{ tipo: 'txikipaintball' }" class="btn btn--primary" (click)="clickDisponibilidad()">Reservar →</a>
 </section>

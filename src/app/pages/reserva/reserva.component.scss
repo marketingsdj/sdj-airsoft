@@ -22,6 +22,8 @@
   max-width: 480px;
   position: relative;
 
+  @media (max-width: $bp-sm) { padding: 28px 20px; }
+
   &__cerrar {
     position: absolute;
     top: 16px;
@@ -90,6 +92,15 @@
 
     .btn { width: 100%; justify-content: center; }
     .btn--ghost { border-width: 1px; }
+
+    @media (max-width: $bp-sm) {
+      .btn {
+        white-space: normal;
+        text-align: center;
+        line-height: 1.3;
+        padding: 14px 16px;
+      }
+    }
   }
 }
 
@@ -143,7 +154,22 @@
 
     &--clickable {
       cursor: pointer;
-      &:hover { opacity: 0.75; }
+
+      .stepper__lbl {
+        text-decoration: underline;
+        text-decoration-color: rgba($naranja, 0.35);
+        text-underline-offset: 3px;
+      }
+
+      &:hover, &:focus-visible {
+        opacity: 1;
+
+        .stepper__num { box-shadow: 0 0 0 4px rgba($naranja, 0.18); }
+        .stepper__lbl { text-decoration-color: $naranja; }
+        .stepper__edit { opacity: 1; }
+      }
+
+      &:focus-visible { outline: 2px solid $naranja; outline-offset: 4px; border-radius: 4px; }
     }
   }
 
@@ -180,6 +206,13 @@
     text-transform: uppercase;
 
     @media (max-width: $bp-sm) { display: none; }
+  }
+
+  &__edit {
+    display: inline-flex;
+    color: $naranja;
+    opacity: 0.55;
+    transition: opacity $transition;
   }
 
   &__line {
@@ -465,6 +498,8 @@
   text-transform: uppercase;
   color: rgba($crema, 0.6);
   margin-bottom: 10px;
+
+  &__req { color: $naranja; }
 }
 
 .form-input {
@@ -572,12 +607,25 @@
     height: 44px;
     border-top: 1px solid $line;
     border-bottom: 1px solid $line;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    border-left: none;
+    border-right: none;
+    background: transparent;
+    text-align: center;
+    padding: 0;
+    outline: none;
     font-family: $font-narrow;
     font-size: 15px;
     color: $crema;
+    transition: border-color $transition;
+    -moz-appearance: textfield;
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    &:focus { border-color: $naranja; }
   }
 }
 
@@ -615,9 +663,20 @@
     color: $naranja-soft;
   }
 
+  &__aviso {
+    width: 100%;
+    font-family: $font-mono;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: $naranja;
+    text-align: right;
+  }
+
   @media (max-width: $bp-sm) {
     justify-content: center;
     text-align: center;
+
+    &__aviso { text-align: center; }
   }
 }
 
@@ -945,6 +1004,81 @@
   margin: 0 auto 24px;
 }
 
+// Recuadro naranja que agrupa "Añadir a Google Calendar" (fila principal) y
+// el .ics de Apple/Outlook (fila secundaria), dentro del mismo borde.
+.exito-cal-card {
+  border: 1.5px solid $naranja;
+  border-radius: $radius-md;
+  overflow: hidden;
+  background: rgba($naranja, 0.08);
+  transition: background $transition, box-shadow $transition;
+
+  &:hover {
+    background: rgba($naranja, 0.13);
+    box-shadow: 0 4px 24px rgba($naranja, 0.15);
+  }
+
+  &__principal {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 18px 20px;
+    cursor: pointer;
+    text-align: left;
+  }
+
+  &__secundario {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    border: none;
+    border-top: 1px solid rgba($naranja, 0.3);
+    background: rgba($ink, 0.15);
+    padding: 10px 20px;
+    cursor: pointer;
+    text-align: center;
+    white-space: normal;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    font-family: $font-mono;
+    font-size: 11px;
+    letter-spacing: 0.02em;
+    color: rgba($crema, 0.55);
+    text-decoration: underline;
+    text-decoration-color: rgba($crema, 0.3);
+    transition: color $transition, background $transition;
+
+    &:hover { color: $crema; background: rgba($ink, 0.25); text-decoration-color: $crema; }
+  }
+}
+
+.exito-otra-reserva {
+  display: block;
+  box-sizing: border-box;
+  width: 100% !important;
+  max-width: 480px;
+  margin: 20px auto 0;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-align: center;
+  white-space: normal !important;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  font-family: $font-mono;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  color: rgba($crema, 0.45);
+  text-decoration: underline;
+  text-decoration-color: rgba($crema, 0.25);
+  transition: color $transition;
+
+  &:hover { color: $naranja; text-decoration-color: $naranja; }
+}
+
 .exito-pdf-btn {
   display: flex;
   align-items: center;
@@ -979,6 +1113,7 @@
 
   &__center {
     flex: 1;
+    min-width: 0;
     display: flex;
     flex-direction: column;
     gap: 3px;
@@ -990,7 +1125,9 @@
       text-transform: uppercase;
       letter-spacing: 0.04em;
       color: $crema;
-      line-height: 1;
+      line-height: 1.25;
+      white-space: normal;
+      overflow-wrap: break-word;
     }
 
     span {
@@ -999,6 +1136,8 @@
       letter-spacing: 0.08em;
       text-transform: uppercase;
       color: rgba($crema, 0.45);
+      white-space: normal;
+      overflow-wrap: break-word;
     }
   }
 
