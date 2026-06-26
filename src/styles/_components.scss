@@ -78,8 +78,15 @@
   padding: 80px 0;
   overflow: hidden;
 
+  // En móvil, 80px arriba/abajo entre cada sección se nota mucho más que en
+  // escritorio (pantallas más cortas), dejando demasiado hueco vacío entre
+  // bloques en toda la web.
+  @media (max-width: $bp-sm) { padding: 40px 0; }
+
   &__header {
     margin-bottom: 48px;
+
+    @media (max-width: $bp-sm) { margin-bottom: 28px; }
   }
 
   &__eyebrow {

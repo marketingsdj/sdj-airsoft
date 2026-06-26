@@ -1,5 +1,20 @@
 @use '../../../styles/variables' as *;
 
+// En móvil, .section trae 80px de relleno arriba/abajo (heredado global) y
+// .section__header otros 48px de margen inferior: entre bloque y bloque eso
+// suma mucho hueco vacío. Se reduce solo en esta página.
+.section {
+  @media (max-width: $bp-sm) { padding: 40px 0; }
+}
+
+.section__header {
+  @media (max-width: $bp-sm) { margin-bottom: 28px; }
+}
+
+.section--alt {
+  background: $gris;
+}
+
 // ── FAQ (mismo estilo que la home) ──────────────────────────────────────────────
 .faq-grid {
   display: grid;
@@ -390,17 +405,7 @@
 }
 
 .txiki-tarifa-info {
-  position: absolute;
-  inset: 0;
-  z-index: 3;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  padding: 0;
-
-  &__header { text-align: center; }
+  &__header { text-align: center; margin-bottom: 24px; }
 
   &__eyebrow {
     font-family: $font-mono;
@@ -409,7 +414,6 @@
     text-transform: uppercase;
     color: $naranja;
     margin: 0 0 6px;
-    text-shadow: 0 1px 8px rgba(0,0,0,0.9);
   }
 
   &__titulo {
@@ -420,34 +424,6 @@
     letter-spacing: -0.01em;
     color: $crema;
     margin: 0;
-    text-shadow: 0 2px 12px rgba(0,0,0,0.9);
-  }
-
-  &__incluye {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    justify-content: center;
-  }
-
-  &__tag {
-    font-family: $font-mono;
-    font-size: 9px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: rgba($crema, 0.8);
-    background: rgba(255,255,255,0.1);
-    border: 1px solid rgba($crema, 0.2);
-    border-radius: 99px;
-    padding: 5px 12px;
-  }
-
-  &__footer {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    flex-wrap: wrap;
-    justify-content: center;
   }
 
   &__stat {
@@ -462,7 +438,6 @@
       font-size: clamp(20px, 3vw, 28px);
       color: $crema;
       line-height: 1;
-      text-shadow: 0 1px 8px rgba(0,0,0,0.9);
     }
 
     em {
@@ -472,22 +447,20 @@
       letter-spacing: 0.12em;
       text-transform: uppercase;
       color: rgba($crema, 0.45);
-      text-shadow: 0 1px 6px rgba(0,0,0,0.9);
     }
   }
 
   &__stat--precio {
+    width: 100%;
     gap: 6px;
-    padding: 18px 28px;
+    padding: 18px 24px;
     background: rgba($naranja, 0.12);
     border: 1px solid rgba($naranja, 0.45);
     border-radius: $radius-md;
-    backdrop-filter: blur(10px);
 
     strong {
-      font-size: clamp(40px, 6vw, 56px);
+      font-size: clamp(32px, 6vw, 48px);
       color: $naranja;
-      text-shadow: 0 2px 14px rgba(0,0,0,0.95);
     }
 
     em {
@@ -496,35 +469,55 @@
       color: rgba($crema, 0.85);
     }
   }
+}
 
-  &__divider {
-    width: 1px;
-    height: 32px;
-    background: rgba($crema, 0.2);
+// Modificador compacto: las 3 etapas (antes / juego / después) van siempre
+// en una sola línea, incluso en móvil, para no ocupar tanto espacio vertical.
+.txiki-pasos--compacta {
+  grid-template-columns: 1fr 1.3fr 1fr;
+  margin-bottom: 0;
+
+  @media (max-width: $bp-md) { grid-template-columns: 1fr 1.3fr 1fr; }
+
+  .txiki-pasos__item {
+    padding: 12px 6px;
+    gap: 2px;
+  }
+
+  .txiki-pasos__num { font-size: 18px; min-height: auto; }
+  .txiki-pasos__item--main .txiki-pasos__num { font-size: 24px; }
+
+  .txiki-pasos__item strong { font-size: 10px; margin-bottom: 0; }
+  .txiki-pasos__item p { display: none; }
+}
+
+.txiki-tarifa-section--top { padding-bottom: 32px; }
+.txiki-tarifa-section--bottom { padding-top: 32px; }
+
+// En móvil, todo el bloque de la tarifa (cómo funciona + listado + carrusel
+// + precio y botón) pasa a ir justo después del hero, antes de Horarios; en
+// escritorio se mantiene el orden original.
+.txiki-reorder {
+  display: flex;
+  flex-direction: column;
+
+  @media (max-width: $bp-md) {
+    .txiki-tarifa-section--top { order: 1; }
+    .txiki-tarifa-carousel-section { order: 2; }
+    .txiki-tarifa-section--bottom { order: 3; }
+    .txiki-horarios-section { order: 4; }
   }
 }
 
-.txiki-pasos--overlay {
-  margin-bottom: 0;
-  width: 100%;
-
-  .txiki-pasos__item {
-    background: rgba(0,0,0,0.55);
-    backdrop-filter: blur(10px);
-    border-color: rgba($crema, 0.15);
-  }
-
-  .txiki-pasos__item--main {
-    background: rgba(0,0,0,0.65);
-    border-color: rgba($naranja, 0.4);
-  }
+.txiki-tarifa-carousel-section {
+  background: $ink;
 }
 
 .txiki-tarifa-carousel {
   position: relative;
   width: 100%;
-  height: 75vh;
-  min-height: 480px;
+  aspect-ratio: 16 / 9;
+  max-height: 70vh;
   overflow: hidden;
   background: $ink;
 
@@ -537,37 +530,14 @@
 
   &__overlay {
     position: absolute;
-    inset: 0;
-    background: rgba(0,0,0,0.62);
-  }
-
-  &__btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(0,0,0,0.45);
-    backdrop-filter: blur(4px);
-    border: 1px solid rgba($crema, 0.15);
-    color: $crema;
-    font-size: 26px;
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background $transition;
-    z-index: 2;
-
-    &:hover { background: rgba($naranja, 0.5); }
-    &--prev { left: 20px; }
-    &--next { right: 20px; }
+    inset: auto 0 0 0;
+    height: 70px;
+    background: linear-gradient(180deg, transparent, rgba(0,0,0,0.65));
   }
 
   &__dots {
     position: absolute;
-    bottom: 16px;
+    bottom: 14px;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
@@ -589,27 +559,47 @@
   }
 }
 
-// En móvil el contenido deja de ir superpuesto: la foto arriba (altura fija)
-// y la info en flujo normal debajo, para que nada se recorte.
-@media (max-width: $bp-md) {
-  .txiki-tarifa-carousel {
-    height: auto;
-    min-height: 0;
+.txiki-incluye-lista {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px 24px;
+  list-style: none;
+  margin: 24px auto 0;
+  padding: 0;
 
-    &__img { height: 280px; }
-    &__overlay { height: 280px; bottom: auto; }
-    &__btn { top: 140px; }
-    &__dots { top: 254px; bottom: auto; }
+  @media (max-width: $bp-sm) { grid-template-columns: 1fr; }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: $font-narrow;
+    font-size: 14px;
+    color: rgba($crema, 0.85);
   }
 
-  .txiki-tarifa-info {
-    position: static;
-    inset: auto;
-    justify-content: flex-start;
-    gap: 20px;
-    padding: 32px 20px 40px;
-    background: #000;
+  &__icon {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba($naranja, 0.15);
+    color: $naranja;
+    font-size: 11px;
   }
+}
+
+.txiki-reservar-cta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding-bottom: 8px;
+
+  .btn { width: 100%; justify-content: center; }
 }
 
 .txiki-tarifa-banda {
@@ -902,6 +892,8 @@
 // ── Cumpleaños ────────────────────────────────────────────────────────────────
 .txiki-cumple {
   margin-top: 72px;
+
+  @media (max-width: $bp-sm) { display: none; }
 }
 
 .txiki-cumple__head {
@@ -1077,6 +1069,8 @@
     flex-direction: column;
 
     app-txiki-carrusel { display: block; margin-top: 24px; }
+
+    @media (max-width: $bp-sm) { display: none; }
   }
   &__testimonios { display: flex; flex-direction: column; }
 }

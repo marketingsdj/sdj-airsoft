@@ -5,7 +5,9 @@
   top: 0;
   left: 0;
   right: 0;
-  z-index: 1000;
+  // Por encima del botón de WhatsApp (1500) y de .promo-nav (1000): el menú
+  // hamburguesa abierto tiene que quedar siempre como capa principal.
+  z-index: 1600;
   background: linear-gradient(to bottom, $verde-osc 80%, transparent 100%);
   border-bottom: none;
   transition: background $transition;
@@ -15,11 +17,13 @@
     align-items: center;
     gap: 24px;
     height: 100px;
-    padding-bottom: 20px;
+    padding-top: 14px;
   }
 
+  // Tiene que coincidir con la altura real de &__inner (100px) para que el
+  // contenido de cada página no quede tapado bajo el header fijo.
   &__spacer {
-    height: 72px;
+    height: 100px;
   }
 
   // ── Logo ────────────────────────────────────────────────────────────────────
@@ -152,12 +156,13 @@
     display: none;
   }
 
+
   // ── Mobile ───────────────────────────────────────────────────────────────────
   @media (max-width: $bp-md) {
     &__nav {
       display: none;
       position: absolute;
-      top: 72px;
+      top: 100%;
       left: 0;
       right: 0;
       flex-direction: column;
@@ -166,6 +171,7 @@
       border-top: 1px solid $line;
       padding: 16px 20px 24px;
       gap: 4px;
+      box-shadow: 0 24px 32px -16px rgba(0,0,0,0.55);
 
       &--open {
         display: flex;

@@ -41,18 +41,20 @@
 </section>
 
 <!-- ── ¿A QUÉ VIENES? ─────────────────────────────────────────────────────── -->
-<section class="section">
+<section class="section a-que-vienes">
   <div class="wrap">
     <div class="section__header">
       <p class="section__eyebrow">Encuentra tu plan</p>
       <h2 class="section__title">¿A qué vienes?</h2>
     </div>
-    <div class="grid-4" style="grid-auto-flow: row dense">
+    <div class="grid-4 a-que-vienes__grid" style="grid-auto-flow: row dense">
       @for (p of publicos; track p.titulo) {
         <button class="card publico-card" [class.publico-card--active]="publicoActivo() === p.key"
           (click)="seleccionarPublico(p.key)">
-          <h3 class="card__title">{{ p.titulo }}</h3>
-          <p class="card__desc">{{ p.desc }}</p>
+          <div class="publico-card__texto">
+            <h3 class="card__title">{{ p.titulo }}</h3>
+            <p class="card__desc">{{ p.desc }}</p>
+          </div>
           <span class="publico-card__arrow"></span>
         </button>
 

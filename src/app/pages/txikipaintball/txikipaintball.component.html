@@ -1,3 +1,4 @@
+<div class="txiki-reorder">
 <!-- HERO -->
 <section class="txiki-hero">
   <div class="txiki-hero__bg">
@@ -28,7 +29,7 @@
 
 
 <!-- HORARIOS -->
-<section class="section section--alt">
+<section class="section section--alt txiki-horarios-section">
   <div class="wrap">
     <div class="txiki-horarios-layout">
       <div>
@@ -63,8 +64,51 @@
 </section>
 
 <!-- TARIFA -->
-<section class="txiki-tarifa-section">
+<section class="section txiki-tarifa-section txiki-tarifa-section--top">
+  <div class="wrap">
 
+    <div class="txiki-tarifa-info__header">
+      <p class="txiki-tarifa-info__eyebrow">La actividad</p>
+      <h2 class="txiki-tarifa-info__titulo">¿Cómo funciona?</h2>
+    </div>
+
+    <div class="txiki-pasos txiki-pasos--compacta">
+      <div class="txiki-pasos__item">
+        <span class="txiki-pasos__num">+30 min</span>
+        <div>
+          <strong>Antes de la partida</strong>
+          <p>Organización y equipamiento de los peques.</p>
+        </div>
+      </div>
+      <div class="txiki-pasos__item txiki-pasos__item--main">
+        <span class="txiki-pasos__num">60 min</span>
+        <div>
+          <strong>Juego real</strong>
+          <p>60 minutos de partida con monitores.</p>
+        </div>
+      </div>
+      <div class="txiki-pasos__item">
+        <span class="txiki-pasos__num">+30 min</span>
+        <div>
+          <strong>Después de la partida</strong>
+          <p>Recogida, cambio y tiempo libre.</p>
+        </div>
+      </div>
+    </div>
+
+    <ul class="txiki-incluye-lista">
+      @for (item of tarifaIncluye; track item) {
+        <li class="txiki-incluye-lista__item">
+          <span class="txiki-incluye-lista__icon">✓</span>
+          <span>{{ item }}</span>
+        </li>
+      }
+    </ul>
+
+  </div>
+</section>
+
+<section class="txiki-tarifa-carousel-section">
   <div class="txiki-tarifa-carousel">
     <img [src]="'Txikipaintball/' + galeriaImagenes[carruselActual] + '.svg'"
          alt="Txikipaintball" class="txiki-tarifa-carousel__img" />
@@ -77,57 +121,21 @@
         </button>
       }
     </div>
+  </div>
+</section>
 
-    <div class="txiki-tarifa-info wrap">
-      <div class="txiki-tarifa-info__header">
-        <p class="txiki-tarifa-info__eyebrow">La actividad</p>
-        <h2 class="txiki-tarifa-info__titulo">¿Cómo funciona?</h2>
-      </div>
-      <div class="txiki-pasos txiki-pasos--overlay">
-        <div class="txiki-pasos__item">
-          <span class="txiki-pasos__num">+30 min</span>
-          <div>
-            <strong>Antes de la partida</strong>
-            <p>Organización y equipamiento de los peques.</p>
-          </div>
-        </div>
-        <div class="txiki-pasos__item txiki-pasos__item--main">
-          <span class="txiki-pasos__num">60 min</span>
-          <div>
-            <strong>Juego real</strong>
-            <p>60 minutos de partida con monitores.</p>
-          </div>
-        </div>
-        <div class="txiki-pasos__item">
-          <span class="txiki-pasos__num">+30 min</span>
-          <div>
-            <strong>Después de la partida</strong>
-            <p>Recogida, cambio y tiempo libre.</p>
-          </div>
-        </div>
-      </div>
-      <div class="txiki-tarifa-info__incluye">
-        @for (item of tarifaIncluye; track item) {
-          <span class="txiki-tarifa-info__tag">{{ item }}</span>
-        }
-      </div>
-      <div class="txiki-tarifa-info__footer">
-        <span class="txiki-tarifa-info__stat">
-          <strong>≈ 2 horas</strong>
-          <em>duración total</em>
-        </span>
-        <span class="txiki-tarifa-info__divider"></span>
-        <span class="txiki-tarifa-info__stat txiki-tarifa-info__stat--precio">
-          <strong>19€</strong>
-          <em>por jugador</em>
-        </span>
-        <span class="txiki-tarifa-info__divider"></span>
-        <a [href]="waUrl" target="_blank" rel="noopener" class="btn btn--primary" (click)="clickWhatsapp('tarifa')">Reservar →</a>
-      </div>
+<section class="section txiki-tarifa-section txiki-tarifa-section--bottom">
+  <div class="wrap">
+    <div class="txiki-reservar-cta">
+      <span class="txiki-tarifa-info__stat txiki-tarifa-info__stat--precio">
+        <strong>19€</strong>
+        <em>por jugador</em>
+      </span>
+      <a [href]="waUrl" target="_blank" rel="noopener" class="btn btn--primary" (click)="clickWhatsapp('tarifa')">Reservar →</a>
     </div>
   </div>
-
 </section>
+</div>
 
 
 
@@ -214,7 +222,7 @@
 </section>
 
 <!-- PARA QUIÉN ES -->
-<section class="section">
+<section class="section section--alt">
   <div class="wrap">
     <div class="txiki-planes-wrap">
       <div class="section__header">
@@ -228,6 +236,14 @@
       </div>
     </div>
   </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="cta-band txiki-cta-final">
+  <p class="txiki-cta-final__eyebrow">¿Preparados para la misión?</p>
+  <h2>Haz que su próximo cumpleaños<br>sea una aventura inolvidable</h2>
+  <p class="txiki-cta-final__sub">Diversión, seguridad y adrenalina adaptada para peques.</p>
+  <a routerLink="/reserva" [queryParams]="{ tipo: 'txikipaintball' }" class="btn btn--primary" (click)="clickDisponibilidad()">Reservar →</a>
 </section>
 
 <!-- PREGUNTAS RÁPIDAS -->
@@ -250,13 +266,4 @@
       <a [href]="waUrl" target="_blank" rel="noopener" class="btn btn--ghost" (click)="clickWhatsapp('faq')">Pregúntanos por WhatsApp →</a>
     </div>
   </div>
-</section>
-
-
-<!-- CTA FINAL -->
-<section class="cta-band txiki-cta-final">
-  <p class="txiki-cta-final__eyebrow">¿Preparados para la misión?</p>
-  <h2>Haz que su próximo cumpleaños<br>sea una aventura inolvidable</h2>
-  <p class="txiki-cta-final__sub">Diversión, seguridad y adrenalina adaptada para peques.</p>
-  <a routerLink="/reserva" [queryParams]="{ tipo: 'txikipaintball' }" class="btn btn--primary" (click)="clickDisponibilidad()">Reservar →</a>
 </section>

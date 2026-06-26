@@ -74,7 +74,7 @@
 
     @media (max-width: $bp-md) {
       grid-template-columns: 1fr;
-      gap: 40px;
+      gap: 12px;
     }
   }
 
@@ -99,10 +99,16 @@
     margin-bottom: 20px;
   }
 
+
   &__logo {
     height: clamp(72px, 14vw, 160px);
     width: auto;
     display: block;
+
+    // El hueco que antes quedaba entre "Disfruta..." y "El campo más
+    // grande..." en móvil (al apilarse las columnas) pasa a ir arriba,
+    // separando el logo del header.
+    @media (max-width: $bp-md) { margin-top: 28px; }
   }
 
   &__title {
@@ -376,6 +382,17 @@
 }
 
 // ── Público cards ─────────────────────────────────────────────────────────────
+// En móvil, cada tarjeta va en su propia línea (una columna), pero en fila
+// (texto a la izquierda, flecha a la derecha) en vez de apilada, para que
+// no ocupe tanto alto y las 4 se vean a la vez sin hacer scroll.
+.a-que-vienes {
+  @media (max-width: $bp-sm) { padding: 40px 0; }
+
+  &__grid {
+    @media (max-width: $bp-sm) { grid-template-columns: 1fr; gap: 8px; }
+  }
+}
+
 .publico-card {
   display: flex;
   flex-direction: column;
@@ -388,9 +405,24 @@
   color: $crema;
   text-align: left;
 
+  @media (max-width: $bp-sm) {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 16px;
+
+    .card__title { font-size: 13px; margin-bottom: 2px; }
+    .card__desc { font-size: 11px; line-height: 1.35; }
+  }
+
   &--active {
     border-color: $naranja;
     background: rgba($naranja, 0.07);
+  }
+
+  &__texto {
+    min-width: 0;
   }
 
   &__icon {
@@ -408,6 +440,12 @@
     width: 12px;
     height: 12px;
     transition: transform 0.25s ease;
+
+    @media (max-width: $bp-sm) {
+      margin-top: 0;
+      padding-top: 0;
+      flex-shrink: 0;
+    }
 
     &::before,
     &::after {

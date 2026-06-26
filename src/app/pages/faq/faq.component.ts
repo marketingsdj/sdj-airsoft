@@ -56,13 +56,14 @@ export class FaqComponent {
       ]
     },
     {
-      key: 'campo', titulo: 'El campo y partidas', count: 5,
+      key: 'campo', titulo: 'El campo y partidas', count: 6,
       faqs: [
         { q: '¿Cuánto dura una partida?', a: 'Una jornada completa dura entre 3 y 4 horas, con varias partidas cortas de 20-30 minutos. Las partidas privadas tienen duración personalizable.', open: false },
         { q: '¿Puedo ir a ver una partida sin jugar?', a: 'Sí. Hay zonas habilitadas para observadores. Contacta antes para coordinar la visita.', open: false },
         { q: '¿Cuántas zonas tiene el campo?', a: 'El campo tiene 45.000 m² con varias zonas diferenciadas: urbana, bosque, colina, bunkers y zona abierta. No todas se usan en cada partida.', open: false },
         { q: '¿Hay vestuarios con duchas?', a: 'Sí. Vestuarios separados (hombre/mujer) con taquillas con llave y duchas calientes. Baños accesibles disponibles.', open: false },
         { q: '¿Llevo gafas graduadas o soy daltónico?', a: 'Sin problema. Disponemos de protección compatible con gafas graduadas. El daltonismo no afecta al juego: los equipos se distinguen por brazaletes y posición, no por color.', open: false },
+        { q: '¿Hacéis fotos durante las partidas?', a: 'Sí. Cada semana hacemos fotos de los jugadores durante las partidas y las compartimos en nuestro grupo de Telegram (@sdj_airsoft), para que tengas un recuerdo de tu día.', open: false },
       ]
     },
     {
