@@ -75,13 +75,21 @@
 }
 
 // ── Tipo cards ────────────────────────────────────────────────────────────────
+.grid-4 {
+  // Página de eventos: en móvil se quedan 2 por línea, no 1.
+  @media (max-width: $bp-sm) { grid-template-columns: 1fr 1fr; }
+}
+
 .tipo-card {
   display: flex;
   flex-direction: column;
+  justify-content: flex-end;
+  aspect-ratio: 3 / 4;
   color: inherit;
   text-decoration: none;
   cursor: pointer;
-  background: rgba(255, 255, 255, 0.03);
+  background-size: cover;
+  background-position: center;
   border: 1px solid $line;
   border-radius: $radius-md;
   overflow: hidden;
@@ -102,36 +110,11 @@
     .tipo-card__arrow { transform: translateX(4px); }
   }
 
-  &__img {
-    position: relative;
-    height: 180px;
-    border: none;
-    border-radius: 0;
-    border-bottom: 1px solid $line;
-    overflow: hidden;
-
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    &::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.1);
-      pointer-events: none;
-    }
-  }
-
   &__body {
     display: flex;
     flex-direction: column;
     gap: 8px;
     padding: 18px 20px 20px;
-    flex: 1;
   }
 
   &__cat {
@@ -175,10 +158,21 @@
     display: inline-block;
     transition: transform $transition;
   }
+
+  @media (max-width: $bp-sm) {
+    &__body { padding: 14px; gap: 4px; }
+    &__cat { font-size: 12px; }
+    &__tagline { font-size: 12px; }
+    &__cta { font-size: 10px; padding: 6px 12px; }
+  }
 }
 
 // ── Calendario / Timeline ─────────────────────────────────────────────────────
-.calendario-section { background: $ink; }
+.calendario-section {
+  background: $ink;
+
+  @media (max-width: $bp-sm) { display: none; }
+}
 
 .cal-carrusel {
   display: flex;
@@ -440,7 +434,9 @@
 .cesion-item {
   all: unset;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
   gap: 14px;
   padding: 24px 20px 20px;
   cursor: pointer;
@@ -465,15 +461,6 @@
   &:hover { background: rgba(255, 255, 255, 0.04); }
   &--active { background: rgba($naranja, 0.06); }
 
-  &__num {
-    font-family: $font-mono;
-    font-size: 24px;
-    font-weight: 700;
-    color: rgba($naranja, 0.35);
-    line-height: 1;
-    letter-spacing: -0.04em;
-  }
-
   &__titulo {
     font-family: $font-tight;
     font-weight: 800;
@@ -481,16 +468,15 @@
     text-transform: uppercase;
     letter-spacing: 0.05em;
     line-height: 1.35;
-    color: $crema;
+    color: $naranja;
     margin: 0;
     flex: 1;
   }
 
   &__toggle {
-    align-self: flex-end;
     width: 28px;
     height: 28px;
-    border: 1.5px solid rgba($naranja, 0.4);
+    border: 1.5px solid rgba($crema, 0.4);
     border-radius: 50%;
     flex-shrink: 0;
     position: relative;
@@ -500,7 +486,7 @@
     &::after {
       content: '';
       position: absolute;
-      background: $naranja;
+      background: $crema;
       border-radius: 2px;
       transition: transform $transition, opacity $transition;
     }

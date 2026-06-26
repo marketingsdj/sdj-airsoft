@@ -502,6 +502,11 @@
   opacity: 0.6;
   border-style: dashed;
   &:hover { border-color: $line; }
+
+  // En móvil ocupa demasiado: se deja solo el título con el badge "Próximamente".
+  @media (max-width: $bp-sm) {
+    p, .como-item__cta { display: none; }
+  }
 }
 
 .como-item__cta--disabled {

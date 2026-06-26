@@ -27,10 +27,9 @@
     </div>
     <div class="grid-4">
       @for (t of tipos; track t.key) {
-        <a class="tipo-card" [routerLink]="t.ruta">
-          <div class="tipo-card__img">
-            <img [src]="t.img" [alt]="t.titulo" loading="lazy" />
-          </div>
+        <a class="tipo-card"
+           [routerLink]="t.ruta"
+           [style.background-image]="'linear-gradient(180deg, rgba(20,18,15,0.1) 0%, rgba(20,18,15,0.55) 55%, rgba(20,18,15,0.94) 100%), url(' + t.img + ')'">
           <div class="tipo-card__body">
             <span class="tipo-card__cat">{{ t.titulo }}</span>
             <p class="tipo-card__tagline">{{ t.tagline }}</p>
@@ -61,7 +60,6 @@
           (click)="toggleCesion(i)"
           type="button"
         >
-          <span class="cesion-item__num">{{ i < 9 ? '0' + (i + 1) : (i + 1) }}</span>
           <h3 class="cesion-item__titulo">{{ item.titulo }}</h3>
           <span class="cesion-item__toggle" aria-hidden="true"></span>
         </button>

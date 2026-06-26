@@ -6,6 +6,8 @@
   border-bottom: 1px solid $line;
   padding: 80px 0 56px;
 
+  @media (max-width: $bp-sm) { padding: 40px 0 28px; }
+
   .eyebrow {
     font-family: $font-mono;
     font-size: 11px;
@@ -179,6 +181,80 @@
   align-items: start;
 
   @media (max-width: $bp-md) { grid-template-columns: 1fr; }
+  @media (max-width: $bp-sm) { gap: 20px; }
+}
+
+// La sección de contenido (categorías + acordeón) usa la clase global
+// .section, con 80px de relleno arriba; en móvil, justo después del buscador,
+// dejaba demasiado hueco vacío. Se reduce solo en esta página.
+.faq-seccion {
+  @media (max-width: $bp-sm) { padding-top: 32px; padding-bottom: 32px; }
+}
+
+// En móvil, las categorías pasan a ser un acordeón propio (cada categoría
+// despliega sus preguntas debajo), para no repetir el nombre de la categoría
+// en el sidebar Y en el título del contenido.
+.faq-seccion--escritorio {
+  @media (max-width: $bp-sm) { display: none; }
+}
+
+.faq-seccion--movil {
+  display: none;
+
+  @media (max-width: $bp-sm) { display: block; }
+}
+
+.faq-mobile-cat {
+  border-bottom: 1px solid $line;
+
+  &:first-child { border-top: 1px solid $line; }
+
+  &__btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 16px 0;
+    background: none;
+    border: none;
+    color: $naranja;
+    font-family: $font-tight;
+    font-weight: 700;
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    text-align: left;
+    cursor: pointer;
+    transition: color $transition;
+  }
+
+  &--open &__btn { color: $naranja; }
+
+  &__count {
+    font-family: $font-mono;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    color: rgba($crema, 0.35);
+  }
+
+  &__arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    margin-left: auto;
+    border: 1px solid $crema;
+    border-radius: 50%;
+    font-family: $font-mono;
+    font-size: 14px;
+    color: $crema;
+    flex-shrink: 0;
+  }
+
+  &__faqs {
+    padding-bottom: 12px;
+  }
 }
 
 // ── Sidebar ───────────────────────────────────────────────────────────────────
@@ -207,15 +283,17 @@
     text-align: left;
     font-family: $font-narrow;
     font-size: 14px;
-    color: rgba($crema, 0.55);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: rgba($naranja, 0.7);
     transition: $transition;
     width: 100%;
 
-    &:hover { color: $crema; background: $gris; font-weight: 700; }
+    &:hover { color: $naranja; background: $gris; font-weight: 700; }
 
     &--active {
       background: rgba($crema, 0.06);
-      color: $crema;
+      color: $naranja;
       font-weight: 700;
     }
   }
@@ -295,6 +373,8 @@
 
 // ── CTA inferior ──────────────────────────────────────────────────────────────
 .faq-cta {
+  padding-top: 32px;
+
   &__inner {
     display: flex;
     align-items: center;

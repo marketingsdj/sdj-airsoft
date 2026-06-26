@@ -49,8 +49,8 @@
   </div>
 </section>
 
-<!-- CONTENIDO -->
-<section class="section">
+<!-- CONTENIDO (escritorio / tablet) -->
+<section class="section faq-seccion faq-seccion--escritorio">
   <div class="wrap faq-layout">
 
     <!-- Sidebar categorías -->
@@ -83,6 +83,38 @@
       }
     </div>
 
+  </div>
+</section>
+
+<!-- CONTENIDO (móvil): categorías en acordeón, las preguntas salen debajo de cada una -->
+<section class="section faq-seccion faq-seccion--movil">
+  <div class="wrap">
+    @for (cat of categorias; track cat.key) {
+      <div class="faq-mobile-cat" [class.faq-mobile-cat--open]="categoriaActiva() === cat.key">
+        <button class="faq-mobile-cat__btn" (click)="toggleCategoriaMobile(cat.key)">
+          <span>{{ cat.titulo }}</span>
+          <span class="faq-mobile-cat__count">{{ cat.count }}</span>
+          <span class="faq-mobile-cat__arrow">{{ categoriaActiva() === cat.key ? '−' : '+' }}</span>
+        </button>
+        @if (categoriaActiva() === cat.key) {
+          <div class="faq-mobile-cat__faqs">
+            @for (f of cat.faqs; track f.q) {
+              <div class="faq-item" [class.faq-item--open]="f.open">
+                <button class="faq-item__trigger" (click)="toggle(f)">
+                  <span>{{ f.q }}</span>
+                  <span class="faq-item__arrow">{{ f.open ? '−' : '+' }}</span>
+                </button>
+                @if (f.open) {
+                  <div class="faq-item__body">
+                    <p>{{ f.a }}</p>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        }
+      </div>
+    }
   </div>
 </section>
 

@@ -5,8 +5,8 @@ import { AnalyticsService } from '../../core/services/analytics.service';
 import { CommonModule, DecimalPipe } from '@angular/common';
 import { CalendarioGruposComponent } from '../../shared/calendario-grupos/calendario-grupos.component';
 
-type Tab = 'individual' | 'grupo' | 'socio' | 'extras' | 'txiki';
-const TABS_VALIDOS: Tab[] = ['individual', 'grupo', 'socio', 'extras', 'txiki'];
+type Tab = 'individual' | 'grupo' | 'socio' | 'extras';
+const TABS_VALIDOS: Tab[] = ['individual', 'grupo', 'socio', 'extras'];
 
 @Component({
   selector: 'app-tarifas',
@@ -18,6 +18,9 @@ export class TarifasComponent implements OnInit {
   tab = signal<Tab>('individual');
   modalAlquiler = signal(false);
   mostrarBeneficios = signal(false);
+  // Independiente de las 4 pestañas: no es una más, así que no debe vaciar
+  // el contenido de la pestaña activa al abrirse.
+  txikiAbierto = signal(false);
 
   premiumIncluye = [
     'Réplica de gama alta',
@@ -153,7 +156,13 @@ export class TarifasComponent implements OnInit {
 
   setTab(t: Tab) {
     this.tab.set(t);
+    this.txikiAbierto.set(false);
     this.location.replaceState('/tarifas?tab=' + t);
     this.analytics.trackEvent('tarifas_tab_visto', { tab: t });
+  }
+
+  toggleTxiki() {
+    this.txikiAbierto.update(v => !v);
+    this.analytics.trackEvent('tarifas_txiki_visto', { abierto: this.txikiAbierto() ? 'sí' : 'no' });
   }
 }

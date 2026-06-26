@@ -198,6 +198,12 @@ export class FaqComponent {
     this.categoriaActiva.set(key);
   }
 
+  // Acordeón de categorías en móvil: a diferencia del sidebar de escritorio,
+  // aquí sí se puede cerrar la categoría activa pulsándola otra vez.
+  toggleCategoriaMobile(key: string) {
+    this.categoriaActiva.set(this.categoriaActiva() === key ? '' : key);
+  }
+
   private analytics = inject(AnalyticsService);
 
   toggle(faq: Faq) {

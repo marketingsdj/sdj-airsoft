@@ -275,7 +275,7 @@
         </div>
 
         <!-- Apadrinamiento -->
-        <div class="socio-apadrinamiento">
+        <div class="socio-apadrinamiento" style="background-image: linear-gradient(100deg, rgba(20,18,15,0.92) 0%, rgba(20,18,15,0.7) 45%, rgba(20,18,15,0.35) 100%), url('Fotos alquilados/1.svg');">
           <div class="socio-apadrinamiento__texto">
             <p class="eyebrow">APADRINAMIENTO DE SOCIOS</p>
             <h3>Invita a 1 persona gratis por trimestre.<br>Si se hace socio, te descontamos 1 mes de tu cuota.</h3>
@@ -290,9 +290,6 @@
             <p class="eyebrow" style="margin-top:20px;">Recompensa por apadrinar</p>
             <p class="socio-apadrinamiento__recompensa">1 MES GRATIS</p>
             <p style="margin-top:8px; font-size:13px; color:rgba(239,246,235,0.5);">El descuento se aplica en tu siguiente renovación de cuota.</p>
-          </div>
-          <div class="socio-apadrinamiento__img">
-            <img src="Fotos alquilados/1.svg" alt="Dos jugadores en campo SDJ" loading="lazy" />
           </div>
         </div>
 
@@ -342,11 +339,11 @@
     <!-- Política -->
     <div class="politica">
       <!-- Aviso aparte, visible en cualquier pestaña (no es una categoría más de partida abierta/grupo/socio) -->
-      <button type="button" class="txiki-banner" (click)="setTab('txiki')">
+      <button type="button" class="txiki-banner" (click)="toggleTxiki()">
         <span class="txiki-banner__icon" aria-hidden="true">◉</span>
         <span class="txiki-banner__texto">
           <span class="txiki-banner__eyebrow">Otra actividad · No es una tarifa de partida abierta</span>
-          <strong>¿Quieres venir con un peque de 8 a 14 años?</strong>
+          <strong>¿Quieres venir con un peque?</strong>
           <span>Descubre las tarifas de Txikipaintball, pensadas para ellos.</span>
         </span>
         <span class="txiki-banner__cta">Ver tarifas →</span>
@@ -354,7 +351,7 @@
 
       <!-- Tarifa de Txikipaintball: mismo estilo de tarjeta que el resto, pero
            se muestra aquí mismo, debajo del aviso, sin saltar arriba -->
-      @if (tab() === 'txiki') {
+      @if (txikiAbierto()) {
         <div class="tarifas-grid tarifas-grid--single" style="margin-top:24px;">
           <div class="tarifa-card">
             <p class="tarifa-card__nombre">{{ txikiTarifa.nombre }}</p>
