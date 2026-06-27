@@ -1,0 +1,19 @@
+{
+  "name": "SDJ Soldados de Juguete — Airsoft Bizkaia",
+  "short_name": "SDJ Airsoft",
+  "description": "Campo de airsoft y paintball en Larrabetzu (Bizkaia). Partidas, eventos y txikipaintball.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#1a1a17",
+  "theme_color": "#1a1a17",
+  "lang": "es",
+  "icons": [
+    {
+      "src": "logo-sdj.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
