@@ -1,0 +1,42 @@
+name: Deploy a GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:   # permite lanzarlo a mano desde la pestaña Actions
+
+permissions:
+  contents: write      # necesario para que la acción publique en gh-pages
+
+concurrency:
+  group: pages-deploy
+  cancel-in-progress: true
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configurar Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      # Usamos 'npx ng build' (no 'npm run build') para saltarnos el prebuild
+      # sync-media.js, que pisaría los vídeos comprimidos con los originales.
+      - name: Compilar (producción + prerender)
+        run: npx ng build --configuration production --base-href /
+
+      - name: Publicar en gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist/sdj-airsoft/browser
+          publish_branch: gh-pages
+          cname: prueba.elbarraconrestaurante.com
