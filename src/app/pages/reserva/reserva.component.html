@@ -317,6 +317,8 @@
               </button>
             </div>
 
+            <div id="reserva-subseccion"></div>
+
             @if (form.tipo === 'individual') {
               <div class="equipo-select">
                 <strong class="equipo-select__title">¿Qué equipo quieres?</strong>
@@ -382,7 +384,7 @@
                     <span class="upgrade-card__title">Doble partida privada</span>
                     <span class="upgrade-card__price">+15 € / persona</span>
                   </span>
-                  <span class="upgrade-card__desc">2 h de juego en campo exclusivo, más 30 min de cambio y explicación y 30 min de ducha. Elige el horario de inicio y reservamos también la franja siguiente.</span>
+                  <span class="upgrade-card__desc">2 h de juego seguidas: eliges la hora de inicio y te reservamos también la franja siguiente.</span>
                 </span>
                 <span class="upgrade-card__toggle" aria-hidden="true">
                   {{ form.doblePartida ? 'Añadido ✓' : 'Añadir +' }}
@@ -468,7 +470,7 @@
               Te esperamos en el campo.
             </p>
 
-            <label class="form-check" style="margin-top: 28px;">
+            <label class="form-check" style="margin-top: 12px;">
               <input type="checkbox" [(ngModel)]="form.aceptaComunicaciones" name="aceptaComunicaciones" />
               <span>Acepto recibir comunicaciones comerciales de SDJ.</span>
             </label>

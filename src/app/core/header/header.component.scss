@@ -12,18 +12,35 @@
   border-bottom: none;
   transition: background $transition;
 
+  // En móvil el header es SÓLIDO (el degradado a transparente es solo para
+  // escritorio): así al abrir el menú no se ve el contenido de la página detrás
+  // ni parpadea el degradado.
+  @media (max-width: $bp-md) {
+    background: $verde-osc;
+    transition: none;
+  }
+
+  // Con el menú abierto, siempre sólido (sin degradado transparente)
+  &--menu-open {
+    background: $verde-osc;
+  }
+
   &__inner {
     display: flex;
     align-items: center;
     gap: 24px;
     height: 100px;
     padding-top: 14px;
+
+    @media (max-width: $bp-md) { height: 68px; padding-top: 0; }
   }
 
-  // Tiene que coincidir con la altura real de &__inner (100px) para que el
+  // Tiene que coincidir con la altura real de &__inner para que el
   // contenido de cada página no quede tapado bajo el header fijo.
   &__spacer {
     height: 100px;
+
+    @media (max-width: $bp-md) { height: 68px; }
   }
 
   // ── Logo ────────────────────────────────────────────────────────────────────
@@ -168,7 +185,7 @@
       flex-direction: column;
       align-items: stretch;
       background: $verde-osc;
-      border-top: 1px solid $line;
+      border-top: 1px solid rgba(255, 255, 255, 0.55);   // línea divisoria a todo el ancho
       padding: 16px 20px 24px;
       gap: 4px;
       box-shadow: 0 24px 32px -16px rgba(0,0,0,0.55);

@@ -1,5 +1,7 @@
 <div class="legal">
 
+  <button class="legal__cerrar" (click)="cerrar()" aria-label="Cerrar y volver">✕</button>
+
   <h1 class="legal__titulo">Política de cookies</h1>
 
   <!-- ¿QUÉ SON LAS COOKIES? -->
@@ -53,95 +55,18 @@
       </thead>
       <tbody>
         <tr>
-          <td class="td-nombre">_gid</td>
-          <td>Google</td>
-          <td>Técnica / Análisis</td>
-          <td>Cookie analítica de Google Analytics. Se usa para distinguir a los usuarios.</td>
-          <td class="td-dur">3 horas</td>
+          <td class="td-nombre" data-label="Nombre">_ga</td>
+          <td data-label="Proveedor">Google</td>
+          <td data-label="Tipología">Analítica</td>
+          <td data-label="Descripción">Cookie de Google Analytics 4. Distingue a los usuarios para las estadísticas de visitas anónimas.</td>
+          <td class="td-dur" data-label="Duración">2 años</td>
         </tr>
         <tr>
-          <td class="td-nombre">_ga</td>
-          <td>Google</td>
-          <td>Técnica / Análisis</td>
-          <td>Cookie analítica de Google Analytics. Se usa para distinguir a los usuarios.</td>
-          <td class="td-dur">2 años</td>
-        </tr>
-        <tr>
-          <td class="td-nombre">_gat</td>
-          <td>Google</td>
-          <td>Técnica / Análisis</td>
-          <td>Cookie analítica de Google Analytics. Se usa para limitar el porcentaje de solicitudes.</td>
-          <td class="td-dur">2 horas</td>
-        </tr>
-        <tr>
-          <td class="td-nombre">gtm_auth</td>
-          <td>Google</td>
-          <td>Técnica</td>
-          <td>Cookie de Google Tag Manager. Se usa para etiquetar interacciones y eventos.</td>
-          <td class="td-dur">Sesión</td>
-        </tr>
-        <tr>
-          <td class="td-nombre">gtm_preview</td>
-          <td>Google</td>
-          <td>Técnica</td>
-          <td>Cookie de Google Tag Manager. Se usa para etiquetar interacciones y eventos.</td>
-          <td class="td-dur">Sesión</td>
-        </tr>
-        <tr>
-          <td class="td-nombre">gtm_debug</td>
-          <td>Google</td>
-          <td>Técnica</td>
-          <td>Cookie de Google Tag Manager. Se usa para etiquetar interacciones y eventos.</td>
-          <td class="td-dur">Sesión</td>
-        </tr>
-        <tr>
-          <td class="td-nombre">_fbp</td>
-          <td>Facebook</td>
-          <td>Social</td>
-          <td>Plugin de red social que permite al usuario compartir contenidos en Facebook.</td>
-          <td class="td-dur">3 meses</td>
-        </tr>
-        <tr>
-          <td class="td-nombre">__atuvs</td>
-          <td>Addthis</td>
-          <td>Social</td>
-          <td>Establece los marcadores sociales de Facebook, Twitter y Google+ para compartir contenidos.</td>
-          <td class="td-dur">1 mes</td>
-        </tr>
-        <tr>
-          <td class="td-nombre">__atuvc</td>
-          <td>Addthis</td>
-          <td>Social</td>
-          <td>Establece los marcadores sociales de Facebook, Twitter y Google+ para compartir contenidos.</td>
-          <td class="td-dur">1 mes</td>
-        </tr>
-        <tr>
-          <td class="td-nombre">PHPSESSID</td>
-          <td>GESIO</td>
-          <td>Sesión</td>
-          <td>Mantiene la sesión del usuario.</td>
-          <td class="td-dur">Sesión</td>
-        </tr>
-        <tr>
-          <td class="td-nombre">3-50-cookie-23</td>
-          <td>GESIO</td>
-          <td>Técnica</td>
-          <td>Cookies necesarias para el funcionamiento correcto de la web.</td>
-          <td class="td-dur">1 mes</td>
-        </tr>
-        <tr>
-          <td class="td-nombre">3-50-HASH</td>
-          <td>GESIO</td>
-          <td>Técnica</td>
-          <td>Cookies necesarias para el funcionamiento correcto de la web.</td>
-          <td class="td-dur">Permanente</td>
-        </tr>
-        <tr>
-          <td class="td-nombre">IDE</td>
-          <td><a href="http://doubleclick.net" target="_blank" rel="noopener">Doubleclick.net</a></td>
-          <td>Publicitaria</td>
-          <td>Cookies publicitarias usadas para mejorar la publicidad: orientación según contenido relevante, informes de campaña y evitar repetición de anuncios.</td>
-          <td class="td-dur">1 año</td>
+          <td class="td-nombre" data-label="Nombre">_ga_&lt;ID&gt;</td>
+          <td data-label="Proveedor">Google</td>
+          <td data-label="Tipología">Analítica</td>
+          <td data-label="Descripción">Cookie de Google Analytics 4. Mantiene el estado de la sesión para las estadísticas de visitas.</td>
+          <td class="td-dur" data-label="Duración">2 años</td>
         </tr>
       </tbody>
     </table>
@@ -156,37 +81,37 @@
   </p>
   <ul class="legal__ul">
     <li>
+      Google Chrome:
+      <a href="https://support.google.com/chrome/answer/95647?hl=es" target="_blank" rel="noopener">
+        support.google.com/chrome
+      </a>
+    </li>
+    <li>
       Mozilla Firefox:
-      <a href="http://support.mozilla.org/es/kb/habilitar-y-deshabilitar-cookies-que-los-sitios-we" target="_blank" rel="noopener">
+      <a href="https://support.mozilla.org/es/kb/proteccion-antirastreo-mejorada-firefox-escritorio" target="_blank" rel="noopener">
         support.mozilla.org
       </a>
     </li>
     <li>
-      Google Chrome:
-      <a href="http://support.google.com/chrome/bin/answer.py?hl=es&answer=95647" target="_blank" rel="noopener">
-        support.google.com
-      </a>
-    </li>
-    <li>
-      Internet Explorer:
-      <a href="http://windows.microsoft.com/es-es/windows7/how-to-manage-cookies-in-internet-explorer-9" target="_blank" rel="noopener">
-        windows.microsoft.com
-      </a>
-    </li>
-    <li>
-      Opera:
-      <a href="http://help.opera.com/Windows/11.50/es-ES/cookies.html" target="_blank" rel="noopener">
-        help.opera.com
+      Microsoft Edge:
+      <a href="https://support.microsoft.com/es-es/microsoft-edge/eliminar-las-cookies-en-microsoft-edge-63947406-40ac-c3b8-57b9-2a946a29ae09" target="_blank" rel="noopener">
+        support.microsoft.com
       </a>
     </li>
     <li>
       Safari:
-      <a href="http://support.apple.com/kb/ph5042" target="_blank" rel="noopener">
+      <a href="https://support.apple.com/es-es/guide/safari/sfri11471/mac" target="_blank" rel="noopener">
         support.apple.com
       </a>
     </li>
     <li>
-      Android:
+      Opera:
+      <a href="https://help.opera.com/es/latest/web-preferences/#cookies" target="_blank" rel="noopener">
+        help.opera.com
+      </a>
+    </li>
+    <li>
+      Android (Chrome):
       <a href="https://support.google.com/accounts/answer/61416?hl=es" target="_blank" rel="noopener">
         support.google.com/accounts
       </a>
@@ -231,7 +156,7 @@
     que analizan cómo se usan nuestros servicios. Puedes elegir entre:
   </p>
   <ul class="legal__ul">
-    <li><strong>Aceptar todas:</strong> se habilitarán todas las cookies, incluidas las analíticas y publicitarias.</li>
+    <li><strong>Aceptar todas:</strong> se habilitarán las cookies analíticas (Google Analytics) además de las necesarias.</li>
     <li><strong>Solo necesarias:</strong> únicamente se activarán las cookies imprescindibles para el funcionamiento del sitio.</li>
   </ul>
   <p class="legal__p">

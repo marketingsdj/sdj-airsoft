@@ -8,6 +8,29 @@
   @media (max-width: $bp-sm) { padding: 60px 20px 80px; }
 }
 
+.legal__cerrar {
+  position: fixed;
+  top: 84px;
+  right: 20px;
+  z-index: 50;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba($ink, 0.85);
+  backdrop-filter: blur(6px);
+  border: 1px solid $line;
+  color: $crema;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background $transition, border-color $transition;
+
+  &:hover { background: $naranja; border-color: $naranja; color: $ink; }
+}
+
 .legal__titulo {
   font-family: $font-tight;
   font-weight: 900;
@@ -99,4 +122,36 @@
 
   .td-nombre { font-family: $font-mono; font-size: 11px; color: $crema; white-space: nowrap; }
   .td-dur { white-space: nowrap; }
+
+  // En móvil: cada cookie se apila como una tarjeta con etiquetas (sin scroll)
+  @media (max-width: $bp-sm) {
+    thead { display: none; }
+
+    tr {
+      display: block;
+      padding: 12px 14px;
+      border-bottom: 1px solid $line;
+    }
+    tr:last-child { border-bottom: none; }
+
+    td {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 5px 0;
+      border-bottom: none;
+      text-align: right;
+
+      &::before {
+        content: attr(data-label);
+        font-family: $font-mono;
+        font-size: 9px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: $naranja;
+        text-align: left;
+        flex-shrink: 0;
+      }
+    }
+  }
 }

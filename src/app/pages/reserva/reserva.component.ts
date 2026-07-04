@@ -320,6 +320,19 @@ export class ReservaComponent implements OnInit, OnDestroy {
       this.form.certificadoActividad = false;
     }
     this.analytics.trackEvent('reserva_tipo_seleccionado', { tipo });
+    // Baja automáticamente a la siguiente subsección (equipo, tipo de evento…)
+    this.scrollASubseccion();
+  }
+
+  // Lleva la vista al siguiente bloque a rellenar tras elegir el tipo de reserva.
+  private scrollASubseccion() {
+    if (!this.isBrowser) return;
+    setTimeout(() => {
+      const el = document.getElementById('reserva-subseccion');
+      if (!el) return;
+      const y = el.getBoundingClientRect().top + window.scrollY - 90; // margen bajo el header fijo
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }, 80);
   }
 
   seleccionarSubtipoEvento(subtipo: SubtipoEvento) {
@@ -522,13 +535,13 @@ export class ReservaComponent implements OnInit, OnDestroy {
 
     this.enviando.set(false);
     this.enviado.set(true);
+    // La pantalla de confirmación debe verse desde arriba, no donde estaba el scroll.
+    if (this.isBrowser) window.scrollTo({ top: 0, behavior: 'instant' });
     this.analytics.trackEvent('reserva_enviada', { tipo: this.form.tipo, personas: this.form.personas });
 
-    // Abre solo el diálogo de imprimir/guardar como PDF, para que el cliente
-    // no tenga que acordarse de pulsar "Guardar copia de la reserva". El
-    // pequeño retraso deja que la pantalla de confirmación termine de
-    // renderizarse antes de abrir el diálogo del navegador.
-    if (this.isBrowser) setTimeout(() => this.imprimirResumen(), 400);
+    // No abrimos el diálogo de descarga automáticamente (resultaba invasivo):
+    // el cliente se queda en la pantalla de confirmación y descarga el PDF
+    // pulsando el botón "Guardar copia de la reserva" si quiere.
   }
 
   // Permite empezar una reserva nueva sin esperar a una sesión distinta

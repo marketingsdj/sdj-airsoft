@@ -78,15 +78,16 @@
   padding: 80px 0;
   overflow: hidden;
 
-  // En móvil, 80px arriba/abajo entre cada sección se nota mucho más que en
-  // escritorio (pantallas más cortas), dejando demasiado hueco vacío entre
-  // bloques en toda la web.
-  @media (max-width: $bp-sm) { padding: 40px 0; }
+  // En móvil/tablet el espacio entre secciones se nota mucho más (pantallas más
+  // cortas) y deja demasiado hueco vacío en toda la web. Se aprieta por tramos.
+  @media (max-width: $bp-md) { padding: 48px 0; }
+  @media (max-width: $bp-sm) { padding: 32px 0; }
 
   &__header {
     margin-bottom: 48px;
 
-    @media (max-width: $bp-sm) { margin-bottom: 28px; }
+    @media (max-width: $bp-md) { margin-bottom: 28px; }
+    @media (max-width: $bp-sm) { margin-bottom: 20px; }
   }
 
   &__eyebrow {
@@ -202,6 +203,9 @@
 .page-hero {
   padding: 100px 0 64px;
   border-bottom: 1px solid $line;
+
+  @media (max-width: $bp-md) { padding: 84px 0 40px; }
+  @media (max-width: $bp-sm) { padding: 76px 0 28px; }
 
   .eyebrow {
     font-family: $font-mono;

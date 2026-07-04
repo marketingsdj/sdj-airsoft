@@ -104,7 +104,22 @@
     @media (max-width: $bp-md) {
       flex-direction: row;
       width: 100%;
-      .btn { flex: 1; }
+
+      // Los botones se reparten el ancho y pueden encoger (evita que se salgan)
+      .btn {
+        flex: 1;
+        min-width: 0;
+        white-space: normal;
+        padding-left: 12px;
+        padding-right: 12px;
+      }
+    }
+
+    // En pantallas pequeñas se apilan para que nunca se salgan de la caja
+    @media (max-width: $bp-sm) {
+      flex-direction: column;
+
+      .btn { white-space: nowrap; }
     }
   }
 }

@@ -257,7 +257,10 @@ export class CalendarioGruposComponent implements OnInit {
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(ev: MouseEvent) {
-    if (this.dropdownAbierto() && !this.el.nativeElement.contains(ev.target)) {
+    if (!this.dropdownAbierto()) return;
+    // Se cierra al pinchar fuera del propio desplegable (aunque sea dentro del calendario)
+    const dentroDropdown = (ev.target as HTMLElement)?.closest('.cal__dropdown');
+    if (!dentroDropdown) {
       this.dropdownAbierto.set(false);
     }
   }

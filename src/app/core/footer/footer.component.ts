@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { AnalyticsService } from '../services/analytics.service';
 
 @Component({
   selector: 'app-footer',
@@ -8,7 +9,13 @@ import { RouterLink } from '@angular/router';
   styleUrl: './footer.component.scss'
 })
 export class FooterComponent {
+  private analytics = inject(AnalyticsService);
   year = new Date().getFullYear();
+
+  // Registra en GA4 el clic en cada red social (usa la cookie analítica ya existente)
+  clickRed(red: string) {
+    this.analytics.trackEvent('click_red_social', { red });
+  }
 
   nav = [
     { label: 'Campo', path: '/campo' },
