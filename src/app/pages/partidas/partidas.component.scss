@@ -13,10 +13,14 @@
     padding: 32px 40px;
     background: rgba(255,255,255,0.03);
 
-    @media (max-width: $bp-md) { flex-direction: column; align-items: flex-start; padding: 24px; }
+    @media (max-width: $bp-md) { flex-direction: column; align-items: stretch; padding: 24px; }
   }
 
-  .btn { flex-shrink: 0; }
+  .btn {
+    flex-shrink: 0;
+
+    @media (max-width: $bp-md) { width: 100%; justify-content: center; }
+  }
 }
 
 .img-placeholder {
@@ -47,14 +51,16 @@
     position: absolute;
     inset: 0;
     z-index: 0;
+  }
 
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center 65%;
-      display: block;
-    }
+  &__video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 65%;
+    display: block;
   }
 
   &__overlay {
@@ -89,6 +95,50 @@
       max-width: 560px;
     }
   }
+
+  // Bloque Telegram: en escritorio 2 columnas (info izquierda, botón derecha)
+  &__tg {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin-top: 28px;
+    padding: 20px 24px;
+    background: rgba($ink, 0.35);
+    border: 1px solid rgba($crema, 0.15);
+    border-radius: $radius-md;
+    backdrop-filter: blur(6px);
+    max-width: 720px;
+
+    .btn { flex-shrink: 0; }
+
+    @media (max-width: $bp-sm) {
+      flex-direction: column;
+      align-items: stretch;
+
+      .btn { width: 100%; justify-content: center; }
+    }
+  }
+
+  &__tg-info { flex: 1; min-width: 220px; }
+
+  &__tg-titulo {
+    font-family: $font-tight;
+    font-weight: 800;
+    font-size: 18px;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    color: $crema;
+    margin: 0 0 4px;
+  }
+
+  &__tg-desc {
+    font-size: 13px;
+    color: rgba($crema, 0.7);
+    line-height: 1.5;
+    margin: 0;
+  }
 }
 
 // ── Todo lo que necesitas saber ───────────────────────────────────────────────
@@ -107,7 +157,25 @@
   border-radius: $radius-md;
   overflow: hidden;
 
-  @media (max-width: $bp-sm) { grid-template-columns: 1fr; }
+  // En móvil: línea vertical con puntos (timeline) en una sola columna
+  @media (max-width: $bp-sm) {
+    display: block;
+    position: relative;
+    border: none;
+    border-radius: 0;
+    overflow: visible;
+
+    // Línea vertical continua
+    &::before {
+      content: '';
+      position: absolute;
+      left: 5px;
+      top: 10px;
+      bottom: 10px;
+      width: 1px;
+      background: rgba($naranja, 0.3);
+    }
+  }
 }
 
 .necesitas-item {
@@ -123,10 +191,29 @@
   &:nth-child(5),
   &:nth-child(6)     { border-bottom: none; }
 
+  // Timeline en móvil: punto a la izquierda sobre la línea vertical
   @media (max-width: $bp-sm) {
-    border-right: none;
-    &:last-child { border-bottom: none; }
-    &:nth-child(5) { border-bottom: 1px solid rgba($crema, 0.14); }
+    display: block;
+    position: relative;
+    border: none;
+    padding: 0 0 22px 26px;
+
+    &:last-child { padding-bottom: 0; }
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 3px;
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: $naranja;
+      border: 2px solid $verde-osc;
+      box-sizing: border-box;
+    }
+
+    &:hover { background: none; }
   }
 
   &:hover { background: rgba(255,255,255,0.05); }
@@ -898,20 +985,10 @@
     gap: 64px;
     align-items: center;
 
-    // En móvil: tarjeta con la foto de fondo y el texto + botón encima
+    // En móvil se apila limpio: texto arriba, foto normal debajo.
     @media (max-width: $bp-md) {
-      display: block;
-      position: relative;
-      border-radius: $radius-md;
-      overflow: hidden;
-    }
-  }
-
-  &__texto {
-    @media (max-width: $bp-md) {
-      position: relative;
-      z-index: 1;
-      padding: 40px 24px;
+      grid-template-columns: 1fr;
+      gap: 28px;
     }
   }
 
@@ -919,20 +996,6 @@
     aspect-ratio: 4 / 3;
     border-radius: $radius-md;
     overflow: hidden;
-
-    @media (max-width: $bp-md) {
-      position: absolute;
-      inset: 0;
-      aspect-ratio: auto;
-      border-radius: 0;
-
-      &::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(180deg, rgba($ink, 0.82) 0%, rgba($ink, 0.94) 100%);
-      }
-    }
 
     img {
       width: 100%;
@@ -944,21 +1007,33 @@
 
   &__precios {
     display: flex;
-    align-items: center;
-    gap: 24px;
+    align-items: stretch;
+    gap: 12px;
     margin: 24px 0 10px;
   }
 
-  &__precio { display: flex; flex-direction: column; gap: 3px; }
+  &__precio {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 16px 12px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba($naranja, 0.35);
+    border-radius: $radius-md;
+    text-align: center;
+  }
 
   &__num {
     font-family: $font-tight;
     font-weight: 900;
-    font-size: 40px;
+    font-size: 34px;
     color: $naranja;
     line-height: 1;
 
-    sup { font-size: 18px; vertical-align: super; }
+    sup { font-size: 16px; vertical-align: super; }
   }
 
   &__lbl {
@@ -966,15 +1041,10 @@
     font-size: 9px;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: rgba($crema, 0.45);
+    color: rgba($crema, 0.6);
   }
 
-  &__sep {
-    font-size: 28px;
-    color: rgba($crema, 0.2);
-    align-self: center;
-    padding-bottom: 16px;
-  }
+  &__sep { display: none; }
 
   &__aviso {
     font-family: $font-mono;
@@ -988,5 +1058,7 @@
     display: flex;
     gap: 12px;
     flex-wrap: wrap;
+
+    .btn { flex: 1 1 100%; justify-content: center; }
   }
 }
