@@ -102,7 +102,21 @@
         <div class="grupo-layout__cal">
           <p class="grupo-calendario__titulo">Elige fecha y franja horaria</p>
           <p class="grupo-calendario__desc">Franjas de 2 horas. Solo fines de semana.</p>
-          <app-calendario-grupos></app-calendario-grupos>
+          <app-calendario-grupos
+            ngSkipHydration
+            modo="seleccion"
+            [permitirLaborables]="true"
+            [avisoLaborable]="avisoLaborableGrupo"
+            (slotSeleccionado)="onSlotElegido($event)"
+            (laborableSeleccionado)="onLaborableElegido($event)"
+            (extraHoraSeleccionada)="onExtraHoraElegida($event)">
+          </app-calendario-grupos>
+
+          <button type="button" class="btn btn--primary grupo-calendario__siguiente"
+            [disabled]="!seleccionValida()"
+            (click)="irAReservaGrupo()">
+            {{ seleccionValida() ? 'Siguiente → ' + slotResumen : textoBotonGrupo }}
+          </button>
         </div>
 
         <!-- Columna derecha: info + tarjetas -->

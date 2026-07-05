@@ -853,6 +853,14 @@
   margin: 0 0 16px;
 }
 
+.grupo-calendario__siguiente {
+  width: 100%;
+  justify-content: center;
+  margin-top: 16px;
+
+  &:disabled { opacity: 0.4; cursor: not-allowed; }
+}
+
 // ── Cross eventos ─────────────────────────────────────────────────────────────
 .tarifas-eventos-link {
   margin-top: 48px;

@@ -27,6 +27,8 @@ export interface FormData {
   doblePartida: boolean;
   laborableConsulta: boolean;   // grupo +10 entre semana, hora aproximada pendiente de confirmar
   tarifaReducida: boolean;      // tarifa reducida (tarde)
+  esExtraordinaria: boolean;    // el día elegido es una partida extraordinaria (16–20)
+  extraTarifa: string;          // tarifa elegida en la extraordinaria: ''|socio|propio|alquiler|premium
   menu: boolean;                // menú del evento (precio pendiente de confirmar)
   monoRosa: boolean;            // despedidas: mono rosa para el/la protagonista, sin suplemento
   camisetasEquipo: boolean;     // colectivos: camisetas/brazaletes de color por equipo, sin suplemento
@@ -73,6 +75,8 @@ export class ReservaStateService {
       doblePartida: false,
       laborableConsulta: false,
       tarifaReducida: false,
+      esExtraordinaria: false,
+      extraTarifa: '',
       menu: false,
       monoRosa: false,
       camisetasEquipo: false,

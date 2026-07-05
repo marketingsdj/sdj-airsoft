@@ -1,5 +1,5 @@
 import { Component, signal, OnInit, inject } from '@angular/core';
-import { RouterLink, ActivatedRoute } from '@angular/router';
+import { RouterLink, ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { AnalyticsService } from '../../core/services/analytics.service';
 import { CommonModule, DecimalPipe } from '@angular/common';
@@ -15,9 +15,86 @@ const TABS_VALIDOS: Tab[] = ['individual', 'grupo', 'socio', 'extras'];
   styleUrl: './tarifas.component.scss'
 })
 export class TarifasComponent implements OnInit {
+  private router = inject(Router);
+
   tab = signal<Tab>('individual');
   modalAlquiler = signal(false);
   mostrarBeneficios = signal(false);
+
+  // Mismo aviso de días laborables que el calendario de partida privada.
+  readonly avisoLaborableGrupo = 'Entre semana disponible para grupos de 10 o más personas. Confirmaremos el número exacto en el último paso.';
+
+  // Doble paso (elegir → "Siguiente"). El calendario, igual que en privada,
+  // permite elegir una franja de finde/festivo o un día laborable "a consultar".
+  slotElegido = signal<{ fecha: string; hora: string; horaFin: string; pista: string } | null>(null);
+  laborableElegido = signal<{ fecha: string; horaAprox: string } | null>(null);
+  extraElegido = signal<{ fecha: string; hora: string } | null>(null);
+
+  onSlotElegido(slot: { fecha: string; hora: string; horaFin: string; pista: string }) {
+    this.slotElegido.set(slot);
+    this.laborableElegido.set(null);
+    this.extraElegido.set(null);
+  }
+
+  onLaborableElegido(ev: { fecha: string; horaAprox: string }) {
+    this.laborableElegido.set(ev);
+    this.slotElegido.set(null);
+    this.extraElegido.set(null);
+  }
+
+  // Partida extraordinaria: hora de llegada (pendiente de confirmar).
+  onExtraHoraElegida(ev: { fecha: string; hora: string }) {
+    this.extraElegido.set(ev);
+    this.slotElegido.set(null);
+    this.laborableElegido.set(null);
+  }
+
+  // El botón se activa con una franja, un laborable con hora, o una extraordinaria con hora.
+  seleccionValida(): boolean {
+    return !!this.slotElegido() || !!this.laborableElegido()?.horaAprox || !!this.extraElegido();
+  }
+
+  get textoBotonGrupo(): string {
+    if (this.laborableElegido() && !this.laborableElegido()?.horaAprox) return 'Elige una hora de llegada para continuar';
+    return 'Elige una fecha para continuar';
+  }
+
+  // Texto legible de lo seleccionado para el botón.
+  get slotResumen(): string {
+    const fmtFecha = (iso: string) =>
+      new Date(iso + 'T00:00:00').toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', month: 'short' });
+    const s = this.slotElegido();
+    if (s) return `${fmtFecha(s.fecha)} · ${s.hora} · Pista ${s.pista}`;
+    const e = this.extraElegido();
+    if (e) return `${fmtFecha(e.fecha)} · ${e.hora} (extraordinaria, pendiente)`;
+    const l = this.laborableElegido();
+    if (l?.horaAprox) return `${fmtFecha(l.fecha)} · ${l.horaAprox} (a consultar)`;
+    return '';
+  }
+
+  irAReservaGrupo() {
+    const s = this.slotElegido();
+    if (s) {
+      this.router.navigate(['/reserva'], {
+        queryParams: { tipo: 'privada', fecha: s.fecha, hora: s.hora, pista: s.pista }
+      });
+      return;
+    }
+    const e = this.extraElegido();
+    if (e) {
+      // La extraordinaria es una partida abierta: se reserva como individual.
+      this.router.navigate(['/reserva'], {
+        queryParams: { tipo: 'individual', fecha: e.fecha, hora: e.hora }
+      });
+      return;
+    }
+    const l = this.laborableElegido();
+    if (l?.horaAprox) {
+      this.router.navigate(['/reserva'], {
+        queryParams: { tipo: 'privada', fecha: l.fecha, hora: l.horaAprox, laborable: 'true' }
+      });
+    }
+  }
   // Independiente de las 4 pestañas: no es una más, así que no debe vaciar
   // el contenido de la pestaña activa al abrirse.
   txikiAbierto = signal(false);
@@ -87,7 +164,7 @@ export class TarifasComponent implements OnInit {
   individual = [
     {
       key: 'simple',
-      nombre: 'Entrada simple',
+      nombre: 'Entrada con equipo propio',
       incluye: ['Acceso al campo', 'Monitor incluido', 'Seguro de actividad'],
       precio: 19.90,
       premium: false

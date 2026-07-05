@@ -1,5 +1,6 @@
 import { Component, signal, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { generarProximasPartidas, EXTRA_CONFIG, fechaLocalISO } from '../../core/data/partidas-extraordinarias';
 
 @Component({
   selector: 'app-partidas',
@@ -29,14 +30,25 @@ export class PartidasComponent {
     },
   ];
 
+  // Reservar desde la agenda lleva al paso 2 con tipo abierta y fecha preseleccionada.
   readonly PAGE_SIZE = 4;
   readonly Math = Math;
+  readonly EXTRA_PRECIO = EXTRA_CONFIG.precioNoSocio.toFixed(2).replace('.', ',');
   pagina = signal(0);
 
-  private modos = ['Captura de bandera', 'Dominación', 'Eliminación', 'Milsim corto'];
-
-  // Genera automáticamente los próximos fines de semana desde hoy
-  todasLasPartidas = this.generarPartidas(24);
+  // Genera automáticamente las próximas partidas (fines de semana +
+  // extraordinarias de la lista compartida), en orden cronológico.
+  todasLasPartidas = generarProximasPartidas(24).map(p => ({
+    fecha: p.fecha.toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', month: 'short' }),
+    iso: fechaLocalISO(p.fecha),
+    hora: p.horaLabel,
+    modo: p.modo,
+    tipo: p.esExtraordinaria ? 'Extraordinaria' : 'Abierta',
+    plazas: p.plazas,
+    total: p.total,
+    precio: p.precio,
+    esExtraordinaria: p.esExtraordinaria,
+  }));
 
   partidasPagina = computed(() => {
     const start = this.pagina() * this.PAGE_SIZE;
@@ -48,32 +60,6 @@ export class PartidasComponent {
 
   siguiente() { if (this.haySiguiente()) this.pagina.update(p => p + 1); }
   anterior()  { if (this.hayAnterior())  this.pagina.update(p => p - 1); }
-
-  private generarPartidas(cantidad: number) {
-    const partidas = [];
-    const hoy = new Date();
-    hoy.setHours(0, 0, 0, 0);
-    const cursor = new Date(hoy);
-    let modoIdx = 0;
-
-    while (partidas.length < cantidad) {
-      const dia = cursor.getDay();
-      if (dia === 6 || dia === 0) {
-        partidas.push({
-          fecha: cursor.toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', month: 'short' }),
-          hora: '09:00',
-          modo: this.modos[modoIdx % this.modos.length],
-          tipo: 'Abierta',
-          plazas: 30,
-          total: 30,
-          precio: 39.90,
-        });
-        modoIdx++;
-      }
-      cursor.setDate(cursor.getDate() + 1);
-    }
-    return partidas;
-  }
 
   diasGrandes = [
     {

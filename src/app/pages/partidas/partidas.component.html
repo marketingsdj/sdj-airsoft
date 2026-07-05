@@ -131,16 +131,21 @@
         <span></span>
       </div>
       @for (p of partidasPagina(); track p.fecha) {
-        <div class="partidas-table__row" [class.agotado]="p.plazas === 0">
+        <div class="partidas-table__row" [class.agotado]="p.plazas === 0" [class.partidas-table__row--extra]="p.esExtraordinaria">
           <div class="partidas-table__fecha">
             <span>{{ p.fecha }}</span>
             <span class="hora">{{ p.hora }}</span>
           </div>
-          <span class="partidas-table__modo">{{ p.modo }}</span>
-          <span>
-            <span class="tipo-badge">{{ p.tipo }}</span>
+          <span class="partidas-table__modo">
+            {{ p.modo }}
+            @if (p.esExtraordinaria) {
+              <span class="partidas-table__precio-extra">Socios gratis · No socios {{ EXTRA_PRECIO }} €</span>
+            }
           </span>
-          <a routerLink="/reserva" class="btn btn--primary" [class.btn--disabled]="p.plazas === 0">
+          <span>
+            <span class="tipo-badge" [class.tipo-badge--especial]="p.esExtraordinaria">{{ p.tipo }}</span>
+          </span>
+          <a routerLink="/reserva" [queryParams]="{tipo:'individual', fecha:p.iso}" class="btn btn--primary" [class.btn--disabled]="p.plazas === 0">
             {{ p.plazas === 0 ? 'Completa' : 'Reservar' }}
           </a>
         </div>

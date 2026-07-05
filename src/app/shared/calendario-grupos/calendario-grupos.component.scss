@@ -156,6 +156,19 @@
 
       &:hover { background: rgba($naranja, 0.12); }
     }
+
+    // Partida extraordinaria (lun 16–20): día muy destacado en naranja para
+    // que llame la atención por tener horario y precio distintos.
+    &--extra {
+      color: $crema;
+      cursor: pointer;
+      border-color: $naranja;
+      background: rgba($naranja, 0.3);
+
+      &:hover { background: rgba($naranja, 0.42); }
+
+      .cal__dia-num { color: $naranja; }
+    }
   }
 
   &__dia-num {
@@ -190,6 +203,7 @@
     flex-shrink: 0;
 
     &--disponible { background: $naranja; }
+    &--extra      { background: rgba($naranja, 0.4); border: 1px solid $naranja; }
     &--laborable  { background: transparent; border: 1px solid $naranja; border-radius: 2px; }
     &--reservado  { background: rgba($crema, 0.2); border: 1px solid $line; }
     &--inactivo   { background: rgba($crema, 0.1); }
@@ -327,6 +341,170 @@
     text-transform: uppercase;
     color: $naranja;
     margin: 0 0 12px;
+  }
+
+  &__extra-info {
+    margin-top: 16px;
+    padding: 14px 16px;
+    background: rgba($naranja, 0.08);
+    border: 1px solid rgba($naranja, 0.4);
+    border-radius: $radius-sm;
+
+    &__badge {
+      display: inline-block;
+      font-family: $font-mono;
+      font-size: 9px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: $naranja;
+      border: 1px solid $naranja;
+      border-radius: 99px;
+      padding: 3px 10px;
+      margin-bottom: 10px;
+    }
+
+    &__texto {
+      font-size: 13px;
+      line-height: 1.55;
+      color: rgba($crema, 0.8);
+      margin: 0 0 10px;
+    }
+
+    &__precio {
+      font-family: $font-mono;
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      color: rgba($crema, 0.7);
+      margin: 0;
+
+      strong { color: $naranja; }
+    }
+
+    &__label {
+      font-family: $font-mono;
+      font-size: 9px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba($crema, 0.5);
+      margin: 12px 0 8px;
+    }
+  }
+
+  &__extra-opciones {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+
+    @media (max-width: $bp-sm) { grid-template-columns: 1fr; }
+  }
+
+  &__extra-opcion {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-align: left;
+    padding: 10px 12px;
+    border: 1px solid $line;
+    border-radius: $radius-sm;
+    background: rgba(255,255,255,0.03);
+    color: $crema;
+    cursor: pointer;
+    transition: $transition;
+
+    &:hover { border-color: rgba($naranja, 0.5); }
+
+    &--activa {
+      border-color: $naranja;
+      background: rgba($naranja, 0.12);
+    }
+
+    &__check {
+      color: $naranja;
+      font-size: 13px;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    &__body {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    &__titulo {
+      font-family: $font-tight;
+      font-weight: 700;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+
+    &__precio {
+      font-family: $font-mono;
+      font-size: 11px;
+      color: $naranja;
+    }
+  }
+
+  &__extra-pendiente {
+    color: rgba($crema, 0.4);
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+
+  &__extra-panel {
+    padding: 16px;
+    background: rgba($naranja, 0.08);
+    border: 1px solid rgba($naranja, 0.4);
+    border-radius: $radius-md;
+
+    &__badge {
+      display: inline-block;
+      font-family: $font-mono;
+      font-size: 9px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: $naranja;
+      border: 1px solid $naranja;
+      border-radius: 99px;
+      padding: 3px 10px;
+      margin-bottom: 12px;
+    }
+
+    &__texto {
+      font-size: 13px;
+      line-height: 1.55;
+      color: rgba($crema, 0.8);
+      margin: 0 0 10px;
+
+      strong { color: $crema; }
+    }
+
+    &__precio {
+      font-family: $font-mono;
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      color: rgba($crema, 0.7);
+      margin: 0;
+
+      strong { color: $naranja; }
+    }
+  }
+
+  &__extra-aviso {
+    font-family: $font-mono;
+    font-size: 11px;
+    line-height: 1.5;
+    letter-spacing: 0.04em;
+    color: rgba($crema, 0.7);
+    background: rgba($naranja, 0.1);
+    border: 1px solid rgba($naranja, 0.4);
+    border-radius: $radius-sm;
+    padding: 10px 12px;
+    margin: 0 0 14px;
+
+    strong { color: $naranja; }
   }
 
   &__slots-grid {

@@ -6,6 +6,7 @@ import { CalendarioGruposComponent } from '../../shared/calendario-grupos/calend
 import { SlotsService } from '../../core/services/slots.service';
 import { ReservaStateService, TipoReserva, SubtipoEvento } from '../../core/services/reserva-state.service';
 import { AnalyticsService } from '../../core/services/analytics.service';
+import { esExtraordinaria as fechaEsExtra, EXTRA_CONFIG } from '../../core/data/partidas-extraordinarias';
 
 @Component({
   selector: 'app-reserva',
@@ -106,6 +107,7 @@ export class ReservaComponent implements OnInit, OnDestroy {
       const pista     = params['pista'] || '';
       const doble     = params['doble'] === 'true';
       const subtipo   = params['subtipo'] || '';
+      const laborable = params['laborable'] === 'true';   // día entre semana "a consultar"
 
       if (tipoParam && this.paramToTipo[tipoParam]) {
         const nuevoTipo = this.paramToTipo[tipoParam];
@@ -123,11 +125,25 @@ export class ReservaComponent implements OnInit, OnDestroy {
         this.form.doblePartida = doble && (this.form.tipo === 'privada' || this.form.tipo === 'evento');
 
         if (this.minPersonas > 1 && this.form.personas < this.minPersonas) this.form.personas = this.minPersonas;
-        if (fecha) this.form.fecha = fecha;
+        if (fecha) {
+          this.form.fecha = fecha;
+          // Si se entra directo a un día extraordinario, se marca para exigir
+          // (y esperar) la elección de tarifa especial antes de continuar.
+          this.form.esExtraordinaria = fechaEsExtra(fecha);
+          if (this.form.esExtraordinaria) this.form.extraTarifa = '';
+        }
         if (hora)  this.form.hora  = hora;
         if (pista) this.form.pista = pista;
 
-        this.paso.set(fecha && hora && pista ? 3 : 2);
+        // Día laborable "a consultar" (entre semana, grupos +10): hora aproximada
+        // de llegada, sin franja fija. Se lleva al resumen igual que una franja.
+        if (laborable) {
+          this.form.laborableConsulta = true;
+          this.form.pista = '';
+          if (this.form.personas < 10) this.form.personas = 10;
+        }
+
+        this.paso.set((fecha && hora && pista) || (fecha && laborable && hora) ? 3 : 2);
       } else {
         // Entrada genérica a /reserva (sin categoría): empezar en el paso 1
         // para elegir, en vez de quedarse a medias en una reserva anterior.
@@ -205,9 +221,13 @@ export class ReservaComponent implements OnInit, OnDestroy {
       if (this.form.tipo === 'evento') return !!this.form.subtipoEvento;
       return true;
     }
-    if (this.paso() === 2) return this.mostrarFranjas
-      ? !!this.form.fecha && !!this.form.hora
-      : !!this.form.fecha;
+    if (this.paso() === 2) {
+      // En un día extraordinario hay que elegir la tarifa especial antes de seguir.
+      if (this.aplicaTarifaExtra && !this.form.extraTarifa) return false;
+      return this.mostrarFranjas
+        ? !!this.form.fecha && !!this.form.hora
+        : !!this.form.fecha;
+    }
     if (this.paso() === 3) {
       if (!this.form.aceptaEdad) return false;
       if (!this.form.aceptaPrivacidad) return false;
@@ -271,7 +291,10 @@ export class ReservaComponent implements OnInit, OnDestroy {
   }
 
   get resumen() {
-    const modalidad = this.packLabels[this.form.modalidad] || '';
+    // En la extraordinaria la "modalidad" es la tarifa especial elegida.
+    const modalidad = this.aplicaTarifaExtra
+      ? this.extraLabel
+      : this.packLabels[this.form.modalidad] || '';
     const tipo = this.form.tipo === 'evento' && this.form.subtipoEvento
       ? this.packLabels[this.form.subtipoEvento]
       : this.tipoNombres[this.form.tipo] || '';
@@ -363,8 +386,60 @@ export class ReservaComponent implements OnInit, OnDestroy {
     this.form.hora  = '';
     this.form.pista = '';
     this.form.laborableConsulta = false;
+    // ¿El día elegido es una partida extraordinaria? Solo entonces se exige
+    // (y se invalida cualquier tarifa previa) para elegir la tarifa especial.
+    this.form.esExtraordinaria = fechaEsExtra(fecha);
+    this.form.extraTarifa = '';
     if (this.form.tipo !== 'individual') this.form.personas = 8;
     this.analytics.trackEvent('calendario_fecha_seleccionada', { fecha, tipo: this.form.tipo });
+  }
+
+  // Partida extraordinaria: el usuario elige tarifa en el calendario.
+  //  · socio    → entra gratis
+  //  · propio   → entrada reducida (14,90 €) con su equipo
+  //  · alquiler → alquiler estándar (39,90 €)
+  //  · premium  → alquiler premium (44,90 €)
+  onExtraTarifa(t: 'socio' | 'propio' | 'alquiler' | 'premium') {
+    // El precio de la extraordinaria depende SOLO de esta elección, no de la
+    // equipación del paso 1 (que puede venir de "reservar partida abierta").
+    this.form.extraTarifa = t;
+    this.form.premium = t === 'premium';
+    this.analytics.trackEvent('extraordinaria_tarifa', { tarifa: t });
+  }
+
+  // La tarifa especial (y sus casillas) solo aplica en partida abierta/individual
+  // sobre un día extraordinario; en grupo (con franjas) el precio va aparte.
+  get aplicaTarifaExtra(): boolean {
+    return this.form.esExtraordinaria && !this.mostrarFranjas;
+  }
+
+  // Precio por persona de la tarifa extraordinaria elegida (o null si falta).
+  get extraPrecio(): number | null {
+    switch (this.form.extraTarifa) {
+      case 'socio':    return EXTRA_CONFIG.precioSocio;
+      case 'propio':   return EXTRA_CONFIG.precioNoSocio;
+      case 'alquiler': return EXTRA_CONFIG.precioAlquiler;
+      case 'premium':  return EXTRA_CONFIG.precioPremium;
+      default:         return null;
+    }
+  }
+
+  // Hora de llegada elegida en la partida extraordinaria (pendiente de confirmar).
+  onExtraHora(ev: { fecha: string; hora: string }) {
+    this.form.fecha = ev.fecha;
+    this.form.hora  = ev.hora;
+    this.form.esExtraordinaria = true;
+    this.analytics.trackEvent('extraordinaria_hora', { fecha: ev.fecha, hora: ev.hora });
+  }
+
+  get extraLabel(): string {
+    switch (this.form.extraTarifa) {
+      case 'socio':    return 'Socio (gratis)';
+      case 'propio':   return 'Con equipo propio';
+      case 'alquiler': return 'Alquiler estándar';
+      case 'premium':  return 'Alquiler premium';
+      default:         return '';
+    }
   }
 
   onLaborableSeleccionado(event: { fecha: string; horaAprox: string }) {
@@ -667,6 +742,13 @@ export class ReservaComponent implements OnInit, OnDestroy {
   }
 
   get totalReserva(): string {
+    // Partida extraordinaria: el precio manda desde la tarifa elegida en el
+    // calendario, ignorando la equipación previa del paso 1.
+    if (this.aplicaTarifaExtra) {
+      const p = this.extraPrecio;
+      if (p === null) return 'A consultar';
+      return (p * this.form.personas).toFixed(2).replace('.', ',');
+    }
     if (this.form.tipo === 'txiki') {
       const total = (19 + (this.form.merienda ? 9.90 : 0)) * this.form.personas;
       return total.toFixed(2).replace('.', ',');
@@ -695,6 +777,15 @@ export class ReservaComponent implements OnInit, OnDestroy {
     const fmt = (v: number) => `${v.toFixed(2).replace('.', ',')} €`;
     const lineas: { concepto: string; importe: string }[] = [];
 
+    // Partida extraordinaria: una única línea con la tarifa especial elegida.
+    if (this.aplicaTarifaExtra) {
+      const p = this.extraPrecio;
+      lineas.push(p === null
+        ? { concepto: 'Partida extraordinaria', importe: 'A consultar' }
+        : { concepto: `Partida extraordinaria · ${this.extraLabel} · ${fmt(p)} × ${n}`, importe: fmt(p * n) });
+      return lineas;
+    }
+
     if (this.form.tipo === 'txiki') {
       lineas.push({ concepto: `Txikipaintball · 19 € × ${n}`, importe: fmt(19 * n) });
       if (this.form.merienda) lineas.push({ concepto: `Merienda infantil · 9,90 € × ${n}`, importe: fmt(9.90 * n) });
@@ -722,6 +813,10 @@ export class ReservaComponent implements OnInit, OnDestroy {
 
   get alquilerEquipo(): string {
     if (this.form.tipo === 'txiki') return 'Incluido';
+    // En la extraordinaria el alquiler depende de la tarifa especial elegida.
+    if (this.aplicaTarifaExtra) {
+      return this.form.extraTarifa === 'alquiler' || this.form.extraTarifa === 'premium' ? 'Sí' : 'No';
+    }
     return this.form.modalidad?.includes('alquiler') || this.form.premium ? 'Sí' : 'No';
   }
 

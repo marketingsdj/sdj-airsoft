@@ -404,7 +404,9 @@
                 [preselect]="form.fecha ? {fecha: form.fecha, hora: form.hora, pista: form.pista} : null"
                 (slotSeleccionado)="onSlotSeleccionado($event)"
                 (fechaSeleccionada)="onFechaSeleccionada($event)"
-                (laborableSeleccionado)="onLaborableSeleccionado($event)">
+                (laborableSeleccionado)="onLaborableSeleccionado($event)"
+                (extraTarifaSeleccionada)="onExtraTarifa($event)"
+                (extraHoraSeleccionada)="onExtraHora($event)">
               </app-calendario-grupos>
             </div>
 
@@ -741,12 +743,15 @@
           }
           @if (resumen.hora) {
             <div class="resumen-row">
-              <span>{{ form.laborableConsulta ? 'Llegada aprox.' : 'Hora' }}</span>
+              <span>{{ form.laborableConsulta || form.esExtraordinaria ? 'Llegada aprox.' : 'Hora' }}</span>
               <strong>{{ resumen.hora }}{{ form.doblePartida ? ' – ' + horaFin : '' }}</strong>
             </div>
           }
           @if (form.laborableConsulta) {
             <div class="resumen-row"><span>Entre semana</span><strong>Pendiente de confirmar</strong></div>
+          }
+          @if (form.esExtraordinaria && resumen.hora) {
+            <div class="resumen-row"><span>Hora extraordinaria</span><strong>Pendiente de confirmar</strong></div>
           }
           <div class="resumen-row">
             <span>{{ form.tipo === 'txiki' ? 'Niños/as' : 'Personas' }}</span>

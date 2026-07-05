@@ -314,21 +314,27 @@
     </div>
     <div class="agenda-cards">
       @for (p of partidas; track p.fecha) {
-      <div class="agenda-card">
+      <div class="agenda-card" [class.agenda-card--extra]="p.esExtraordinaria">
         <div class="agenda-card__fecha">
           <span class="agenda-card__dia">{{ p.fecha.split(' ')[1] }}</span>
           <span class="agenda-card__mes">{{ p.fecha.split(' ')[2] }}</span>
           <span class="agenda-card__dow">{{ p.fecha.split(' ')[0] }}</span>
         </div>
         <div class="agenda-card__body">
+          @if (p.esExtraordinaria) {
+            <span class="agenda-card__badge">Extraordinaria</span>
+          }
           <p class="agenda-card__modo">{{ p.modo }}</p>
           <p class="agenda-card__meta">
             <span>{{ p.hora }}</span>
             <span class="agenda-card__dot"></span>
             <span>{{ p.tipo }}</span>
           </p>
+          @if (p.esExtraordinaria) {
+            <p class="agenda-card__precio">Socios gratis · No socios {{ EXTRA_PRECIO }} €</p>
+          }
         </div>
-        <a routerLink="/reserva" class="btn btn--primary agenda-card__btn">Reservar →</a>
+        <a routerLink="/reserva" [queryParams]="{tipo:'individual', fecha:p.iso}" class="btn btn--primary agenda-card__btn">Reservar →</a>
       </div>
       }
     </div>

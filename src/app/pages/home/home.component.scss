@@ -1353,6 +1353,37 @@
     padding: 10px 14px;
     white-space: nowrap;
   }
+
+  // Partida extraordinaria: resaltada en naranja (horario y precio distintos).
+  &--extra {
+    border-color: rgba($naranja, 0.55);
+    background: rgba($naranja, 0.06);
+
+    &:hover { border-color: $naranja; }
+
+    .agenda-card__fecha { border-right-color: rgba($naranja, 0.4); }
+  }
+
+  &__badge {
+    display: inline-block;
+    font-family: $font-mono;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: $naranja;
+    border: 1px solid $naranja;
+    border-radius: 99px;
+    padding: 2px 8px;
+    margin-bottom: 6px;
+  }
+
+  &__precio {
+    font-family: $font-mono;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    color: $naranja;
+    margin: 6px 0 0;
+  }
 }
 
 // ── Partidas (legacy, puede borrarse) ─────────────────────────────────────────

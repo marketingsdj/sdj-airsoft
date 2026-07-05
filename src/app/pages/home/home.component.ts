@@ -2,6 +2,7 @@ import { Component, signal, OnInit, OnDestroy, AfterViewInit, ElementRef, ViewCh
 import { isPlatformBrowser } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { AnalyticsService } from '../../core/services/analytics.service';
+import { generarProximasPartidas, EXTRA_CONFIG, fechaLocalISO } from '../../core/data/partidas-extraordinarias';
 
 @Component({
   selector: 'app-home',
@@ -59,31 +60,19 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     { key: 'jugado', icon: '◆', titulo: 'Ya he jugado antes', desc: 'Juegas de vez en cuando o vienes de otro campo. Descubre lo que te estás perdiendo.', link: '/tarifas' },
   ];
 
-  private generarPartidas() {
-    const modos = ['Captura de bandera', 'Dominación', 'Eliminación', 'Milsim corto'];
-    const partidas = [];
-    const hoy = new Date(); hoy.setHours(0, 0, 0, 0);
-    const cursor = new Date(hoy);
-    let idx = 0;
-    while (partidas.length < 2) {
-      const dow = cursor.getDay();
-      if (dow === 6 || dow === 0) {
-        partidas.push({
-          fecha: cursor.toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', month: 'short' }),
-          hora: '09:00',
-          tipo: 'Partida abierta',
-          modo: modos[idx % modos.length],
-          plazas: 30,
-          total: 30,
-        });
-        idx++;
-      }
-      cursor.setDate(cursor.getDate() + 1);
-    }
-    return partidas;
-  }
+  readonly EXTRA_PRECIO = EXTRA_CONFIG.precioNoSocio.toFixed(2).replace('.', ',');
 
-  partidas = this.generarPartidas();
+  // Próximas partidas (fin de semana + extraordinarias) desde la lista compartida.
+  partidas = generarProximasPartidas(2).map(p => ({
+    fecha: p.fecha.toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', month: 'short' }),
+    iso: fechaLocalISO(p.fecha),
+    hora: p.horaLabel,
+    tipo: p.esExtraordinaria ? 'Partida extraordinaria' : 'Partida abierta',
+    modo: p.modo,
+    plazas: p.plazas,
+    total: p.total,
+    esExtraordinaria: p.esExtraordinaria,
+  }));
 
   faqs = [
     { q: '¿Duele?', a: 'Pica, sí. Como una goma elástica fuerte. El 90% no se siente en calor de partida. Con el equipo de protección adecuado —que está incluido en el alquiler— es perfectamente tolerable.' },

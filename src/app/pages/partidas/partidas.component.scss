@@ -399,10 +399,29 @@
     &:hover { background: rgba(255,255,255,0.03); }
     &.agotado { opacity: 0.5; }
 
+    // Partida extraordinaria: resaltada en naranja (horario 16–20 y precio distinto).
+    &--extra {
+      background: rgba($naranja, 0.06);
+      border-left: 3px solid $naranja;
+
+      &:hover { background: rgba($naranja, 0.1); }
+
+      .partidas-table__fecha .hora { color: $naranja; font-weight: 700; }
+    }
+
     @media (max-width: $bp-md) {
       grid-template-columns: 1fr 1fr;
       gap: 12px;
     }
+  }
+
+  &__precio-extra {
+    display: block;
+    font-family: $font-mono;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    color: $naranja;
+    margin-top: 4px;
   }
 
   &__fecha {

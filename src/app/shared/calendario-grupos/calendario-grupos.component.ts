@@ -2,6 +2,9 @@ import { Component, signal, computed, OnInit, Input, Output, EventEmitter, injec
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SlotsService } from '../../core/services/slots.service';
+import { esExtraordinaria, EXTRA_CONFIG } from '../../core/data/partidas-extraordinarias';
+
+export type ExtraTarifa = 'socio' | 'propio' | 'alquiler' | 'premium';
 
 interface Slot {
   hora: string;
@@ -14,7 +17,8 @@ interface Dia {
   fecha: Date;
   esFinDeSemana: boolean;
   esFestivo: boolean;
-  esDisponible: boolean;   // finde o festivo: abre para partidas abiertas
+  esExtraordinaria: boolean; // partida extraordinaria (lun 16–20): resaltada naranja
+  esDisponible: boolean;   // finde, festivo o extraordinaria: abre para partidas abiertas
   esLaborable: boolean;    // entre semana no festivo: consulta para grupos +10
   esPasado: boolean;
   slots: Slot[];
@@ -46,6 +50,11 @@ export class CalendarioGruposComponent implements OnInit {
   @Output() slotSeleccionado = new EventEmitter<{ fecha: string; hora: string; horaFin: string; pista: string }>();
   @Output() fechaSeleccionada = new EventEmitter<string>();
   @Output() laborableSeleccionado = new EventEmitter<{ fecha: string; horaAprox: string }>();
+  // Partida extraordinaria: el usuario elige si entra como socio (gratis) o con
+  // equipo propio pagando la entrada reducida.
+  @Output() extraTarifaSeleccionada = new EventEmitter<ExtraTarifa>();
+  // Hora de llegada elegida en la partida extraordinaria (pendiente de confirmar).
+  @Output() extraHoraSeleccionada = new EventEmitter<{ fecha: string; hora: string }>();
 
   @Input() set preselect(v: { fecha: string; hora: string; pista?: string } | null) {
     if (v?.fecha) {
@@ -128,6 +137,15 @@ export class CalendarioGruposComponent implements OnInit {
     '13:30', '14:00', '14:30', '15:00', '15:30', '16:00',
   ];
 
+  // Horas de llegada para la partida extraordinaria (16:00–20:00). La última
+  // llegada razonable es a las 19:00 (queda 1 h de juego).
+  readonly HORAS_LLEGADA_EXTRA = ['16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00'];
+
+  // Horas a mostrar en el desplegable según el día seleccionado.
+  get horasLlegadaActivas(): string[] {
+    return this.diaSeleccionado()?.esExtraordinaria ? this.HORAS_LLEGADA_EXTRA : this.HORAS_LLEGADA;
+  }
+
   mesActual      = signal(new Date());
   fechaSel       = signal<string | null>(null);   // fecha del día elegido (YYYY-MM-DD)
   slotActivoKey  = signal<string | null>(null);
@@ -136,7 +154,27 @@ export class CalendarioGruposComponent implements OnInit {
 
   private el = inject(ElementRef);
 
+  readonly EXTRA_PRECIO = EXTRA_CONFIG.precioNoSocio.toFixed(2).replace('.', ',');
+  readonly EXTRA_PRECIO_ALQUILER = EXTRA_CONFIG.precioAlquiler.toFixed(2).replace('.', ',');
+  readonly EXTRA_PRECIO_PREMIUM = EXTRA_CONFIG.precioPremium.toFixed(2).replace('.', ',');
+  readonly EXTRA_DESC = EXTRA_CONFIG.descripcion;
+
+  // Tarifa elegida en el día extraordinario (socio gratis | propio | alquiler | premium).
+  extraTarifa = signal<ExtraTarifa | null>(null);
+
+  seleccionarExtraTarifa(t: ExtraTarifa) {
+    this.extraTarifa.set(t);
+    this.extraTarifaSeleccionada.emit(t);
+  }
+
   semanas  = computed(() => this.generarMes(this.mesActual()));
+
+  // ¿Hay alguna partida extraordinaria visible en el mes actual? (para la leyenda)
+  hayExtraordinariaVisible = computed(() =>
+    this.semanas().some(sem => sem.some(d =>
+      d.esExtraordinaria && !d.esPasado && d.fecha.getMonth() === this.mesActual().getMonth()
+    ))
+  );
 
   // El día seleccionado se DERIVA del mes en vivo (no se guarda una copia),
   // para que sus franjas reflejen siempre el estado de reservas más reciente
@@ -180,7 +218,7 @@ export class CalendarioGruposComponent implements OnInit {
       for (const semana of semanas) {
         for (const dia of semana) {
           const seleccionable = dia.esDisponible && !dia.esPasado && dia.fecha.getMonth() === ref.getMonth()
-            && (!this.mostrarSlots || this.slotDisponibles(dia) > 0);
+            && (dia.esExtraordinaria || !this.mostrarSlots || this.slotDisponibles(dia) > 0);
           if (seleccionable) {
             if (offset > 0) this.mesActual.set(ref);
             this.seleccionarDia(dia);
@@ -209,6 +247,8 @@ export class CalendarioGruposComponent implements OnInit {
   // para grupos +10, también los laborables (bajo consulta).
   diaSeleccionable(dia: Dia): boolean {
     if (dia.esPasado || dia.fecha.getMonth() !== this.mesActual().getMonth()) return false;
+    // La partida extraordinaria se elige por día (sin franjas), aunque haya slots.
+    if (dia.esExtraordinaria) return true;
     if (dia.esDisponible) return !this.mostrarSlots || this.slotDisponibles(dia) > 0;
     if (this.permitirLaborables && dia.esLaborable) return true;
     return false;
@@ -217,6 +257,20 @@ export class CalendarioGruposComponent implements OnInit {
   seleccionarDia(dia: Dia) {
     if (!this.diaSeleccionable(dia)) return;
     this.fechaSel.set(this.localFecha(dia.fecha));
+    // Al cambiar de día se reinicia la tarifa extraordinaria elegida.
+    if (!dia.esExtraordinaria) this.extraTarifa.set(null);
+
+    // Partida extraordinaria: se elige el día (partida abierta 16–20), sin
+    // franjas de pista, pero se puede indicar una hora de llegada (pendiente
+    // de confirmar) igual que en los días laborables.
+    if (dia.esExtraordinaria) {
+      const fecha = this.localFecha(dia.fecha);
+      this.slotActivoKey.set(fecha);
+      this.horaAproxLaborable.set('');
+      this.dropdownAbierto.set(false);
+      if (this.modo === 'seleccion') this.fechaSeleccionada.emit(fecha);
+      return;
+    }
 
     // Laborable (grupos +10, bajo consulta): no hay franjas, se pide hora aproximada.
     if (dia.esLaborable) {
@@ -238,11 +292,19 @@ export class CalendarioGruposComponent implements OnInit {
     }
   }
 
-  // El cliente elige/cambia la hora aproximada de llegada (laborable consulta).
+  // El cliente elige/cambia la hora aproximada de llegada. En un día
+  // extraordinario emite su propio evento (pendiente de confirmar); en un
+  // laborable, el de consulta de grupos.
   onHoraAproxChange(hora: string) {
     this.horaAproxLaborable.set(hora);
     const dia = this.diaSeleccionado();
-    if (dia) this.laborableSeleccionado.emit({ fecha: this.localFecha(dia.fecha), horaAprox: hora });
+    if (!dia) return;
+    const fecha = this.localFecha(dia.fecha);
+    if (dia.esExtraordinaria) {
+      this.extraHoraSeleccionada.emit({ fecha, hora });
+    } else {
+      this.laborableSeleccionado.emit({ fecha, horaAprox: hora });
+    }
   }
 
   // Desplegable custom de hora aproximada (en vez del <select> nativo).
@@ -361,19 +423,24 @@ export class CalendarioGruposComponent implements OnInit {
       const esFinDeSemana = dow === 0 || dow === 6;
       const esViernes = dow === 5;
       const esFestivo = this.FESTIVOS.has(this.localFecha(fecha));
+      const esExtra = esExtraordinaria(fecha);
       // Txiki abre también los viernes; el resto solo finde/festivo.
+      // La partida extraordinaria se trata como día entre semana (laborable):
+      // no genera franjas; se elige el día (tarifa individual o WhatsApp en grupo).
       const esDisponible = this.txiki
         ? (esViernes || esFinDeSemana || esFestivo)
         : (esFinDeSemana || esFestivo);
-      const esLaborable = !esDisponible;   // entre semana no festivo (consulta grupos +10 / txiki)
+      const esLaborable = !esDisponible;   // entre semana no festivo (consulta grupos +10 / txiki / extraordinaria)
       const esPasado = fecha < hoy;
       const esEsteMes = fecha.getMonth() === ref.getMonth();
 
+      // La partida extraordinaria NO tiene franjas de pista: se elige el día
+      // (partida abierta 16–20). Los demás usan txiki o las franjas base.
       const slotsBase = this.txiki
         ? (esViernes ? this.SLOTS_TXIKI_VIERNES : this.SLOTS_TXIKI_FINDE)
         : this.SLOTS_BASE;
 
-      const slots: Slot[] = esDisponible && !esPasado && esEsteMes
+      const slots: Slot[] = esDisponible && !esExtra && !esPasado && esEsteMes
         ? slotsBase.map(s => ({
             ...s,
             reservada: this.slotsService.bloqueados().includes(
@@ -382,7 +449,7 @@ export class CalendarioGruposComponent implements OnInit {
           }))
         : [];
 
-      dias.push({ fecha, esFinDeSemana, esFestivo, esDisponible, esLaborable, esPasado, slots });
+      dias.push({ fecha, esFinDeSemana, esFestivo, esExtraordinaria: esExtra, esDisponible, esLaborable, esPasado, slots });
       cursor.setDate(cursor.getDate() + 1);
     }
 
