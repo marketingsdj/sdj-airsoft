@@ -98,6 +98,7 @@ export class TarifasComponent implements OnInit {
   // Independiente de las 4 pestañas: no es una más, así que no debe vaciar
   // el contenido de la pestaña activa al abrirse.
   txikiAbierto = signal(false);
+  paintballAbierto = signal(false);
 
   premiumIncluye = [
     'Réplica de gama alta',
@@ -186,6 +187,14 @@ export class TarifasComponent implements OnInit {
     precio: 19,
   };
 
+  // Paintball: misma mecánica que Txikipaintball (aviso desplegable con tarifa).
+  // TODO cliente: confirmar precio y qué incluye exactamente.
+  paintballTarifa = {
+    nombre: 'Paintball',
+    incluye: ['Munición incluida', 'Equipamiento completo (marcadora, máscara y peto)', 'Monitor durante toda la actividad', 'Acceso a las zonas de juego', 'Seguro de actividad'],
+    precio: 19.90,
+  };
+
   grupo = [
     {
       key: 'grupo',
@@ -234,6 +243,7 @@ export class TarifasComponent implements OnInit {
   setTab(t: Tab) {
     this.tab.set(t);
     this.txikiAbierto.set(false);
+    this.paintballAbierto.set(false);
     this.location.replaceState('/tarifas?tab=' + t);
     this.analytics.trackEvent('tarifas_tab_visto', { tab: t });
   }
@@ -241,5 +251,10 @@ export class TarifasComponent implements OnInit {
   toggleTxiki() {
     this.txikiAbierto.update(v => !v);
     this.analytics.trackEvent('tarifas_txiki_visto', { abierto: this.txikiAbierto() ? 'sí' : 'no' });
+  }
+
+  togglePaintball() {
+    this.paintballAbierto.update(v => !v);
+    this.analytics.trackEvent('tarifas_paintball_visto', { abierto: this.paintballAbierto() ? 'sí' : 'no' });
   }
 }

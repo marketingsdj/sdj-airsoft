@@ -432,38 +432,24 @@
     margin-bottom: 12px;
   }
 
+  // Chevron limpio (bordes): se dibuja nítido e idéntico en todas las tarjetas
+  // y en móvil/escritorio. Apunta a la derecha; al activarse gira hacia abajo.
   &__arrow {
     margin-top: auto;
-    padding-top: 16px;
-    position: relative;
-    display: block;
-    width: 12px;
-    height: 12px;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    width: 9px;
+    height: 9px;
+    border-top: 2px solid $naranja;
+    border-right: 2px solid $naranja;
+    transform: rotate(45deg);
     transition: transform 0.25s ease;
 
-    @media (max-width: $bp-sm) {
-      margin-top: 0;
-      padding-top: 0;
-      flex-shrink: 0;
-    }
-
-    &::before,
-    &::after {
-      content: '';
-      position: absolute;
-      left: 1px;
-      width: 8px;
-      height: 1.5px;
-      background: $naranja;
-      border-radius: 1px;
-    }
-
-    &::before { top: 2px;  transform: rotate(40deg);  transform-origin: left center; }
-    &::after  { bottom: 2px; transform: rotate(-40deg); transform-origin: left center; }
+    @media (max-width: $bp-sm) { margin-top: 0; }
   }
 
   &--active &__arrow {
-    transform: rotate(90deg);
+    transform: rotate(135deg);
   }
 
   &--active {

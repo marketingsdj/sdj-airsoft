@@ -356,7 +356,7 @@
       <button type="button" class="txiki-banner" (click)="toggleTxiki()">
         <span class="txiki-banner__icon" aria-hidden="true">◉</span>
         <span class="txiki-banner__texto">
-          <span class="txiki-banner__eyebrow">Otra actividad · No es una tarifa de partida abierta</span>
+          <span class="txiki-banner__eyebrow">Otra actividad</span>
           <strong>¿Quieres venir con un peque?</strong>
           <span>Descubre las tarifas de Txikipaintball, pensadas para ellos.</span>
         </span>
@@ -379,6 +379,32 @@
               <a routerLink="/txikipaintball">Ver horarios, fotos y todos los detalles de Txikipaintball →</a>
             </p>
             <a routerLink="/reserva" [queryParams]="{tipo: 'txikipaintball'}" class="btn btn--primary tarifa-btn">Reservar</a>
+          </div>
+        </div>
+      }
+
+      <!-- Aviso de Paintball, mismo estilo que el de Txikipaintball -->
+      <button type="button" class="txiki-banner" (click)="togglePaintball()" style="margin-top:12px;">
+        <span class="txiki-banner__icon" aria-hidden="true">◎</span>
+        <span class="txiki-banner__texto">
+          <span class="txiki-banner__eyebrow">Otra actividad</span>
+          <strong>Conoce el paintball</strong>
+          <span>Descubre las tarifas de paintball, otra forma de jugar en el campo.</span>
+        </span>
+        <span class="txiki-banner__cta">Ver tarifas →</span>
+      </button>
+
+      @if (paintballAbierto()) {
+        <div class="tarifas-grid tarifas-grid--single" style="margin-top:24px;">
+          <div class="tarifa-card">
+            <p class="tarifa-card__nombre">{{ paintballTarifa.nombre }}</p>
+            <p class="tarifa-card__precio">{{ paintballTarifa.precio | number:'1.2-2' }}<span>€</span></p>
+            <ul class="tarifa-card__incluye">
+              @for (item of paintballTarifa.incluye; track item) {
+                <li>{{ item }}</li>
+              }
+            </ul>
+            <a routerLink="/reserva" [queryParams]="{tipo: 'individual'}" class="btn btn--primary tarifa-btn">Reservar</a>
           </div>
         </div>
       }
