@@ -13,12 +13,12 @@ import { getFirestore, type Firestore } from 'firebase/firestore';
  * ──────────────────────────────────────────────────────────────────────────
  */
 export const firebaseConfig = {
-  apiKey: '',
-  authDomain: '',
-  projectId: '',
-  storageBucket: '',
-  messagingSenderId: '',
-  appId: '',
+  apiKey: 'AIzaSyDMmT8GH7WcE_tTKRQNsBrkTNfdTXTZhkQ',
+  authDomain: 'sdj-airsoft.firebaseapp.com',
+  projectId: 'sdj-airsoft',
+  storageBucket: 'sdj-airsoft.firebasestorage.app',
+  messagingSenderId: '891768290800',
+  appId: '1:891768290800:web:c5a22b503e7d32b8297135',
 };
 
 /** Hay configuración válida solo si has rellenado al menos apiKey y projectId. */
