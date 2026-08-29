@@ -403,9 +403,26 @@
     align-items: center;
     align-self: center;
 
-    // En móvil solo dejamos los iconos: la frase sobra en pantalla estrecha.
+    // En móvil el bloque de iconos ocupa el ancho completo y se reparte.
     @media (max-width: $bp-md) {
-      .redes-seguir__texto { display: none; }
+      width: 100%;
+    }
+  }
+
+  // Móvil: botones de contacto y redes a todo lo ancho, uno por línea.
+  @media (max-width: $bp-md) {
+    &__alt {
+      align-items: stretch;
+    }
+
+    &__btns {
+      width: 100%;
+      flex-wrap: nowrap;
+
+      .btn {
+        flex: 1;
+        justify-content: center;
+      }
     }
   }
 

@@ -26,7 +26,7 @@
 
       @if (!zonaSeleccionada) {
       <!-- MAPA PRINCIPAL -->
-      <img src="Campo/Imagen aerea campo.webp" alt="Vista aérea del campo SDJ" loading="eager" fetchpriority="high" />
+      <img src="Campo/Imagen aerea campo.svg" alt="Vista aérea del campo SDJ" loading="eager" fetchpriority="high" />
       @for (z of zonas; track z.id) {
       @if (z.rw > 0 && z.rh > 0) {
       <div class="zona-rect" [class.zona-rect--activa]="zonaActiva === z.id"
@@ -118,6 +118,23 @@
         </div>
       </div>
       }
+    </div>
+  </div>
+</section>
+
+<!-- TXIKIPAINTBALL: el campo de los peques, dentro de las mismas instalaciones -->
+<section class="section section--alt">
+  <div class="wrap">
+    <div class="privadas__banner">
+      <img src="Txikipaintball/12.webp" alt="Txikipaintball en SDJ" loading="lazy" />
+      <div class="privadas__banner-overlay"></div>
+      <div class="privadas__banner-texto">
+        <p class="section__eyebrow">Txikipaintball</p>
+        <h2 class="section__title">El campo de<br>los más peques</h2>
+        <p>En las mismas instalaciones tenemos una zona propia para niños de 8 a 13 años: bolas de baja potencia,
+          monitores especializados y todo el material incluido. El plan perfecto para venir en familia.</p>
+        <a routerLink="/txikipaintball" class="btn btn--primary" style="margin-top:24px;">Ver Txikipaintball →</a>
+      </div>
     </div>
   </div>
 </section>

@@ -41,6 +41,7 @@
     width: 34px;
     height: 34px;
     border: 1px solid $line;
+    border-radius: $radius-md;
     color: rgba($crema, 0.8);
     transition: color $transition, border-color $transition, background $transition;
 
@@ -49,6 +50,20 @@
       border-color: rgba($naranja, 0.6);
       background: rgba($naranja, 0.08);
     }
+  }
+
+  // Móvil: los iconos se reparten de izquierda a derecha ocupando todo el ancho.
+  @media (max-width: $bp-md) {
+    width: 100%;
+
+    &__iconos {
+      flex: 1;
+      width: 100%;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    &__link { flex: 1; }
   }
 
   @media (max-width: 600px) {
