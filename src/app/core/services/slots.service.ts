@@ -97,6 +97,7 @@ export class SlotsService {
   async registrarReserva(datos: {
     email: string; nombre?: string; telefono?: string; tipo: string;
     fecha: string; hora?: string; pista?: string; personas?: number; numeroReserva?: string;
+    gestion?: string;
   }): Promise<void> {
     if (!isFirebaseConfigured || !db) return;
     const email = this.normEmail(datos.email);

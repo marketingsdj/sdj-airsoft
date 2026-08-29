@@ -56,6 +56,12 @@ img {
   @media (max-width: $bp-md) { display: none !important; }
 }
 
+// Utilidad inversa: solo se muestra en móvil (para bloques que en escritorio
+// viven en otra sección).
+.hide-desktop {
+  @media (min-width: $bp-md + 1px) { display: none !important; }
+}
+
 .eyebrow {
   font-family: $font-mono;
   font-size: 11px;

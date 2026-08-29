@@ -193,7 +193,7 @@
             </div>
           </li>
         </ul>
-        <app-redes-seguir origen="home"
+        <app-redes-seguir class="hide-desktop" origen="home"
           texto="Síguenos y mira cómo se vive una partida:"></app-redes-seguir>
       </div>
 
@@ -263,14 +263,12 @@
 
 <!-- ── CROSS-SELL TIENDA ──────────────────────────────────────────────────── -->
 <section class="section section--alt tienda-cross">
-  <div class="wrap">
-    <div class="section__header">
-      <p class="section__eyebrow">KIT DE INICIO · TIENDA</p>
-      <h2 class="section__title">¿Ya enganchado?<br>Móntate tu equipo</h2>
-    </div>
-  </div>
   <div class="wrap tienda-cross__inner">
     <div class="tienda-cross__text">
+      <div class="section__header">
+        <p class="section__eyebrow">KIT DE INICIO · TIENDA</p>
+        <h2 class="section__title">¿Ya enganchado?<br>Móntate tu equipo</h2>
+      </div>
       <p class="section__lead">El campo te espera. Solo falta que te equipes.</p>
       <div class="kit-lista">
         <span class="kit-lista__item">Réplica Rossi Sentinel</span>
@@ -364,6 +362,8 @@
         </div>
         <a routerLink="/reserva" class="btn btn--primary">Reservar →</a>
       </div>
+      <app-redes-seguir origen="home"
+        texto="Síguenos y mira cómo se vive una partida:"></app-redes-seguir>
     </div>
   </div>
 </section>

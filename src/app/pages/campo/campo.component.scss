@@ -15,7 +15,15 @@
   :host > .zonas-section  { order: 2; }
 }
 
-.section { background: $gris; }
+// La página tiene muchas secciones seguidas: el padding global (80px) deja
+// demasiado hueco entre ellas, así que aquí se aprieta.
+.section {
+  background: $gris;
+  padding: 32px 0;
+
+  @media (max-width: $bp-md) { padding: 24px 0; }
+  @media (max-width: $bp-sm) { padding: 18px 0; }
+}
 .section--alt { background: darken($gris, 4%); }
 .section--dark { background: darken($gris, 8%); }
 
@@ -42,6 +50,27 @@
   min-height: 400px;
   display: flex;
   align-items: flex-end;
+  overflow: hidden;
+
+  // Móvil: hero más corto, sobraba espacio vacío bajo el titular.
+  @media (max-width: $bp-md) { height: 46vh; min-height: 300px; }
+  @media (max-width: $bp-sm) { height: 42vh; min-height: 260px; }
+
+  // El degradado se aplica al hero (no al contenedor del video) para que cubra
+  // todo lo visible aunque el video desborde su caja.
+  &::after {
+    content: '';
+    position: absolute;
+    // Baja unos píxeles más que el hero para cubrir la franja de vídeo que
+    // asomaba al final (el hero recorta el sobrante con overflow:hidden).
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: -10px;
+    z-index: 0;
+    pointer-events: none;
+    background: linear-gradient(180deg, rgba($ink, 0) 30%, rgba($ink, 0.9) 100%);
+  }
 
   &__bg {
     position: absolute;
@@ -55,18 +84,14 @@
       display: block;
     }
 
-    &::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(180deg, rgba($ink, 0) 30%, rgba($ink, 0.9) 100%);
-    }
   }
 
   &__content {
     position: relative;
     z-index: 1;
     padding-bottom: 64px;
+
+    @media (max-width: $bp-md) { padding-bottom: 32px; }
 
     .eyebrow {
       font-family: $font-mono;
@@ -1674,6 +1699,26 @@
 
     @media (max-width: $bp-md) { padding: 32px 24px; max-width: 100%; }
   }
+
+  // Móvil: el texto sigue sobre la foto, pero el degradado pasa a vertical
+  // (el horizontal tapaba la imagen entera en pantalla estrecha) y la foto se
+  // encuadra por arriba, que es donde está la acción.
+  &--apilado {
+    @media (max-width: $bp-md) {
+      height: 380px;
+
+      img { object-position: center 25%; }
+
+      .privadas__banner-overlay {
+        background: linear-gradient(180deg, rgba($ink, 0.25) 0%, rgba($ink, 0.65) 45%, rgba($ink, 0.92) 100%);
+      }
+
+      .privadas__banner-texto {
+        justify-content: flex-end;
+        padding: 24px 20px;
+      }
+    }
+  }
 }
 
 // ── Servicios grid ────────────────────────────────────────────────────────────
@@ -1682,7 +1727,9 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 2px;
 
-  @media (max-width: $bp-md) { grid-template-columns: 1fr; gap: 10px; }
+  // También en móvil van las tres en una sola fila.
+  @media (max-width: $bp-md) { gap: 6px; }
+  @media (max-width: $bp-sm) { gap: 4px; }
 }
 
 .servicio-card {
@@ -1691,7 +1738,8 @@
   overflow: hidden;
   border-radius: $radius-md;
 
-  @media (max-width: $bp-md) { height: 190px; }
+  @media (max-width: $bp-md) { height: 230px; }
+  @media (max-width: $bp-sm) { height: 180px; }
 
   &__bg {
     position: absolute;
@@ -1734,7 +1782,7 @@
     justify-content: flex-end;
 
     @media (max-width: $bp-md) {
-      padding: 14px;
+      padding: 14px 10px;
 
       .servicio-card__desc { display: none; }
 
@@ -1761,7 +1809,8 @@
     color: $naranja;
     margin: 0 0 8px;
 
-    @media (max-width: $bp-md) { font-size: 8px; margin: 0 0 4px; letter-spacing: 0.1em; }
+    // En movil las tarjetas son muy estrechas: se deja solo el titulo.
+    @media (max-width: $bp-md) { display: none; }
   }
 
   &__titulo {
@@ -1773,7 +1822,8 @@
     line-height: 0.95;
     margin: 0 0 14px;
 
-    @media (max-width: $bp-md) { font-size: 14px; margin: 0 0 6px; }
+    @media (max-width: $bp-md) { font-size: 13px; margin: 0 0 6px; }
+    @media (max-width: $bp-sm) { font-size: 11px; }
   }
 
   &__desc {

@@ -137,13 +137,21 @@ export class CalendarioGruposComponent implements OnInit {
     '13:30', '14:00', '14:30', '15:00', '15:30', '16:00',
   ];
 
+  // Txikipaintball entre semana: 30' para cambiarse, 1 h de juego y 30' de
+  // ducha (~2 h en total), así que se puede llegar hasta las 17:00.
+  readonly HORAS_LLEGADA_TXIKI = [
+    '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00',
+    '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00',
+  ];
+
   // Horas de llegada para la partida extraordinaria (16:00–20:00). La última
   // llegada razonable es a las 19:00 (queda 1 h de juego).
   readonly HORAS_LLEGADA_EXTRA = ['16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00'];
 
   // Horas a mostrar en el desplegable según el día seleccionado.
   get horasLlegadaActivas(): string[] {
-    return this.diaSeleccionado()?.esExtraordinaria ? this.HORAS_LLEGADA_EXTRA : this.HORAS_LLEGADA;
+    if (this.diaSeleccionado()?.esExtraordinaria) return this.HORAS_LLEGADA_EXTRA;
+    return this.txiki ? this.HORAS_LLEGADA_TXIKI : this.HORAS_LLEGADA;
   }
 
   mesActual      = signal(new Date());

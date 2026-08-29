@@ -24,6 +24,10 @@
   display: flex;
   align-items: flex-end;
 
+  // Móvil: hero más corto, sobraba espacio vacío bajo el titular.
+  @media (max-width: $bp-md) { height: 46vh; min-height: 300px; }
+  @media (max-width: $bp-sm) { height: 42vh; min-height: 260px; }
+
   &__bg {
     position: absolute;
     inset: 0;
@@ -42,6 +46,8 @@
     position: relative;
     z-index: 1;
     padding-bottom: 64px;
+
+    @media (max-width: $bp-md) { padding-bottom: 32px; }
 
     .eyebrow {
       font-family: $font-mono;

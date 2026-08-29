@@ -98,8 +98,13 @@
 
       <div class="reserva-exito">
         <span class="reserva-exito__icon">✓</span>
-        <h2>¡Solicitud enviada!</h2>
-        <p>Te contactamos en menos de 24h para confirmar tu reserva. Revisa tu email y WhatsApp.</p>
+        @if (requiereConfirmacion) {
+          <h2>¡Solicitud enviada!</h2>
+          <p>Te contactamos en menos de 24h para cerrar los detalles de tu reserva. Revisa tu email y WhatsApp.</p>
+        } @else {
+          <h2>¡Reserva confirmada!</h2>
+          <p>Tu plaza ya está reservada. Guarda el justificante y nos vemos en el campo.</p>
+        }
 
         <div class="exito-resumen">
           <p class="exito-resumen__titulo">Resumen de tu reserva</p>
@@ -806,7 +811,7 @@
           </button>
         } @else {
           <button class="btn btn--primary" (click)="enviar()" [disabled]="!pasoValido || enviando()">
-            {{ enviando() ? 'Enviando...' : form.tipo === 'individual' ? 'Confirmar asistencia' : 'Enviar solicitud' }}
+            {{ enviando() ? 'Enviando...' : requiereConfirmacion ? 'Enviar solicitud' : 'Confirmar reserva' }}
           </button>
           @if (errorReserva()) {
             <p class="reserva-error" role="alert">{{ errorReserva() }}</p>

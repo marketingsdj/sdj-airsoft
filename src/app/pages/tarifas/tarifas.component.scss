@@ -1,5 +1,16 @@
 @use '../../../styles/variables' as *;
 
+// Hero de Tarifas: el titular es corto y sobraba aire arriba y abajo. Se deja
+// solo el hueco necesario bajo el header fijo (100px / 68px en móvil).
+.page-hero {
+  padding: 100px 0 36px;
+
+  @media (max-width: $bp-md) { padding: 76px 0 24px; }
+  @media (max-width: $bp-sm) { padding: 72px 0 20px; }
+
+  h1 { margin-bottom: 10px; }
+}
+
 // ── Aviso Txikipaintball (independiente de las pestañas) ───────────────────────
 .txiki-banner {
   display: flex;

@@ -144,6 +144,10 @@ export class ReservaComponent implements OnInit, OnDestroy {
           if (this.form.personas < 10) this.form.personas = 10;
         }
 
+        // Con la fecha ya fijada el mínimo puede haber subido (p. ej. viernes de
+        // Txikipaintball, 12 niños/as), así que se vuelve a ajustar.
+        if (this.form.personas < this.minPersonas) this.form.personas = this.minPersonas;
+
         this.paso.set((fecha && hora && pista) || (fecha && laborable && hora) ? 3 : 2);
       } else {
         // Entrada genérica a /reserva (sin categoría): empezar en el paso 1
@@ -250,7 +254,17 @@ export class ReservaComponent implements OnInit, OnDestroy {
   // Si se reservó un día entre semana ("a consultar"), el mínimo sube a 10.
   get minPersonas(): number {
     const base = this.form.tipo === 'privada' || this.form.tipo === 'evento' || this.form.tipo === 'txiki' ? 8 : 1;
+    // Txikipaintball entre semana (viernes incluido): mínimo 12 niños/as.
+    if (this.form.tipo === 'txiki' && (this.esViernesElegido || this.form.laborableConsulta)) return 12;
     return this.form.laborableConsulta ? Math.max(base, 10) : base;
+  }
+
+  // ¿El día elegido cae en viernes? (Txikipaintball abre los viernes por la
+  // tarde, pero con un mínimo de grupo mayor que el del fin de semana.)
+  get esViernesElegido(): boolean {
+    if (!this.form.fecha) return false;
+    const [anio, mes, dia] = this.form.fecha.split('-').map(Number);
+    return new Date(anio, mes - 1, dia).getDay() === 5;
   }
 
   // La tarifa reducida (tarde) se ofrece en partida abierta y privada.
@@ -263,7 +277,7 @@ export class ReservaComponent implements OnInit, OnDestroy {
   // calendario en vez de ocultar la opción.
   get avisoLaborable(): string {
     if (this.form.tipo === 'privada') return 'Entre semana disponible para grupos de 10 o más personas. Confirmaremos el número exacto en el último paso.';
-    if (this.form.tipo === 'txiki')   return 'Entre semana disponible para grupos de 10 o más niños/as. Confirmaremos el número exacto en el último paso.';
+    if (this.form.tipo === 'txiki')   return 'Entre semana (viernes incluido) la reserva mínima es de 12 niños/as. Confirmaremos el número exacto en el último paso.';
     return '';
   }
 
@@ -289,6 +303,13 @@ export class ReservaComponent implements OnInit, OnDestroy {
 
   get tarifaReducidaTotal(): string {
     return (this.precioReducida * this.form.personas).toFixed(2).replace('.', ',');
+  }
+
+  // Reservas que NO quedan cerradas solas y hay que gestionar a mano:
+  //  · día entre semana ("a consultar"): sin franja fija, hora por acordar
+  //  · evento con menú: el precio del menú se cierra con el cliente
+  get requiereConfirmacion(): boolean {
+    return this.form.laborableConsulta || (this.form.tipo === 'evento' && this.form.menu);
   }
 
   get resumen() {
@@ -379,7 +400,7 @@ export class ReservaComponent implements OnInit, OnDestroy {
     this.form.hora  = event.hora;
     this.form.pista = event.pista;
     this.form.laborableConsulta = false;
-    if (this.form.tipo !== 'individual') this.form.personas = 8;
+    if (this.form.tipo !== 'individual') this.form.personas = Math.max(8, this.minPersonas);
   }
 
   onFechaSeleccionada(fecha: string) {
@@ -391,7 +412,7 @@ export class ReservaComponent implements OnInit, OnDestroy {
     // (y se invalida cualquier tarifa previa) para elegir la tarifa especial.
     this.form.esExtraordinaria = fechaEsExtra(fecha);
     this.form.extraTarifa = '';
-    if (this.form.tipo !== 'individual') this.form.personas = 8;
+    if (this.form.tipo !== 'individual') this.form.personas = Math.max(8, this.minPersonas);
     this.analytics.trackEvent('calendario_fecha_seleccionada', { fecha, tipo: this.form.tipo });
   }
 
@@ -449,7 +470,8 @@ export class ReservaComponent implements OnInit, OnDestroy {
     this.form.pista = '';
     this.form.doblePartida = false;
     this.form.laborableConsulta = true;
-    if (this.form.personas < 10) this.form.personas = 10;   // mínimo para entre semana
+    // Mínimo para entre semana: 10 en general, 12 en Txikipaintball.
+    if (this.form.personas < this.minPersonas) this.form.personas = this.minPersonas;
   }
 
   sumarPersona() {
@@ -580,12 +602,15 @@ export class ReservaComponent implements OnInit, OnDestroy {
 
     const payload = this.form.tipo === 'individual'
       ? {
+          gestion: 'CONFIRMADA',
           tipo: 'individual',
           fecha: this.form.fecha,
           personas: this.form.personas,
           tarifa_reducida: this.form.tarifaReducida ? `Sí (${this.precioReducidaFmt} €/persona)` : 'No',
         }
       : {
+          // Bandera para localizar de un vistazo las que hay que gestionar a mano.
+          gestion:     this.requiereConfirmacion ? 'PENDIENTE DE CONFIRMAR' : 'CONFIRMADA',
           tipo:        this.form.tipo,
           modalidad:   this.form.modalidad,
           fecha:       this.form.fecha,

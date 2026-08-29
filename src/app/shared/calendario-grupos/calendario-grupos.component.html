@@ -169,10 +169,14 @@
         } @else if (diaSeleccionado()!.esLaborable) {
           <!-- Grupos +10 entre semana: bajo consulta, hora aproximada de llegada -->
           <div class="cal__consulta">
-            <p class="cal__consulta-aviso">Reserva entre semana para grupos de 10 o más personas. <strong>Pendiente de confirmar.</strong></p>
+            @if (txiki) {
+              <p class="cal__consulta-aviso">Reserva entre semana para grupos de 12 o más niños/as. <strong>Pendiente de confirmar.</strong></p>
+            } @else {
+              <p class="cal__consulta-aviso">Reserva entre semana para grupos de 10 o más personas. <strong>Pendiente de confirmar.</strong></p>
+            }
             <ul class="cal__consulta-lista">
               <li>30 min para cambiarse y explicación del juego</li>
-              <li>2 h de juego</li>
+              <li>{{ txiki ? '1 h de juego' : '2 h de juego' }}</li>
               <li>30 min para ducharse</li>
             </ul>
             <label class="cal__consulta-label">Hora aproximada de llegada</label>
@@ -185,7 +189,7 @@
               </button>
               @if (dropdownAbierto()) {
                 <ul class="cal__dropdown-list">
-                  @for (h of HORAS_LLEGADA; track h) {
+                  @for (h of horasLlegadaActivas; track h) {
                     <li>
                       <button type="button" class="cal__dropdown-option"
                         [class.cal__dropdown-option--activa]="horaAproxLaborable() === h"

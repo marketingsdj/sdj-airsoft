@@ -86,11 +86,11 @@ export class PromosComponent implements OnInit, OnDestroy {
   traeAmigos = [
     {
       tag: 'Jugador con equipo + 1 amigo nuevo',
-      titulo: 'Tu entrada baja a la mitad',
-      tituloHtml: 'Tu entrada baja a la mitad',
+      titulo: 'Tu entrada a mitad de precio',
+      tituloHtml: 'Tu entrada a mitad de precio',
       condiciones: ['Pendiente de completar'],
       lista: [
-        '1 amigo que <strong>nunca haya jugado en SDJ</strong>',
+        'Vienes con <strong>1 amigo que nunca haya jugado en SDJ</strong>',
         'Tu entrada es <strong class="promo-precio">reducida</strong>',
         'El amigo nuevo paga tarifa de alquiler estándar (39,90 €)',
       ],
@@ -102,7 +102,7 @@ export class PromosComponent implements OnInit, OnDestroy {
       tituloHtml: 'Organiza la visita.<br>Tú entras gratis.',
       condiciones: ['Pendiente de completar'],
       lista: [
-        '3 amigos que pagan la entrada <strong>(39,90 € cada uno)</strong>',
+        'Vienes con <strong>3 amigos que pagan la entrada (39,90 € cada uno)</strong>',
         'Los 4 jugáis con <strong>equipo premium</strong> incluido',
         'Tu entrada es <strong class="promo-precio">gratuita</strong>',
       ],

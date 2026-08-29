@@ -25,6 +25,10 @@
   align-items: center;
   overflow: hidden;
 
+  // Móvil: el contenido ocupa poco y sobraba pantalla vacía.
+  @media (max-width: $bp-md) { min-height: 62vh; }
+  @media (max-width: $bp-sm) { min-height: 56vh; }
+
   &__bg {
     position: absolute;
     inset: 0;
@@ -519,13 +523,24 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 64px;
-    align-items: center;
+    // Las dos columnas igualan altura: la foto ocupa lo mismo que el texto.
+    align-items: stretch;
 
-    @media (max-width: $bp-md) { grid-template-columns: 1fr; }
+    @media (max-width: $bp-md) { grid-template-columns: 1fr; align-items: center; }
   }
 
   &__text {
-    @media (max-width: $bp-md) { display: none; }
+    // El titular vive dentro de la columna, así la foto arranca a su altura.
+    .section__header { margin-bottom: 24px; }
+
+    // En móvil solo se mantiene el titular; el detalle del kit se oculta.
+    @media (max-width: $bp-md) {
+      .section__lead,
+      .kit-lista,
+      .kit-disponible { display: none; }
+
+      .section__header { margin-bottom: 16px; }
+    }
   }
 }
 
@@ -1024,13 +1039,16 @@
   &__img {
     display: none;
     width: 100%;
-    height: auto;
+    height: 100%;
     object-fit: contain;
 
     &--activa {
       display: block;
       animation: kitFade 0.5s ease;
     }
+
+    // En móvil la columna es única: la foto recupera su alto natural.
+    @media (max-width: $bp-md) { height: auto; }
   }
 
   &__cta {
