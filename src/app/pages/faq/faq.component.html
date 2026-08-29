@@ -39,6 +39,9 @@
               <span class="busqueda-item__cat">{{ r.cat }}</span>
               <h4 class="busqueda-item__q">{{ r.q }}</h4>
               <p class="busqueda-item__a">{{ r.a }}</p>
+              @if (r.link) {
+                <a class="faq-link" [href]="r.link.url" target="_blank" rel="noopener">{{ r.link.label }}</a>
+              }
             </div>
           }
         } @else {
@@ -77,6 +80,9 @@
           @if (f.open) {
             <div class="faq-item__body">
               <p>{{ f.a }}</p>
+              @if (f.link) {
+                <a class="faq-link" [href]="f.link.url" target="_blank" rel="noopener">{{ f.link.label }}</a>
+              }
             </div>
           }
         </div>
@@ -107,6 +113,9 @@
                 @if (f.open) {
                   <div class="faq-item__body">
                     <p>{{ f.a }}</p>
+                    @if (f.link) {
+                      <a class="faq-link" [href]="f.link.url" target="_blank" rel="noopener">{{ f.link.label }}</a>
+                    }
                   </div>
                 }
               </div>

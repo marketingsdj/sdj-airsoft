@@ -18,5 +18,34 @@ service cloud.firestore {
       // (esos cambios se harán desde la consola o un backend de confianza).
       allow update, delete: if false;
     }
+
+    // Registro de reservas (email, nombre, teléfono, etc.). Contiene datos
+    // personales: el navegador SOLO puede CREAR, nunca leer/editar/borrar.
+    // Tú lo consultas desde la consola de Firebase.
+    match /reservas/{reservaId} {
+      allow create: if true;
+      allow read, update, delete: if false;
+    }
+
+    // Contador diario por persona (email + fecha + nº), para el límite de
+    // 2 reservas por día. Datos mínimos; se puede leer y actualizar.
+    match /reservas_contador/{contadorId} {
+      allow read, create, update: if true;
+      allow delete: if false;
+    }
+
+    // Contador mensual por persona (email + mes + nº), para el límite de
+    // 4 reservas al mes.
+    match /reservas_contador_mes/{contadorId} {
+      allow read, create, update: if true;
+      allow delete: if false;
+    }
+
+    // Lista de usuarios bloqueados (id = email). El navegador solo LEE, para
+    // comprobar si un email está vetado. Se añaden/quitan desde la consola.
+    match /usuarios_bloqueados/{email} {
+      allow read: if true;
+      allow write: if false;
+    }
   }
 }

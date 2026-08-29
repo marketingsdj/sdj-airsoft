@@ -3,7 +3,7 @@ import { AnalyticsService } from '../../core/services/analytics.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
-interface Faq { q: string; a: string; open: boolean; }
+interface Faq { q: string; a: string; open: boolean; link?: { url: string; label: string }; }
 interface Categoria { key: string; titulo: string; count: number; faqs: Faq[]; }
 
 // Mapa de sinónimos / palabras clave
@@ -41,7 +41,7 @@ export class FaqComponent {
         { q: '¿Duele cuando te dan?', a: 'Pica, sí. Como una goma elástica fuerte. El 90% no se siente. Con el equipo de protección adecuado (que está incluido en el alquiler) es perfectamente tolerable.', open: false },
         { q: '¿Necesito experiencia para venir?', a: 'Cero. La mayoría de la gente que viene es primera vez. Los monitores explican las reglas, el equipo y la dinámica antes de empezar. En 10 minutos estás listo.', open: false },
         { q: '¿Es legal?', a: 'Sí, totalmente regulado. Las réplicas de airsoft están clasificadas como juguetes / deporte. Necesitan seguir la normativa de FPS y edad mínima, que nosotros cumplimos estrictamente.', open: false },
-        { q: '¿Qué edad mínima hay?', a: 'Para el campo de airsoft se requiere autorización de tutor para menores. Para Txikipaintball (la alternativa familiar) la edad mínima es inferior. Consulta directamente para tu caso concreto.', open: false },
+        { q: '¿Qué edad mínima hay?', a: 'Para el campo de airsoft la edad mínima es a partir de los 14 años (los menores necesitan autorización del tutor). Para los más pequeños está Txikipaintball, la alternativa familiar, de 8 a 13 años.', open: false },
         { q: '¿Es peligroso?', a: 'Es de los deportes más seguros: gafas homologadas obligatorias, FPS controlados, monitores siempre presentes. En 16 años de campo no hemos tenido ningún incidente grave.', open: false },
       ]
     },
@@ -63,7 +63,7 @@ export class FaqComponent {
         { q: '¿Cuántas zonas tiene el campo?', a: 'El campo tiene 45.000 m² con varias zonas diferenciadas: urbana, bosque, colina, bunkers y zona abierta. No todas se usan en cada partida.', open: false },
         { q: '¿Hay vestuarios con duchas?', a: 'Sí. Vestuarios separados (hombre/mujer) con taquillas con llave y duchas calientes. Baños accesibles disponibles.', open: false },
         { q: '¿Llevo gafas graduadas o soy daltónico?', a: 'Sin problema. Disponemos de protección compatible con gafas graduadas. El daltonismo no afecta al juego: los equipos se distinguen por brazaletes y posición, no por color.', open: false },
-        { q: '¿Hacéis fotos durante las partidas?', a: 'Sí. Cada semana hacemos fotos de los jugadores durante las partidas y las compartimos en nuestro grupo de Telegram (@sdj_airsoft), para que tengas un recuerdo de tu día.', open: false },
+        { q: '¿Hacéis fotos durante las partidas?', a: 'Sí. Cada semana hacemos fotos de los jugadores durante las partidas y las compartimos en nuestro grupo de Telegram, para que tengas un recuerdo de tu día.', link: { url: 'https://t.me/sdj_airsoft', label: 'Ver las fotos en el grupo de Telegram →' }, open: false },
       ]
     },
     {

@@ -81,6 +81,7 @@
 }
 
 .tipo-card {
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -90,10 +91,27 @@
   cursor: pointer;
   background-size: cover;
   background-position: center;
+  background-repeat: no-repeat;
+  background-clip: padding-box;   // la imagen queda dentro del borde, no debajo
   border: 1px solid $line;
   border-radius: $radius-md;
   overflow: hidden;
   transition: transform $transition, border-color $transition, box-shadow $transition;
+
+  // Degradado como capa propia: cubre siempre toda la tarjeta (inset: 0),
+  // así no quedan cortes ni zonas de foto sin oscurecer.
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgba($ink, 0.35) 0%,
+      rgba($ink, 0.62) 50%,
+      rgba($ink, 0.97) 100%
+    );
+    pointer-events: none;
+  }
 
   &:hover,
   &:focus-visible {
@@ -111,6 +129,8 @@
   }
 
   &__body {
+    position: relative;
+    z-index: 1;
     display: flex;
     flex-direction: column;
     gap: 8px;

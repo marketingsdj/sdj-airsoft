@@ -808,6 +808,9 @@
           <button class="btn btn--primary" (click)="enviar()" [disabled]="!pasoValido || enviando()">
             {{ enviando() ? 'Enviando...' : form.tipo === 'individual' ? 'Confirmar asistencia' : 'Enviar solicitud' }}
           </button>
+          @if (errorReserva()) {
+            <p class="reserva-error" role="alert">{{ errorReserva() }}</p>
+          }
         }
       </div>
 

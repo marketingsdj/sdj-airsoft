@@ -1,10 +1,10 @@
 import { Component, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AnalyticsService } from '../services/analytics.service';
 
 @Component({
   selector: 'app-footer',
-  imports: [RouterLink],
+  imports: [RouterLink, RouterLinkActive],
   templateUrl: './footer.component.html',
   styleUrl: './footer.component.scss'
 })
@@ -18,6 +18,7 @@ export class FooterComponent {
   }
 
   nav = [
+    { label: 'SDJ', path: '/' },
     { label: 'Campo', path: '/campo' },
     { label: 'Partidas', path: '/partidas' },
     { label: 'Tarifas', path: '/tarifas' },

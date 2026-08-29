@@ -241,7 +241,7 @@
   @media (max-width: $bp-md) {
     flex-direction: column;
     align-items: stretch;   // que el contenido (tipos, calendario, datos) ocupe todo el ancho al apilarse
-    gap: 24px;
+    gap: 12px;
   }
 }
 
@@ -456,13 +456,13 @@
   // En móvil se compactan pero manteniendo la MISMA escala que las tarjetas de
   // la subsección (equipo/evento), para que todo el formulario se vea unificado.
   @media (max-width: $bp-md) {
-    padding: 16px 18px;
-    gap: 14px;
+    padding: 11px 14px;
+    gap: 12px;
     align-items: center;
 
-    &__icon { font-size: 18px; width: 20px; margin-top: 0; }
-    strong { font-size: 15px; margin-bottom: 3px; }
-    &__desc { font-size: 12px; line-height: 1.35; }
+    &__icon { display: none; }   // en móvil se ocultan los símbolos de cada opción
+    strong { font-size: 15px; margin-bottom: 2px; }
+    &__desc { font-size: 12px; line-height: 1.3; }
   }
 
   &--link {
@@ -848,7 +848,6 @@
   padding: 20px;
   position: sticky;
   top: 88px;
-  box-shadow: 0 0 32px rgba($naranja, 0.08);
 
   width: 260px;
   flex-shrink: 0;
@@ -856,6 +855,10 @@
   @media (max-width: $bp-md) {
     width: 100%;
     position: static;
+    padding: 14px 16px;
+
+    .resumen-row { padding: 7px 0; }
+    .reserva-resumen__title { margin-bottom: 10px; }
   }
 
   &__title {
@@ -1585,4 +1588,16 @@ select.form-input {
   }
 
   a { color: rgba($crema, 0.8); text-decoration: underline; }
+}
+
+// Mensaje de error al enviar (usuario bloqueado o límite diario alcanzado).
+.reserva-error {
+  margin: 12px 0 0;
+  padding: 12px 14px;
+  border: 1px solid rgba(#e5484d, 0.5);
+  background: rgba(#e5484d, 0.08);
+  border-radius: $radius-sm;
+  color: #ff8f92;
+  font-size: 13px;
+  line-height: 1.5;
 }

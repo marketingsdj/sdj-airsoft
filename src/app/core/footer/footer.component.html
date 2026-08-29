@@ -32,7 +32,9 @@
     <div class="footer__nav-col">
       <p class="footer__col-title">Navegación</p>
       @for (item of nav; track item.path) {
-        <a class="footer__link" [routerLink]="item.path">{{ item.label }}</a>
+        <a class="footer__link" [routerLink]="item.path"
+           routerLinkActive="footer__link--active"
+           [routerLinkActiveOptions]="{ exact: true }">{{ item.label }}</a>
       }
     </div>
 

@@ -390,3 +390,20 @@
     flex-shrink: 0;
   }
 }
+
+// Enlace opcional dentro de una respuesta (p. ej. grupo de Telegram de fotos).
+.faq-link {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 12px;
+  font-family: $font-mono;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: $naranja;
+  text-decoration: none;
+  border-bottom: 1px solid rgba($naranja, 0.4);
+  padding-bottom: 2px;
+  transition: border-color $transition, opacity $transition;
+
+  &:hover { opacity: 0.8; border-color: $naranja; }
+}

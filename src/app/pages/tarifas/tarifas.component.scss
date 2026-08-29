@@ -1552,6 +1552,8 @@
   background-color: rgba($naranja, 0.04);
   background-size: cover;
   background-position: center;
+  background-repeat: no-repeat;
+  background-clip: padding-box;   // foto y degradado dentro del borde, no debajo
   border: 1px solid rgba($naranja, 0.25);
   border-radius: $radius-lg;
 

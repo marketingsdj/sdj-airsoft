@@ -27,6 +27,7 @@ export class ReservaComponent implements OnInit, OnDestroy {
   numeroReserva = this.state.numeroReserva;
 
   enviando     = signal(false);
+  errorReserva = signal('');
   mostrarNormas      = signal(false);
   mostrarPrivacidad  = signal(false);
   mostrarReducida    = signal(false);   // disclosure "¿Conoces la tarifa reducida?"
@@ -544,7 +545,34 @@ export class ReservaComponent implements OnInit, OnDestroy {
 
   async enviar() {
     if (!this.pasoValido) return;
+    this.errorReserva.set('');
     this.enviando.set(true);
+
+    // Control por email (reservas de grupo): usuario bloqueado o límite diario.
+    const email = this.form.email?.trim();
+    if (email) {
+      try {
+        if (await this.slotsService.estaBloqueado(email)) {
+          this.errorReserva.set('No podemos procesar esta reserva. Por favor, contacta con nosotros.');
+          this.enviando.set(false);
+          return;
+        }
+        const previasDia = await this.slotsService.contarReservasDia(email, this.form.fecha);
+        if (previasDia >= 2) {
+          this.errorReserva.set('Ya tienes 2 reservas para esta fecha con este correo. Si necesitas más plazas, escríbenos y te ayudamos.');
+          this.enviando.set(false);
+          return;
+        }
+        const previasMes = await this.slotsService.contarReservasMes(email, this.form.fecha);
+        if (previasMes >= 4) {
+          this.errorReserva.set('Has alcanzado el máximo de 4 reservas este mes con este correo. Si necesitas más, escríbenos y te ayudamos.');
+          this.enviando.set(false);
+          return;
+        }
+      } catch {
+        // Si falla la comprobación (red/Firebase), no bloqueamos la reserva.
+      }
+    }
 
     const endpoint = this.form.tipo === 'individual'
       ? 'https://formspree.io/f/xgoqdwyd'
@@ -607,6 +635,23 @@ export class ReservaComponent implements OnInit, OnDestroy {
     const ds = `${hoy.getFullYear()}${String(hoy.getMonth()+1).padStart(2,'0')}${String(hoy.getDate()).padStart(2,'0')}`;
     const rand = String(Math.floor(Math.random() * 9000) + 1000);
     this.numeroReserva.set(`SDJ-${ds}-${rand}`);
+
+    // Registro de la reserva (quién reservó) para el límite diario y el historial.
+    if (email) {
+      try {
+        await this.slotsService.registrarReserva({
+          email,
+          nombre: this.form.nombre,
+          telefono: this.form.telefono,
+          tipo: this.form.tipo,
+          fecha: this.form.fecha,
+          hora: this.form.hora,
+          pista: this.form.pista,
+          personas: this.form.personas,
+          numeroReserva: this.numeroReserva(),
+        });
+      } catch { /* si falla el registro no bloqueamos la confirmación */ }
+    }
 
     this.enviando.set(false);
     this.enviado.set(true);
@@ -758,7 +803,7 @@ export class ReservaComponent implements OnInit, OnDestroy {
       simple:              19.90,
       alquiler:            this.form.premium ? 44.90 : 39.90,
       'reducida-simple':   14.90,
-      'reducida-alquiler': 29.90,
+      'reducida-alquiler': this.form.premium ? 34.90 : 29.90,
     };
     const base = precios[this.form.modalidad];
     if (!base) return 'A consultar';
@@ -796,7 +841,12 @@ export class ReservaComponent implements OnInit, OnDestroy {
       if (this.form.tarifaReducida) {
         lineas.push({ concepto: `Tarifa reducida ${this.equipoReducidaLabel} · ${this.precioReducidaFmt} € × ${n}`, importe: fmt(this.precioReducida * n) });
       } else {
-        const precios: Record<string, number> = { simple: 19.90, alquiler: this.form.premium ? 44.90 : 39.90 };
+        const precios: Record<string, number> = {
+          simple: 19.90,
+          alquiler: this.form.premium ? 44.90 : 39.90,
+          'reducida-simple': 14.90,
+          'reducida-alquiler': this.form.premium ? 34.90 : 29.90,
+        };
         const base = precios[this.form.modalidad];
         const label = this.packLabels[this.form.modalidad] || 'Entrada';
         lineas.push(base ? { concepto: `${label} · ${fmt(base)} × ${n}`, importe: fmt(base * n) } : { concepto: 'Entrada', importe: 'A consultar' });
