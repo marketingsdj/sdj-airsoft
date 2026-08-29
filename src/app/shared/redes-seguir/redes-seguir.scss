@@ -1,0 +1,59 @@
+@use '../../../styles/variables' as *;
+
+:host { display: block; }
+
+// Fila sobria: una frase + los iconos. Pensada para incrustarse dentro de un
+// bloque ya existente, no como sección independiente.
+.redes-seguir {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid $line;
+
+  // Sin separador: se alinea en la misma fila que los botones vecinos.
+  &--sin-linea {
+    border-top: none;
+    padding-top: 0;
+    margin-top: 0;
+  }
+
+  &__texto {
+    margin: 0;
+    font-family: $font-mono;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    color: rgba($crema, 0.65);
+  }
+
+  &__iconos {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  &__link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border: 1px solid $line;
+    color: rgba($crema, 0.8);
+    transition: color $transition, border-color $transition, background $transition;
+
+    &:hover {
+      color: $naranja;
+      border-color: rgba($naranja, 0.6);
+      background: rgba($naranja, 0.08);
+    }
+  }
+
+  @media (max-width: 600px) {
+    gap: 14px;
+
+    &__texto { font-size: 11px; }
+  }
+}

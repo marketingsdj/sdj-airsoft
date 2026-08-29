@@ -177,6 +177,24 @@
 
     &:last-child { border-bottom: none; }
   }
+
+  // Detalle que enlaza a un documento (p. ej. la carta de la cafetería).
+  &__link {
+    color: $crema;
+    text-decoration: underline;
+    text-decoration-color: $naranja;
+    text-underline-offset: 3px;
+    transition: color .2s ease;
+
+    &::after {
+      content: ' ↗';
+      color: $naranja;
+      font-size: .85em;
+    }
+
+    &:hover,
+    &:focus-visible { color: $naranja; }
+  }
 }
 
 // ── CTA band ──────────────────────────────────────────────────────────────────

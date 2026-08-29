@@ -24,13 +24,13 @@ export class PromosComponent implements OnInit, OnDestroy {
   // ── Carrusel tienda física (mismo que en campo) ──────────────────────────────
   tiendaActivo = 0;
   tiendaImagenes = [
-    { src: 'Campo/Galeria sdj tienda/Tienda 1.svg', alt: 'Tienda SDJ' },
-    { src: 'Campo/Galeria sdj tienda/Tienda  2.svg', alt: 'Tienda SDJ' },
-    { src: 'Campo/Galeria sdj tienda/Tienda  3.svg', alt: 'Tienda SDJ' },
-    { src: 'Campo/Galeria sdj tienda/Tienda  4.svg', alt: 'Tienda SDJ' },
-    { src: 'Campo/Galeria sdj tienda/Tienda  5.svg', alt: 'Tienda SDJ' },
-    { src: 'Campo/Galeria sdj tienda/Tienda  6.svg', alt: 'Tienda SDJ' },
-    { src: 'Campo/Galeria sdj tienda/Tienda  7.svg', alt: 'Tienda SDJ' },
+    { src: 'Campo/Galeria sdj tienda/Tienda 1.webp', alt: 'Tienda SDJ' },
+    { src: 'Campo/Galeria sdj tienda/Tienda  2.webp', alt: 'Tienda SDJ' },
+    { src: 'Campo/Galeria sdj tienda/Tienda  3.webp', alt: 'Tienda SDJ' },
+    { src: 'Campo/Galeria sdj tienda/Tienda  4.webp', alt: 'Tienda SDJ' },
+    { src: 'Campo/Galeria sdj tienda/Tienda  5.webp', alt: 'Tienda SDJ' },
+    { src: 'Campo/Galeria sdj tienda/Tienda  6.webp', alt: 'Tienda SDJ' },
+    { src: 'Campo/Galeria sdj tienda/Tienda  7.webp', alt: 'Tienda SDJ' },
   ];
 
   tiendaSiguiente() { this.tiendaActivo = (this.tiendaActivo + 1) % this.tiendaImagenes.length; }

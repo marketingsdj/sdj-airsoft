@@ -377,17 +377,44 @@
 
   &__inner {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 32px;
-
-    @media (max-width: $bp-md) { flex-direction: column; align-items: flex-start; }
+    flex-direction: column;
+    align-items: stretch;
+    gap: 20px;
   }
 
   &__btns {
     display: flex;
     gap: 12px;
-    flex-shrink: 0;
+    flex-wrap: wrap;
+  }
+
+  &__alt {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    border-top: 1px solid $line;
+    padding-top: 20px;
+  }
+
+  // El bloque de redes va en la misma fila que los botones, centrado con ellos.
+  &__alt app-redes-seguir {
+    display: flex;
+    align-items: center;
+    align-self: center;
+
+    // En móvil solo dejamos los iconos: la frase sobra en pantalla estrecha.
+    @media (max-width: $bp-md) {
+      .redes-seguir__texto { display: none; }
+    }
+  }
+
+  &__alt-label {
+    font-family: $font-mono;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba($crema, 0.45);
   }
 }
 
@@ -406,4 +433,52 @@
   transition: border-color $transition, opacity $transition;
 
   &:hover { opacity: 0.8; border-color: $naranja; }
+
+  // CTA fijo de una categoría: visible sin abrir ningún desplegable.
+  &--destacado {
+    margin-top: 0;
+    border-bottom: none;
+    border: 1px solid rgba($naranja, 0.5);
+    padding: 12px 20px;
+    text-transform: uppercase;
+
+    &:hover { background: rgba($naranja, 0.1); opacity: 1; }
+  }
+}
+
+.faq-content__cta {
+  margin-top: 24px;
+}
+
+// ── Deja tu duda (bloque de texto → email info@) ──────────────────────────────
+.faq-duda {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  &__texto {
+    width: 100%;
+    resize: vertical;
+    min-height: 96px;
+    padding: 14px 16px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid $line;
+    border-radius: $radius-sm;
+    color: $crema;
+    font-family: inherit;
+    font-size: 15px;
+    line-height: 1.5;
+    transition: border-color $transition;
+
+    &::placeholder { color: rgba($crema, 0.35); }
+    &:focus { outline: none; border-color: $naranja; }
+  }
+
+  &__btn {
+    width: 100%;
+    justify-content: center;
+
+    &:disabled { opacity: 0.4; cursor: not-allowed; }
+  }
 }

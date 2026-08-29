@@ -3,10 +3,11 @@ import { isPlatformBrowser } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { AnalyticsService } from '../../core/services/analytics.service';
 import { generarProximasPartidas, EXTRA_CONFIG, fechaLocalISO } from '../../core/data/partidas-extraordinarias';
+import { RedesSeguirComponent } from '../../shared/redes-seguir/redes-seguir';
 
 @Component({
   selector: 'app-home',
-  imports: [RouterLink],
+  imports: [RouterLink, RedesSeguirComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })

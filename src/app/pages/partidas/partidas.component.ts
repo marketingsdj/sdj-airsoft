@@ -1,10 +1,11 @@
 import { Component, signal, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { generarProximasPartidas, EXTRA_CONFIG, fechaLocalISO } from '../../core/data/partidas-extraordinarias';
+import { RedesSeguirComponent } from '../../shared/redes-seguir/redes-seguir';
 
 @Component({
   selector: 'app-partidas',
-  imports: [RouterLink],
+  imports: [RouterLink, RedesSeguirComponent],
   templateUrl: './partidas.component.html',
   styleUrl: './partidas.component.scss'
 })

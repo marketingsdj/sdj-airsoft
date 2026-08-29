@@ -40,7 +40,7 @@
               <h4 class="busqueda-item__q">{{ r.q }}</h4>
               <p class="busqueda-item__a">{{ r.a }}</p>
               @if (r.link) {
-                <a class="faq-link" [href]="r.link.url" target="_blank" rel="noopener">{{ r.link.label }}</a>
+                @if (r.link.interno) {<a class="faq-link" [routerLink]="r.link.url">{{ r.link.label }}</a>} @else {<a class="faq-link" [href]="r.link.url" target="_blank" rel="noopener">{{ r.link.label }}</a>}
               }
             </div>
           }
@@ -81,9 +81,19 @@
             <div class="faq-item__body">
               <p>{{ f.a }}</p>
               @if (f.link) {
-                <a class="faq-link" [href]="f.link.url" target="_blank" rel="noopener">{{ f.link.label }}</a>
+                @if (f.link.interno) {<a class="faq-link" [routerLink]="f.link.url">{{ f.link.label }}</a>} @else {<a class="faq-link" [href]="f.link.url" target="_blank" rel="noopener">{{ f.link.label }}</a>}
               }
             </div>
+          }
+        </div>
+      }
+
+      @if (categoriaData().enlace; as e) {
+        <div class="faq-content__cta">
+          @if (e.interno) {
+            <a class="faq-link faq-link--destacado" [routerLink]="e.url">{{ e.label }}</a>
+          } @else {
+            <a class="faq-link faq-link--destacado" [href]="e.url" target="_blank" rel="noopener">{{ e.label }}</a>
           }
         </div>
       }
@@ -114,9 +124,19 @@
                   <div class="faq-item__body">
                     <p>{{ f.a }}</p>
                     @if (f.link) {
-                      <a class="faq-link" [href]="f.link.url" target="_blank" rel="noopener">{{ f.link.label }}</a>
+                      @if (f.link.interno) {<a class="faq-link" [routerLink]="f.link.url">{{ f.link.label }}</a>} @else {<a class="faq-link" [href]="f.link.url" target="_blank" rel="noopener">{{ f.link.label }}</a>}
                     }
                   </div>
+                }
+              </div>
+            }
+
+            @if (cat.enlace; as e) {
+              <div class="faq-content__cta">
+                @if (e.interno) {
+                  <a class="faq-link faq-link--destacado" [routerLink]="e.url">{{ e.label }}</a>
+                } @else {
+                  <a class="faq-link faq-link--destacado" [href]="e.url" target="_blank" rel="noopener">{{ e.label }}</a>
                 }
               </div>
             }
@@ -130,13 +150,29 @@
 <!-- NO ENCUENTRAS -->
 <section class="section section--alt faq-cta">
   <div class="wrap faq-cta__inner">
-    <div>
+    <div class="faq-cta__head">
       <h2 class="section__title" style="font-size:clamp(22px,3vw,32px)">¿No encuentras<br>tu pregunta?</h2>
-      <p style="font-size:15px;color:rgba(239,246,235,0.65);margin:8px 0 0;">Escríbenos por WhatsApp y te respondemos lo antes posible.</p>
+      <p style="font-size:15px;color:rgba(239,246,235,0.65);margin:8px 0 0;">Déjanos tu duda y te respondemos por email lo antes posible.</p>
     </div>
-    <div class="faq-cta__btns">
-      <a href="https://wa.me/34688731474" target="_blank" rel="noopener" class="btn btn--primary">WhatsApp →</a>
-      <a href="mailto:info@soldadosdejuguete.com" class="btn btn--ghost">Email</a>
+
+    <!-- Deja tu duda: se envía a info@soldadosdejuguete.com -->
+    <div class="faq-duda">
+      <textarea id="faq-duda-texto" class="faq-duda__texto" rows="4"
+        placeholder="Escribe tu pregunta aquí…"
+        [(ngModel)]="duda"></textarea>
+      <button type="button" class="btn btn--primary faq-duda__btn" [disabled]="!duda.trim()" (click)="enviarDuda()">
+        Enviar mi duda →
+      </button>
+    </div>
+
+    <div class="faq-cta__alt">
+      <span class="faq-cta__alt-label">O contáctanos por</span>
+      <div class="faq-cta__btns">
+        <a href="https://wa.me/34688731474" target="_blank" rel="noopener" class="btn btn--primary">WhatsApp →</a>
+        <a href="mailto:info@soldadosdejuguete.com" class="btn btn--ghost">Email</a>
+      </div>
+      <app-redes-seguir origen="faq" [sinLinea]="true" [textoSoloEscritorio]="true"
+        texto="También resolvemos dudas en nuestras redes:"></app-redes-seguir>
     </div>
   </div>
 </section>

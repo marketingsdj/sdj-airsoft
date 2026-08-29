@@ -73,65 +73,65 @@ export class CampoComponent implements OnInit, OnDestroy {
       id: 1, titulo: 'Aeropuerto', desc: 'Por definir.',
       rx: 15, ry: 21, rw: 26, rh: 26, side: 'right',
       imagenes: [
-        'Campo/Mapa/Aeropuerto.svg',
-        'Campo/Mapa/Aeropuerto_1.svg',
-        'Campo/Mapa/Aeropuerto_2.svg',
-        'Campo/Mapa/Aeropuerto_3.svg',
-        'Campo/Mapa/Aeropuerto_4.svg',
-        'Campo/Mapa/Aeropuerto_arsenal.svg',
-        'Campo/Mapa/Aeropuerto_base_otam.svg',
+        'Campo/Mapa/Aeropuerto.webp',
+        'Campo/Mapa/Aeropuerto_1.webp',
+        'Campo/Mapa/Aeropuerto_2.webp',
+        'Campo/Mapa/Aeropuerto_3.webp',
+        'Campo/Mapa/Aeropuerto_4.webp',
+        'Campo/Mapa/Aeropuerto_arsenal.webp',
+        'Campo/Mapa/Aeropuerto_base_otam.webp',
       ],
     },
     {
       id: 2, titulo: 'Zona urbana', desc: 'Callejones y edificios. CQB, combate cercano. Emboscadas.',
       rx: 15, ry: 50, rw: 26, rh: 44, side: 'center',
       imagenes: [
-        'Campo/Mapa/Zona_urbana.svg',
-        'Campo/Mapa/Zona_urbana_1.svg',
-        'Campo/Mapa/Zona_urbana_2.svg',
-        'Campo/Mapa/Zona_urbana_banco.svg',
-        'Campo/Mapa/Zona_urbana_farmacia.svg',
-        'Campo/Mapa/Zona_urbana_hospital.svg',
-        'Campo/Mapa/Zona_urbana_prisión.svg',
-        'Campo/Mapa/Zona_urbana_comisaría.svg',
+        'Campo/Mapa/Zona_urbana.webp',
+        'Campo/Mapa/Zona_urbana_1.webp',
+        'Campo/Mapa/Zona_urbana_2.webp',
+        'Campo/Mapa/Zona_urbana_banco.webp',
+        'Campo/Mapa/Zona_urbana_farmacia.webp',
+        'Campo/Mapa/Zona_urbana_hospital.webp',
+        'Campo/Mapa/Zona_urbana_prisión.webp',
+        'Campo/Mapa/Zona_urbana_comisaría.webp',
       ],
     },
     {
       id: 3, titulo: 'Castillo', desc: 'Estructuras de hormigón. Defensa y asalto.',
       rx: 49, ry: 6, rw: 26, rh: 31, side: 'right',
       imagenes: [
-        'Campo/Mapa/Castillo.svg',
-        'Campo/Mapa/Castillo_1.svg',
-        'Campo/Mapa/Castillo_2.svg',
-        'Campo/Mapa/Castillo_3.svg',
+        'Campo/Mapa/Castillo.webp',
+        'Campo/Mapa/Castillo_1.webp',
+        'Campo/Mapa/Castillo_2.webp',
+        'Campo/Mapa/Castillo_3.webp',
       ],
     },
     {
       id: 4, titulo: 'Base militar', desc: 'Por definir.',
       rx: 42, ry: 40, rw: 9, rh: 54, side: 'left',
       imagenes: [
-        'Campo/Mapa/Base_militar.svg',
-        'Campo/Mapa/Base_militar_1.svg',
-        'Campo/Mapa/Base_militar_2.svg',
+        'Campo/Mapa/Base_militar.webp',
+        'Campo/Mapa/Base_militar_1.webp',
+        'Campo/Mapa/Base_militar_2.webp',
       ],
     },
     {
       id: 5, titulo: 'Zona cabrera', desc: 'Por definir.',
       rx: 52, ry: 40, rw: 23, rh: 54, side: 'left',
       imagenes: [
-        'Campo/Mapa/Zona_cabrera.svg',
-        'Campo/Mapa/Zona_cabrera_1.svg',
-        'Campo/Mapa/Zona_cabrera_2.svg',
-        'Campo/Mapa/Zona_cabrera_3.svg',
+        'Campo/Mapa/Zona_cabrera.webp',
+        'Campo/Mapa/Zona_cabrera_1.webp',
+        'Campo/Mapa/Zona_cabrera_2.webp',
+        'Campo/Mapa/Zona_cabrera_3.webp',
       ],
     },
     {
       id: 6, titulo: 'Refinería', desc: 'Por definir.',
       rx: 76, ry: 21, rw: 15, rh: 73, side: 'left',
       imagenes: [
-        'Campo/Mapa/Refinería.svg',
-        'Campo/Mapa/Refinería_1.svg',
-        'Campo/Mapa/Refinería_2.svg',
+        'Campo/Mapa/Refinería.webp',
+        'Campo/Mapa/Refinería_1.webp',
+        'Campo/Mapa/Refinería_2.webp',
       ],
     },
     {
@@ -157,7 +157,7 @@ export class CampoComponent implements OnInit, OnDestroy {
     {
       nombre: 'Lanzamiento de Cohetes',
       desc: 'Encuentra los códigos, arma el lanzacohetes y defiende al artillero hasta el final.',
-      img: 'Campo/Modos de juego/3.svg',
+      img: 'Campo/Modos de juego/3.webp',
       objetivo: 'Acumular cohetes en los lanzacohetes',
       pasos: [
         'Busca los códigos en la Zona Urbana',
@@ -170,7 +170,7 @@ export class CampoComponent implements OnInit, OnDestroy {
     {
       nombre: 'Fuego de Artillería',
       desc: 'Asegura los proyectiles y lleva más munición a tu posición de artillería que el enemigo.',
-      img: 'Campo/Modos de juego/5.svg',
+      img: 'Campo/Modos de juego/5.webp',
       objetivo: 'Acumular proyectiles de artillería',
       pasos: [
         'Busca los códigos en Mezquita y alrededores',
@@ -183,7 +183,7 @@ export class CampoComponent implements OnInit, OnDestroy {
     {
       nombre: 'Sanitarios',
       desc: 'Recoge al herido, trátalo en el hospital y extráelo en helicóptero antes que el rival.',
-      img: 'Campo/Modos de juego/7.svg',
+      img: 'Campo/Modos de juego/7.webp',
       objetivo: 'Rescatar y extraer a un accidentado',
       pasos: [
         'Recoge al herido',
@@ -197,7 +197,7 @@ export class CampoComponent implements OnInit, OnDestroy {
     {
       nombre: 'Operación Extracción',
       desc: 'Tus espías están heridos tras las líneas enemigas. Rescátalos y sácalos en el convoy.',
-      img: 'Campo/Modos de juego/9.svg',
+      img: 'Campo/Modos de juego/9.webp',
       objetivo: 'Rescatar a los espías y extraerlos',
       pasos: [
         'Localiza y rescata a los espías',
@@ -210,7 +210,7 @@ export class CampoComponent implements OnInit, OnDestroy {
     {
       nombre: 'Detonación Doble',
       desc: 'Dos bombas, dos equipos. El primero en detonar las posiciones enemigas gana.',
-      img: 'Campo/Modos de juego/11.svg',
+      img: 'Campo/Modos de juego/11.webp',
       objetivo: 'Detonar las posiciones enemigas',
       pasos: [
         'Cada equipo tiene su bomba',
@@ -318,13 +318,13 @@ export class CampoComponent implements OnInit, OnDestroy {
 
   tiendaActivo = 0;
   tiendaImagenes = [
-    { src: 'Campo/Galeria sdj tienda/Tienda 1.svg', alt: 'Tienda SDJ' },
-    { src: 'Campo/Galeria sdj tienda/Tienda  2.svg', alt: 'Tienda SDJ' },
-    { src: 'Campo/Galeria sdj tienda/Tienda  3.svg', alt: 'Tienda SDJ' },
-    { src: 'Campo/Galeria sdj tienda/Tienda  4.svg', alt: 'Tienda SDJ' },
-    { src: 'Campo/Galeria sdj tienda/Tienda  5.svg', alt: 'Tienda SDJ' },
-    { src: 'Campo/Galeria sdj tienda/Tienda  6.svg', alt: 'Tienda SDJ' },
-    { src: 'Campo/Galeria sdj tienda/Tienda  7.svg', alt: 'Tienda SDJ' },
+    { src: 'Campo/Galeria sdj tienda/Tienda 1.webp', alt: 'Tienda SDJ' },
+    { src: 'Campo/Galeria sdj tienda/Tienda  2.webp', alt: 'Tienda SDJ' },
+    { src: 'Campo/Galeria sdj tienda/Tienda  3.webp', alt: 'Tienda SDJ' },
+    { src: 'Campo/Galeria sdj tienda/Tienda  4.webp', alt: 'Tienda SDJ' },
+    { src: 'Campo/Galeria sdj tienda/Tienda  5.webp', alt: 'Tienda SDJ' },
+    { src: 'Campo/Galeria sdj tienda/Tienda  6.webp', alt: 'Tienda SDJ' },
+    { src: 'Campo/Galeria sdj tienda/Tienda  7.webp', alt: 'Tienda SDJ' },
   ];
 
   tiendaSiguiente() { this.tiendaActivo = (this.tiendaActivo + 1) % this.tiendaImagenes.length; }
@@ -338,25 +338,30 @@ export class CampoComponent implements OnInit, OnDestroy {
     if (this.tiendaInterval) clearInterval(this.tiendaInterval);
   }
 
-  servicios = [
+  // Un detalle puede ser texto simple o un enlace (p. ej. la carta de El Barracón).
+  detalleEnlace(d: string | { texto: string; url: string }) {
+    return typeof d === 'string' ? null : d;
+  }
+
+  servicios: { eyebrow: string; titulo: string; img: string; desc: string; detalle: (string | { texto: string; url: string })[] }[] = [
     {
       eyebrow: 'APARCA Y OLVÍDATE.',
       titulo: 'Parking',
-      img: 'Campo/Campo Instalaciones/Parking.svg',
+      img: 'Campo/Campo Instalaciones/Parking.webp',
       desc: 'Parking gratuito con capacidad amplia. Sin preocuparte de dónde dejar el coche.',
       detalle: ['Gratuito siempre', 'Capacidad para 80+ vehículos', 'Acceso directo al campo', 'Zona especial para discapacitados']
     },
     {
       eyebrow: 'COMER Y REPONER.',
       titulo: 'Cafetería',
-      img: 'Campo/Campo Instalaciones/Cafeteria.svg',
+      img: 'Campo/Campo Instalaciones/Cafeteria.webp',
       desc: 'Abierta durante toda la jornada de juego. Catering disponible para eventos privados.',
-      detalle: ['Pintxos caseros', 'Carta El Barracón', 'Bebidas frías y calientes', 'Catering para eventos bajo petición']
+      detalle: ['Pintxos caseros', { texto: 'Carta El Barracón', url: 'https://elbarraconrestaurante.com/carta/' }, 'Bebidas frías y calientes', 'Catering para eventos bajo petición']
     },
     {
       eyebrow: 'TE CAMBIAS Y LISTO.',
       titulo: 'Vestuarios',
-      img: 'Campo/Campo Instalaciones/Vestuarios.svg',
+      img: 'Campo/Campo Instalaciones/Vestuarios.webp',
       desc: 'Instalaciones completas para prepararte antes y después de la partida.',
       detalle: ['Vestuarios separados (H/M)', 'Taquillas con llave', 'Duchas individuales', 'Gel, toallas y secadores']
     },

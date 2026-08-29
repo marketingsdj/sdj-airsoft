@@ -122,7 +122,7 @@
               @if (d.fotos?.length) {
                 <div class="cal-slide__fotos">
                   @for (f of d.fotos; track f) {
-                    <img [src]="'eventos/navidades/' + f + '.svg'" [alt]="d.titulo + ' en SDJ'" loading="lazy" />
+                    <img [src]="'eventos/navidades/' + f + '.webp'" [alt]="d.titulo + ' en SDJ'" loading="lazy" />
                   }
                 </div>
               }
@@ -152,10 +152,10 @@
   <div class="cesion-marquee">
     <div class="cesion-marquee__track">
       @for (n of galeriaCesion; track $index) {
-        <img [src]="'eventos/globo_negro/' + n + '.svg'" alt="Eventos a medida en SDJ" loading="lazy" />
+        <img [src]="'eventos/globo_negro/' + n + '.webp'" alt="Eventos a medida en SDJ" loading="lazy" />
       }
       @for (n of galeriaCesion; track $index) {
-        <img [src]="'eventos/globo_negro/' + n + '.svg'" alt="" aria-hidden="true" loading="lazy" />
+        <img [src]="'eventos/globo_negro/' + n + '.webp'" alt="" aria-hidden="true" loading="lazy" />
       }
     </div>
   </div>

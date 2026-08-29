@@ -2,9 +2,13 @@ import { Component, signal, computed, inject } from '@angular/core';
 import { AnalyticsService } from '../../core/services/analytics.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
+import { RedesSeguirComponent } from '../../shared/redes-seguir/redes-seguir';
 
-interface Faq { q: string; a: string; open: boolean; link?: { url: string; label: string }; }
-interface Categoria { key: string; titulo: string; count: number; faqs: Faq[]; }
+// link.interno = ruta de la propia web (se navega con routerLink, sin abrir pestaña).
+interface Faq { q: string; a: string; open: boolean; link?: { url: string; label: string; interno?: boolean }; }
+// enlace: CTA fijo de la categoría, visible sin abrir ningún desplegable.
+interface Categoria { key: string; titulo: string; count: number; faqs: Faq[]; enlace?: { url: string; label: string; interno?: boolean }; }
 
 // Mapa de sinónimos / palabras clave
 const SINONIMOS: Record<string, string[]> = {
@@ -23,7 +27,7 @@ const SINONIMOS: Record<string, string[]> = {
 
 @Component({
   selector: 'app-faq',
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, RouterLink, RedesSeguirComponent],
   templateUrl: './faq.component.html',
   styleUrl: './faq.component.scss'
 })
@@ -32,6 +36,16 @@ export class FaqComponent {
   busquedaActiva = false;
   categoriaActiva = signal('curiosos');
   sugerenciaSeleccionada = signal(-1);
+
+  // "Deja tu duda": abre el correo del usuario hacia info@ con el texto escrito.
+  duda = '';
+  enviarDuda() {
+    const texto = this.duda.trim();
+    if (!texto) return;
+    const asunto = encodeURIComponent('Duda desde la web');
+    const cuerpo = encodeURIComponent(texto);
+    window.location.href = `mailto:info@soldadosdejuguete.com?subject=${asunto}&body=${cuerpo}`;
+  }
 
   categorias: Categoria[] = [
     {
@@ -67,11 +81,13 @@ export class FaqComponent {
       ]
     },
     {
-      key: 'grupos', titulo: 'Grupos y familias', count: 4,
+      key: 'grupos', titulo: 'Grupos y familias', count: 5,
+      enlace: { url: '/txikipaintball', label: 'Ver Txikipaintball (8 a 13 años) →', interno: true },
       faqs: [
         { q: '¿A partir de cuántas personas tenemos campo exclusivo?', a: 'A partir de 8 personas tenéis el campo para vosotros solos, con monitor incluido y sin coste extra por la partida privada (solo pagáis las tarifas individuales de cada jugador).', open: false },
         { q: '¿Hacéis despedidas de soltero/a?', a: 'Sí, y son de las más épicas. Tenemos un modo especial "novix objetivo". Consulta el pack de despedidas en la página de Eventos.', open: false },
         { q: '¿Hacéis team building para empresas?', a: 'Sí. Actividad de cohesión sin powerpoints. Podemos adaptar los objetivos y modos de juego a lo que busca el equipo. Pide más info en Eventos.', open: false },
+        { q: '¿Podemos venir con niños pequeños?', a: 'Sí. Para los peques de 8 a 13 años tenemos Txikipaintball, la versión familiar con bolas de baja potencia, monitor y todo el material incluido. Es la opción ideal para cumpleaños y planes en familia.', open: false },
         { q: '¿Y para colectivos?', a: 'Sí, con supervisión y seguridad reforzada. El airsoft es una actividad deportiva reconocida. Contacta para los requisitos concretos según la edad del grupo.', open: false },
       ]
     },

@@ -21,10 +21,10 @@ export class EventosComponent {
   }
 
   tipos = [
-    { key: 'despedidas', ruta: '/eventos/despedidas', icono: '◉', titulo: 'Despedidas', tagline: 'Despedidas que no son la típica.', img: 'eventos/Eventos_despedidas.svg' },
-    { key: 'cumples', ruta: '/eventos/cumpleanos', icono: '◆', titulo: 'Cumpleaños', tagline: 'Que se cuentan solos.', img: 'eventos/Eventos_cumpleaños.svg' },
-    { key: 'empresas', ruta: '/eventos/empresas', icono: '◈', titulo: 'Empresas', tagline: 'Team building con risa.', img: 'eventos/Eventos_empresas.svg' },
-    { key: 'colectivos', ruta: '/eventos/colectivos', icono: '◎', titulo: 'Colectivos', tagline: 'Excursiones que no aburren.', img: 'eventos/Eventos_colectivos.svg' },
+    { key: 'despedidas', ruta: '/eventos/despedidas', icono: '◉', titulo: 'Despedidas', tagline: 'Despedidas que no son la típica.', img: 'eventos/Eventos_despedidas.webp' },
+    { key: 'cumples', ruta: '/eventos/cumpleanos', icono: '◆', titulo: 'Cumpleaños', tagline: 'Que se cuentan solos.', img: 'eventos/Eventos_cumpleaños.webp' },
+    { key: 'empresas', ruta: '/eventos/empresas', icono: '◈', titulo: 'Empresas', tagline: 'Team building con risa.', img: 'eventos/Eventos_empresas.webp' },
+    { key: 'colectivos', ruta: '/eventos/colectivos', icono: '◎', titulo: 'Colectivos', tagline: 'Excursiones que no aburren.', img: 'eventos/Eventos_colectivos.webp' },
   ];
 
   readonly waUrl = 'https://wa.me/34688731474?text=Hola%2C%20me%20interesa%20conocer%20las%20opciones%20de%20cesi%C3%B3n%20de%20campo%20en%20SDJ';
