@@ -54,6 +54,10 @@
           <span class="admin-kpi__num">{{ totalPendientes() }}</span>
           <span class="admin-kpi__lbl">Pendientes de gestionar</span>
         </button>
+        <div class="admin-kpi" [class.admin-kpi--alerta]="totalCambios() > 0">
+          <span class="admin-kpi__num">{{ totalCambios() }}</span>
+          <span class="admin-kpi__lbl">Cambios pedidos</span>
+        </div>
         <div class="admin-kpi">
           <span class="admin-kpi__num">{{ totalProximas() }}</span>
           <span class="admin-kpi__lbl">Próximas (hoy en adelante)</span>
@@ -73,7 +77,7 @@
         <label class="admin-campo admin-campo--ancho">
           <span>Buscar</span>
           <input type="search" [(ngModel)]="busqueda" (ngModelChange)="onFiltroCambiado()"
-            placeholder="Nombre, email, teléfono o nº de reserva" />
+            placeholder="Nombre, email, teléfono, código o nº de reserva" />
         </label>
 
         <label class="admin-campo">
@@ -136,6 +140,7 @@
                 <th>Tipo</th>
                 <th class="admin-tabla__num">Pers.</th>
                 <th>Cliente</th>
+                <th>Código</th>
                 <th>Contacto</th>
                 <th>Estado</th>
                 <th>Acciones</th>
@@ -152,6 +157,7 @@
                   <td>{{ tipoLabel(r.tipo) }}</td>
                   <td class="admin-tabla__num">{{ r.personas ?? '—' }}</td>
                   <td>{{ r.nombre || '—' }}</td>
+                  <td class="admin-codigo">{{ r.codigoCancelacion || '—' }}</td>
                   <td class="admin-contacto">
                     @if (r.telefono) {
                       <a [href]="'https://wa.me/34' + r.telefono.replace(' ', '')" target="_blank" rel="noopener">{{ r.telefono }}</a>
@@ -177,9 +183,24 @@
                   </td>
                 </tr>
 
+                @if (r.cambio) {
+                  <tr class="admin-cambio">
+                    <td colspan="9">
+                      <span class="admin-cambio__badge">Cambio pedido por el cliente</span>
+                      <span class="admin-cambio__texto">{{ resumenCambio(r.cambio) }}</span>
+                      <span class="admin-cambio__acciones">
+                        <button class="admin-btn admin-btn--ok" [disabled]="guardando() === r.id"
+                          (click)="aceptarCambio(r)">Aceptar cambio</button>
+                        <button class="admin-btn admin-btn--no" [disabled]="guardando() === r.id"
+                          (click)="rechazarCambio(r)">Rechazar</button>
+                      </span>
+                    </td>
+                  </tr>
+                }
+
                 @if (detalle() === r.id) {
                   <tr class="admin-detalle">
-                    <td colspan="8">
+                    <td colspan="9">
                       <div class="admin-detalle__grid">
                         <div><span>Nº de reserva</span><strong>{{ r.numeroReserva || '—' }}</strong></div>
                         <div><span>Recibida</span><strong>{{ r.creado ? (r.creado | date:'dd/MM/yyyy HH:mm') : '—' }}</strong></div>

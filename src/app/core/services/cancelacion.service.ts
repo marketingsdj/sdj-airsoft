@@ -14,6 +14,19 @@ export interface DatosCancelacion {
   personas?: number;
   numeroReserva?: string;
   cancelada: boolean;
+  cambio?: SolicitudCambio | null;
+}
+
+/** Cambio pedido por el cliente, pendiente de que lo aprueben en /admin. */
+export interface SolicitudCambio {
+  fecha?: string;
+  hora?: string;
+  personas?: number;
+  nombre?: string;
+  telefono?: string;
+  email?: string;
+  comentario?: string;
+  estado: 'pendiente' | 'aceptado' | 'rechazado';
 }
 
 /** Horas de antelación mínimas para poder cancelar por la web. */
@@ -54,6 +67,7 @@ export class CancelacionService {
       personas:  x['personas'] as number | undefined,
       numeroReserva: x['numeroReserva'] as string | undefined,
       cancelada: !!x['cancelada'],
+      cambio: (x['cambio'] as SolicitudCambio) || null,
     };
   }
 
@@ -68,6 +82,18 @@ export class CancelacionService {
   /** ¿Se puede cancelar por la web? (fuera del plazo se pide contactar). */
   aTiempo(datos: DatosCancelacion): boolean {
     return this.horasHasta(datos.fecha, datos.hora) >= HORAS_MINIMAS_CANCELACION;
+  }
+
+  /**
+   * Pide un cambio en la reserva. No modifica nada todavía: queda registrado
+   * como pendiente para que el equipo lo revise y lo acepte desde /admin.
+   */
+  async solicitarCambio(codigo: string, cambio: Omit<SolicitudCambio, 'estado'>): Promise<void> {
+    if (!db) throw new Error('Firebase no está configurado.');
+    await updateDoc(doc(db, 'cancelaciones', codigo), {
+      cambio: { ...cambio, estado: 'pendiente' },
+      cambioPedidoEl: serverTimestamp(),
+    });
   }
 
   /**

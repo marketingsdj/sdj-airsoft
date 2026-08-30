@@ -26,6 +26,8 @@ export class AdminComponent implements OnInit {
   error = signal('');
   guardando = signal<string | null>(null);   // id de la reserva que se está actualizando
   detalle = signal<string | null>(null);     // id de la fila desplegada
+  /** Códigos de las peticiones de cambio, por id de reserva. */
+  private codigosCambio = new Map<string, { codigo: string; cambio: Record<string, unknown> }>();
 
   // ── Filtros ─────────────────────────────────────────────────────────────────
   busqueda = '';                       // nombre, email, teléfono o nº de reserva
@@ -77,7 +79,10 @@ export class AdminComponent implements OnInit {
     this.cargando.set(true);
     this.error.set('');
     try {
-      this.reservas.set(await this.admin.cargarReservas());
+      const [lista, cambios] = await Promise.all([this.admin.cargarReservas(), this.admin.cargarCambios()]);
+      // Se cruza cada reserva con su petición de cambio pendiente, si la tiene.
+      this.reservas.set(lista.map(r => ({ ...r, cambio: cambios.get(r.id)?.cambio ?? null })));
+      this.codigosCambio = cambios;
     } catch {
       this.error.set('No se han podido cargar las reservas. Revisa las reglas de Firestore.');
     } finally {
@@ -97,7 +102,7 @@ export class AdminComponent implements OnInit {
       if (this.hastaSignal() && (r.fecha || '') > this.hastaSignal()) return false;
       if (this.soloProximasSignal() && (r.fecha || '') < hoy) return false;
       if (texto) {
-        const campos = [r.nombre, r.email, r.telefono, r.numeroReserva, r.notas]
+        const campos = [r.nombre, r.email, r.telefono, r.numeroReserva, r.codigoCancelacion, r.notas]
           .filter(Boolean).join(' ').toLowerCase();
         if (!campos.includes(texto)) return false;
       }
@@ -152,6 +157,7 @@ export class AdminComponent implements OnInit {
 
   // ── Contadores del resumen ──────────────────────────────────────────────────
   totalPendientes = computed(() => this.reservas().filter(r => r.estado === 'pendiente').length);
+  totalCambios = computed(() => this.reservas().filter(r => !!r.cambio).length);
   totalProximas = computed(() => {
     const hoy = new Date().toISOString().slice(0, 10);
     return this.reservas().filter(r => (r.fecha || '') >= hoy && r.estado !== 'denegada' && r.estado !== 'cancelada').length;
@@ -187,15 +193,56 @@ export class AdminComponent implements OnInit {
     }
   }
 
+  async aceptarCambio(r: ReservaAdmin) {
+    const info = this.codigosCambio.get(r.id);
+    if (!info) return;
+    this.guardando.set(r.id);
+    try {
+      await this.admin.aceptarCambio(r, info.codigo, info.cambio);
+      await this.cargar();
+    } catch {
+      this.error.set('No se ha podido aplicar el cambio.');
+    } finally {
+      this.guardando.set(null);
+    }
+  }
+
+  async rechazarCambio(r: ReservaAdmin) {
+    const info = this.codigosCambio.get(r.id);
+    if (!info) return;
+    this.guardando.set(r.id);
+    try {
+      await this.admin.rechazarCambio(info.codigo);
+      this.reservas.update(list => list.map(x => (x.id === r.id ? { ...x, cambio: null } : x)));
+    } catch {
+      this.error.set('No se ha podido rechazar el cambio.');
+    } finally {
+      this.guardando.set(null);
+    }
+  }
+
+  /** Resumen legible de lo que pide cambiar el cliente. */
+  resumenCambio(cambio: Record<string, unknown>): string {
+    const partes: string[] = [];
+    if (cambio['fecha'])      partes.push(`fecha → ${cambio['fecha']}`);
+    if (cambio['hora'])       partes.push(`hora → ${cambio['hora']}`);
+    if (cambio['personas'])   partes.push(`personas → ${cambio['personas']}`);
+    if (cambio['nombre'])     partes.push(`nombre → ${cambio['nombre']}`);
+    if (cambio['telefono'])   partes.push(`teléfono → ${cambio['telefono']}`);
+    if (cambio['email'])      partes.push(`email → ${cambio['email']}`);
+    if (cambio['comentario']) partes.push(`"${cambio['comentario']}"`);
+    return partes.join(' · ');
+  }
+
   toggleDetalle(id: string) {
     this.detalle.set(this.detalle() === id ? null : id);
   }
 
   /** Descarga lo que se está viendo en formato CSV (Excel). */
   exportarCsv() {
-    const cab = ['Nº reserva', 'Estado', 'Fecha', 'Hora', 'Pista', 'Tipo', 'Personas', 'Nombre', 'Email', 'Teléfono', 'Notas'];
+    const cab = ['Nº reserva', 'Código', 'Estado', 'Fecha', 'Hora', 'Pista', 'Tipo', 'Personas', 'Nombre', 'Email', 'Teléfono', 'Notas'];
     const filas = this.filtradas().map(r => [
-      r.numeroReserva || '', r.estado, r.fecha || '', r.hora || '', r.pista || '',
+      r.numeroReserva || '', r.codigoCancelacion || '', r.estado, r.fecha || '', r.hora || '', r.pista || '',
       this.tipoLabel(r.tipo), String(r.personas ?? ''), r.nombre || '', r.email || '', r.telefono || '', r.notas || '',
     ]);
     const csv = [cab, ...filas]

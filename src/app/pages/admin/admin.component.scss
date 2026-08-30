@@ -94,7 +94,7 @@
 // ── Resumen ───────────────────────────────────────────────────────────────────
 .admin-kpis {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 12px;
   margin-bottom: 24px;
 
@@ -113,6 +113,12 @@
 
   &__num { font-family: $font-tight; font-weight: 900; font-size: 30px; line-height: 1; }
   &__lbl { font-family: $font-mono; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba($crema, 0.5); }
+
+  &--alerta {
+    border-color: rgba($naranja, 0.5);
+
+    .admin-kpi__num { color: $naranja; }
+  }
 
   &--accion {
     cursor: pointer;
@@ -253,6 +259,41 @@
 
   &--ok:hover:not(:disabled) { border-color: #6bd08a; color: #6bd08a; }
   &--no:hover:not(:disabled) { border-color: #e2685f; color: #e2685f; }
+}
+
+.admin-codigo {
+  font-family: $font-mono;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: rgba($crema, 0.75);
+  user-select: all;
+}
+
+// ── Petición de cambio del cliente ────────────────────────────────────────────
+.admin-cambio {
+  td {
+    background: rgba($naranja, 0.08);
+    box-shadow: inset 3px 0 0 $naranja;
+  }
+
+  &__badge {
+    display: inline-block;
+    font-family: $font-mono;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: $naranja;
+    margin-right: 10px;
+  }
+
+  &__texto { font-size: 13px; color: rgba($crema, 0.85); }
+
+  &__acciones {
+    float: right;
+    white-space: nowrap;
+
+    .admin-btn + .admin-btn { margin-left: 6px; }
+  }
 }
 
 // ── Detalle desplegable ───────────────────────────────────────────────────────

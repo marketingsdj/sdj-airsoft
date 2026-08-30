@@ -16,15 +16,15 @@
 
     } @else {
       <div class="cancelar__card">
-        <p class="eyebrow">CANCELAR RESERVA</p>
-        <h1>¿Necesitas cancelar?</h1>
+        <p class="eyebrow">TU RESERVA</p>
+        <h1>Modificar o cancelar</h1>
         <p class="cancelar__lead">
-          Introduce el código de cancelación que aparece en tu justificante de reserva.
+          Introduce el código que aparece en tu justificante de reserva.
         </p>
 
         <form class="cancelar__form" (ngSubmit)="buscar()">
           <label class="cancelar__campo">
-            <span>Código de cancelación</span>
+            <span>Código de reserva</span>
             <input type="text" name="codigo" [(ngModel)]="codigo" placeholder="XXXX-XXXX"
               autocapitalize="characters" spellcheck="false" />
           </label>
@@ -65,13 +65,92 @@
               <a href="tel:+34688731474" class="btn btn--ghost">688 73 14 74</a>
             </div>
 
+          } @else if (cambioEnviado()) {
+            <p class="cancelar__aviso">
+              Hemos recibido tu petición de cambio. La revisamos y te confirmamos por email o teléfono
+              lo antes posible. <strong>Tu reserva sigue como está hasta que la confirmemos.</strong>
+            </p>
+            <a routerLink="/" class="btn btn--ghost">Volver al inicio</a>
+
+          } @else if (r.cambio && r.cambio.estado === 'pendiente') {
+            <p class="cancelar__aviso">
+              Ya tienes una petición de cambio pendiente de revisar. Si necesitas algo más,
+              escríbenos por WhatsApp.
+            </p>
+            <div class="cancelar__ctas">
+              <a href="https://wa.me/34688731474" target="_blank" rel="noopener" class="btn btn--ghost">WhatsApp</a>
+            </div>
+
+          } @else if (modo() === 'elegir') {
+            <p class="cancelar__confirmar-texto">¿Qué quieres hacer?</p>
+            <div class="cancelar__opciones">
+              <button class="btn btn--primary" (click)="modo.set('modificar')">Modificar mi reserva</button>
+              <button class="btn btn--ghost" (click)="modo.set('cancelar')">Cancelar mi reserva</button>
+            </div>
+
+          } @else if (modo() === 'modificar') {
+            <!-- ── Petición de cambio ────────────────────────────────────── -->
+            <p class="cancelar__confirmar-texto">
+              Rellena solo lo que quieras cambiar. Lo revisamos y te confirmamos:
+              <strong>tu reserva actual no se modifica hasta entonces.</strong>
+            </p>
+
+            <form class="cancelar__cambio" (ngSubmit)="enviarCambio()">
+              <div class="cancelar__cambio-fila">
+                <label class="cancelar__campo">
+                  <span>Nueva fecha</span>
+                  <input type="date" name="fecha" [(ngModel)]="cambio.fecha" />
+                </label>
+                <label class="cancelar__campo">
+                  <span>Nueva hora</span>
+                  <input type="time" name="hora" [(ngModel)]="cambio.hora" />
+                </label>
+                <label class="cancelar__campo">
+                  <span>Nº de personas</span>
+                  <input type="number" name="personas" min="1" max="100" [(ngModel)]="cambio.personas" />
+                </label>
+              </div>
+
+              <div class="cancelar__cambio-fila">
+                <label class="cancelar__campo">
+                  <span>Nombre</span>
+                  <input type="text" name="nombre" [(ngModel)]="cambio.nombre" placeholder="Solo si cambia" />
+                </label>
+                <label class="cancelar__campo">
+                  <span>Teléfono</span>
+                  <input type="tel" name="telefono" [(ngModel)]="cambio.telefono" placeholder="Solo si cambia" />
+                </label>
+                <label class="cancelar__campo">
+                  <span>Email</span>
+                  <input type="email" name="email" [(ngModel)]="cambio.email" placeholder="Solo si cambia" />
+                </label>
+              </div>
+
+              <label class="cancelar__campo">
+                <span>¿Algo más que debamos saber?</span>
+                <textarea name="comentario" rows="3" [(ngModel)]="cambio.comentario"
+                  placeholder="Cuéntanos el cambio que necesitas…"></textarea>
+              </label>
+
+              <div class="cancelar__ctas cancelar__ctas--izq">
+                <button class="btn btn--primary" type="submit" [disabled]="enviandoCambio() || !hayCambio">
+                  {{ enviandoCambio() ? 'Enviando…' : 'Enviar petición de cambio' }}
+                </button>
+                <button class="btn btn--ghost" type="button" (click)="modo.set('elegir')">Volver</button>
+              </div>
+            </form>
+
           } @else {
+            <!-- ── Confirmar cancelación ─────────────────────────────────── -->
             <p class="cancelar__confirmar-texto">
               Al cancelar, tu plaza quedará libre para otras personas. Esta acción no se puede deshacer.
             </p>
-            <button class="btn btn--primary cancelar__btn-rojo" (click)="confirmar()" [disabled]="cancelando()">
-              {{ cancelando() ? 'Cancelando…' : 'Cancelar mi reserva' }}
-            </button>
+            <div class="cancelar__ctas cancelar__ctas--izq">
+              <button class="btn btn--primary cancelar__btn-rojo" (click)="confirmar()" [disabled]="cancelando()">
+                {{ cancelando() ? 'Cancelando…' : 'Cancelar mi reserva' }}
+              </button>
+              <button class="btn btn--ghost" type="button" (click)="modo.set('elegir')">Volver</button>
+            </div>
           }
         }
 

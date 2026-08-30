@@ -27,6 +27,12 @@ export class CancelarComponent implements OnInit {
   reserva = signal<DatosCancelacion | null>(null);
   hecho = signal(false);
 
+  // ── Modificación ────────────────────────────────────────────────────────────
+  modo = signal<'elegir' | 'cancelar' | 'modificar'>('elegir');
+  enviandoCambio = signal(false);
+  cambioEnviado = signal(false);
+  cambio = { fecha: '', hora: '', personas: null as number | null, nombre: '', telefono: '', email: '', comentario: '' };
+
   ngOnInit() {
     // El enlace del PDF y de la pantalla de confirmación trae el código puesto.
     this.route.queryParams.subscribe(p => {
@@ -42,6 +48,8 @@ export class CancelarComponent implements OnInit {
     this.error.set('');
     this.reserva.set(null);
     this.hecho.set(false);
+    this.modo.set('elegir');
+    this.cambioEnviado.set(false);
     if (!this.codigo.trim()) return;
 
     this.buscando.set(true);
@@ -56,6 +64,36 @@ export class CancelarComponent implements OnInit {
       this.error.set('No hemos podido comprobar el código. Inténtalo de nuevo en unos minutos.');
     } finally {
       this.buscando.set(false);
+    }
+  }
+
+  /** ¿Ha rellenado al menos un campo del cambio? */
+  get hayCambio(): boolean {
+    const c = this.cambio;
+    return !!(c.fecha || c.hora || c.personas || c.nombre.trim() || c.telefono.trim() || c.email.trim() || c.comentario.trim());
+  }
+
+  async enviarCambio() {
+    const r = this.reserva();
+    if (!r || !this.hayCambio) return;
+    this.enviandoCambio.set(true);
+    this.error.set('');
+    try {
+      await this.cancelacion.solicitarCambio(r.codigo, {
+        fecha: this.cambio.fecha || undefined,
+        hora: this.cambio.hora || undefined,
+        personas: this.cambio.personas ?? undefined,
+        nombre: this.cambio.nombre.trim() || undefined,
+        telefono: this.cambio.telefono.trim() || undefined,
+        email: this.cambio.email.trim() || undefined,
+        comentario: this.cambio.comentario.trim() || undefined,
+      });
+      this.cambioEnviado.set(true);
+      this.analytics.trackEvent('reserva_cambio_solicitado', { tipo: r.tipo || '' });
+    } catch {
+      this.error.set('No hemos podido enviar la petición. Escríbenos por WhatsApp y lo vemos.');
+    } finally {
+      this.enviandoCambio.set(false);
     }
   }
 

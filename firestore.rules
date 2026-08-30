@@ -31,12 +31,19 @@ service cloud.firestore {
       allow get: if true;
       allow list: if esAdmin();
       allow create: if true;
-      // El cliente solo puede marcarla como cancelada; nada más.
-      allow update: if esAdmin() || (
-        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['cancelada', 'canceladaEl']) &&
-        request.resource.data.cancelada == true &&
-        resource.data.cancelada == false
-      );
+      // El cliente solo puede: marcarla como cancelada, o pedir un cambio
+      // (que queda pendiente de que el equipo lo apruebe en /admin).
+      allow update: if esAdmin()
+        || (
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['cancelada', 'canceladaEl']) &&
+          request.resource.data.cancelada == true &&
+          resource.data.cancelada == false
+        )
+        || (
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['cambio', 'cambioPedidoEl']) &&
+          request.resource.data.cambio.estado == 'pendiente' &&
+          resource.data.cancelada == false
+        );
       allow delete: if false;
     }
 

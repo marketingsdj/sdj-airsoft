@@ -25,6 +25,9 @@ export interface ReservaAdmin {
   personas?: number;
   creado?: Date | null;
   notas?: string;
+  codigoCancelacion?: string;
+  /** Cambio pedido por el cliente desde /cancelar, pendiente de revisar. */
+  cambio?: Record<string, unknown> | null;
 }
 
 /**
@@ -84,6 +87,7 @@ export class AdminService {
         pista:    x['pista']    as string | undefined,
         personas: x['personas'] as number | undefined,
         notas:    x['notas']    as string | undefined,
+        codigoCancelacion: x['codigoCancelacion'] as string | undefined,
         creado,
       };
     });
@@ -105,6 +109,63 @@ export class AdminService {
   async liberarHueco(fecha: string, hora: string, pista: string): Promise<void> {
     if (!db || !fecha || !hora || !pista) return;
     await deleteDoc(doc(db, 'slots', `${fecha}_${hora}_${pista}`));
+  }
+
+  /**
+   * Peticiones de cambio pedidas por clientes (colección `cancelaciones`).
+   * Devuelve un mapa por id de reserva para cruzarlo con el listado.
+   */
+  async cargarCambios(): Promise<Map<string, { codigo: string; cambio: Record<string, unknown> }>> {
+    const mapa = new Map<string, { codigo: string; cambio: Record<string, unknown> }>();
+    if (!db) return mapa;
+    const snap = await getDocs(query(collection(db, 'cancelaciones'), limit(500)));
+    snap.docs.forEach(d => {
+      const x = d.data() as Record<string, unknown>;
+      const cambio = x['cambio'] as Record<string, unknown> | undefined;
+      if (cambio && cambio['estado'] === 'pendiente' && x['reservaId']) {
+        mapa.set(x['reservaId'] as string, { codigo: d.id, cambio });
+      }
+    });
+    return mapa;
+  }
+
+  /** Acepta el cambio: lo aplica a la reserva y mueve el hueco si cambia la franja. */
+  async aceptarCambio(
+    reserva: ReservaAdmin,
+    codigo: string,
+    cambio: Record<string, unknown>,
+  ): Promise<void> {
+    if (!db) return;
+    const nueva: Record<string, unknown> = {};
+    if (cambio['fecha'])    nueva['fecha']    = cambio['fecha'];
+    if (cambio['hora'])     nueva['hora']     = cambio['hora'];
+    if (cambio['personas']) nueva['personas'] = cambio['personas'];
+    if (cambio['nombre'])   nueva['nombre']   = cambio['nombre'];
+    if (cambio['telefono']) nueva['telefono'] = cambio['telefono'];
+    if (cambio['email'])    nueva['email']    = cambio['email'];
+
+    // Si cambia el día o la hora y la reserva tenía franja, se mueve el hueco.
+    const fecha = (nueva['fecha'] as string) || reserva.fecha || '';
+    const hora  = (nueva['hora']  as string) || reserva.hora  || '';
+    if (reserva.pista && (nueva['fecha'] || nueva['hora'])) {
+      if (reserva.fecha && reserva.hora) {
+        await this.liberarHueco(reserva.fecha, reserva.hora, reserva.pista);
+      }
+      await this.bloquearHueco(fecha, hora, reserva.pista);
+    }
+
+    await updateDoc(doc(db, 'reservas', reserva.id), { ...nueva, estadoActualizado: serverTimestamp() });
+    await updateDoc(doc(db, 'cancelaciones', codigo), {
+      'cambio.estado': 'aceptado',
+      fecha, hora,
+      slotId: reserva.pista ? `${fecha}_${hora}_${reserva.pista}` : '',
+    });
+  }
+
+  /** Rechaza el cambio: la reserva se queda como estaba. */
+  async rechazarCambio(codigo: string): Promise<void> {
+    if (!db) return;
+    await updateDoc(doc(db, 'cancelaciones', codigo), { 'cambio.estado': 'rechazado' });
   }
 
   /** Bloquea un hueco a mano (p. ej. una reserva recibida por teléfono). */
