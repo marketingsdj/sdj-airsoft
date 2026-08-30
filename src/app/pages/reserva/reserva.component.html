@@ -81,6 +81,15 @@
           </ul>
         </div>
 
+        @if (form.tipo === 'txiki') {
+          <div class="pdf-tpl__seccion pdf-tpl__cancelacion">
+            <h2>AUTORIZACIÓN DE MENORES</h2>
+            <p>Cada participante debe traer el día de la partida la autorización firmada por su madre, padre o
+              tutor legal. Puedes descargarla en
+              <strong>www.soldadosdejuguete.com/documentos/autorizacion-menores.pdf</strong></p>
+          </div>
+        }
+
         @if (codigoCancelacion()) {
           <div class="pdf-tpl__seccion pdf-tpl__cancelacion">
             <h2>MODIFICAR O CANCELAR</h2>
@@ -244,6 +253,15 @@
             <button type="button" class="exito-cal-card__secundario" (click)="descargarIcs()">¿Apple Calendar u Outlook? Descargar .ics</button>
           </div>
         </div>
+
+        @if (form.tipo === 'txiki') {
+          <!-- Txikipaintball: cada menor necesita la autorización firmada. -->
+          <a class="exito-autorizacion" href="documentos/autorizacion-menores.pdf" target="_blank" rel="noopener"
+            (click)="analytics.trackEvent('autorizacion_descargada', { tipo: 'txiki' })">
+            <span class="exito-autorizacion__titulo">Descargar autorización de menores</span>
+            <span class="exito-autorizacion__texto">Imprímela, fírmala y tráela el día de la partida. Una por cada niño o niña.</span>
+          </a>
+        }
 
         @if (codigoCancelacion()) {
           <a class="exito-cancelar-link" [routerLink]="['/cancelar']"

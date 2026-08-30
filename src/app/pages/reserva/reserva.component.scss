@@ -1236,6 +1236,7 @@
   .reserva-wrap { display: block !important; padding: 0 !important; max-width: 100% !important; }
   .reserva-exito { display: none !important; }
   .exito-cancelar-link { display: none !important; }
+  .exito-autorizacion { display: none !important; }
   .pdf-tpl { display: block !important; }
 
   // Base del documento
@@ -1634,4 +1635,38 @@ select.form-input {
   transition: color $transition;
 
   &:hover { color: $naranja; }
+}
+
+// ── Autorización de menores (Txikipaintball) ─────────────────────────────────
+.exito-autorizacion {
+  display: block;
+  margin: 24px 0 8px;
+  padding: 18px 20px;
+  border: 1px solid rgba($naranja, 0.5);
+  border-radius: $radius-md;
+  background: rgba($naranja, 0.08);
+  text-decoration: none;
+  color: inherit;
+  transition: background $transition;
+
+  &:hover { background: rgba($naranja, 0.15); }
+
+  &__titulo {
+    display: block;
+    font-family: $font-tight;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: $naranja;
+    margin-bottom: 4px;
+
+    &::after { content: ' ↓'; }
+  }
+
+  &__texto {
+    display: block;
+    font-size: 13px;
+    color: rgba($crema, 0.7);
+    line-height: 1.5;
+  }
 }
