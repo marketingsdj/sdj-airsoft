@@ -157,6 +157,10 @@
     justify-content: center;
 
     &--izq { justify-content: flex-start; }
+
+    // Dentro del formulario ya hay separación propia (gap), así que el margen
+    // extra dejaba los botones descolgados del último campo.
+    .cancelar__cambio & { margin-top: 4px; }
   }
 
   &__opciones {
