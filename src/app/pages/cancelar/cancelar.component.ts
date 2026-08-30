@@ -31,6 +31,8 @@ export class CancelarComponent implements OnInit {
   // ── Modificación ────────────────────────────────────────────────────────────
   modo = signal<'elegir' | 'cancelar' | 'modificar'>('elegir');
   enviandoCambio = signal(false);
+  // El calendario ocupa mucho: solo se abre si el cliente quiere cambiar el dia.
+  calendarioAbierto = signal(false);
   cambioEnviado = signal(false);
   cambio = { fecha: '', hora: '', pista: '', personas: null as number | null, nombre: '', telefono: '', email: '', comentario: '' };
 
@@ -50,6 +52,7 @@ export class CancelarComponent implements OnInit {
     this.reserva.set(null);
     this.hecho.set(false);
     this.modo.set('elegir');
+    this.calendarioAbierto.set(false);
     this.cambioEnviado.set(false);
     if (!this.codigo.trim()) return;
 
@@ -83,6 +86,7 @@ export class CancelarComponent implements OnInit {
   }
 
   quitarFechaNueva() {
+    this.calendarioAbierto.set(false);
     this.cambio.fecha = '';
     this.cambio.hora = '';
     this.cambio.pista = '';

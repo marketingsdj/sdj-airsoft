@@ -105,10 +105,16 @@
                     @if (cambio.pista) { · Pista {{ cambio.pista }} }
                     <button type="button" class="cancelar__quitar" (click)="quitarFechaNueva()">quitar</button>
                   </p>
+                } @else if (!calendarioAbierto()) {
+                  <p class="cancelar__bloque-ayuda">Si te vale el mismo día, sáltate este paso.</p>
+                  <button type="button" class="btn btn--ghost" (click)="calendarioAbierto.set(true)">
+                    Ver días disponibles
+                  </button>
                 } @else {
-                  <p class="cancelar__bloque-ayuda">Elige una franja disponible en el calendario. Si no cambias de día, sáltate este paso.</p>
+                  <p class="cancelar__bloque-ayuda">Elige una franja disponible:</p>
                 }
 
+                @if (calendarioAbierto() && !cambio.fecha) {
                 <app-calendario-grupos
                   modo="seleccion"
                   [txiki]="r.tipo === 'txiki' || r.tipo === 'evento'"
@@ -118,6 +124,7 @@
                   (fechaSeleccionada)="cambio.fecha = $event; cambio.hora = ''; cambio.pista = ''"
                   (laborableSeleccionado)="onNuevoLaborable($event)">
                 </app-calendario-grupos>
+                }
               </div>
 
               <label class="cancelar__campo">
