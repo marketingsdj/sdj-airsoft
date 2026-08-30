@@ -149,7 +149,7 @@
             </thead>
             <tbody>
               @for (r of filtradas(); track r.id) {
-                <tr [class.admin-fila--pasada]="esPasada(r.fecha)"
+                <tr [class.admin-fila--pasada]="esPasada(r)"
                     [class.admin-fila--pendiente]="r.estado === 'pendiente'">
                   <td>
                     <button class="admin-fecha" (click)="toggleDetalle(r.id)">{{ fechaLarga(r.fecha) }}</button>

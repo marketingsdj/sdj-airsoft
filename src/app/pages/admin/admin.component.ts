@@ -288,7 +288,16 @@ export class AdminComponent implements OnInit {
     });
   }
 
-  esPasada(f?: string): boolean {
-    return !!f && f < new Date().toISOString().slice(0, 10);
+  /**
+   * ¿Ya se ha jugado? Cuenta la hora exacta: si la reserva tiene franja se usa
+   * su fin (2 h después); si no tiene hora, al acabar el día de juego (18:00).
+   */
+  esPasada(r: ReservaAdmin): boolean {
+    if (!r.fecha) return false;
+    const [a, m, d] = r.fecha.split('-').map(Number);
+    const [h, min] = (r.hora || '18:00').split(':').map(Number);
+    const fin = new Date(a, m - 1, d, h, min);
+    if (r.hora) fin.setHours(fin.getHours() + 2);
+    return fin.getTime() < Date.now();
   }
 }
