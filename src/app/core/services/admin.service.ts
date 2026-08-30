@@ -143,6 +143,16 @@ export class AdminService {
     });
   }
 
+  /** Deshace la anulación de un extra (por si fue un clic sin querer). */
+  async restaurarExtra(r: ReservaAdmin, extra: string): Promise<void> {
+    if (!db) return;
+    await updateDoc(doc(db, 'reservas', r.id), {
+      extras: [...(r.extras || []), extra],
+      extrasAnulados: (r.extrasAnulados || []).filter(e => e !== extra),
+      estadoActualizado: serverTimestamp(),
+    });
+  }
+
   /** Marca que queda (o ya no queda) un aviso por enviar al cliente. */
   async marcarAviso(id: string, pendiente: boolean): Promise<void> {
     if (!db) return;

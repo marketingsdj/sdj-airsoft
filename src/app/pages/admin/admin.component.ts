@@ -398,6 +398,22 @@ export class AdminComponent implements OnInit {
     }
   }
 
+  /** Devuelve un extra anulado por error. */
+  async restaurarExtra(r: ReservaAdmin, extra: string) {
+    this.guardando.set(r.id);
+    try {
+      await this.admin.restaurarExtra(r, extra);
+      this.reservas.update(list => list.map(x => (x.id === r.id
+        ? { ...x, extras: [...(x.extras || []), extra], extrasAnulados: (x.extrasAnulados || []).filter(e => e !== extra) }
+        : x)));
+      if (this.extraAnulado[r.id] === extra) delete this.extraAnulado[r.id];
+    } catch {
+      this.error.set('No se ha podido restaurar el extra.');
+    } finally {
+      this.guardando.set(null);
+    }
+  }
+
   async copiarAviso(r: ReservaAdmin) {
     try {
       await navigator.clipboard.writeText(this.textoAviso(r));

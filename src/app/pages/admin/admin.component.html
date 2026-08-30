@@ -195,7 +195,9 @@
                     } @else { — }
                     @if (r.extrasAnulados?.length) {
                       @for (e of r.extrasAnulados; track e) {
-                        <span class="admin-extra admin-extra--anulado" [title]="'Anulado: ' + e">{{ e }}</span>
+                        <span class="admin-extra admin-extra--anulado" [title]="'Anulado: ' + e">{{ e }}<button type="button"
+                          class="admin-extra__quitar" title="Deshacer: devolver este extra"
+                          [disabled]="guardando() === r.id" (click)="restaurarExtra(r, e)">↺</button></span>
                       }
                     }
                   </td>
