@@ -204,12 +204,10 @@
   padding: 0;
 }
 
+// Las celdas no usan flex: rompería la alineación vertical de la fila.
 .admin-contacto {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-
-  a { color: rgba($crema, 0.8); font-size: 12px; }
+  a { display: block; color: rgba($crema, 0.8); font-size: 12px; }
+  a + a { margin-top: 2px; }
   a:hover { color: $naranja; }
 }
 
@@ -230,12 +228,14 @@
 }
 
 .admin-acciones {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
+  white-space: nowrap;
+
+  .admin-btn + .admin-btn { margin-left: 6px; }
 }
 
 .admin-btn {
+  display: inline-block;
+  vertical-align: middle;
   font-family: $font-mono;
   font-size: 10px;
   letter-spacing: 0.08em;
