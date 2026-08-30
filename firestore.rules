@@ -5,6 +5,10 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
+    // ¿Es el equipo de SDJ? Cualquier usuario con sesión iniciada en Firebase
+    // Auth: las cuentas las creas tú a mano en la consola (no hay registro).
+    function esAdmin() { return request.auth != null; }
+
     match /slots/{slotId} {
       // Cualquiera puede LEER la disponibilidad (para pintar el calendario).
       allow read: if true;
@@ -14,9 +18,8 @@ service cloud.firestore {
       // la segunda escritura falla porque el documento ya existe.
       allow create: if !exists(/databases/$(database)/documents/slots/$(slotId));
 
-      // Nadie puede modificar ni borrar huecos desde el navegador
-      // (esos cambios se harán desde la consola o un backend de confianza).
-      allow update, delete: if false;
+      // Solo el panel de gestión (con sesión) libera o edita huecos.
+      allow update, delete: if esAdmin();
     }
 
     // Registro de reservas (email, nombre, teléfono, etc.). Contiene datos
@@ -24,7 +27,9 @@ service cloud.firestore {
     // Tú lo consultas desde la consola de Firebase.
     match /reservas/{reservaId} {
       allow create: if true;
-      allow read, update, delete: if false;
+      // El panel de gestión (/admin) lee y actualiza el estado y las notas.
+      allow read, update: if esAdmin();
+      allow delete: if false;
     }
 
     // Contador diario por persona (email + fecha + nº), para el límite de

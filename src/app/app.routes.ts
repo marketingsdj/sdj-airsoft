@@ -18,5 +18,7 @@ export const routes: Routes = [
   { path: 'cookies', loadComponent: () => import('./pages/cookies/cookies.component').then(m => m.CookiesComponent) },
   { path: 'aviso-legal', loadComponent: () => import('./pages/aviso-legal/aviso-legal.component').then(m => m.AvisoLegalComponent) },
   { path: 'privacidad', loadComponent: () => import('./pages/privacidad/privacidad.component').then(m => m.PrivacidadComponent) },
+  // Panel interno de gestión de reservas (requiere login de Firebase Auth).
+  { path: 'admin', loadComponent: () => import('./pages/admin/admin.component').then(m => m.AdminComponent) },
   { path: '**', loadComponent: () => import('./pages/not-found/not-found.component').then(m => m.NotFoundComponent) }
 ];

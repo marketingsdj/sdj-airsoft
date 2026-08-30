@@ -1,5 +1,6 @@
 import { initializeApp, type FirebaseApp } from 'firebase/app';
 import { getFirestore, type Firestore } from 'firebase/firestore';
+import { getAuth, type Auth } from 'firebase/auth';
 
 /**
  * ──────────────────────────────────────────────────────────────────────────
@@ -26,10 +27,13 @@ export const isFirebaseConfigured = !!firebaseConfig.apiKey && !!firebaseConfig.
 
 let app: FirebaseApp | null = null;
 let db: Firestore | null = null;
+// Auth solo se usa en el panel de gestión (/admin): la web pública no la toca.
+let auth: Auth | null = null;
 
 if (isFirebaseConfigured) {
   app = initializeApp(firebaseConfig);
   db = getFirestore(app);
+  auth = getAuth(app);
 }
 
-export { db };
+export { db, auth };

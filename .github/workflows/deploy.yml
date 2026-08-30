@@ -33,6 +33,16 @@ jobs:
       - name: Compilar (producción + prerender)
         run: npx ng build --configuration production --base-href /
 
+      # /admin se renderiza en el navegador, así que el prerender no crea su
+      # index.html y GitHub Pages daría 404. Se sirve el shell (index.csr.html)
+      # en esa ruta y como página 404 para cualquier otra.
+      - name: Preparar rutas de cliente
+        run: |
+          cd dist/sdj-airsoft/browser
+          mkdir -p admin
+          cp index.csr.html admin/index.html
+          cp index.csr.html 404.html
+
       - name: Publicar en gh-pages
         uses: peaceiris/actions-gh-pages@v4
         with:

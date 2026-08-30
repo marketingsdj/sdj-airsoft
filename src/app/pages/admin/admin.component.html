@@ -1,0 +1,207 @@
+<section class="admin">
+  <div class="wrap">
+
+    @if (!admin.disponible) {
+      <div class="admin-aviso">
+        <h1>Panel de reservas</h1>
+        <p>Firebase no está configurado en esta compilación, así que no hay datos que mostrar.</p>
+      </div>
+    } @else if (admin.cargandoSesion()) {
+      <p class="admin-cargando">Comprobando sesión…</p>
+    } @else if (!admin.usuario()) {
+
+      <!-- ── Acceso ───────────────────────────────────────────────────────── -->
+      <form class="admin-login" (ngSubmit)="entrar()">
+        <h1>Panel de reservas</h1>
+        <p class="admin-login__sub">Acceso restringido al equipo de SDJ.</p>
+
+        <label class="admin-campo">
+          <span>Email</span>
+          <input type="email" name="email" [(ngModel)]="email" autocomplete="username" required />
+        </label>
+        <label class="admin-campo">
+          <span>Contraseña</span>
+          <input type="password" name="password" [(ngModel)]="password" autocomplete="current-password" required />
+        </label>
+
+        @if (errorLogin()) { <p class="admin-error">{{ errorLogin() }}</p> }
+
+        <button class="btn btn--primary" type="submit" [disabled]="entrando() || !email || !password">
+          {{ entrando() ? 'Entrando…' : 'Entrar' }}
+        </button>
+      </form>
+
+    } @else {
+
+      <!-- ── Cabecera ─────────────────────────────────────────────────────── -->
+      <div class="admin-top">
+        <div>
+          <h1>Reservas</h1>
+          <p class="admin-top__user">{{ admin.usuario()?.email }}</p>
+        </div>
+        <div class="admin-top__acciones">
+          <button class="btn btn--ghost" (click)="cargar()" [disabled]="cargando()">
+            {{ cargando() ? 'Actualizando…' : 'Actualizar' }}
+          </button>
+          <button class="btn btn--ghost" (click)="exportarCsv()" [disabled]="!filtradas().length">Exportar CSV</button>
+          <button class="btn btn--ghost" (click)="salir()">Salir</button>
+        </div>
+      </div>
+
+      <!-- ── Resumen ──────────────────────────────────────────────────────── -->
+      <div class="admin-kpis">
+        <button class="admin-kpi admin-kpi--accion" (click)="verPendientes()">
+          <span class="admin-kpi__num">{{ totalPendientes() }}</span>
+          <span class="admin-kpi__lbl">Pendientes de gestionar</span>
+        </button>
+        <div class="admin-kpi">
+          <span class="admin-kpi__num">{{ totalProximas() }}</span>
+          <span class="admin-kpi__lbl">Próximas (hoy en adelante)</span>
+        </div>
+        <div class="admin-kpi">
+          <span class="admin-kpi__num">{{ filtradas().length }}</span>
+          <span class="admin-kpi__lbl">Mostradas ahora</span>
+        </div>
+        <div class="admin-kpi">
+          <span class="admin-kpi__num">{{ totalPersonas() }}</span>
+          <span class="admin-kpi__lbl">Personas en lo mostrado</span>
+        </div>
+      </div>
+
+      <!-- ── Filtros ──────────────────────────────────────────────────────── -->
+      <div class="admin-filtros">
+        <label class="admin-campo admin-campo--ancho">
+          <span>Buscar</span>
+          <input type="search" [(ngModel)]="busqueda" (ngModelChange)="onFiltroCambiado()"
+            placeholder="Nombre, email, teléfono o nº de reserva" />
+        </label>
+
+        <label class="admin-campo">
+          <span>Estado</span>
+          <select [(ngModel)]="filtroEstado" (ngModelChange)="onFiltroCambiado()">
+            <option value="">Todos</option>
+            @for (e of estados; track e) { <option [value]="e">{{ e | titlecase }}</option> }
+          </select>
+        </label>
+
+        <label class="admin-campo">
+          <span>Tipo</span>
+          <select [(ngModel)]="filtroTipo" (ngModelChange)="onFiltroCambiado()">
+            <option value="">Todos</option>
+            @for (t of tipos; track t.key) { <option [value]="t.key">{{ t.label }}</option> }
+          </select>
+        </label>
+
+        <label class="admin-campo">
+          <span>Desde</span>
+          <input type="date" [(ngModel)]="desde" (ngModelChange)="onFiltroCambiado()" />
+        </label>
+
+        <label class="admin-campo">
+          <span>Hasta</span>
+          <input type="date" [(ngModel)]="hasta" (ngModelChange)="onFiltroCambiado()" />
+        </label>
+
+        <label class="admin-campo">
+          <span>Ordenar por</span>
+          <select [(ngModel)]="orden" (ngModelChange)="onFiltroCambiado()">
+            <option value="fecha">Fecha de la partida</option>
+            <option value="creado">Más recientes primero</option>
+            <option value="nombre">Nombre</option>
+          </select>
+        </label>
+
+        <label class="admin-check">
+          <input type="checkbox" [(ngModel)]="soloProximas" (ngModelChange)="onFiltroCambiado()" />
+          <span>Solo próximas</span>
+        </label>
+
+        <button class="admin-filtros__limpiar" type="button" (click)="limpiarFiltros()">Limpiar filtros</button>
+      </div>
+
+      @if (error()) { <p class="admin-error">{{ error() }}</p> }
+
+      <!-- ── Tabla ────────────────────────────────────────────────────────── -->
+      @if (cargando() && !reservas().length) {
+        <p class="admin-cargando">Cargando reservas…</p>
+      } @else if (!filtradas().length) {
+        <p class="admin-vacio">No hay reservas que coincidan con los filtros.</p>
+      } @else {
+        <div class="admin-tabla-wrap">
+          <table class="admin-tabla">
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>Hora</th>
+                <th>Tipo</th>
+                <th class="admin-tabla__num">Pers.</th>
+                <th>Cliente</th>
+                <th>Contacto</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (r of filtradas(); track r.id) {
+                <tr [class.admin-fila--pasada]="esPasada(r.fecha)"
+                    [class.admin-fila--pendiente]="r.estado === 'pendiente'">
+                  <td>
+                    <button class="admin-fecha" (click)="toggleDetalle(r.id)">{{ fechaLarga(r.fecha) }}</button>
+                  </td>
+                  <td>{{ r.hora || 'A concretar' }}{{ r.pista ? ' · ' + r.pista : '' }}</td>
+                  <td>{{ tipoLabel(r.tipo) }}</td>
+                  <td class="admin-tabla__num">{{ r.personas ?? '—' }}</td>
+                  <td>{{ r.nombre || '—' }}</td>
+                  <td class="admin-contacto">
+                    @if (r.telefono) {
+                      <a [href]="'https://wa.me/34' + r.telefono.replace(' ', '')" target="_blank" rel="noopener">{{ r.telefono }}</a>
+                    }
+                    @if (r.email) { <a [href]="'mailto:' + r.email">{{ r.email }}</a> }
+                  </td>
+                  <td>
+                    <span class="admin-estado" [class]="'admin-estado--' + r.estado">{{ r.estado }}</span>
+                  </td>
+                  <td class="admin-acciones">
+                    @if (r.estado !== 'confirmada') {
+                      <button class="admin-btn admin-btn--ok" [disabled]="guardando() === r.id"
+                        (click)="marcar(r, 'confirmada')">Confirmar</button>
+                    }
+                    @if (r.estado !== 'denegada') {
+                      <button class="admin-btn admin-btn--no" [disabled]="guardando() === r.id"
+                        (click)="marcar(r, 'denegada')">Denegar</button>
+                    }
+                    @if (r.estado !== 'cancelada') {
+                      <button class="admin-btn" [disabled]="guardando() === r.id"
+                        (click)="marcar(r, 'cancelada')">Cancelar</button>
+                    }
+                  </td>
+                </tr>
+
+                @if (detalle() === r.id) {
+                  <tr class="admin-detalle">
+                    <td colspan="8">
+                      <div class="admin-detalle__grid">
+                        <div><span>Nº de reserva</span><strong>{{ r.numeroReserva || '—' }}</strong></div>
+                        <div><span>Recibida</span><strong>{{ r.creado ? (r.creado | date:'dd/MM/yyyy HH:mm') : '—' }}</strong></div>
+                        <div><span>Pista</span><strong>{{ r.pista || 'Sin franja fija' }}</strong></div>
+                        <div><span>Id interno</span><strong>{{ r.id }}</strong></div>
+                      </div>
+                      <label class="admin-campo admin-campo--ancho">
+                        <span>Notas internas</span>
+                        <textarea rows="2" #nota [value]="r.notas || ''"
+                          placeholder="Anota aquí lo que acuerdes con el cliente…"></textarea>
+                      </label>
+                      <button class="btn btn--ghost" [disabled]="guardando() === r.id"
+                        (click)="guardarNota(r, nota.value)">Guardar nota</button>
+                    </td>
+                  </tr>
+                }
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    }
+
+  </div>
+</section>
