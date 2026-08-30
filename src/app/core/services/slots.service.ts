@@ -101,6 +101,7 @@ export class SlotsService {
     codigoCancelacion?: string;
     extras?: string[];
     laborable?: boolean;   // dia entre semana: la hora es aproximada
+    horaPedida?: string;   // la que eligio el cliente, aunque luego se cambie
   }): Promise<string | null> {
     if (!isFirebaseConfigured || !db) return null;
     const email = this.normEmail(datos.email);

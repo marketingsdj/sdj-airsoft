@@ -34,6 +34,8 @@ export interface ReservaAdmin {
   laborable?: boolean;
   /** true cuando ya has fijado tú la hora definitiva. */
   horaFijada?: boolean;
+  /** Hora que pidió el cliente al reservar (se conserva aunque la cambies). */
+  horaPedida?: string;
   /** Cambio pedido por el cliente desde /cancelar, pendiente de revisar. */
   cambio?: Record<string, unknown> | null;
 }
@@ -100,6 +102,7 @@ export class AdminService {
         extras: (x['extras'] as string[]) || [],
         laborable: !!x['laborable'],
         horaFijada: !!x['horaFijada'],
+        horaPedida: x['horaPedida'] as string | undefined,
         creado,
       };
     });
@@ -112,9 +115,12 @@ export class AdminService {
   }
 
   /** Fija la hora definitiva de una reserva "a consultar". */
-  async fijarHora(id: string, hora: string): Promise<void> {
+  async fijarHora(id: string, hora: string, horaPedida?: string): Promise<void> {
     if (!db) return;
-    await updateDoc(doc(db, 'reservas', id), { hora, horaFijada: true, estadoActualizado: serverTimestamp() });
+    const datos: Record<string, unknown> = { hora, horaFijada: true, estadoActualizado: serverTimestamp() };
+    // La primera vez se deja constancia de la hora que habia pedido el cliente.
+    if (horaPedida) datos['horaPedida'] = horaPedida;
+    await updateDoc(doc(db, 'reservas', id), datos);
   }
 
   /** Guarda una nota interna sobre la reserva. */

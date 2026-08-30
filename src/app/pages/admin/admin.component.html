@@ -156,6 +156,10 @@
                              otra y cambiarla luego las veces que haga falta. -->
                         @if (r.horaFijada) {
                           <span class="admin-hora__ok">{{ r.hora }} fijada</span>
+                          <!-- Se conserva a la vista lo que pidió el cliente. -->
+                          @if (r.horaPedida && r.horaPedida !== r.hora) {
+                            <span class="admin-hora__pedida">pidió {{ r.horaPedida }}</span>
+                          }
                         } @else {
                           <span class="admin-hora__pedida">{{ r.hora }} pedida</span>
                         }
@@ -234,6 +238,9 @@
                         <div><span>Nº de reserva</span><strong>{{ r.numeroReserva || '—' }}</strong></div>
                         <div><span>Recibida</span><strong>{{ r.creado ? (r.creado | date:'dd/MM/yyyy HH:mm') : '—' }}</strong></div>
                         <div><span>Pista</span><strong>{{ r.pista || 'Sin franja fija' }}</strong></div>
+                        @if (r.horaPedida) {
+                          <div><span>Hora que pidió</span><strong>{{ r.horaPedida }}</strong></div>
+                        }
                         <div><span>Id interno</span><strong>{{ r.id }}</strong></div>
                       </div>
                       <label class="admin-campo admin-campo--ancho">

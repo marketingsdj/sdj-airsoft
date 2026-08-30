@@ -682,6 +682,7 @@ export class ReservaComponent implements OnInit, OnDestroy {
           codigoCancelacion: codigo,
           extras: this.extrasLista,
           laborable: this.form.laborableConsulta,
+          horaPedida: this.form.hora,
         });
 
         // Con este código el cliente puede cancelar él mismo desde /cancelar.

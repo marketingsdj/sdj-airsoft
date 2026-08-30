@@ -216,9 +216,10 @@ export class AdminComponent implements OnInit {
     if (!hora) return;
     this.guardando.set(r.id);
     try {
-      await this.admin.fijarHora(r.id, hora);
-      this.reservas.update(list => list.map(x => (x.id === r.id ? { ...x, hora, horaFijada: true } : x)));
-      this.prepararAviso({ ...r, hora, horaFijada: true }, 'hora');
+      const pedida = r.horaPedida || r.hora || '';
+      await this.admin.fijarHora(r.id, hora, r.horaPedida ? undefined : pedida);
+      this.reservas.update(list => list.map(x => (x.id === r.id ? { ...x, hora, horaFijada: true, horaPedida: pedida } : x)));
+      this.prepararAviso({ ...r, hora, horaFijada: true, horaPedida: pedida }, 'hora');
     } catch {
       this.error.set('No se ha podido guardar la hora.');
     } finally {
