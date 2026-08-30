@@ -390,7 +390,7 @@ export class AdminComponent implements OnInit {
         ? { ...x, extras: (x.extras || []).filter(e => e !== extra), extrasAnulados: [...(x.extrasAnulados || []), extra] }
         : x)));
       this.extraAnulado[r.id] = extra;
-      this.prepararAviso(r, 'extra');
+      this.prepararAviso({ ...r, avisoMotivo: 'extra' }, 'extra');
     } catch {
       this.error.set('No se ha podido anular el extra.');
     } finally {
@@ -402,10 +402,16 @@ export class AdminComponent implements OnInit {
   async restaurarExtra(r: ReservaAdmin, extra: string) {
     this.guardando.set(r.id);
     try {
-      await this.admin.restaurarExtra(r, extra);
+      const avisoLimpio = await this.admin.restaurarExtra(r, extra);
       this.reservas.update(list => list.map(x => (x.id === r.id
-        ? { ...x, extras: [...(x.extras || []), extra], extrasAnulados: (x.extrasAnulados || []).filter(e => e !== extra) }
+        ? {
+            ...x,
+            extras: [...(x.extras || []), extra],
+            extrasAnulados: (x.extrasAnulados || []).filter(e => e !== extra),
+            ...(avisoLimpio ? { avisoPendiente: false } : {}),
+          }
         : x)));
+      if (avisoLimpio && this.detalle() === r.id) this.detalle.set(null);
       if (this.extraAnulado[r.id] === extra) delete this.extraAnulado[r.id];
     } catch {
       this.error.set('No se ha podido restaurar el extra.');

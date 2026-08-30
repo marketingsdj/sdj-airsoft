@@ -40,6 +40,8 @@ export interface ReservaAdmin {
   avisoPendiente?: boolean;
   /** Extras que has anulado, para dejar constancia. */
   extrasAnulados?: string[];
+  /** Por qué quedó pendiente el aviso (para poder deshacerlo del todo). */
+  avisoMotivo?: string;
   /** Cambio pedido por el cliente desde /cancelar, pendiente de revisar. */
   cambio?: Record<string, unknown> | null;
 }
@@ -109,6 +111,7 @@ export class AdminService {
         horaPedida: x['horaPedida'] as string | undefined,
         avisoPendiente: !!x['avisoPendiente'],
         extrasAnulados: (x['extrasAnulados'] as string[]) || [],
+        avisoMotivo: x['avisoMotivo'] as string | undefined,
         creado,
       };
     });
@@ -137,20 +140,27 @@ export class AdminService {
     if (!db) return;
     await updateDoc(doc(db, 'reservas', r.id), {
       extras: (r.extras || []).filter(e => e !== extra),
-      extrasAnulados: [...((r as { extrasAnulados?: string[] }).extrasAnulados || []), extra],
+      extrasAnulados: [...(r.extrasAnulados || []), extra],
       avisoPendiente: true,
+      avisoMotivo: 'extra',
       estadoActualizado: serverTimestamp(),
     });
   }
 
   /** Deshace la anulación de un extra (por si fue un clic sin querer). */
-  async restaurarExtra(r: ReservaAdmin, extra: string): Promise<void> {
-    if (!db) return;
+  async restaurarExtra(r: ReservaAdmin, extra: string): Promise<boolean> {
+    if (!db) return false;
+    const anulados = (r.extrasAnulados || []).filter(e => e !== extra);
+    // Si el aviso pendiente lo había provocado este extra y ya no queda
+    // ninguno anulado, se deshace también: es como no haber pulsado nada.
+    const limpiarAviso = r.avisoMotivo === 'extra' && anulados.length === 0;
     await updateDoc(doc(db, 'reservas', r.id), {
       extras: [...(r.extras || []), extra],
-      extrasAnulados: (r.extrasAnulados || []).filter(e => e !== extra),
+      extrasAnulados: anulados,
+      ...(limpiarAviso ? { avisoPendiente: false, avisoMotivo: '' } : {}),
       estadoActualizado: serverTimestamp(),
     });
+    return limpiarAviso;
   }
 
   /** Marca que queda (o ya no queda) un aviso por enviar al cliente. */
