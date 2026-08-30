@@ -245,6 +245,26 @@
   }
 }
 
+.admin-extras { max-width: 190px; }
+
+.admin-extra {
+  display: inline-block;
+  margin: 2px 4px 2px 0;
+  padding: 3px 8px;
+  border: 1px solid rgba($naranja, 0.4);
+  border-radius: 99px;
+  font-family: $font-mono;
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: $naranja;
+  white-space: nowrap;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+}
+
 .admin-sin-acciones { color: rgba($crema, 0.3); }
 
 .admin-acciones {

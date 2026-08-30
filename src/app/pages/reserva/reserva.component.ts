@@ -680,6 +680,7 @@ export class ReservaComponent implements OnInit, OnDestroy {
           personas: this.form.personas,
           numeroReserva: this.numeroReserva(),
           codigoCancelacion: codigo,
+          extras: this.extrasLista,
         });
 
         // Con este código el cliente puede cancelar él mismo desde /cancelar.
@@ -916,8 +917,21 @@ export class ReservaComponent implements OnInit, OnDestroy {
     return this.form.modalidad?.includes('alquiler') || this.form.premium ? 'Sí' : 'No';
   }
 
+  // Extras contratados, en lista: se usan en el PDF, el resumen y el panel.
+  get extrasLista(): string[] {
+    const extras: string[] = [];
+    if (this.form.doblePartida) extras.push('Doble partida');
+    if (this.form.tarifaReducida) extras.push('Tarifa reducida');
+    return [...extras, ...this.otrosExtras];
+  }
+
   // Lista de extras sin coste adicional, para el PDF y el resumen.
   get otrosExtrasTexto(): string {
+    const extras = this.otrosExtras;
+    return extras.length ? extras.join(', ') : '—';
+  }
+
+  private get otrosExtras(): string[] {
     const extras: string[] = [];
     if (this.form.tipo === 'txiki' && this.form.merienda) extras.push('Merienda infantil (+9,90 €/niño)');
     if (this.form.tipo === 'individual' && this.form.premium) extras.push('Pack Premium (+5 €)');
@@ -928,7 +942,7 @@ export class ReservaComponent implements OnInit, OnDestroy {
       if (this.form.autorizacionLote) extras.push('Autorización en lote');
       if (this.form.certificadoActividad) extras.push('Certificado de la actividad');
     }
-    return extras.length ? extras.join(', ') : '—';
+    return extras;
   }
 
   formatFecha(fecha: string): string {

@@ -241,10 +241,10 @@ export class AdminComponent implements OnInit {
 
   /** Descarga lo que se está viendo en formato CSV (Excel). */
   exportarCsv() {
-    const cab = ['Nº reserva', 'Código', 'Estado', 'Fecha', 'Hora', 'Pista', 'Tipo', 'Personas', 'Nombre', 'Email', 'Teléfono', 'Notas'];
+    const cab = ['Nº reserva', 'Código', 'Estado', 'Fecha', 'Hora', 'Pista', 'Tipo', 'Personas', 'Extras', 'Nombre', 'Email', 'Teléfono', 'Notas'];
     const filas = this.filtradas().map(r => [
       r.numeroReserva || '', r.codigoCancelacion || '', r.estado, r.fecha || '', r.hora || '', r.pista || '',
-      this.tipoLabel(r.tipo), String(r.personas ?? ''), r.nombre || '', r.email || '', r.telefono || '', r.notas || '',
+      this.tipoLabel(r.tipo), String(r.personas ?? ''), (r.extras || []).join(' | '), r.nombre || '', r.email || '', r.telefono || '', r.notas || '',
     ]);
     const csv = [cab, ...filas]
       .map(f => f.map(c => `"${String(c).replace(/"/g, '""')}"`).join(';'))

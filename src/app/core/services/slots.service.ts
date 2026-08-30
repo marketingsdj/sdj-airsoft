@@ -99,6 +99,7 @@ export class SlotsService {
     fecha: string; hora?: string; pista?: string; personas?: number; numeroReserva?: string;
     gestion?: string;
     codigoCancelacion?: string;
+    extras?: string[];
   }): Promise<string | null> {
     if (!isFirebaseConfigured || !db) return null;
     const email = this.normEmail(datos.email);

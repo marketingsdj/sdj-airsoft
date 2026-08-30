@@ -141,6 +141,7 @@
                 <th class="admin-tabla__num">Pers.</th>
                 <th>Cliente</th>
                 <th>Código</th>
+                <th>Extras</th>
                 <th>Contacto</th>
                 <th>Estado</th>
                 <th>Acciones</th>
@@ -158,6 +159,13 @@
                   <td class="admin-tabla__num">{{ r.personas ?? '—' }}</td>
                   <td>{{ r.nombre || '—' }}</td>
                   <td class="admin-codigo">{{ r.codigoCancelacion || '—' }}</td>
+                  <td class="admin-extras">
+                    @if (r.extras?.length) {
+                      @for (e of r.extras; track e) {
+                        <span class="admin-extra" [title]="e">{{ e }}</span>
+                      }
+                    } @else { — }
+                  </td>
                   <td class="admin-contacto">
                     @if (r.telefono) {
                       <a [href]="'https://wa.me/34' + r.telefono.replace(' ', '')" target="_blank" rel="noopener">{{ r.telefono }}</a>
@@ -193,7 +201,7 @@
 
                 @if (r.cambio) {
                   <tr class="admin-cambio">
-                    <td colspan="9">
+                    <td colspan="10">
                       <span class="admin-cambio__badge">Cambio pedido por el cliente</span>
                       <span class="admin-cambio__texto">{{ resumenCambio(r.cambio) }}</span>
                       <span class="admin-cambio__acciones">
@@ -208,7 +216,7 @@
 
                 @if (detalle() === r.id) {
                   <tr class="admin-detalle">
-                    <td colspan="9">
+                    <td colspan="10">
                       <div class="admin-detalle__grid">
                         <div><span>Nº de reserva</span><strong>{{ r.numeroReserva || '—' }}</strong></div>
                         <div><span>Recibida</span><strong>{{ r.creado ? (r.creado | date:'dd/MM/yyyy HH:mm') : '—' }}</strong></div>

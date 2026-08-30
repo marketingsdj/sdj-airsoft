@@ -28,6 +28,8 @@ export interface ReservaAdmin {
   codigoCancelacion?: string;
   /** "cliente" si la canceló la propia persona desde /cancelar. */
   canceladaPor?: string;
+  /** Extras contratados (menú, merienda, doble partida…). */
+  extras?: string[];
   /** Cambio pedido por el cliente desde /cancelar, pendiente de revisar. */
   cambio?: Record<string, unknown> | null;
 }
@@ -91,6 +93,7 @@ export class AdminService {
         notas:    x['notas']    as string | undefined,
         codigoCancelacion: x['codigoCancelacion'] as string | undefined,
         canceladaPor: x['canceladaPor'] as string | undefined,
+        extras: (x['extras'] as string[]) || [],
         creado,
       };
     });
