@@ -162,8 +162,9 @@ export class AdminComponent implements OnInit {
    * pedido un cambio, o es un día a consultar cuya hora aún no has fijado.
    */
   requiereAccion(r: ReservaAdmin): boolean {
-    if (r.estado === 'denegada' || r.estado === 'cancelada') return false;
-    return r.estado === 'pendiente' || !!r.cambio || (!!r.laborable && !r.horaFijada);
+    // Una anulada sigue pendiente si aún no le has avisado.
+    if ((r.estado === 'denegada' || r.estado === 'cancelada') && !r.avisoPendiente) return false;
+    return r.estado === 'pendiente' || !!r.cambio || !!r.avisoPendiente || (!!r.laborable && !r.horaFijada);
   }
 
   // ── Contadores del resumen ──────────────────────────────────────────────────
@@ -203,6 +204,7 @@ export class AdminComponent implements OnInit {
     this.motivoPorReserva[r.id] = motivo;
     delete this.textoEditado[r.id];
     this.detalle.set(r.id);
+    this.reservas.update(list => list.map(x => (x.id === r.id ? { ...x, avisoPendiente: true } : x)));
   }
 
   /** ¿Es una reserva de día "a consultar" (hora aproximada, sin franja fija)? */
@@ -365,6 +367,16 @@ export class AdminComponent implements OnInit {
     const asunto = 'Tu reserva en Soldados de Juguete' + (r.numeroReserva ? ' · ' + r.numeroReserva : '');
     return 'mailto:' + (r.email || '') + '?subject=' + encodeURIComponent(asunto)
       + '&body=' + encodeURIComponent(this.textoAviso(r));
+  }
+
+  /** Al abrir WhatsApp/email o copiar el texto, se da por comunicado. */
+  async marcarAvisado(r: ReservaAdmin) {
+    this.reservas.update(list => list.map(x => (x.id === r.id ? { ...x, avisoPendiente: false } : x)));
+    try {
+      await this.admin.marcarAviso(r.id, false);
+    } catch {
+      this.error.set('No se ha podido guardar que ya has avisado.');
+    }
   }
 
   async copiarAviso(r: ReservaAdmin) {

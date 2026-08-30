@@ -36,6 +36,8 @@ export interface ReservaAdmin {
   horaFijada?: boolean;
   /** Hora que pidió el cliente al reservar (se conserva aunque la cambies). */
   horaPedida?: string;
+  /** Hay un cambio hecho que aún no le has comunicado al cliente. */
+  avisoPendiente?: boolean;
   /** Cambio pedido por el cliente desde /cancelar, pendiente de revisar. */
   cambio?: Record<string, unknown> | null;
 }
@@ -103,6 +105,7 @@ export class AdminService {
         laborable: !!x['laborable'],
         horaFijada: !!x['horaFijada'],
         horaPedida: x['horaPedida'] as string | undefined,
+        avisoPendiente: !!x['avisoPendiente'],
         creado,
       };
     });
@@ -111,16 +114,25 @@ export class AdminService {
   /** Cambia el estado de una reserva y deja constancia de cuándo. */
   async cambiarEstado(id: string, estado: EstadoReserva): Promise<void> {
     if (!db) return;
-    await updateDoc(doc(db, 'reservas', id), { estado, estadoActualizado: serverTimestamp() });
+    await updateDoc(doc(db, 'reservas', id), { estado, estadoActualizado: serverTimestamp(), avisoPendiente: true });
   }
 
   /** Fija la hora definitiva de una reserva "a consultar". */
   async fijarHora(id: string, hora: string, horaPedida?: string): Promise<void> {
     if (!db) return;
-    const datos: Record<string, unknown> = { hora, horaFijada: true, estadoActualizado: serverTimestamp() };
+    const datos: Record<string, unknown> = { hora, horaFijada: true, estadoActualizado: serverTimestamp(), avisoPendiente: true };
     // La primera vez se deja constancia de la hora que habia pedido el cliente.
     if (horaPedida) datos['horaPedida'] = horaPedida;
     await updateDoc(doc(db, 'reservas', id), datos);
+  }
+
+  /** Marca que queda (o ya no queda) un aviso por enviar al cliente. */
+  async marcarAviso(id: string, pendiente: boolean): Promise<void> {
+    if (!db) return;
+    await updateDoc(doc(db, 'reservas', id), {
+      avisoPendiente: pendiente,
+      ...(pendiente ? {} : { avisadoEl: serverTimestamp() }),
+    });
   }
 
   /** Guarda una nota interna sobre la reserva. */
@@ -181,7 +193,7 @@ export class AdminService {
       if (pista) await this.bloquearHueco(fecha, hora, pista);
     }
 
-    await updateDoc(doc(db, 'reservas', reserva.id), { ...nueva, estadoActualizado: serverTimestamp() });
+    await updateDoc(doc(db, 'reservas', reserva.id), { ...nueva, estadoActualizado: serverTimestamp(), avisoPendiente: true });
     await updateDoc(doc(db, 'cancelaciones', codigo), {
       'cambio.estado': 'aceptado',
       fecha, hora,

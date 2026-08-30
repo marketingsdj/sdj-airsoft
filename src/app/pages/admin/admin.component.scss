@@ -319,6 +319,16 @@
   vertical-align: middle;
 }
 
+.admin-sin-avisar {
+  display: block;
+  margin-top: 4px;
+  font-family: $font-mono;
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: $naranja;
+}
+
 .admin-sin-acciones { color: rgba($crema, 0.3); }
 
 .admin-acciones {
@@ -340,7 +350,7 @@
   width: 100%;
   text-align: center;
 
-  &--col2 { grid-row: 2; }
+
   font-family: $font-mono;
   font-size: 10px;
   letter-spacing: 0.08em;
