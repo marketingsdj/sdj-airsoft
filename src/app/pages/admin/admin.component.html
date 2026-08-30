@@ -153,7 +153,8 @@
                 <tr [class.admin-fila--pasada]="esPasada(r)"
                     [class.admin-fila--pendiente]="requiereAccion(r)"
                     [class.admin-fila--recordatorio]="!requiereAccion(r) && r.estado === 'recordatorio' && !esPasada(r)"
-                    [class.admin-fila--recordatorio-ya]="recordatorioCercano(r) && !requiereAccion(r)">
+                    [class.admin-fila--recordatorio-ya]="recordatorioCercano(r) && !requiereAccion(r)"
+                    [class.admin-fila--confirmada]="r.estado === 'confirmada' && !requiereAccion(r) && !esPasada(r)">
                   <td class="c-fecha">
                     <button class="admin-fecha" (click)="toggleDetalle(r.id)">{{ fechaLarga(r.fecha) }}</button>
                     <span class="admin-hora">

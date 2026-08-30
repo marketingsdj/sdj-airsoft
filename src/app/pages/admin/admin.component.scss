@@ -220,6 +220,10 @@
 .admin-fila--recordatorio-ya td { background: rgba(#e8c547, 0.16); }
 .admin-tabla tbody tr.admin-fila--recordatorio:hover td { background: rgba(#e8c547, 0.2); }
 
+// Cerrada del todo: el recordatorio ya se ha enviado.
+.admin-fila--confirmada td { background: rgba(#6bd08a, 0.09); }
+.admin-tabla tbody tr.admin-fila--confirmada:hover td { background: rgba(#6bd08a, 0.15); }
+
 // Ya celebradas: fondo gris apagado para distinguirlas de las proximas.
 .admin-fila--pasada td {
   background: rgba(0, 0, 0, 0.35);
