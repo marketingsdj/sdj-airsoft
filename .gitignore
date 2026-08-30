@@ -45,3 +45,6 @@ Thumbs.db
 
 # Platform marker (se regenera automáticamente por check-platform.js)
 .node-platform
+
+# Video sin usar en la web: sync-media lo recupera de multimedia/ y no debe subirse
+public/Campo/Partidas abiertas junio.mp4
