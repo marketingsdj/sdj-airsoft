@@ -339,6 +339,21 @@
                         }
                         <div><span>Id interno</span><strong>{{ r.id }}</strong></div>
                       </div>
+                      @if (cambiosSobreOriginal(r).length) {
+                        <!-- Lo que pidió el cliente frente a lo que has dejado tú. -->
+                        <div class="admin-original">
+                          <p class="admin-original__titulo">Reserva original del cliente</p>
+                          @for (c of cambiosSobreOriginal(r); track c.campo) {
+                            <div class="admin-original__fila">
+                              <span>{{ c.campo }}</span>
+                              <span class="admin-original__antes">{{ c.antes }}</span>
+                              <span class="admin-original__flecha">→</span>
+                              <strong>{{ c.ahora }}</strong>
+                            </div>
+                          }
+                        </div>
+                      }
+
                       @if (editando() === r.id) {
                         <!-- Edición completa de la reserva -->
                         <div class="admin-editar">

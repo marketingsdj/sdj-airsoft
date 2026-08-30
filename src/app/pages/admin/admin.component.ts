@@ -30,6 +30,30 @@ export class AdminComponent implements OnInit {
   /** Códigos de las peticiones de cambio, por id de reserva. */
   private codigosCambio = new Map<string, { codigo: string; cambio: Record<string, unknown> }>();
 
+  /**
+   * Diferencias entre la reserva original del cliente y como está ahora,
+   * para no perder de vista lo que pidió él.
+   */
+  cambiosSobreOriginal(r: ReservaAdmin): { campo: string; antes: string; ahora: string }[] {
+    const o = r.original;
+    if (!o) return [];
+    const txt = (v: unknown) => Array.isArray(v) ? v.join(', ') : (v === null || v === undefined || v === '' ? '—' : String(v));
+    const filas: { campo: string; antes: unknown; ahora: unknown }[] = [
+      { campo: 'Tipo',     antes: o['tipo'],     ahora: r.tipo },
+      { campo: 'Fecha',    antes: o['fecha'],    ahora: r.fecha },
+      { campo: 'Hora',     antes: o['hora'],     ahora: r.hora },
+      { campo: 'Pista',    antes: o['pista'],    ahora: r.pista },
+      { campo: 'Personas', antes: o['personas'], ahora: r.personas },
+      { campo: 'Nombre',   antes: o['nombre'],   ahora: r.nombre },
+      { campo: 'Teléfono', antes: o['telefono'], ahora: r.telefono },
+      { campo: 'Email',    antes: o['email'],    ahora: r.email },
+      { campo: 'Extras',   antes: o['extras'],   ahora: r.extras },
+    ];
+    return filas
+      .map(f => ({ campo: f.campo, antes: txt(f.antes), ahora: txt(f.ahora) }))
+      .filter(f => f.antes !== f.ahora);
+  }
+
   // ── Edición de una reserva ──────────────────────────────────────────────────
   editando = signal<string | null>(null);
   edicion = {

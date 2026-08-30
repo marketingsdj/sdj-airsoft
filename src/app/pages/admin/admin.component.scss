@@ -136,6 +136,38 @@
   }
 }
 
+// ── Reserva original del cliente ─────────────────────────────────────────────
+.admin-original {
+  border-left: 2px solid rgba($crema, 0.25);
+  padding: 4px 0 4px 12px;
+  margin-bottom: 16px;
+
+  &__titulo {
+    margin: 0 0 8px;
+    font-family: $font-mono;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba($crema, 0.45);
+  }
+
+  &__fila {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    font-size: 12.5px;
+    padding: 2px 0;
+
+    > span:first-child {
+      min-width: 78px;
+      color: rgba($crema, 0.45);
+    }
+  }
+
+  &__antes { color: rgba($crema, 0.5); text-decoration: line-through; }
+  &__flecha { color: rgba($crema, 0.35); }
+}
+
 // ── Edición de una reserva ───────────────────────────────────────────────────
 .admin-editar {
   border: 1px solid rgba($naranja, 0.4);

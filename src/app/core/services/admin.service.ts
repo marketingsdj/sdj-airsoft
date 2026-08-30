@@ -44,6 +44,8 @@ export interface ReservaAdmin {
   extrasAnulados?: string[];
   /** Por qué quedó pendiente el aviso (para poder deshacerlo del todo). */
   avisoMotivo?: string;
+  /** Cómo era la reserva tal y como la hizo el cliente (si la has editado). */
+  original?: Record<string, unknown> | null;
   /** Cambio pedido por el cliente desde /cancelar, pendiente de revisar. */
   cambio?: Record<string, unknown> | null;
 }
@@ -114,6 +116,7 @@ export class AdminService {
         avisoPendiente: !!x['avisoPendiente'],
         extrasAnulados: (x['extrasAnulados'] as string[]) || [],
         avisoMotivo: x['avisoMotivo'] as string | undefined,
+        original: (x['original'] as Record<string, unknown>) || null,
         creado,
       };
     });
@@ -183,8 +186,16 @@ export class AdminService {
       if (fecha && hora && pista) await this.bloquearHueco(fecha, hora, pista);
     }
 
+    // La primera vez que tocas una reserva se guarda cómo la dejó el cliente.
+    const original = r.original ?? {
+      tipo: r.tipo || '', fecha: r.fecha || '', hora: r.hora || '', pista: r.pista || '',
+      personas: r.personas ?? null, nombre: r.nombre || '', email: r.email || '',
+      telefono: r.telefono || '', extras: r.extras || [],
+    };
+
     await updateDoc(doc(db, 'reservas', r.id), {
       ...datos,
+      original,
       ...(datos.email !== undefined ? { email: datos.email.trim().toLowerCase() } : {}),
       estadoActualizado: serverTimestamp(),
       ...(cambiaFranja ? { avisoPendiente: true, avisoMotivo: 'cambio-ok' } : {}),
