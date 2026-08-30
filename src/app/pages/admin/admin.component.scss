@@ -195,9 +195,14 @@
 }
 
 // Pendiente de gestionar: la fila entera se tiñe, se ve de un vistazo.
-.admin-fila--pendiente td { background: rgba($naranja, 0.14); }
-.admin-tabla tbody tr.admin-fila--pendiente:hover td { background: rgba($naranja, 0.2); }
-.admin-fila--pasada td { opacity: 0.5; }
+.admin-fila--pendiente:not(.admin-fila--pasada) td { background: rgba($naranja, 0.14); }
+.admin-tabla tbody tr.admin-fila--pendiente:not(.admin-fila--pasada):hover td { background: rgba($naranja, 0.2); }
+// Ya celebradas: fondo gris apagado para distinguirlas de las proximas.
+.admin-fila--pasada td {
+  background: rgba(0, 0, 0, 0.35);
+  color: rgba($crema, 0.45);
+}
+.admin-tabla tbody tr.admin-fila--pasada:hover td { background: rgba(0, 0, 0, 0.28); }
 
 .admin-fecha {
   background: none;
