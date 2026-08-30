@@ -96,7 +96,9 @@ export class AdminComponent implements OnInit {
     const hoy = new Date().toISOString().slice(0, 10);
 
     const lista = this.reservas().filter(r => {
-      if (this.filtroEstadoSignal() && r.estado !== this.filtroEstadoSignal()) return false;
+      if (this.filtroEstadoSignal() === 'pendiente') {
+        if (!this.requiereAccion(r)) return false;
+      } else if (this.filtroEstadoSignal() && r.estado !== this.filtroEstadoSignal()) return false;
       if (this.filtroTipoSignal() && r.tipo !== this.filtroTipoSignal()) return false;
       if (this.desdeSignal() && (r.fecha || '') < this.desdeSignal()) return false;
       if (this.hastaSignal() && (r.fecha || '') > this.hastaSignal()) return false;
@@ -155,8 +157,17 @@ export class AdminComponent implements OnInit {
     this.onFiltroCambiado();
   }
 
+  /**
+   * ¿Necesita que hagas algo? Está pendiente de gestionar, el cliente ha
+   * pedido un cambio, o es un día a consultar cuya hora aún no has fijado.
+   */
+  requiereAccion(r: ReservaAdmin): boolean {
+    if (r.estado === 'denegada' || r.estado === 'cancelada') return false;
+    return r.estado === 'pendiente' || !!r.cambio || (!!r.laborable && !r.horaFijada);
+  }
+
   // ── Contadores del resumen ──────────────────────────────────────────────────
-  totalPendientes = computed(() => this.reservas().filter(r => r.estado === 'pendiente').length);
+  totalPendientes = computed(() => this.reservas().filter(r => this.requiereAccion(r)).length);
   totalCambios = computed(() => this.reservas().filter(r => !!r.cambio).length);
   totalProximas = computed(() => {
     const hoy = new Date().toISOString().slice(0, 10);
@@ -253,6 +264,99 @@ export class AdminComponent implements OnInit {
     if (cambio['email'])      partes.push(`email → ${cambio['email']}`);
     if (cambio['comentario']) partes.push(`"${cambio['comentario']}"`);
     return partes.join(' · ');
+  }
+
+  // Mismas horas de llegada que ofrece el calendario al cliente, para no
+  // inventar minutos que luego no encajan con las sesiones.
+  private readonly HORAS_GRUPO = [
+    '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00',
+    '13:30', '14:00', '14:30', '15:00', '15:30', '16:00',
+  ];
+  private readonly HORAS_TXIKI = [...this.HORAS_GRUPO, '16:30', '17:00'];
+
+  horasDisponibles(r: ReservaAdmin): string[] {
+    const horas = r.tipo === 'txiki' ? this.HORAS_TXIKI : this.HORAS_GRUPO;
+    // Si la hora guardada no está en la lista (reservas antiguas), se añade.
+    return r.hora && !horas.includes(r.hora) ? [r.hora, ...horas] : horas;
+  }
+
+  // ── Avisar al cliente ───────────────────────────────────────────────────────
+  // No hay envío automático: se prepara el texto y se abre WhatsApp o el correo
+  // para que lo mandes tú desde tus propias cuentas.
+  readonly motivos = [
+    { key: 'confirmada', label: 'Reserva confirmada' },
+    { key: 'hora',       label: 'Hora fijada' },
+    { key: 'cambio-ok',  label: 'Cambio aceptado' },
+    { key: 'cambio-no',  label: 'Cambio no posible' },
+    { key: 'extra',      label: 'Extra no disponible' },
+    { key: 'anulada',    label: 'Reserva anulada' },
+  ];
+
+  motivoPorReserva: Record<string, string> = {};
+  textoEditado: Record<string, string> = {};
+  copiado = signal<string | null>(null);
+
+  motivo(r: ReservaAdmin): string {
+    return this.motivoPorReserva[r.id] || 'confirmada';
+  }
+
+  cambiarMotivo(r: ReservaAdmin, motivo: string) {
+    this.motivoPorReserva[r.id] = motivo;
+    delete this.textoEditado[r.id];   // el texto se vuelve a generar
+  }
+
+  /** Texto del aviso: el generado para ese motivo, o el que hayas retocado. */
+  textoAviso(r: ReservaAdmin): string {
+    if (this.textoEditado[r.id] !== undefined) return this.textoEditado[r.id];
+
+    const nombre = (r.nombre || '').split(' ')[0] || 'hola';
+    const dia = this.fechaLarga(r.fecha);
+    const cuando = dia + (r.hora ? ' a las ' + r.hora : '');
+    const ref = r.numeroReserva ? ' (reserva ' + r.numeroReserva + ')' : '';
+
+    switch (this.motivo(r)) {
+      case 'hora':
+        return 'Hola ' + nombre + ', te escribimos de Soldados de Juguete. Hemos fijado la hora de vuestra reserva del '
+          + dia + ': os esperamos a las ' + r.hora + ref
+          + '. Si no os viene bien, decidnos y lo ajustamos. ¡Nos vemos en el campo!';
+      case 'cambio-ok':
+        return 'Hola ' + nombre + ', te escribimos de Soldados de Juguete. Hemos aplicado el cambio que pediste: tu reserva queda para el '
+          + cuando + ref + '. ¡Nos vemos en el campo!';
+      case 'cambio-no':
+        return 'Hola ' + nombre + ', te escribimos de Soldados de Juguete. No podemos aplicar el cambio que pediste porque no tenemos disponibilidad. Tu reserva sigue en pie para el '
+          + cuando + ref + '. Si necesitas otra fecha, dínoslo y buscamos alternativa.';
+      case 'extra':
+        return 'Hola ' + nombre + ', te escribimos de Soldados de Juguete por tu reserva del ' + cuando + ref
+          + '. No vamos a poder ofrecerte uno de los extras que habías pedido, así que no se te cobrará. La reserva se mantiene igual. Cualquier duda, aquí estamos.';
+      case 'anulada':
+        return 'Hola ' + nombre + ', te escribimos de Soldados de Juguete. Lamentamos decirte que no podemos atender tu reserva del '
+          + cuando + ref + '. Si quieres, buscamos otra fecha que os venga bien.';
+      default:
+        return 'Hola ' + nombre + ', te confirmamos tu reserva en Soldados de Juguete para el ' + cuando + ref
+          + '. Te esperamos en Larrabetzu, Barrio Legina. ¡Nos vemos en el campo!';
+    }
+  }
+
+  /** Enlace de WhatsApp con el mensaje ya escrito. */
+  enlaceWhatsapp(r: ReservaAdmin): string {
+    const tel = (r.telefono || '').replace(/\D/g, '');
+    const num = tel.startsWith('34') ? tel : '34' + tel;
+    return 'https://wa.me/' + num + '?text=' + encodeURIComponent(this.textoAviso(r));
+  }
+
+  /** Enlace de correo con asunto y cuerpo preparados. */
+  enlaceEmail(r: ReservaAdmin): string {
+    const asunto = 'Tu reserva en Soldados de Juguete' + (r.numeroReserva ? ' · ' + r.numeroReserva : '');
+    return 'mailto:' + (r.email || '') + '?subject=' + encodeURIComponent(asunto)
+      + '&body=' + encodeURIComponent(this.textoAviso(r));
+  }
+
+  async copiarAviso(r: ReservaAdmin) {
+    try {
+      await navigator.clipboard.writeText(this.textoAviso(r));
+      this.copiado.set(r.id);
+      setTimeout(() => this.copiado.set(null), 2000);
+    } catch { /* si el navegador lo impide, el texto se puede seleccionar a mano */ }
   }
 
   toggleDetalle(id: string) {

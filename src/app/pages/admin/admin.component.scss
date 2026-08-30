@@ -358,6 +358,13 @@
 
   &--ok:hover:not(:disabled) { border-color: #6bd08a; color: #6bd08a; }
   &--no:hover:not(:disabled) { border-color: #e2685f; color: #e2685f; }
+
+  // Motivo de aviso seleccionado.
+  &--activo {
+    border-color: $naranja;
+    color: $naranja;
+    background: rgba($naranja, 0.12);
+  }
 }
 
 .admin-codigo {
@@ -412,6 +419,54 @@
   }
 
   .btn { margin-top: 10px; font-size: 11px; padding: 8px 14px; }
+}
+
+// ── Aviso al cliente (dentro del detalle) ─────────────────────────────────────
+.admin-aviso-cliente {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid $line;
+
+  &__titulo {
+    font-family: $font-mono;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: $naranja;
+    margin: 0 0 10px;
+  }
+
+  &__motivos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+
+  &__texto {
+    width: 100%;
+    box-sizing: border-box;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid $line;
+    border-radius: $radius-sm;
+    color: $crema;
+    padding: 10px 12px;
+    font-family: inherit;
+    font-size: 13px;
+    line-height: 1.5;
+    resize: vertical;
+
+    &:focus { outline: none; border-color: rgba($naranja, 0.7); }
+  }
+
+  &__envios {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+
+    .btn { font-size: 11px; padding: 9px 16px; }
+  }
 }
 
 // ── Mensajes ──────────────────────────────────────────────────────────────────

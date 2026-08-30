@@ -147,7 +147,7 @@
             <tbody>
               @for (r of filtradas(); track r.id) {
                 <tr [class.admin-fila--pasada]="esPasada(r)"
-                    [class.admin-fila--pendiente]="r.estado === 'pendiente'">
+                    [class.admin-fila--pendiente]="requiereAccion(r)">
                   <td class="c-fecha">
                     <button class="admin-fecha" (click)="toggleDetalle(r.id)">{{ fechaLarga(r.fecha) }}</button>
                     <span class="admin-hora">
@@ -159,9 +159,12 @@
                         } @else {
                           <span class="admin-hora__pedida">{{ r.hora }} pedida</span>
                         }
-                        <input class="admin-hora__input" type="time" [value]="r.hora || ''"
-                          [disabled]="guardando() === r.id"
-                          (change)="fijarHora(r, $any($event.target).value)" />
+                        <select class="admin-hora__input" [disabled]="guardando() === r.id"
+                          (change)="fijarHora(r, $any($event.target).value)">
+                          @for (h of horasDisponibles(r); track h) {
+                            <option [value]="h" [selected]="h === r.hora">{{ h }}</option>
+                          }
+                        </select>
                       } @else {
                         {{ r.hora || '—' }}{{ r.pista ? ' · ' + r.pista : '' }}
                         @if (r.horaFijada) { <span class="admin-hora__ok">fijada</span> }
@@ -240,6 +243,35 @@
                       </label>
                       <button class="btn btn--ghost" [disabled]="guardando() === r.id"
                         (click)="guardarNota(r, nota.value)">Guardar nota</button>
+
+                      <!-- Aviso al cliente: se prepara el texto y lo envías tú. -->
+                      <div class="admin-aviso-cliente">
+                        <p class="admin-aviso-cliente__titulo">Avisar al cliente</p>
+
+                        <div class="admin-aviso-cliente__motivos">
+                          @for (m of motivos; track m.key) {
+                            <button type="button" class="admin-btn"
+                              [class.admin-btn--activo]="motivo(r) === m.key"
+                              (click)="cambiarMotivo(r, m.key)">{{ m.label }}</button>
+                          }
+                        </div>
+
+                        <textarea class="admin-aviso-cliente__texto" rows="3"
+                          [value]="textoAviso(r)"
+                          (input)="textoEditado[r.id] = $any($event.target).value"></textarea>
+
+                        <div class="admin-aviso-cliente__envios">
+                          @if (r.telefono) {
+                            <a class="btn btn--primary" [href]="enlaceWhatsapp(r)" target="_blank" rel="noopener">WhatsApp</a>
+                          }
+                          @if (r.email) {
+                            <a class="btn btn--ghost" [href]="enlaceEmail(r)">Email</a>
+                          }
+                          <button type="button" class="btn btn--ghost" (click)="copiarAviso(r)">
+                            {{ copiado() === r.id ? '¡Copiado!' : 'Copiar texto' }}
+                          </button>
+                        </div>
+                      </div>
                     </td>
                   </tr>
                 }
