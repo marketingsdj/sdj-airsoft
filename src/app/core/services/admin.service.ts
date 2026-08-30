@@ -38,6 +38,8 @@ export interface ReservaAdmin {
   horaPedida?: string;
   /** Hay un cambio hecho que aún no le has comunicado al cliente. */
   avisoPendiente?: boolean;
+  /** Extras que has anulado, para dejar constancia. */
+  extrasAnulados?: string[];
   /** Cambio pedido por el cliente desde /cancelar, pendiente de revisar. */
   cambio?: Record<string, unknown> | null;
 }
@@ -106,6 +108,7 @@ export class AdminService {
         horaFijada: !!x['horaFijada'],
         horaPedida: x['horaPedida'] as string | undefined,
         avisoPendiente: !!x['avisoPendiente'],
+        extrasAnulados: (x['extrasAnulados'] as string[]) || [],
         creado,
       };
     });
@@ -124,6 +127,20 @@ export class AdminService {
     // La primera vez se deja constancia de la hora que habia pedido el cliente.
     if (horaPedida) datos['horaPedida'] = horaPedida;
     await updateDoc(doc(db, 'reservas', id), datos);
+  }
+
+  /**
+   * Anula un extra concreto manteniendo la reserva. Guarda además el histórico
+   * de lo anulado y deja el aviso al cliente pendiente.
+   */
+  async anularExtra(r: ReservaAdmin, extra: string): Promise<void> {
+    if (!db) return;
+    await updateDoc(doc(db, 'reservas', r.id), {
+      extras: (r.extras || []).filter(e => e !== extra),
+      extrasAnulados: [...((r as { extrasAnulados?: string[] }).extrasAnulados || []), extra],
+      avisoPendiente: true,
+      estadoActualizado: serverTimestamp(),
+    });
   }
 
   /** Marca que queda (o ya no queda) un aviso por enviar al cliente. */

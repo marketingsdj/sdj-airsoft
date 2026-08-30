@@ -311,6 +311,8 @@ export class AdminComponent implements OnInit {
   ];
 
   motivoPorReserva: Record<string, string> = {};
+  /** Extra que acabas de anular, para nombrarlo en el mensaje. */
+  extraAnulado: Record<string, string> = {};
   textoEditado: Record<string, string> = {};
   copiado = signal<string | null>(null);
 
@@ -376,6 +378,23 @@ export class AdminComponent implements OnInit {
       await this.admin.marcarAviso(r.id, false);
     } catch {
       this.error.set('No se ha podido guardar que ya has avisado.');
+    }
+  }
+
+  /** Anula un extra concreto sin tocar el resto de la reserva. */
+  async anularExtra(r: ReservaAdmin, extra: string) {
+    this.guardando.set(r.id);
+    try {
+      await this.admin.anularExtra(r, extra);
+      this.reservas.update(list => list.map(x => (x.id === r.id
+        ? { ...x, extras: (x.extras || []).filter(e => e !== extra), extrasAnulados: [...(x.extrasAnulados || []), extra] }
+        : x)));
+      this.extraAnulado[r.id] = extra;
+      this.prepararAviso(r, 'extra');
+    } catch {
+      this.error.set('No se ha podido anular el extra.');
+    } finally {
+      this.guardando.set(null);
     }
   }
 
