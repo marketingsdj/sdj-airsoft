@@ -183,7 +183,8 @@ export class AdminComponent implements OnInit {
 
   /** ¿Es una reserva de día "a consultar" (hora aproximada, sin franja fija)? */
   horaAproximada(r: ReservaAdmin): boolean {
-    return (r.laborable || (!r.pista && r.tipo !== 'individual' && !!r.hora)) && !r.horaFijada;
+    // Sigue siendo editable aunque ya la hayas fijado: puedes rectificar.
+    return r.laborable || (!r.pista && r.tipo !== 'individual' && !!r.hora);
   }
 
   /** Fija tú la hora definitiva de una reserva a consultar. */

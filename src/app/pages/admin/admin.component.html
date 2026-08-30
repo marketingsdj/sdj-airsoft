@@ -152,8 +152,13 @@
                     <button class="admin-fecha" (click)="toggleDetalle(r.id)">{{ fechaLarga(r.fecha) }}</button>
                     <span class="admin-hora">
                       @if (horaAproximada(r)) {
-                        <!-- Día a consultar: el cliente propuso una hora; puedes fijar otra. -->
-                        <span class="admin-hora__pedida">{{ r.hora }} pedida</span>
+                        <!-- Día a consultar: el cliente propuso una hora; puedes fijar
+                             otra y cambiarla luego las veces que haga falta. -->
+                        @if (r.horaFijada) {
+                          <span class="admin-hora__ok">{{ r.hora }} fijada</span>
+                        } @else {
+                          <span class="admin-hora__pedida">{{ r.hora }} pedida</span>
+                        }
                         <input class="admin-hora__input" type="time" [value]="r.hora || ''"
                           [disabled]="guardando() === r.id"
                           (change)="fijarHora(r, $any($event.target).value)" />
