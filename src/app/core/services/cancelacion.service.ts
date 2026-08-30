@@ -21,6 +21,7 @@ export interface DatosCancelacion {
 export interface SolicitudCambio {
   fecha?: string;
   hora?: string;
+  pista?: string;
   personas?: number;
   nombre?: string;
   telefono?: string;

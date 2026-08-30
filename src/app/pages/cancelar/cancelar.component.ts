@@ -6,10 +6,11 @@ import {
   CancelacionService, DatosCancelacion, HORAS_MINIMAS_CANCELACION,
 } from '../../core/services/cancelacion.service';
 import { AnalyticsService } from '../../core/services/analytics.service';
+import { CalendarioGruposComponent } from '../../shared/calendario-grupos/calendario-grupos.component';
 
 @Component({
   selector: 'app-cancelar',
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, CalendarioGruposComponent],
   templateUrl: './cancelar.component.html',
   styleUrl: './cancelar.component.scss',
 })
@@ -31,7 +32,7 @@ export class CancelarComponent implements OnInit {
   modo = signal<'elegir' | 'cancelar' | 'modificar'>('elegir');
   enviandoCambio = signal(false);
   cambioEnviado = signal(false);
-  cambio = { fecha: '', hora: '', personas: null as number | null, nombre: '', telefono: '', email: '', comentario: '' };
+  cambio = { fecha: '', hora: '', pista: '', personas: null as number | null, nombre: '', telefono: '', email: '', comentario: '' };
 
   ngOnInit() {
     // El enlace del PDF y de la pantalla de confirmación trae el código puesto.
@@ -67,6 +68,26 @@ export class CancelarComponent implements OnInit {
     }
   }
 
+  /** Franja nueva elegida en el calendario de disponibilidad. */
+  onNuevoSlot(ev: { fecha: string; hora: string; pista: string }) {
+    this.cambio.fecha = ev.fecha;
+    this.cambio.hora  = ev.hora;
+    this.cambio.pista = ev.pista;
+  }
+
+  /** Día entre semana: no hay franjas, solo hora aproximada de llegada. */
+  onNuevoLaborable(ev: { fecha: string; horaAprox: string }) {
+    this.cambio.fecha = ev.fecha;
+    this.cambio.hora  = ev.horaAprox;
+    this.cambio.pista = '';
+  }
+
+  quitarFechaNueva() {
+    this.cambio.fecha = '';
+    this.cambio.hora = '';
+    this.cambio.pista = '';
+  }
+
   /** ¿Ha rellenado al menos un campo del cambio? */
   get hayCambio(): boolean {
     const c = this.cambio;
@@ -82,6 +103,7 @@ export class CancelarComponent implements OnInit {
       await this.cancelacion.solicitarCambio(r.codigo, {
         fecha: this.cambio.fecha || undefined,
         hora: this.cambio.hora || undefined,
+        pista: this.cambio.pista || undefined,
         personas: this.cambio.personas ?? undefined,
         nombre: this.cambio.nombre.trim() || undefined,
         telefono: this.cambio.telefono.trim() || undefined,

@@ -219,6 +219,51 @@
     &:focus { outline: none; border-color: rgba($naranja, 0.7); }
   }
 
+  &__bloque {
+    border: 1px solid $line;
+    border-radius: $radius-md;
+    padding: 16px;
+    background: rgba(0, 0, 0, 0.15);
+  }
+
+  &__bloque-titulo {
+    font-family: $font-mono;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba($crema, 0.5);
+    margin: 0 0 10px;
+  }
+
+  &__bloque-ayuda {
+    margin: 0 0 14px;
+    font-size: 13px;
+    color: rgba($crema, 0.6);
+    line-height: 1.5;
+  }
+
+  &__elegido {
+    margin: 0 0 14px;
+    font-size: 14px;
+    color: $crema;
+
+    strong { color: $naranja; }
+  }
+
+  &__quitar {
+    margin-left: 8px;
+    background: none;
+    border: none;
+    color: rgba($crema, 0.5);
+    font-family: $font-mono;
+    font-size: 11px;
+    text-transform: uppercase;
+    cursor: pointer;
+    text-decoration: underline;
+
+    &:hover { color: $naranja; }
+  }
+
   &__error {
     margin: 16px 0 0;
     color: #e2685f;

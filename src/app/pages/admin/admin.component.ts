@@ -226,6 +226,7 @@ export class AdminComponent implements OnInit {
     const partes: string[] = [];
     if (cambio['fecha'])      partes.push(`fecha → ${cambio['fecha']}`);
     if (cambio['hora'])       partes.push(`hora → ${cambio['hora']}`);
+    if (cambio['pista'])      partes.push(`pista → ${cambio['pista']}`);
     if (cambio['personas'])   partes.push(`personas → ${cambio['personas']}`);
     if (cambio['nombre'])     partes.push(`nombre → ${cambio['nombre']}`);
     if (cambio['telefono'])   partes.push(`teléfono → ${cambio['telefono']}`);

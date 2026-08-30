@@ -96,20 +96,35 @@
             </p>
 
             <form class="cancelar__cambio" (ngSubmit)="enviarCambio()">
-              <div class="cancelar__cambio-fila">
-                <label class="cancelar__campo">
-                  <span>Nueva fecha</span>
-                  <input type="date" name="fecha" [(ngModel)]="cambio.fecha" />
-                </label>
-                <label class="cancelar__campo">
-                  <span>Nueva hora</span>
-                  <input type="time" name="hora" [(ngModel)]="cambio.hora" />
-                </label>
-                <label class="cancelar__campo">
-                  <span>Nº de personas</span>
-                  <input type="number" name="personas" min="1" max="100" [(ngModel)]="cambio.personas" />
-                </label>
+              <div class="cancelar__bloque">
+                <p class="cancelar__bloque-titulo">¿Quieres cambiar el día o la hora?</p>
+                @if (cambio.fecha) {
+                  <p class="cancelar__elegido">
+                    Nueva fecha: <strong>{{ fechaLarga(cambio.fecha) | titlecase }}</strong>
+                    @if (cambio.hora) { · <strong>{{ cambio.hora }}</strong> }
+                    @if (cambio.pista) { · Pista {{ cambio.pista }} }
+                    <button type="button" class="cancelar__quitar" (click)="quitarFechaNueva()">quitar</button>
+                  </p>
+                } @else {
+                  <p class="cancelar__bloque-ayuda">Elige una franja disponible en el calendario. Si no cambias de día, sáltate este paso.</p>
+                }
+
+                <app-calendario-grupos
+                  modo="seleccion"
+                  [txiki]="r.tipo === 'txiki' || r.tipo === 'evento'"
+                  [permitirLaborables]="r.tipo !== 'individual'"
+                  [mostrarSlots]="!!r.pista"
+                  (slotSeleccionado)="onNuevoSlot($event)"
+                  (fechaSeleccionada)="cambio.fecha = $event; cambio.hora = ''; cambio.pista = ''"
+                  (laborableSeleccionado)="onNuevoLaborable($event)">
+                </app-calendario-grupos>
               </div>
+
+              <label class="cancelar__campo">
+                <span>Nº de personas</span>
+                <input type="number" name="personas" min="1" max="100" [(ngModel)]="cambio.personas"
+                  placeholder="Solo si cambia" />
+              </label>
 
               <div class="cancelar__cambio-fila">
                 <label class="cancelar__campo">

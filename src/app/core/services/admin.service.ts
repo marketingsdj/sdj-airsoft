@@ -139,6 +139,7 @@ export class AdminService {
     const nueva: Record<string, unknown> = {};
     if (cambio['fecha'])    nueva['fecha']    = cambio['fecha'];
     if (cambio['hora'])     nueva['hora']     = cambio['hora'];
+    if (cambio['pista'])    nueva['pista']    = cambio['pista'];
     if (cambio['personas']) nueva['personas'] = cambio['personas'];
     if (cambio['nombre'])   nueva['nombre']   = cambio['nombre'];
     if (cambio['telefono']) nueva['telefono'] = cambio['telefono'];
@@ -147,18 +148,20 @@ export class AdminService {
     // Si cambia el día o la hora y la reserva tenía franja, se mueve el hueco.
     const fecha = (nueva['fecha'] as string) || reserva.fecha || '';
     const hora  = (nueva['hora']  as string) || reserva.hora  || '';
-    if (reserva.pista && (nueva['fecha'] || nueva['hora'])) {
-      if (reserva.fecha && reserva.hora) {
+    const pista = (nueva['pista'] as string) || reserva.pista || '';
+    if (nueva['fecha'] || nueva['hora'] || nueva['pista']) {
+      // Se suelta la franja antigua y se coge la nueva.
+      if (reserva.fecha && reserva.hora && reserva.pista) {
         await this.liberarHueco(reserva.fecha, reserva.hora, reserva.pista);
       }
-      await this.bloquearHueco(fecha, hora, reserva.pista);
+      if (pista) await this.bloquearHueco(fecha, hora, pista);
     }
 
     await updateDoc(doc(db, 'reservas', reserva.id), { ...nueva, estadoActualizado: serverTimestamp() });
     await updateDoc(doc(db, 'cancelaciones', codigo), {
       'cambio.estado': 'aceptado',
       fecha, hora,
-      slotId: reserva.pista ? `${fecha}_${hora}_${reserva.pista}` : '',
+      slotId: pista ? `${fecha}_${hora}_${pista}` : '',
     });
   }
 
