@@ -301,14 +301,26 @@ export class AdminComponent implements OnInit {
   // ── Avisar al cliente ───────────────────────────────────────────────────────
   // No hay envío automático: se prepara el texto y se abre WhatsApp o el correo
   // para que lo mandes tú desde tus propias cuentas.
-  readonly motivos = [
+  readonly motivos: { key: string; label: string; soloTxiki?: boolean }[] = [
     { key: 'confirmada', label: 'Reserva confirmada' },
     { key: 'hora',       label: 'Hora fijada' },
     { key: 'cambio-ok',  label: 'Cambio aceptado' },
     { key: 'cambio-no',  label: 'Cambio no posible' },
     { key: 'extra',      label: 'Extra no disponible' },
     { key: 'anulada',    label: 'Reserva anulada' },
+    { key: 'autorizacion', label: 'Autorización de menores', soloTxiki: true },
   ];
+
+  /** Enlace público al PDF de autorización (según el dominio donde estés). */
+  get urlAutorizacion(): string {
+    const base = typeof location !== 'undefined' ? location.origin : 'https://www.soldadosdejuguete.com';
+    return base + '/documentos/autorizacion-menores.pdf';
+  }
+
+  /** Motivos aplicables a esa reserva (la autorización solo en Txikipaintball). */
+  motivosDe(r: ReservaAdmin): { key: string; label: string }[] {
+    return this.motivos.filter(m => !m.soloTxiki || r.tipo === 'txiki');
+  }
 
   motivoPorReserva: Record<string, string> = {};
   /** Extra que acabas de anular, para nombrarlo en el mensaje. */
@@ -348,6 +360,10 @@ export class AdminComponent implements OnInit {
       case 'extra':
         return 'Hola ' + nombre + ', te escribimos de Soldados de Juguete por tu reserva del ' + cuando + ref
           + '. No vamos a poder ofrecerte uno de los extras que habías pedido, así que no se te cobrará. La reserva se mantiene igual. Cualquier duda, aquí estamos.';
+      case 'autorizacion':
+        return 'Hola ' + nombre + ', te escribimos de Soldados de Juguete por vuestra reserva de Txikipaintball del '
+          + cuando + ref + '. Necesitamos que cada niño o niña traiga su autorización firmada por el padre, madre o tutor legal. '
+          + 'Puedes descargarla aquí: ' + this.urlAutorizacion + ' — Sin ella no podrán participar. ¡Gracias!';
       case 'anulada':
         return 'Hola ' + nombre + ', te escribimos de Soldados de Juguete. Lamentamos decirte que no podemos atender tu reserva del '
           + cuando + ref + '. Si quieres, buscamos otra fecha que os venga bien.';

@@ -270,7 +270,7 @@
                         <p class="admin-aviso-cliente__titulo">Avisar al cliente</p>
 
                         <div class="admin-aviso-cliente__motivos">
-                          @for (m of motivos; track m.key) {
+                          @for (m of motivosDe(r); track m.key) {
                             <button type="button" class="admin-btn"
                               [class.admin-btn--activo]="motivo(r) === m.key"
                               (click)="cambiarMotivo(r, m.key)">{{ m.label }}</button>
@@ -288,6 +288,9 @@
                           }
                           @if (r.email) {
                             <a class="btn btn--ghost" [href]="enlaceEmail(r)" (click)="marcarAvisado(r)">Email</a>
+                          }
+                          @if (r.tipo === 'txiki') {
+                            <a class="btn btn--ghost" [href]="urlAutorizacion" target="_blank" rel="noopener">Ver autorización</a>
                           }
                           <button type="button" class="btn btn--ghost" (click)="copiarAviso(r)">
                             {{ copiado() === r.id ? '¡Copiado!' : 'Copiar texto' }}
