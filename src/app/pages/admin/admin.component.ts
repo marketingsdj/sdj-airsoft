@@ -38,7 +38,7 @@ export class AdminComponent implements OnInit {
   soloProximas = false;
   orden: Orden = 'fecha';
 
-  readonly estados: EstadoReserva[] = ['pendiente', 'confirmada', 'denegada', 'cancelada'];
+  readonly estados: EstadoReserva[] = ['pendiente', 'recordatorio', 'confirmada', 'denegada', 'cancelada'];
   readonly tipos = [
     { key: 'individual', label: 'Partida abierta' },
     { key: 'privada',    label: 'Partida privada' },
@@ -167,8 +167,22 @@ export class AdminComponent implements OnInit {
     return r.estado === 'pendiente' || !!r.cambio || !!r.avisoPendiente || (!!r.laborable && !r.horaFijada);
   }
 
+  /** Días que faltan para la partida (negativo si ya pasó). */
+  diasPara(r: ReservaAdmin): number {
+    if (!r.fecha) return 999;
+    const [a, m, d] = r.fecha.split('-').map(Number);
+    const hoy = new Date(); hoy.setHours(0, 0, 0, 0);
+    return Math.round((new Date(a, m - 1, d).getTime() - hoy.getTime()) / 86400000);
+  }
+
+  /** Gestionada pero con el recordatorio sin enviar, y la fecha ya cerca. */
+  recordatorioCercano(r: ReservaAdmin): boolean {
+    return r.estado === 'recordatorio' && !this.esPasada(r) && this.diasPara(r) <= 7;
+  }
+
   // ── Contadores del resumen ──────────────────────────────────────────────────
   totalPendientes = computed(() => this.reservas().filter(r => this.requiereAccion(r)).length);
+  totalRecordatorios = computed(() => this.reservas().filter(r => this.recordatorioCercano(r)).length);
   totalCambios = computed(() => this.reservas().filter(r => !!r.cambio).length);
   totalProximas = computed(() => {
     const hoy = new Date().toISOString().slice(0, 10);
@@ -188,7 +202,8 @@ export class AdminComponent implements OnInit {
       this.reservas.update(list => list.map(x => (x.id === r.id ? { ...x, estado } : x)));
       const actualizada = { ...r, estado };
       if (estado === 'denegada') this.prepararAviso(actualizada, 'anulada');
-      if (estado === 'confirmada') this.prepararAviso(actualizada, 'confirmada');
+      if (estado === 'recordatorio') this.prepararAviso(actualizada, 'confirmada');
+      if (estado === 'confirmada') this.prepararAviso(actualizada, 'recordatorio');
     } catch {
       this.error.set('No se ha podido guardar el cambio.');
     } finally {
@@ -302,7 +317,8 @@ export class AdminComponent implements OnInit {
   // No hay envío automático: se prepara el texto y se abre WhatsApp o el correo
   // para que lo mandes tú desde tus propias cuentas.
   readonly motivos: { key: string; label: string; soloTxiki?: boolean }[] = [
-    { key: 'confirmada', label: 'Reserva confirmada' },
+    { key: 'confirmada',   label: 'Reserva confirmada' },
+    { key: 'recordatorio', label: 'Recordatorio' },
     { key: 'hora',       label: 'Hora fijada' },
     { key: 'cambio-ok',  label: 'Cambio aceptado' },
     { key: 'cambio-no',  label: 'Cambio no posible' },
@@ -347,6 +363,9 @@ export class AdminComponent implements OnInit {
     const ref = r.numeroReserva ? ' (reserva ' + r.numeroReserva + ')' : '';
 
     switch (this.motivo(r)) {
+      case 'recordatorio':
+        return 'Hola ' + nombre + ', te recordamos que tienes tu reserva en Soldados de Juguete el ' + cuando + ref
+          + '. Te esperamos en Larrabetzu, Barrio Legina. Ven con ropa que se pueda manchar y calzado deportivo. ¡Nos vemos en el campo!';
       case 'hora':
         return 'Hola ' + nombre + ', te escribimos de Soldados de Juguete. Hemos fijado la hora de vuestra reserva del '
           + dia + ': os esperamos a las ' + r.hora + ref

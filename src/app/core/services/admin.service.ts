@@ -9,7 +9,9 @@ import {
 import { db, auth, isFirebaseConfigured } from '../firebase';
 
 /** Estado de gestión de una reserva. */
-export type EstadoReserva = 'pendiente' | 'confirmada' | 'denegada' | 'cancelada';
+// Flujo: pendiente (por gestionar) -> recordatorio (gestionada, falta avisar
+// unos dias antes) -> confirmada (recordatorio enviado).
+export type EstadoReserva = 'pendiente' | 'recordatorio' | 'confirmada' | 'denegada' | 'cancelada';
 
 export interface ReservaAdmin {
   id: string;
@@ -89,7 +91,7 @@ export class AdminService {
       const creado = x['creado'] instanceof Timestamp ? (x['creado'] as Timestamp).toDate() : null;
       // Las reservas antiguas no tienen estado: se deducen del campo `gestion`.
       const estado = (x['estado'] as EstadoReserva) ??
-        (x['gestion'] === 'pendiente' ? 'pendiente' : 'confirmada');
+        (x['gestion'] === 'pendiente' ? 'pendiente' : 'recordatorio');
       return {
         id: d.id,
         numeroReserva: x['numeroReserva'] as string | undefined,

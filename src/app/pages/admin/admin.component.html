@@ -54,6 +54,10 @@
           <span class="admin-kpi__num">{{ totalPendientes() }}</span>
           <span class="admin-kpi__lbl">Pendientes de gestionar</span>
         </button>
+        <div class="admin-kpi" [class.admin-kpi--recordatorio]="totalRecordatorios() > 0">
+          <span class="admin-kpi__num">{{ totalRecordatorios() }}</span>
+          <span class="admin-kpi__lbl">Recordatorios por enviar</span>
+        </div>
         <div class="admin-kpi" [class.admin-kpi--alerta]="totalCambios() > 0">
           <span class="admin-kpi__num">{{ totalCambios() }}</span>
           <span class="admin-kpi__lbl">Cambios pedidos</span>
@@ -147,7 +151,9 @@
             <tbody>
               @for (r of filtradas(); track r.id) {
                 <tr [class.admin-fila--pasada]="esPasada(r)"
-                    [class.admin-fila--pendiente]="requiereAccion(r)">
+                    [class.admin-fila--pendiente]="requiereAccion(r)"
+                    [class.admin-fila--recordatorio]="!requiereAccion(r) && r.estado === 'recordatorio' && !esPasada(r)"
+                    [class.admin-fila--recordatorio-ya]="recordatorioCercano(r) && !requiereAccion(r)">
                   <td class="c-fecha">
                     <button class="admin-fecha" (click)="toggleDetalle(r.id)">{{ fechaLarga(r.fecha) }}</button>
                     <span class="admin-hora">
@@ -213,9 +219,13 @@
                       <!-- Rejilla fija: cada botón ocupa siempre su columna, así
                            quedan alineados aunque falte uno de los dos. -->
                       <span class="admin-acciones__grid">
-                        @if (r.estado !== 'confirmada') {
+                        @if (r.estado === 'pendiente' || r.estado === 'denegada') {
+                          <button class="admin-btn admin-btn--recordatorio" [disabled]="guardando() === r.id"
+                            (click)="marcar(r, 'recordatorio')">Gestionada</button>
+                        }
+                        @if (r.estado === 'recordatorio') {
                           <button class="admin-btn admin-btn--ok" [disabled]="guardando() === r.id"
-                            (click)="marcar(r, 'confirmada')">Confirmar</button>
+                            (click)="marcar(r, 'confirmada')">Recordada</button>
                         }
                         @if (r.estado !== 'denegada') {
                           <button class="admin-btn admin-btn--no" [disabled]="guardando() === r.id"
