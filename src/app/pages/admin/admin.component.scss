@@ -136,6 +136,47 @@
   }
 }
 
+// ── Edición de una reserva ───────────────────────────────────────────────────
+.admin-editar {
+  border: 1px solid rgba($naranja, 0.4);
+  border-radius: $radius-md;
+  padding: 16px;
+  margin-bottom: 16px;
+
+  &__titulo {
+    margin: 0 0 12px;
+    font-family: $font-mono;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: $naranja;
+  }
+
+  &__campos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  &__fecha {
+    margin: 0 0 12px;
+    font-size: 13px;
+
+    strong { color: $naranja; }
+    .admin-btn { margin-left: 10px; }
+  }
+
+  &__acciones {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 14px;
+
+    .btn { font-size: 11px; padding: 9px 16px; }
+  }
+}
+
 // ── Alta manual ──────────────────────────────────────────────────────────────
 .admin-nueva {
   border: 1px solid rgba($naranja, 0.45);

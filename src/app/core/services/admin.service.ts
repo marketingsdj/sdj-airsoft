@@ -163,6 +163,42 @@ export class AdminService {
     if (slotId) await this.bloquearHueco(datos.fecha, datos.hora || '', datos.pista || '');
   }
 
+  /**
+   * Edición completa de una reserva desde el panel. Si cambia la franja,
+   * libera la antigua y bloquea la nueva.
+   */
+  async actualizarReserva(r: ReservaAdmin, datos: {
+    tipo?: string; fecha?: string; hora?: string; pista?: string; personas?: number;
+    nombre?: string; email?: string; telefono?: string; extras?: string[]; notas?: string;
+  }): Promise<void> {
+    if (!db) return;
+
+    const fecha = datos.fecha ?? r.fecha ?? '';
+    const hora  = datos.hora  ?? r.hora  ?? '';
+    const pista = datos.pista ?? r.pista ?? '';
+    const cambiaFranja = fecha !== r.fecha || hora !== r.hora || pista !== r.pista;
+
+    if (cambiaFranja) {
+      if (r.fecha && r.hora && r.pista) await this.liberarHueco(r.fecha, r.hora, r.pista);
+      if (fecha && hora && pista) await this.bloquearHueco(fecha, hora, pista);
+    }
+
+    await updateDoc(doc(db, 'reservas', r.id), {
+      ...datos,
+      ...(datos.email !== undefined ? { email: datos.email.trim().toLowerCase() } : {}),
+      estadoActualizado: serverTimestamp(),
+      ...(cambiaFranja ? { avisoPendiente: true, avisoMotivo: 'cambio-ok' } : {}),
+    });
+
+    // El código de gestión del cliente apunta a la franja: hay que actualizarlo.
+    if (cambiaFranja && r.codigoCancelacion) {
+      await updateDoc(doc(db, 'cancelaciones', r.codigoCancelacion), {
+        fecha, hora, pista,
+        slotId: pista ? fecha + '_' + hora + '_' + pista : '',
+      }).catch(() => { /* si no existe el código, no pasa nada */ });
+    }
+  }
+
   /** Cambia el estado de una reserva y deja constancia de cuándo. */
   async cambiarEstado(id: string, estado: EstadoReserva): Promise<void> {
     if (!db) return;

@@ -30,6 +30,76 @@ export class AdminComponent implements OnInit {
   /** Códigos de las peticiones de cambio, por id de reserva. */
   private codigosCambio = new Map<string, { codigo: string; cambio: Record<string, unknown> }>();
 
+  // ── Edición de una reserva ──────────────────────────────────────────────────
+  editando = signal<string | null>(null);
+  edicion = {
+    tipo: '', fecha: '', hora: '', pista: '', personas: 0,
+    nombre: '', email: '', telefono: '', extras: '', notas: '',
+  };
+  calendarioEdicion = signal(false);
+
+  editar(r: ReservaAdmin) {
+    this.editando.set(r.id);
+    this.calendarioEdicion.set(false);
+    this.edicion = {
+      tipo: r.tipo || 'privada',
+      fecha: r.fecha || '',
+      hora: r.hora || '',
+      pista: r.pista || '',
+      personas: r.personas || 1,
+      nombre: r.nombre || '',
+      email: r.email || '',
+      telefono: r.telefono || '',
+      extras: (r.extras || []).join(', '),
+      notas: r.notas || '',
+    };
+  }
+
+  cancelarEdicion() {
+    this.editando.set(null);
+    this.calendarioEdicion.set(false);
+  }
+
+  edicionSlot(ev: { fecha: string; hora: string; pista: string }) {
+    this.edicion.fecha = ev.fecha;
+    this.edicion.hora = ev.hora;
+    this.edicion.pista = ev.pista;
+    this.calendarioEdicion.set(false);
+  }
+
+  edicionLaborable(ev: { fecha: string; horaAprox: string }) {
+    this.edicion.fecha = ev.fecha;
+    this.edicion.hora = ev.horaAprox;
+    this.edicion.pista = '';
+    this.calendarioEdicion.set(false);
+  }
+
+  async guardarEdicion(r: ReservaAdmin) {
+    this.guardando.set(r.id);
+    this.error.set('');
+    try {
+      const datos = {
+        tipo: this.edicion.tipo,
+        fecha: this.edicion.fecha,
+        hora: this.edicion.hora,
+        pista: this.edicion.pista,
+        personas: Number(this.edicion.personas) || 0,
+        nombre: this.edicion.nombre.trim(),
+        email: this.edicion.email.trim(),
+        telefono: this.edicion.telefono.trim(),
+        extras: this.edicion.extras.split(',').map(e => e.trim()).filter(Boolean),
+        notas: this.edicion.notas.trim(),
+      };
+      await this.admin.actualizarReserva(r, datos);
+      this.editando.set(null);
+      await this.cargar();
+    } catch {
+      this.error.set('No se han podido guardar los cambios.');
+    } finally {
+      this.guardando.set(null);
+    }
+  }
+
   // ── Alta manual ─────────────────────────────────────────────────────────────
   nuevaAbierta = signal(false);
   creando = signal(false);

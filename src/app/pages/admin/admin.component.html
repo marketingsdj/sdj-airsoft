@@ -339,6 +339,74 @@
                         }
                         <div><span>Id interno</span><strong>{{ r.id }}</strong></div>
                       </div>
+                      @if (editando() === r.id) {
+                        <!-- Edición completa de la reserva -->
+                        <div class="admin-editar">
+                          <p class="admin-editar__titulo">Editar reserva</p>
+                          <div class="admin-editar__campos">
+                            <label class="admin-campo">
+                              <span>Tipo</span>
+                              <select [(ngModel)]="edicion.tipo">
+                                @for (t of tipos; track t.key) { <option [value]="t.key">{{ t.label }}</option> }
+                              </select>
+                            </label>
+                            <label class="admin-campo">
+                              <span>Personas</span>
+                              <input type="number" min="1" max="100" [(ngModel)]="edicion.personas" />
+                            </label>
+                            <label class="admin-campo">
+                              <span>Nombre</span>
+                              <input type="text" [(ngModel)]="edicion.nombre" />
+                            </label>
+                            <label class="admin-campo">
+                              <span>Teléfono</span>
+                              <input type="tel" [(ngModel)]="edicion.telefono" />
+                            </label>
+                            <label class="admin-campo">
+                              <span>Email</span>
+                              <input type="email" [(ngModel)]="edicion.email" />
+                            </label>
+                            <label class="admin-campo">
+                              <span>Extras (separados por comas)</span>
+                              <input type="text" [(ngModel)]="edicion.extras" />
+                            </label>
+                            <label class="admin-campo admin-campo--ancho">
+                              <span>Notas internas</span>
+                              <input type="text" [(ngModel)]="edicion.notas" />
+                            </label>
+                          </div>
+
+                          <p class="admin-editar__fecha">
+                            Fecha: <strong>{{ fechaLarga(edicion.fecha) }}</strong>
+                            @if (edicion.hora) { · <strong>{{ edicion.hora }}</strong> }
+                            @if (edicion.pista) { · Pista {{ edicion.pista }} }
+                            <button type="button" class="admin-btn" (click)="calendarioEdicion.set(!calendarioEdicion())">
+                              {{ calendarioEdicion() ? 'Cerrar calendario' : 'Cambiar fecha' }}
+                            </button>
+                          </p>
+
+                          @if (calendarioEdicion()) {
+                            <app-calendario-grupos
+                              modo="seleccion"
+                              [txiki]="edicion.tipo === 'txiki' || edicion.tipo === 'evento'"
+                              [permitirLaborables]="edicion.tipo !== 'individual'"
+                              [mostrarSlots]="edicion.tipo !== 'individual'"
+                              (slotSeleccionado)="edicionSlot($event)"
+                              (fechaSeleccionada)="edicion.fecha = $event; edicion.hora = ''; edicion.pista = ''"
+                              (laborableSeleccionado)="edicionLaborable($event)">
+                            </app-calendario-grupos>
+                          }
+
+                          <div class="admin-editar__acciones">
+                            <button class="btn btn--primary" [disabled]="guardando() === r.id"
+                              (click)="guardarEdicion(r)">Guardar cambios</button>
+                            <button class="btn btn--ghost" (click)="cancelarEdicion()">Cancelar</button>
+                          </div>
+                        </div>
+                      } @else {
+                        <button class="btn btn--ghost" (click)="editar(r)">Editar reserva</button>
+                      }
+
                       <label class="admin-campo admin-campo--ancho">
                         <span>Notas internas</span>
                         <textarea rows="2" #nota [value]="r.notas || ''"
