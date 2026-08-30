@@ -175,14 +175,18 @@
                       <!-- Cancelada por el cliente: no hay nada que gestionar. -->
                       <span class="admin-sin-acciones">—</span>
                     } @else {
-                      @if (r.estado !== 'confirmada') {
-                        <button class="admin-btn admin-btn--ok" [disabled]="guardando() === r.id"
-                          (click)="marcar(r, 'confirmada')">Confirmar</button>
-                      }
-                      @if (r.estado !== 'denegada') {
-                        <button class="admin-btn admin-btn--no" [disabled]="guardando() === r.id"
-                          (click)="marcar(r, 'denegada')">Anular</button>
-                      }
+                      <!-- Rejilla fija: cada botón ocupa siempre su columna, así
+                           quedan alineados aunque falte uno de los dos. -->
+                      <span class="admin-acciones__grid">
+                        @if (r.estado !== 'confirmada') {
+                          <button class="admin-btn admin-btn--ok" [disabled]="guardando() === r.id"
+                            (click)="marcar(r, 'confirmada')">Confirmar</button>
+                        }
+                        @if (r.estado !== 'denegada') {
+                          <button class="admin-btn admin-btn--no admin-btn--col2" [disabled]="guardando() === r.id"
+                            (click)="marcar(r, 'denegada')">Anular</button>
+                        }
+                      </span>
                     }
                   </td>
                 </tr>

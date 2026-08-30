@@ -194,7 +194,9 @@
   &__num { text-align: right; }
 }
 
-.admin-fila--pendiente td { box-shadow: inset 3px 0 0 $naranja; }
+// Pendiente de gestionar: la fila entera se tiñe, se ve de un vistazo.
+.admin-fila--pendiente td { background: rgba($naranja, 0.14); }
+.admin-tabla tbody tr.admin-fila--pendiente:hover td { background: rgba($naranja, 0.2); }
 .admin-fila--pasada td { opacity: 0.5; }
 
 .admin-fecha {
@@ -248,12 +250,24 @@
 .admin-acciones {
   white-space: nowrap;
 
-  .admin-btn + .admin-btn { margin-left: 6px; }
+  // Dos columnas del mismo ancho (el del texto más largo, "Confirmar"), para
+  // que los botones de todas las filas caigan en la misma posición.
+  &__grid {
+    display: inline-grid;
+    grid-template-columns: repeat(2, 96px);
+    gap: 6px;
+    vertical-align: middle;
+  }
 }
 
 .admin-btn {
   display: inline-block;
   vertical-align: middle;
+  width: 100%;
+  text-align: center;
+
+  // El de anular siempre en la segunda columna, aunque no haya "Confirmar".
+  &--col2 { grid-column: 2; }
   font-family: $font-mono;
   font-size: 10px;
   letter-spacing: 0.08em;
