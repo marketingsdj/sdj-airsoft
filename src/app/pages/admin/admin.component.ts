@@ -181,6 +181,25 @@ export class AdminComponent implements OnInit {
     }
   }
 
+  /** ¿Es una reserva de día "a consultar" (hora aproximada, sin franja fija)? */
+  horaAproximada(r: ReservaAdmin): boolean {
+    return (r.laborable || (!r.pista && r.tipo !== 'individual' && !!r.hora)) && !r.horaFijada;
+  }
+
+  /** Fija tú la hora definitiva de una reserva a consultar. */
+  async fijarHora(r: ReservaAdmin, hora: string) {
+    if (!hora) return;
+    this.guardando.set(r.id);
+    try {
+      await this.admin.fijarHora(r.id, hora);
+      this.reservas.update(list => list.map(x => (x.id === r.id ? { ...x, hora, horaFijada: true } : x)));
+    } catch {
+      this.error.set('No se ha podido guardar la hora.');
+    } finally {
+      this.guardando.set(null);
+    }
+  }
+
   async guardarNota(r: ReservaAdmin, texto: string) {
     this.guardando.set(r.id);
     try {

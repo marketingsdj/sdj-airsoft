@@ -245,6 +245,38 @@
   }
 }
 
+.admin-hora {
+  &__pedida {
+    display: block;
+    font-family: $font-mono;
+    font-size: 10px;
+    color: rgba($crema, 0.5);
+    margin-bottom: 4px;
+  }
+
+  &__input {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba($naranja, 0.45);
+    border-radius: $radius-sm;
+    color: $crema;
+    padding: 4px 6px;
+    font-family: inherit;
+    font-size: 12px;
+
+    &:focus { outline: none; border-color: $naranja; }
+  }
+
+  &__ok {
+    display: block;
+    font-family: $font-mono;
+    font-size: 9px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #6bd08a;
+    margin-top: 2px;
+  }
+}
+
 .admin-extras { max-width: 190px; }
 
 .admin-extra {

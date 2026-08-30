@@ -30,6 +30,10 @@ export interface ReservaAdmin {
   canceladaPor?: string;
   /** Extras contratados (menú, merienda, doble partida…). */
   extras?: string[];
+  /** Día entre semana: la hora es la de llegada aproximada, a cerrar con el cliente. */
+  laborable?: boolean;
+  /** true cuando ya has fijado tú la hora definitiva. */
+  horaFijada?: boolean;
   /** Cambio pedido por el cliente desde /cancelar, pendiente de revisar. */
   cambio?: Record<string, unknown> | null;
 }
@@ -94,6 +98,8 @@ export class AdminService {
         codigoCancelacion: x['codigoCancelacion'] as string | undefined,
         canceladaPor: x['canceladaPor'] as string | undefined,
         extras: (x['extras'] as string[]) || [],
+        laborable: !!x['laborable'],
+        horaFijada: !!x['horaFijada'],
         creado,
       };
     });
@@ -103,6 +109,12 @@ export class AdminService {
   async cambiarEstado(id: string, estado: EstadoReserva): Promise<void> {
     if (!db) return;
     await updateDoc(doc(db, 'reservas', id), { estado, estadoActualizado: serverTimestamp() });
+  }
+
+  /** Fija la hora definitiva de una reserva "a consultar". */
+  async fijarHora(id: string, hora: string): Promise<void> {
+    if (!db) return;
+    await updateDoc(doc(db, 'reservas', id), { hora, horaFijada: true, estadoActualizado: serverTimestamp() });
   }
 
   /** Guarda una nota interna sobre la reserva. */
