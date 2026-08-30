@@ -285,6 +285,20 @@
         <p class="eyebrow">SDJ Airsoft · Reservas</p>
         <h1>{{ tituloReserva }}</h1>
 
+        @if (paso() === 1) {
+          <a class="reserva-gestionar" routerLink="/cancelar">
+            <span class="reserva-gestionar__icono" aria-hidden="true">↺</span>
+            <span class="reserva-gestionar__texto">
+              <strong>Ya tengo una reserva</strong>
+              <span>Gestiona (modifica o cancela) tu reserva con tu código</span>
+            </span>
+            <span class="reserva-gestionar__cta">Gestionar →</span>
+          </a>
+          <a class="reserva-gestionar-email" [href]="gestionarPorEmailUrl">
+            ¿No tienes el código? Gestiónala con tu email →
+          </a>
+        }
+
         <!-- Stepper -->
         <div class="stepper">
           @for (n of [1, 2, 3]; track n) {

@@ -1670,3 +1670,85 @@ select.form-input {
     line-height: 1.5;
   }
 }
+
+// Acceso a modificar/cancelar reserva (para quien ya tiene una), en el paso 1.
+.reserva-modificar-link {
+  display: inline-block;
+  margin: 4px 0 20px;
+  font-family: $font-mono;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: $naranja;
+  text-decoration: none;
+  border-bottom: 1px solid rgba($naranja, 0.4);
+  padding-bottom: 2px;
+  transition: opacity $transition, border-color $transition;
+
+  &:hover { opacity: 0.8; border-color: $naranja; }
+}
+
+// "Ya tengo una reserva · Gestionar" — acceso directo a /cancelar desde el paso 1.
+.reserva-gestionar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 8px 0 24px;
+  padding: 14px 18px;
+  border: 1px solid rgba($naranja, 0.4);
+  border-radius: $radius-md;
+  background: rgba($naranja, 0.06);
+  text-decoration: none;
+  color: $crema;
+  transition: border-color $transition, background $transition;
+
+  &:hover { border-color: $naranja; background: rgba($naranja, 0.1); }
+
+  &__icono {
+    font-size: 20px;
+    color: $naranja;
+    flex-shrink: 0;
+  }
+
+  &__texto {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+    min-width: 0;
+
+    strong {
+      font-family: $font-tight;
+      font-weight: 700;
+      font-size: 15px;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+    span { font-size: 13px; color: rgba($crema, 0.65); line-height: 1.35; }
+  }
+
+  &__cta {
+    flex-shrink: 0;
+    font-family: $font-mono;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: $naranja;
+    font-weight: 700;
+
+    @media (max-width: $bp-sm) { display: none; }
+  }
+}
+
+// "Gestionar con email" (sin código): enlace secundario bajo el botón de gestionar.
+.reserva-gestionar-email {
+  display: inline-block;
+  margin: -14px 0 24px;
+  font-family: $font-mono;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: rgba($crema, 0.5);
+  text-decoration: none;
+  transition: color $transition;
+
+  &:hover { color: $naranja; }
+}

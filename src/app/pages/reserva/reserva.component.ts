@@ -33,6 +33,19 @@ export class ReservaComponent implements OnInit, OnDestroy {
   codigoCancelacion = signal('');
   errorReserva = signal('');
   mostrarNormas      = signal(false);
+
+  // Gestionar la reserva por email (para quien no tiene el código): nos escribe
+  // y lo gestionamos nosotros. Por seguridad no se puede editar solo con el email.
+  readonly gestionarPorEmailUrl = 'mailto:info@soldadosdejuguete.com?subject='
+    + encodeURIComponent('Gestionar mi reserva')
+    + '&body='
+    + encodeURIComponent(
+        'Hola, quiero modificar o cancelar mi reserva y no tengo el código.\n\n'
+        + 'Email de la reserva: \n'
+        + 'Nombre: \n'
+        + 'Fecha de la partida: \n'
+        + 'Qué necesito cambiar / cancelar: \n'
+      );
   mostrarPrivacidad  = signal(false);
   mostrarReducida    = signal(false);   // disclosure "¿Conoces la tarifa reducida?"
   modalPremium       = signal(false);   // pop-up de upsell a Premium al pasar del paso 1
