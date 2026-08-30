@@ -203,14 +203,11 @@
                   </td>
                   <td class="c-estado">
                     <span class="admin-estado" [class]="'admin-estado--' + r.estado">{{ r.estado }}</span>
-                    @if (r.avisoPendiente) {
-                      <span class="admin-sin-avisar">sin avisar</span>
-                    }
                   </td>
                   <td class="c-acciones admin-acciones">
                     @if (r.estado === 'cancelada') {
                       <span class="admin-acciones__grid">
-                        <button class="admin-btn" (click)="toggleDetalle(r.id)">Avisar</button>
+                        <button class="admin-btn admin-btn--avisar" (click)="toggleDetalle(r.id)">Avisar</button>
                       </span>
                     } @else {
                       <!-- Rejilla fija: cada botón ocupa siempre su columna, así
@@ -225,7 +222,7 @@
                             (click)="marcar(r, 'denegada')">Anular</button>
                         }
                         <!-- Abre el detalle, donde está el mensaje para el cliente. -->
-                        <button class="admin-btn" (click)="toggleDetalle(r.id)">
+                        <button class="admin-btn admin-btn--avisar" (click)="toggleDetalle(r.id)">
                           {{ detalle() === r.id ? 'Cerrar' : 'Avisar' }}
                         </button>
                       </span>

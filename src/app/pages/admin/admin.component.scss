@@ -357,11 +357,11 @@
 
   // Dos columnas del mismo ancho (el del texto más largo, "Confirmar"), para
   // que los botones de todas las filas caigan en la misma posición.
+  // Dos por fila: Confirmar/Anular arriba y Avisar debajo, alineados.
   &__grid {
     display: grid;
-    grid-template-columns: minmax(0, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 5px;
-    max-width: 110px;
   }
 }
 
@@ -387,8 +387,27 @@
   &:hover:not(:disabled) { background: rgba(255, 255, 255, 0.06); color: $crema; }
   &:disabled { opacity: 0.4; cursor: default; }
 
-  &--ok:hover:not(:disabled) { border-color: #6bd08a; color: #6bd08a; }
-  &--no:hover:not(:disabled) { border-color: #e2685f; color: #e2685f; }
+  // Colores fijos por acción, no solo al pasar el ratón.
+  &--ok {
+    border-color: rgba(#6bd08a, 0.55);
+    color: #6bd08a;
+
+    &:hover:not(:disabled) { background: rgba(#6bd08a, 0.15); color: #8fe0a8; }
+  }
+
+  &--no {
+    border-color: rgba(#e2685f, 0.55);
+    color: #e2685f;
+
+    &:hover:not(:disabled) { background: rgba(#e2685f, 0.15); color: #f0857d; }
+  }
+
+  &--avisar {
+    border-color: rgba($naranja, 0.6);
+    color: $naranja;
+
+    &:hover:not(:disabled) { background: rgba($naranja, 0.15); }
+  }
 
   // Motivo de aviso seleccionado.
   &--activo {
