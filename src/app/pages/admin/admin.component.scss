@@ -234,15 +234,6 @@
   &--denegada { color: #e2685f; }
   &--cancelada { color: #e2685f; }
 
-  &__quien {
-    display: block;
-    margin-top: 4px;
-    font-family: $font-mono;
-    font-size: 9px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: rgba($crema, 0.45);
-  }
 }
 
 .admin-hora {

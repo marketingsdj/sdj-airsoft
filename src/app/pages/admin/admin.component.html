@@ -185,9 +185,6 @@
                   </td>
                   <td>
                     <span class="admin-estado" [class]="'admin-estado--' + r.estado">{{ r.estado }}</span>
-                    @if (r.estado === 'cancelada' && r.canceladaPor === 'cliente') {
-                      <span class="admin-estado__quien">por el cliente</span>
-                    }
                   </td>
                   <td class="admin-acciones">
                     @if (r.estado === 'cancelada') {
