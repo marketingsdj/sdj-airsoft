@@ -135,58 +135,55 @@
           <table class="admin-tabla">
             <thead>
               <tr>
-                <th>Fecha</th>
-                <th>Hora</th>
-                <th>Tipo</th>
-                <th class="admin-tabla__num">Pers.</th>
-                <th>Cliente</th>
-                <th>Código</th>
-                <th>Extras</th>
-                <th>Contacto</th>
-                <th>Estado</th>
-                <th>Acciones</th>
+                <th class="c-fecha">Fecha y hora</th>
+                <th class="c-tipo">Tipo</th>
+                <th class="c-num">Pers.</th>
+                <th class="c-cliente">Cliente</th>
+                <th class="c-extras">Extras</th>
+                <th class="c-estado">Estado</th>
+                <th class="c-acciones">Acciones</th>
               </tr>
             </thead>
             <tbody>
               @for (r of filtradas(); track r.id) {
                 <tr [class.admin-fila--pasada]="esPasada(r)"
                     [class.admin-fila--pendiente]="r.estado === 'pendiente'">
-                  <td>
+                  <td class="c-fecha">
                     <button class="admin-fecha" (click)="toggleDetalle(r.id)">{{ fechaLarga(r.fecha) }}</button>
+                    <span class="admin-hora">
+                      @if (horaAproximada(r)) {
+                        <!-- Día a consultar: el cliente propuso una hora; puedes fijar otra. -->
+                        <span class="admin-hora__pedida">{{ r.hora }} pedida</span>
+                        <input class="admin-hora__input" type="time" [value]="r.hora || ''"
+                          [disabled]="guardando() === r.id"
+                          (change)="fijarHora(r, $any($event.target).value)" />
+                      } @else {
+                        {{ r.hora || '—' }}{{ r.pista ? ' · ' + r.pista : '' }}
+                        @if (r.horaFijada) { <span class="admin-hora__ok">fijada</span> }
+                      }
+                    </span>
                   </td>
-                  <td class="admin-hora">
-                    @if (horaAproximada(r)) {
-                      <!-- Día a consultar: el cliente propuso una hora; puedes fijar otra. -->
-                      <span class="admin-hora__pedida">{{ r.hora }} pedida</span>
-                      <input class="admin-hora__input" type="time" [value]="r.hora || ''"
-                        [disabled]="guardando() === r.id"
-                        (change)="fijarHora(r, $any($event.target).value)" />
-                    } @else {
-                      {{ r.hora || '—' }}{{ r.pista ? ' · ' + r.pista : '' }}
-                      @if (r.horaFijada) { <span class="admin-hora__ok">fijada</span> }
+                  <td class="c-tipo">{{ tipoLabel(r.tipo) }}</td>
+                  <td class="c-num admin-tabla__num">{{ r.personas ?? '—' }}</td>
+                  <td class="c-cliente admin-cliente">
+                    <strong>{{ r.nombre || '—' }}</strong>
+                    @if (r.telefono) {
+                      <a [href]="'https://wa.me/34' + r.telefono.replace(' ', '')" target="_blank" rel="noopener">{{ r.telefono }}</a>
                     }
+                    @if (r.email) { <a [href]="'mailto:' + r.email">{{ r.email }}</a> }
+                    @if (r.codigoCancelacion) { <span class="admin-codigo">{{ r.codigoCancelacion }}</span> }
                   </td>
-                  <td>{{ tipoLabel(r.tipo) }}</td>
-                  <td class="admin-tabla__num">{{ r.personas ?? '—' }}</td>
-                  <td>{{ r.nombre || '—' }}</td>
-                  <td class="admin-codigo">{{ r.codigoCancelacion || '—' }}</td>
-                  <td class="admin-extras">
+                  <td class="c-extras admin-extras">
                     @if (r.extras?.length) {
                       @for (e of r.extras; track e) {
                         <span class="admin-extra" [title]="e">{{ e }}</span>
                       }
                     } @else { — }
                   </td>
-                  <td class="admin-contacto">
-                    @if (r.telefono) {
-                      <a [href]="'https://wa.me/34' + r.telefono.replace(' ', '')" target="_blank" rel="noopener">{{ r.telefono }}</a>
-                    }
-                    @if (r.email) { <a [href]="'mailto:' + r.email">{{ r.email }}</a> }
-                  </td>
-                  <td>
+                  <td class="c-estado">
                     <span class="admin-estado" [class]="'admin-estado--' + r.estado">{{ r.estado }}</span>
                   </td>
-                  <td class="admin-acciones">
+                  <td class="c-acciones admin-acciones">
                     @if (r.estado === 'cancelada') {
                       <!-- Cancelada por el cliente: no hay nada que gestionar. -->
                       <span class="admin-sin-acciones">—</span>
@@ -209,7 +206,7 @@
 
                 @if (r.cambio) {
                   <tr class="admin-cambio">
-                    <td colspan="10">
+                    <td colspan="7">
                       <span class="admin-cambio__badge">Cambio pedido por el cliente</span>
                       <span class="admin-cambio__texto">{{ resumenCambio(r.cambio) }}</span>
                       <span class="admin-cambio__acciones">
@@ -224,7 +221,7 @@
 
                 @if (detalle() === r.id) {
                   <tr class="admin-detalle">
-                    <td colspan="10">
+                    <td colspan="7">
                       <div class="admin-detalle__grid">
                         <div><span>Nº de reserva</span><strong>{{ r.numeroReserva || '—' }}</strong></div>
                         <div><span>Recibida</span><strong>{{ r.creado ? (r.creado | date:'dd/MM/yyyy HH:mm') : '—' }}</strong></div>
