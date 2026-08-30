@@ -1235,7 +1235,7 @@
   .reserva-page { display: block !important; }
   .reserva-wrap { display: block !important; padding: 0 !important; max-width: 100% !important; }
   .reserva-exito { display: none !important; }
-  .exito-cancelar { display: none !important; }
+  .exito-cancelar-link { display: none !important; }
   .pdf-tpl { display: block !important; }
 
   // Base del documento
@@ -1619,36 +1619,19 @@ select.form-input {
   line-height: 1.5;
 }
 
-// ── Código de cancelación (pantalla de confirmación) ──────────────────────────
-.exito-cancelar {
-  margin: 24px 0 8px;
-  padding: 20px;
-  border: 1px solid $line;
-  border-radius: $radius-md;
-  background: rgba(255, 255, 255, 0.03);
-  text-align: center;
+// ── Enlace de cancelación (pantalla de confirmación) ─────────────────────────
+// Discreto a propósito: el código completo va en el PDF; aquí solo el enlace,
+// que ya lleva el código en la URL.
+.exito-cancelar-link {
+  display: inline-block;
+  margin-top: 18px;
+  font-family: $font-mono;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: rgba($crema, 0.55);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color $transition;
 
-  &__titulo {
-    font-family: $font-tight;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    margin: 0 0 6px;
-  }
-
-  &__texto {
-    margin: 0 0 14px;
-    font-size: 13px;
-    color: rgba($crema, 0.65);
-    line-height: 1.5;
-  }
-
-  &__codigo {
-    font-family: $font-mono;
-    font-size: 24px;
-    letter-spacing: 0.18em;
-    color: $naranja;
-    margin: 0 0 16px;
-    user-select: all;   // un toque selecciona el código entero
-  }
+  &:hover { color: $naranja; }
 }

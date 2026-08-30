@@ -246,16 +246,8 @@
         </div>
 
         @if (codigoCancelacion()) {
-          <div class="exito-cancelar">
-            <p class="exito-cancelar__titulo">¿Necesitas cancelar?</p>
-            <p class="exito-cancelar__texto">
-              Guarda este código. Con él puedes anular tu reserva tú mismo hasta 48&nbsp;h antes de la partida.
-            </p>
-            <p class="exito-cancelar__codigo">{{ codigoCancelacion() }}</p>
-            <a class="btn btn--ghost" [routerLink]="['/cancelar']" [queryParams]="{ codigo: codigoCancelacion() }">
-              Cancelar mi reserva
-            </a>
-          </div>
+          <a class="exito-cancelar-link" [routerLink]="['/cancelar']"
+            [queryParams]="{ codigo: codigoCancelacion() }">¿Necesitas cancelar?</a>
         }
 
         <p class="exito-aviso">¿Dudas o cambios? Escríbenos por WhatsApp.</p>
