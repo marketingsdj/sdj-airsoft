@@ -40,6 +40,7 @@
           <p class="admin-top__user">{{ admin.usuario()?.email }}</p>
         </div>
         <div class="admin-top__acciones">
+          <button class="btn btn--primary" (click)="abrirNueva()">+ Nueva reserva</button>
           <button class="btn btn--ghost" (click)="cargar()" [disabled]="cargando()">
             {{ cargando() ? 'Actualizando…' : 'Actualizar' }}
           </button>
@@ -75,6 +76,76 @@
           <span class="admin-kpi__lbl">Personas en lo mostrado</span>
         </div>
       </div>
+
+      <!-- ── Alta manual (reservas por teléfono o presenciales) ───────────── -->
+      @if (nuevaAbierta()) {
+        <div class="admin-nueva">
+          <div class="admin-nueva__top">
+            <p class="admin-nueva__titulo">Nueva reserva</p>
+            <button class="admin-btn" (click)="nuevaAbierta.set(false)">Cerrar</button>
+          </div>
+
+          <div class="admin-nueva__campos">
+            <label class="admin-campo">
+              <span>Tipo</span>
+              <select [(ngModel)]="nueva.tipo">
+                @for (t of tipos; track t.key) { <option [value]="t.key">{{ t.label }}</option> }
+              </select>
+            </label>
+            <label class="admin-campo">
+              <span>Personas</span>
+              <input type="number" min="1" max="100" [(ngModel)]="nueva.personas" />
+            </label>
+            <label class="admin-campo">
+              <span>Nombre *</span>
+              <input type="text" [(ngModel)]="nueva.nombre" placeholder="Quién reserva" />
+            </label>
+            <label class="admin-campo">
+              <span>Teléfono</span>
+              <input type="tel" [(ngModel)]="nueva.telefono" />
+            </label>
+            <label class="admin-campo">
+              <span>Email</span>
+              <input type="email" [(ngModel)]="nueva.email" />
+            </label>
+            <label class="admin-campo">
+              <span>Extras (separados por comas)</span>
+              <input type="text" [(ngModel)]="nueva.extras" placeholder="Menú, Merienda…" />
+            </label>
+            <label class="admin-campo admin-campo--ancho">
+              <span>Notas internas</span>
+              <input type="text" [(ngModel)]="nueva.notas" placeholder="Reserva por teléfono, paga en efectivo…" />
+            </label>
+          </div>
+
+          <p class="admin-nueva__sub">
+            @if (nueva.fecha) {
+              Elegido: <strong>{{ fechaLarga(nueva.fecha) }}</strong>
+              @if (nueva.hora) { · <strong>{{ nueva.hora }}</strong> }
+              @if (nueva.pista) { · Pista {{ nueva.pista }} }
+            } @else {
+              Elige día y franja en el calendario (la disponibilidad es la misma que ve el cliente).
+            }
+          </p>
+
+          <app-calendario-grupos
+            modo="seleccion"
+            [txiki]="nueva.tipo === 'txiki' || nueva.tipo === 'evento'"
+            [permitirLaborables]="nueva.tipo !== 'individual'"
+            [mostrarSlots]="nueva.tipo !== 'individual'"
+            (slotSeleccionado)="nuevoSlot($event)"
+            (fechaSeleccionada)="nueva.fecha = $event; nueva.hora = ''; nueva.pista = ''"
+            (laborableSeleccionado)="nuevoLaborable($event)">
+          </app-calendario-grupos>
+
+          <div class="admin-nueva__acciones">
+            <button class="btn btn--primary" [disabled]="!nuevaValida || creando()" (click)="guardarNueva()">
+              {{ creando() ? 'Creando…' : 'Crear reserva' }}
+            </button>
+            <button class="btn btn--ghost" (click)="nuevaAbierta.set(false)">Cancelar</button>
+          </div>
+        </div>
+      }
 
       <!-- ── Filtros ──────────────────────────────────────────────────────── -->
       <div class="admin-filtros">

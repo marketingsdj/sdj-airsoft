@@ -2,12 +2,13 @@ import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AdminService, EstadoReserva, ReservaAdmin } from '../../core/services/admin.service';
+import { CalendarioGruposComponent } from '../../shared/calendario-grupos/calendario-grupos.component';
 
 type Orden = 'fecha' | 'creado' | 'nombre';
 
 @Component({
   selector: 'app-admin',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, CalendarioGruposComponent],
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.scss',
 })
@@ -28,6 +29,67 @@ export class AdminComponent implements OnInit {
   detalle = signal<string | null>(null);     // id de la fila desplegada
   /** Códigos de las peticiones de cambio, por id de reserva. */
   private codigosCambio = new Map<string, { codigo: string; cambio: Record<string, unknown> }>();
+
+  // ── Alta manual ─────────────────────────────────────────────────────────────
+  nuevaAbierta = signal(false);
+  creando = signal(false);
+  nueva = {
+    tipo: 'privada', fecha: '', hora: '', pista: '', personas: 8,
+    nombre: '', email: '', telefono: '', extras: '', notas: '', laborable: false,
+  };
+
+  abrirNueva() {
+    this.nuevaAbierta.set(true);
+    this.nueva = {
+      tipo: 'privada', fecha: '', hora: '', pista: '', personas: 8,
+      nombre: '', email: '', telefono: '', extras: '', notas: '', laborable: false,
+    };
+  }
+
+  nuevoSlot(ev: { fecha: string; hora: string; pista: string }) {
+    this.nueva.fecha = ev.fecha;
+    this.nueva.hora = ev.hora;
+    this.nueva.pista = ev.pista;
+    this.nueva.laborable = false;
+  }
+
+  nuevoLaborable(ev: { fecha: string; horaAprox: string }) {
+    this.nueva.fecha = ev.fecha;
+    this.nueva.hora = ev.horaAprox;
+    this.nueva.pista = '';
+    this.nueva.laborable = true;
+  }
+
+  get nuevaValida(): boolean {
+    return !!this.nueva.fecha && !!this.nueva.nombre.trim();
+  }
+
+  async guardarNueva() {
+    if (!this.nuevaValida) return;
+    this.creando.set(true);
+    this.error.set('');
+    try {
+      await this.admin.crearReserva({
+        tipo: this.nueva.tipo,
+        fecha: this.nueva.fecha,
+        hora: this.nueva.hora,
+        pista: this.nueva.pista,
+        personas: this.nueva.personas,
+        nombre: this.nueva.nombre.trim(),
+        email: this.nueva.email.trim(),
+        telefono: this.nueva.telefono.trim(),
+        extras: this.nueva.extras.split(',').map(e => e.trim()).filter(Boolean),
+        laborable: this.nueva.laborable,
+        notas: this.nueva.notas.trim(),
+      });
+      this.nuevaAbierta.set(false);
+      await this.cargar();
+    } catch {
+      this.error.set('No se ha podido crear la reserva.');
+    } finally {
+      this.creando.set(false);
+    }
+  }
 
   // ── Filtros ─────────────────────────────────────────────────────────────────
   busqueda = '';                       // nombre, email, teléfono o nº de reserva

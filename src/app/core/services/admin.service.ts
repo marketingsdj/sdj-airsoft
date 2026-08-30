@@ -1,6 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 import {
-  collection, doc, getDocs, updateDoc, deleteDoc, setDoc, query, orderBy, limit,
+  collection, doc, getDocs, addDoc, updateDoc, deleteDoc, setDoc, query, orderBy, limit,
   serverTimestamp, Timestamp,
 } from 'firebase/firestore';
 import {
@@ -117,6 +117,50 @@ export class AdminService {
         creado,
       };
     });
+  }
+
+  /**
+   * Alta manual de una reserva (teléfono, presencial…). Deja el hueco
+   * bloqueado y genera el código para que el cliente pueda gestionarla.
+   */
+  async crearReserva(datos: {
+    tipo: string; fecha: string; hora?: string; pista?: string; personas?: number;
+    nombre?: string; email?: string; telefono?: string; extras?: string[];
+    laborable?: boolean; notas?: string;
+  }): Promise<void> {
+    if (!db) return;
+
+    const abc = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    const bloque = () => Array.from({ length: 4 }, () => abc[Math.floor(Math.random() * abc.length)]).join('');
+    const codigo = bloque() + '-' + bloque();
+
+    const hoy = new Date();
+    const ds = hoy.getFullYear().toString()
+      + String(hoy.getMonth() + 1).padStart(2, '0')
+      + String(hoy.getDate()).padStart(2, '0');
+    const numeroReserva = 'SDJ-' + ds + '-' + String(Math.floor(Math.random() * 9000) + 1000);
+
+    const ref = await addDoc(collection(db, 'reservas'), {
+      ...datos,
+      email: (datos.email || '').trim().toLowerCase(),
+      numeroReserva,
+      codigoCancelacion: codigo,
+      horaPedida: datos.hora || '',
+      horaFijada: !!datos.hora,
+      estado: 'recordatorio',
+      gestion: 'CONFIRMADA',
+      origen: 'admin',
+      creado: serverTimestamp(),
+    });
+
+    const slotId = datos.pista ? datos.fecha + '_' + datos.hora + '_' + datos.pista : '';
+    await setDoc(doc(db, 'cancelaciones', codigo), {
+      reservaId: ref.id, slotId, fecha: datos.fecha, hora: datos.hora || '', pista: datos.pista || '',
+      tipo: datos.tipo, personas: datos.personas || 0, numeroReserva,
+      cancelada: false, creado: serverTimestamp(),
+    });
+
+    if (slotId) await this.bloquearHueco(datos.fecha, datos.hora || '', datos.pista || '');
   }
 
   /** Cambia el estado de una reserva y deja constancia de cuándo. */
