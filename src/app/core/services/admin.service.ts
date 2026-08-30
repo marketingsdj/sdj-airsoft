@@ -26,6 +26,8 @@ export interface ReservaAdmin {
   creado?: Date | null;
   notas?: string;
   codigoCancelacion?: string;
+  /** "cliente" si la canceló la propia persona desde /cancelar. */
+  canceladaPor?: string;
   /** Cambio pedido por el cliente desde /cancelar, pendiente de revisar. */
   cambio?: Record<string, unknown> | null;
 }
@@ -88,6 +90,7 @@ export class AdminService {
         personas: x['personas'] as number | undefined,
         notas:    x['notas']    as string | undefined,
         codigoCancelacion: x['codigoCancelacion'] as string | undefined,
+        canceladaPor: x['canceladaPor'] as string | undefined,
         creado,
       };
     });

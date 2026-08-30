@@ -166,19 +166,23 @@
                   </td>
                   <td>
                     <span class="admin-estado" [class]="'admin-estado--' + r.estado">{{ r.estado }}</span>
+                    @if (r.estado === 'cancelada' && r.canceladaPor === 'cliente') {
+                      <span class="admin-estado__quien">por el cliente</span>
+                    }
                   </td>
                   <td class="admin-acciones">
-                    @if (r.estado !== 'confirmada') {
-                      <button class="admin-btn admin-btn--ok" [disabled]="guardando() === r.id"
-                        (click)="marcar(r, 'confirmada')">Confirmar</button>
-                    }
-                    @if (r.estado !== 'denegada') {
-                      <button class="admin-btn admin-btn--no" [disabled]="guardando() === r.id"
-                        (click)="marcar(r, 'denegada')">Denegar</button>
-                    }
-                    @if (r.estado !== 'cancelada') {
-                      <button class="admin-btn" [disabled]="guardando() === r.id"
-                        (click)="marcar(r, 'cancelada')">Cancelar</button>
+                    @if (r.estado === 'cancelada') {
+                      <!-- Cancelada por el cliente: no hay nada que gestionar. -->
+                      <span class="admin-sin-acciones">—</span>
+                    } @else {
+                      @if (r.estado !== 'confirmada') {
+                        <button class="admin-btn admin-btn--ok" [disabled]="guardando() === r.id"
+                          (click)="marcar(r, 'confirmada')">Confirmar</button>
+                      }
+                      @if (r.estado !== 'denegada') {
+                        <button class="admin-btn admin-btn--no" [disabled]="guardando() === r.id"
+                          (click)="marcar(r, 'denegada')">Anular</button>
+                      }
                     }
                   </td>
                 </tr>

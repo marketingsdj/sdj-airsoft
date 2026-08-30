@@ -230,8 +230,20 @@
   &--pendiente { color: $naranja; }
   &--confirmada { color: #6bd08a; }
   &--denegada { color: #e2685f; }
-  &--cancelada { color: rgba($crema, 0.45); }
+  &--cancelada { color: #e2685f; }
+
+  &__quien {
+    display: block;
+    margin-top: 4px;
+    font-family: $font-mono;
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba($crema, 0.45);
+  }
 }
+
+.admin-sin-acciones { color: rgba($crema, 0.3); }
 
 .admin-acciones {
   white-space: nowrap;
