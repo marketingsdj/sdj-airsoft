@@ -185,11 +185,24 @@ export class AdminComponent implements OnInit {
         await this.admin.liberarHueco(r.fecha, r.hora, r.pista);
       }
       this.reservas.update(list => list.map(x => (x.id === r.id ? { ...x, estado } : x)));
+      const actualizada = { ...r, estado };
+      if (estado === 'denegada') this.prepararAviso(actualizada, 'anulada');
+      if (estado === 'confirmada') this.prepararAviso(actualizada, 'confirmada');
     } catch {
       this.error.set('No se ha podido guardar el cambio.');
     } finally {
       this.guardando.set(null);
     }
+  }
+
+  /**
+   * Tras una acción se deja listo el aviso correspondiente y se abre la fila,
+   * para que solo tengas que pulsar WhatsApp o Email.
+   */
+  private prepararAviso(r: ReservaAdmin, motivo: string) {
+    this.motivoPorReserva[r.id] = motivo;
+    delete this.textoEditado[r.id];
+    this.detalle.set(r.id);
   }
 
   /** ¿Es una reserva de día "a consultar" (hora aproximada, sin franja fija)? */
@@ -205,6 +218,7 @@ export class AdminComponent implements OnInit {
     try {
       await this.admin.fijarHora(r.id, hora);
       this.reservas.update(list => list.map(x => (x.id === r.id ? { ...x, hora, horaFijada: true } : x)));
+      this.prepararAviso({ ...r, hora, horaFijada: true }, 'hora');
     } catch {
       this.error.set('No se ha podido guardar la hora.');
     } finally {
@@ -245,6 +259,7 @@ export class AdminComponent implements OnInit {
     try {
       await this.admin.rechazarCambio(info.codigo);
       this.reservas.update(list => list.map(x => (x.id === r.id ? { ...x, cambio: null } : x)));
+      this.prepararAviso(r, 'cambio-no');
     } catch {
       this.error.set('No se ha podido rechazar el cambio.');
     } finally {
