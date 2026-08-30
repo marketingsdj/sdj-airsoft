@@ -39,8 +39,9 @@ jobs:
       - name: Preparar rutas de cliente
         run: |
           cd dist/sdj-airsoft/browser
-          mkdir -p admin
+          mkdir -p admin cancelar
           cp index.csr.html admin/index.html
+          cp index.csr.html cancelar/index.html
           cp index.csr.html 404.html
 
       - name: Publicar en gh-pages

@@ -6,6 +6,11 @@ export const serverRoutes: ServerRoute[] = [
     path: 'admin',
     renderMode: RenderMode.Client
   },
+  // La cancelación depende del código de la URL, así que también va en cliente.
+  {
+    path: 'cancelar',
+    renderMode: RenderMode.Client
+  },
   {
     path: '**',
     renderMode: RenderMode.Prerender

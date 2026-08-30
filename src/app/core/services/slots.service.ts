@@ -98,10 +98,11 @@ export class SlotsService {
     email: string; nombre?: string; telefono?: string; tipo: string;
     fecha: string; hora?: string; pista?: string; personas?: number; numeroReserva?: string;
     gestion?: string;
-  }): Promise<void> {
-    if (!isFirebaseConfigured || !db) return;
+    codigoCancelacion?: string;
+  }): Promise<string | null> {
+    if (!isFirebaseConfigured || !db) return null;
     const email = this.normEmail(datos.email);
-    await addDoc(collection(db, 'reservas'), { ...datos, email, creado: serverTimestamp() });
+    const ref = await addDoc(collection(db, 'reservas'), { ...datos, email, estado: datos.gestion === 'pendiente' ? 'pendiente' : 'confirmada', creado: serverTimestamp() });
     // Contador diario (límite 2/día).
     await setDoc(
       doc(db, 'reservas_contador', this.contadorId(email, datos.fecha)),
@@ -114,5 +115,21 @@ export class SlotsService {
       { email, mes: (datos.fecha || '').slice(0, 7), count: increment(1) },
       { merge: true },
     );
+    return ref.id;
+  }
+
+  /**
+   * Crea el documento que permite al cliente cancelar su reserva sin cuenta:
+   * el id es su código secreto (el que aparece en pantalla y en el PDF).
+   * No guarda datos personales: solo lo necesario para liberar el hueco.
+   */
+  async crearCodigoCancelacion(codigo: string, datos: {
+    reservaId: string; slotId: string; fecha: string; hora?: string;
+    pista?: string; tipo: string; personas?: number; numeroReserva?: string;
+  }): Promise<void> {
+    if (!isFirebaseConfigured || !db) return;
+    await setDoc(doc(db, 'cancelaciones', codigo), {
+      ...datos, cancelada: false, creado: serverTimestamp(),
+    });
   }
 }

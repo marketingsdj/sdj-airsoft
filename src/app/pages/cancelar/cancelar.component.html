@@ -1,0 +1,87 @@
+<section class="cancelar">
+  <div class="wrap cancelar__inner">
+
+    @if (hecho()) {
+      <!-- ── Cancelada ──────────────────────────────────────────────────── -->
+      <div class="cancelar__card cancelar__card--ok">
+        <span class="cancelar__icon">✓</span>
+        <h1>Reserva cancelada</h1>
+        <p>Hemos liberado tu plaza. No tienes que hacer nada más.</p>
+        <p class="cancelar__nota">Si te has equivocado o quieres volver a reservar, puedes hacerlo cuando quieras.</p>
+        <div class="cancelar__ctas">
+          <a routerLink="/reserva" class="btn btn--primary">Reservar de nuevo</a>
+          <a routerLink="/" class="btn btn--ghost">Volver al inicio</a>
+        </div>
+      </div>
+
+    } @else {
+      <div class="cancelar__card">
+        <p class="eyebrow">CANCELAR RESERVA</p>
+        <h1>¿Necesitas cancelar?</h1>
+        <p class="cancelar__lead">
+          Introduce el código de cancelación que aparece en tu justificante de reserva.
+        </p>
+
+        <form class="cancelar__form" (ngSubmit)="buscar()">
+          <label class="cancelar__campo">
+            <span>Código de cancelación</span>
+            <input type="text" name="codigo" [(ngModel)]="codigo" placeholder="XXXX-XXXX"
+              autocapitalize="characters" spellcheck="false" />
+          </label>
+          <button class="btn btn--ghost" type="submit" [disabled]="buscando() || !codigo.trim()">
+            {{ buscando() ? 'Buscando…' : 'Buscar reserva' }}
+          </button>
+        </form>
+
+        @if (error()) { <p class="cancelar__error">{{ error() }}</p> }
+
+        @if (reserva(); as r) {
+          <div class="cancelar__resumen">
+            <p class="cancelar__resumen-titulo">Tu reserva</p>
+            <div class="cancelar__fila"><span>Tipo</span><strong>{{ tipoLabel(r.tipo) }}</strong></div>
+            <div class="cancelar__fila"><span>Fecha</span><strong>{{ fechaLarga(r.fecha) | titlecase }}</strong></div>
+            @if (r.hora) {
+              <div class="cancelar__fila"><span>Hora</span><strong>{{ r.hora }}{{ r.pista ? ' · Pista ' + r.pista : '' }}</strong></div>
+            }
+            @if (r.personas) {
+              <div class="cancelar__fila"><span>Personas</span><strong>{{ r.personas }}</strong></div>
+            }
+            @if (r.numeroReserva) {
+              <div class="cancelar__fila"><span>Nº de reserva</span><strong>{{ r.numeroReserva }}</strong></div>
+            }
+          </div>
+
+          @if (r.cancelada) {
+            <p class="cancelar__aviso">Esta reserva ya estaba cancelada. No hace falta que hagas nada más.</p>
+            <a routerLink="/reserva" class="btn btn--primary">Reservar de nuevo</a>
+
+          } @else if (!aTiempo(r)) {
+            <p class="cancelar__aviso">
+              Quedan menos de {{ horasMinimas }} horas para tu partida, así que ya no se puede cancelar
+              por la web. Escríbenos y lo vemos contigo.
+            </p>
+            <div class="cancelar__ctas">
+              <a href="https://wa.me/34688731474" target="_blank" rel="noopener" class="btn btn--primary">WhatsApp</a>
+              <a href="tel:+34688731474" class="btn btn--ghost">688 73 14 74</a>
+            </div>
+
+          } @else {
+            <p class="cancelar__confirmar-texto">
+              Al cancelar, tu plaza quedará libre para otras personas. Esta acción no se puede deshacer.
+            </p>
+            <button class="btn btn--primary cancelar__btn-rojo" (click)="confirmar()" [disabled]="cancelando()">
+              {{ cancelando() ? 'Cancelando…' : 'Cancelar mi reserva' }}
+            </button>
+          }
+        }
+
+        <p class="cancelar__pie">
+          ¿No encuentras el código? Escríbenos por
+          <a href="https://wa.me/34688731474" target="_blank" rel="noopener">WhatsApp</a>
+          y lo resolvemos.
+        </p>
+      </div>
+    }
+
+  </div>
+</section>

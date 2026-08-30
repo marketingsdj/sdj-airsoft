@@ -6,6 +6,7 @@ import { CalendarioGruposComponent } from '../../shared/calendario-grupos/calend
 import { SlotsService } from '../../core/services/slots.service';
 import { ReservaStateService, TipoReserva, SubtipoEvento } from '../../core/services/reserva-state.service';
 import { AnalyticsService } from '../../core/services/analytics.service';
+import { CancelacionService } from '../../core/services/cancelacion.service';
 import { esExtraordinaria as fechaEsExtra, EXTRA_CONFIG } from '../../core/data/partidas-extraordinarias';
 
 @Component({
@@ -19,6 +20,7 @@ export class ReservaComponent implements OnInit, OnDestroy {
   private slotsService = inject(SlotsService);
   analytics            = inject(AnalyticsService);
   private isBrowser    = isPlatformBrowser(inject(PLATFORM_ID));
+  private cancelacion  = inject(CancelacionService);
 
   // Shared with the service — survives navigation
   form  = this.state.form;
@@ -27,6 +29,8 @@ export class ReservaComponent implements OnInit, OnDestroy {
   numeroReserva = this.state.numeroReserva;
 
   enviando     = signal(false);
+  // Codigo con el que el cliente puede cancelar su reserva desde /cancelar.
+  codigoCancelacion = signal('');
   errorReserva = signal('');
   mostrarNormas      = signal(false);
   mostrarPrivacidad  = signal(false);
@@ -664,7 +668,8 @@ export class ReservaComponent implements OnInit, OnDestroy {
     // Registro de la reserva (quién reservó) para el límite diario y el historial.
     if (email) {
       try {
-        await this.slotsService.registrarReserva({
+        const codigo = this.cancelacion.generarCodigo();
+        const reservaId = await this.slotsService.registrarReserva({
           email,
           nombre: this.form.nombre,
           telefono: this.form.telefono,
@@ -674,7 +679,23 @@ export class ReservaComponent implements OnInit, OnDestroy {
           pista: this.form.pista,
           personas: this.form.personas,
           numeroReserva: this.numeroReserva(),
+          codigoCancelacion: codigo,
         });
+
+        // Con este código el cliente puede cancelar él mismo desde /cancelar.
+        if (reservaId) {
+          await this.slotsService.crearCodigoCancelacion(codigo, {
+            reservaId,
+            slotId: this.form.pista ? `${this.form.fecha}_${this.form.hora}_${this.form.pista}` : '',
+            fecha: this.form.fecha,
+            hora: this.form.hora,
+            pista: this.form.pista,
+            tipo: this.form.tipo,
+            personas: this.form.personas,
+            numeroReserva: this.numeroReserva(),
+          });
+          this.codigoCancelacion.set(codigo);
+        }
       } catch { /* si falla el registro no bloqueamos la confirmación */ }
     }
 

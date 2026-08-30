@@ -18,7 +18,34 @@ service cloud.firestore {
       // la segunda escritura falla porque el documento ya existe.
       allow create: if !exists(/databases/$(database)/documents/slots/$(slotId));
 
-      // Solo el panel de gestión (con sesión) libera o edita huecos.
+      // Borra el hueco el panel, o el cliente que ha cancelado su reserva
+      // (la autorización quedó registrada en /liberaciones con su código).
+      allow update: if esAdmin();
+      allow delete: if esAdmin() || exists(/databases/$(database)/documents/liberaciones/$(slotId));
+    }
+
+    // Códigos de cancelación. El id ES el código secreto que se le da al
+    // cliente: solo puede leerlo quien lo conoce (get sí, list no). No guarda
+    // datos personales.
+    match /cancelaciones/{codigo} {
+      allow get: if true;
+      allow list: if esAdmin();
+      allow create: if true;
+      // El cliente solo puede marcarla como cancelada; nada más.
+      allow update: if esAdmin() || (
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['cancelada', 'canceladaEl']) &&
+        request.resource.data.cancelada == true &&
+        resource.data.cancelada == false
+      );
+      allow delete: if false;
+    }
+
+    // Autorización para liberar una franja: se crea al cancelar y solo se
+    // acepta si el código aportado corresponde a esa misma franja.
+    match /liberaciones/{slotId} {
+      allow read: if esAdmin();
+      allow create: if exists(/databases/$(database)/documents/cancelaciones/$(request.resource.data.codigo))
+        && get(/databases/$(database)/documents/cancelaciones/$(request.resource.data.codigo)).data.slotId == slotId;
       allow update, delete: if esAdmin();
     }
 
@@ -28,7 +55,14 @@ service cloud.firestore {
     match /reservas/{reservaId} {
       allow create: if true;
       // El panel de gestión (/admin) lee y actualiza el estado y las notas.
-      allow read, update: if esAdmin();
+      allow read: if esAdmin();
+      // El panel edita libremente; el cliente solo puede cancelar la suya, y
+      // únicamente si aporta el código de cancelación que se le entregó.
+      allow update: if esAdmin() || (
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['estado', 'canceladaPor', 'codigoUsado']) &&
+        request.resource.data.estado == 'cancelada' &&
+        request.resource.data.codigoUsado == resource.data.codigoCancelacion
+      );
       allow delete: if false;
     }
 

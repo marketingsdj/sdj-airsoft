@@ -81,6 +81,16 @@
           </ul>
         </div>
 
+        @if (codigoCancelacion()) {
+          <div class="pdf-tpl__seccion pdf-tpl__cancelacion">
+            <h2>CANCELACIÓN</h2>
+            <p>Puedes anular esta reserva tú mismo hasta 48 h antes de la partida en
+              <strong>www.soldadosdejuguete.com/cancelar</strong>, con este código:</p>
+            <p class="pdf-tpl__codigo">{{ codigoCancelacion() }}</p>
+            <p>Dentro de las 48 h previas, contacta con nosotros en el 688 731 474.</p>
+          </div>
+        }
+
         <div class="pdf-tpl__seccion pdf-tpl__dos-col">
           <div>
             <h2>UBICACIÓN</h2>
@@ -234,6 +244,19 @@
             <button type="button" class="exito-cal-card__secundario" (click)="descargarIcs()">¿Apple Calendar u Outlook? Descargar .ics</button>
           </div>
         </div>
+
+        @if (codigoCancelacion()) {
+          <div class="exito-cancelar">
+            <p class="exito-cancelar__titulo">¿Necesitas cancelar?</p>
+            <p class="exito-cancelar__texto">
+              Guarda este código. Con él puedes anular tu reserva tú mismo hasta 48&nbsp;h antes de la partida.
+            </p>
+            <p class="exito-cancelar__codigo">{{ codigoCancelacion() }}</p>
+            <a class="btn btn--ghost" [routerLink]="['/cancelar']" [queryParams]="{ codigo: codigoCancelacion() }">
+              Cancelar mi reserva
+            </a>
+          </div>
+        }
 
         <p class="exito-aviso">¿Dudas o cambios? Escríbenos por WhatsApp.</p>
         <div class="exito-ctas">
