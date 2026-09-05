@@ -336,9 +336,11 @@
           }
           <p class="agenda-card__modo">{{ p.modo }}</p>
           <p class="agenda-card__meta">
-            <span>{{ p.hora }}</span>
+            <span class="agenda-card__horas">
+              @for (h of p.horas; track h) { <span>{{ h }}</span> }
+            </span>
             <span class="agenda-card__dot"></span>
-            <span>{{ p.tipo }}</span>
+            <span class="agenda-card__tipo">{{ p.tipo }}</span>
           </p>
           @if (p.esExtraordinaria) {
             <p class="agenda-card__precio">Socios gratis · No socios {{ EXTRA_PRECIO }} €</p>

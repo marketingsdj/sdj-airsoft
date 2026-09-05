@@ -1395,7 +1395,28 @@
     margin-top: 1px;
   }
 
-  &__body { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+  &__body {
+    flex: 1;
+    min-width: 0;
+    // Las palabras no se parten a la mitad: si no caben, saltan enteras.
+    overflow-wrap: break-word;
+    word-break: normal;
+    hyphens: none;
+  }
+
+  // Horario: una hora suelta se queda en su línea; en los rangos la segunda
+  // cae debajo, sin dejar el guion colgando al final de la primera.
+  &__horas {
+    span { white-space: nowrap; }
+    span + span::before { content: ' – '; }
+
+    @media (max-width: $bp-md) {
+      span { display: block; }
+      span + span::before { content: none; }
+    }
+  }
+
+  &__tipo { white-space: nowrap; }
 
   &__modo {
     font-family: $font-tight;
