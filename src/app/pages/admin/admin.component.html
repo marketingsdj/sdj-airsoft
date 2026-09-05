@@ -375,6 +375,8 @@
                           {{ detalle() === r.id ? 'Cerrar' : 'Avisar' }}
                         </button>
                         @if (r.estado === 'confirmada') {
+                          <!-- Hueco de la izquierda: entrar a cambiar datos. -->
+                          <button class="admin-btn" (click)="toggleDetalle(r.id); editar(r)">Modificar</button>
                           <!-- Por si se ha confirmado sin querer. -->
                           <button class="admin-btn admin-btn--col2" [disabled]="guardando() === r.id"
                             (click)="reabrir(r)">Deshacer</button>
