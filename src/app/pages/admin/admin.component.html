@@ -577,8 +577,9 @@
                       <span class="admin-acciones__grid">
                         <button class="admin-btn admin-btn--aceptar" [disabled]="guardando() === r.id"
                           (click)="marcar(r, 'aceptada')">Aceptar</button>
-                        <button class="admin-btn admin-btn--avisar" (click)="avisarAnulacion(r)">
-                          {{ detalle() === r.id ? 'Cerrar' : 'Avisar de la anulación' }}
+                        <button class="admin-btn admin-btn--avisar" (click)="avisarAnulacion(r)"
+                          title="Avisar al cliente de que la reserva queda anulada">
+                          {{ detalle() === r.id ? 'Cerrar' : 'Avisar' }}
                         </button>
                       </span>
                     } @else if (r.estado === 'aceptada') {
