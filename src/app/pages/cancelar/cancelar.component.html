@@ -15,7 +15,7 @@
       </div>
 
     } @else {
-      <div class="cancelar__card">
+      <div class="cancelar__card" [class.cancelar__card--ancho]="modo() === 'modificar'">
         <p class="eyebrow">TU RESERVA</p>
         <h1>Modificar o cancelar</h1>
         <p class="cancelar__lead">
@@ -118,6 +118,7 @@
                 @if (calendarioAbierto()) {
                 <app-calendario-grupos
                   modo="seleccion"
+                  [compacto]="true"
                   [txiki]="r.tipo === 'txiki' || r.tipo === 'evento'"
                   [permitirLaborables]="r.tipo !== 'individual'"
                   [mostrarSlots]="!!r.pista"
