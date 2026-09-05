@@ -138,27 +138,32 @@
       @if (!calendarioAbierto()) {
       <div class="admin-kpis">
         <button class="admin-kpi admin-kpi--clic" [class.admin-kpi--activo]="sinFiltros"
-                (click)="verFiltro('')">
+                (click)="verFiltro('')"
+                title="Quita todos los filtros y deja el panel como al entrar: sin estado ni tipo, y con «Solo próximas» marcada.">
           <span class="admin-kpi__num">{{ totalReservas() }}</span>
           <span class="admin-kpi__lbl">Todas las reservas</span>
         </button>
         <button class="admin-kpi admin-kpi--accion" [class.admin-kpi--activo]="filtroActivo('pendiente')"
-                (click)="verFiltro('pendiente')">
+                (click)="verFiltro('pendiente')"
+                title="Piden algo de ti: sin gestionar, con un cambio pedido, con un aviso sin dar o con la hora sin fijar.">
           <span class="admin-kpi__num">{{ totalPendientes() }}</span>
           <span class="admin-kpi__lbl">Pendientes de gestionar</span>
         </button>
         <button class="admin-kpi admin-kpi--clic" [class.admin-kpi--recordatorio]="totalRecordatorios() > 0"
-                [class.admin-kpi--activo]="filtroActivo('recordatorio')" (click)="verFiltro('recordatorio')">
+                [class.admin-kpi--activo]="filtroActivo('recordatorio')" (click)="verFiltro('recordatorio')"
+                title="Aceptadas, sin jugar, a 7 días o menos y sin nada más que gestionar: son las filas amarillas.">
           <span class="admin-kpi__num">{{ totalRecordatorios() }}</span>
           <span class="admin-kpi__lbl">Recordatorios por enviar</span>
         </button>
         <button class="admin-kpi admin-kpi--clic" [class.admin-kpi--alerta]="totalCambios() > 0"
-                [class.admin-kpi--activo]="filtroActivo('cambios')" (click)="verFiltro('cambios')">
+                [class.admin-kpi--activo]="filtroActivo('cambios')" (click)="verFiltro('cambios')"
+                title="Reservas en las que el cliente ha pedido un cambio desde /cancelar.">
           <span class="admin-kpi__num">{{ totalCambios() }}</span>
           <span class="admin-kpi__lbl">Cambios pedidos</span>
         </button>
         <button class="admin-kpi admin-kpi--clic" [class.admin-kpi--activo]="filtroActivo('proximas')"
-                (click)="verFiltro('proximas')">
+                (click)="verFiltro('proximas')"
+                title="De hoy en adelante y sin anuladas ni canceladas. Al pulsarlo se quitan los demás filtros.">
           <span class="admin-kpi__num">{{ totalProximas() }}</span>
           <span class="admin-kpi__lbl">Próximas (hoy en adelante)</span>
         </button>
@@ -672,7 +677,8 @@
           </select>
         </label>
 
-        <label class="admin-check">
+        <label class="admin-check"
+          title="Oculta las reservas de fechas ya pasadas. Se aplica junto al resto de filtros; el recuadro «Próximas» de arriba, además, descarta las anuladas y canceladas.">
           <input type="checkbox" [(ngModel)]="soloProximas" (ngModelChange)="onFiltroCambiado()" />
           <span>Solo próximas</span>
         </label>
