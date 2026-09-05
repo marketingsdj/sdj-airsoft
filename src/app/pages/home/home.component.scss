@@ -145,30 +145,42 @@
   &__extra {
     display: block;
     margin-bottom: 14px;
-    padding: 10px 14px;
-    border: 1px solid rgba($naranja, 0.6);
+    padding: 14px 16px;
+    border: 1px solid rgba($naranja, 0.7);
     border-radius: $radius-md;
-    background: rgba($naranja, 0.12);
+    // Fondo sólido: sobre el vídeo el translúcido no se leía.
+    background: rgba($ink, 0.82);
     text-decoration: none;
     transition: background $transition;
 
-    &:hover { background: rgba($naranja, 0.2); }
+    &:hover { background: rgba($ink, 0.92); border-color: $naranja; }
   }
 
   &__extra-badge {
     display: block;
     font-family: $font-mono;
-    font-size: 9px;
+    font-size: 10px;
     letter-spacing: 0.16em;
     text-transform: uppercase;
     color: $naranja;
+    margin-bottom: 6px;
+  }
+
+  &__extra-fecha {
+    display: block;
+    font-family: $font-tight;
+    font-weight: 800;
+    font-size: 17px;
+    line-height: 1.2;
+    color: $crema;
     margin-bottom: 2px;
   }
 
   &__extra-texto {
     display: block;
     font-size: 13px;
-    color: $crema;
+    line-height: 1.5;
+    color: rgba($crema, 0.85);
   }
 
   &__cta-row {

@@ -63,6 +63,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   ];
 
   readonly EXTRA_PRECIO = EXTRA_CONFIG.precioNoSocio.toFixed(2).replace('.', ',');
+  readonly EXTRA_PRECIO_ALQUILER = EXTRA_CONFIG.precioAlquiler.toFixed(2).replace('.', ',');
 
   // Próximas partidas (fin de semana + extraordinarias) desde la lista compartida.
   private extraordinarias = inject(ExtraordinariasService);

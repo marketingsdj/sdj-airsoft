@@ -23,7 +23,8 @@
           <!-- Aviso de partida extraordinaria abierta desde el panel. -->
           <a class="hero__extra" routerLink="/reserva" [queryParams]="{ tipo: 'individual', fecha: extra.iso }">
             <span class="hero__extra-badge">Partida extraordinaria</span>
-            <span class="hero__extra-texto">{{ extra.fecha }} · {{ extra.hora }} — socios gratis, resto {{ EXTRA_PRECIO }} €</span>
+            <span class="hero__extra-fecha">{{ extra.fecha | titlecase }} · {{ extra.hora }}</span>
+            <span class="hero__extra-texto">Socios gratis · equipo propio {{ EXTRA_PRECIO }} € · con alquiler {{ EXTRA_PRECIO_ALQUILER }} €</span>
           </a>
         }
 
