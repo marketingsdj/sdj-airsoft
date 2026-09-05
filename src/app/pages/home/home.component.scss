@@ -25,9 +25,12 @@
   align-items: center;
   overflow: hidden;
 
-  // Móvil: el contenido ocupa poco y sobraba pantalla vacía.
-  @media (max-width: $bp-md) { min-height: 62vh; }
-  @media (max-width: $bp-sm) { min-height: 56vh; }
+  // Móvil: el vídeo llena la pantalla visible (menos el header) y el
+  // contenido va dentro, con margen arriba y abajo.
+  @media (max-width: $bp-md) {
+    min-height: calc(100svh - 68px);
+    padding-top: 68px;
+  }
 
   &__bg {
     position: absolute;
@@ -63,6 +66,13 @@
     display: flex;
     flex-direction: column;
     gap: 80px;
+
+    // Móvil: aire arriba (bajo el header) y abajo (sobre la flecha), sin
+    // huecos muertos entre los bloques.
+    @media (max-width: $bp-md) {
+      gap: 20px;
+      padding: 32px 0 72px;
+    }
   }
 
   &__eyebrow--top {
