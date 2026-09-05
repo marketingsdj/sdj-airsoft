@@ -173,9 +173,13 @@
   &__cambio {
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 12px;
     margin-top: 4px;
     padding: 18px;
+
+    // Sin márgenes propios: la separación la marca el gap del formulario.
+    > * { margin: 0; }
+    label, textarea, input { margin: 0; }
     border: 1px solid $line;
     border-radius: $radius-md;
     background: rgba(0, 0, 0, 0.15);
@@ -207,6 +211,7 @@
   textarea {
     width: 100%;
     box-sizing: border-box;
+    display: block;   // sin el hueco del inline por debajo
     background: rgba(0, 0, 0, 0.25);
     border: 1px solid $line;
     border-radius: $radius-sm;
