@@ -111,7 +111,8 @@
         <div class="admin-nueva">
           <div class="admin-nueva__top">
             <p class="admin-nueva__titulo">Nueva reserva</p>
-            <button class="admin-btn" (click)="nuevaAbierta.set(false)">Cerrar</button>
+            <button class="admin-cerrar" (click)="nuevaAbierta.set(false)"
+              aria-label="Cerrar" title="Cerrar">×</button>
           </div>
 
           <div class="admin-nueva__cols">
@@ -138,10 +139,20 @@
               <span>Email</span>
               <input type="email" [(ngModel)]="nueva.email" />
             </label>
-            <label class="admin-campo">
-              <span>Extras (separados por comas)</span>
-              <input type="text" [(ngModel)]="nueva.extras" placeholder="Menú, Merienda…" />
-            </label>
+            <div class="admin-campo admin-campo--ancho">
+              <span>Extras</span>
+              <div class="admin-extras-lista">
+                @for (e of extrasDisponibles; track e) {
+                  <label class="admin-extras-lista__op">
+                    <input type="checkbox" [checked]="tieneExtra(nueva.extras, e)"
+                      (change)="nueva.extras = toggleExtra(nueva.extras, e)" />
+                    <span>{{ e }}</span>
+                  </label>
+                }
+              </div>
+              <input type="text" [(ngModel)]="nueva.extras"
+                placeholder="Otros (escríbelos separados por comas)" />
+            </div>
             <label class="admin-campo admin-campo--ancho">
               <span>Notas internas</span>
               <input type="text" [(ngModel)]="nueva.notas" placeholder="Reserva por teléfono, paga en efectivo…" />
@@ -415,10 +426,20 @@
                               <span>Email</span>
                               <input type="email" [(ngModel)]="edicion.email" />
                             </label>
-                            <label class="admin-campo">
-                              <span>Extras (separados por comas)</span>
-                              <input type="text" [(ngModel)]="edicion.extras" />
-                            </label>
+                            <div class="admin-campo admin-campo--ancho">
+                              <span>Extras</span>
+                              <div class="admin-extras-lista">
+                                @for (e of extrasDisponibles; track e) {
+                                  <label class="admin-extras-lista__op">
+                                    <input type="checkbox" [checked]="tieneExtra(edicion.extras, e)"
+                                      (change)="edicion.extras = toggleExtra(edicion.extras, e)" />
+                                    <span>{{ e }}</span>
+                                  </label>
+                                }
+                              </div>
+                              <input type="text" [(ngModel)]="edicion.extras"
+                                placeholder="Otros (escríbelos separados por comas)" />
+                            </div>
                             <label class="admin-campo admin-campo--ancho">
                               <span>Notas internas</span>
                               <input type="text" [(ngModel)]="edicion.notas" />

@@ -58,6 +58,34 @@ export class AdminComponent implements OnInit {
       .filter(f => f.antes !== f.ahora);
   }
 
+  // ── Extras ──────────────────────────────────────────────────────────────────
+  // Los mismos que puede contratar el cliente en la web, más un campo libre
+  // para lo que no esté en la lista todavía.
+  readonly extrasDisponibles = [
+    'Doble partida',
+    'Tarifa reducida',
+    'Menú (precio por confirmar)',
+    'Merienda infantil (+9,90 €/niño)',
+    'Pack Premium (+5 €)',
+    'Mono rosa para el/la protagonista',
+    'Camisetas por equipo',
+    'Autorización en lote',
+    'Certificado de la actividad',
+  ];
+
+  /** Marca o desmarca un extra en la lista separada por comas. */
+  toggleExtra(lista: string, extra: string): string {
+    const actuales = lista.split(',').map(e => e.trim()).filter(Boolean);
+    const i = actuales.indexOf(extra);
+    if (i >= 0) actuales.splice(i, 1);
+    else actuales.push(extra);
+    return actuales.join(', ');
+  }
+
+  tieneExtra(lista: string, extra: string): boolean {
+    return lista.split(',').map(e => e.trim()).includes(extra);
+  }
+
   // ── Edición de una reserva ──────────────────────────────────────────────────
   editando = signal<string | null>(null);
   edicion = {
