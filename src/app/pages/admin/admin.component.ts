@@ -19,6 +19,8 @@ export class AdminComponent implements OnInit {
   email = '';
   password = '';
   errorLogin = signal('');
+  // Mostrar u ocultar la contraseña al escribirla.
+  verPassword = signal(false);
   entrando = signal(false);
 
   // ── Datos ───────────────────────────────────────────────────────────────────

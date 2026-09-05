@@ -67,6 +67,33 @@
   input { accent-color: $naranja; width: 16px; height: 16px; }
 }
 
+// Campo de contraseña con el botón del ojo dentro.
+.admin-password {
+  position: relative;
+  display: block;
+
+  input { width: 100%; box-sizing: border-box; padding-right: 44px; }
+
+  &__ojo {
+    position: absolute;
+    top: 50%;
+    right: 6px;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: none;
+    background: none;
+    color: rgba($crema, 0.5);
+    cursor: pointer;
+
+    &:hover { color: $naranja; }
+  }
+}
+
 // ── Cabecera ──────────────────────────────────────────────────────────────────
 .admin-top {
   display: flex;
