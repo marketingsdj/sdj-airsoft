@@ -94,7 +94,7 @@
 
             @if (ajustesAbierto()) {
               <div class="admin-ajustes__menu">
-                <button type="button" class="admin-ajustes__opcion" (click)="toggleTextos()">Textos de los avisos</button>
+                <button type="button" class="admin-ajustes__opcion" (click)="toggleTextos()">💬 Textos de los avisos</button>
                 <button type="button" class="admin-ajustes__opcion" (click)="toggleModoBorrado()">
                   ✎ {{ modoBorrado() ? 'Terminar de borrar' : 'Borrar reservas anuladas' }}
                 </button>
@@ -104,7 +104,7 @@
                 <button type="button" class="admin-ajustes__opcion" [disabled]="!filtradas().length"
                   (click)="exportarCsv(); ajustesAbierto.set(false)"
                   title="Exporta lo que estas viendo: usa los filtros Desde y Hasta para acotar por fechas">
-                  Exportar CSV ({{ filtradas().length }})
+                  ⬇ Exportar CSV ({{ filtradas().length }})
                 </button>
                 <button type="button" class="admin-ajustes__opcion admin-ajustes__opcion--salir"
                   (click)="salir()">Salir</button>
