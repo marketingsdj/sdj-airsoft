@@ -11,7 +11,9 @@
 
   &__card {
     width: 100%;
-    max-width: 520px;
+    // Ancha en todas las pantallas: así el calendario de "modificar" cabe
+    // sin cambiar de formato al pasar de un paso a otro.
+    max-width: 720px;
     padding: 36px;
     border: 1px solid $line;
     border-radius: $radius-md;
