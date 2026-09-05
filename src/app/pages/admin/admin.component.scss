@@ -672,15 +672,23 @@
   padding: 0;
   border: none;
   background: none;
-  color: inherit;
   font-size: 15px;
   line-height: 1;
   vertical-align: middle;
   cursor: pointer;
-  opacity: 0.7;
 
-  &:hover:not(:disabled) { opacity: 1; color: #e2685f; }
-  &:disabled { cursor: default; }
+  // La x de anular, en gris.
+  color: rgba($crema, 0.5);
+
+  &:hover:not(:disabled) { color: $crema; }
+  &:disabled { cursor: default; opacity: 0.4; }
+
+  // El de deshacer (dentro de un extra anulado), en naranja.
+  .admin-extra--anulado & {
+    color: $naranja;
+
+    &:hover:not(:disabled) { color: $naranja-soft; }
+  }
 }
 
 // Anulado: se marca con el color apagado, sin tachar (el tachado se comía
