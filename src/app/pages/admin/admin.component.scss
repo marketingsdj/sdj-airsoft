@@ -278,7 +278,7 @@
   // Campos a la izquierda y calendario a la derecha: todo cabe sin scroll.
   &__cols {
     display: grid;
-    grid-template-columns: 1fr 360px;
+    grid-template-columns: minmax(0, 1fr) 440px;
     gap: 20px;
     align-items: start;
 
@@ -287,12 +287,18 @@
 
   &__campos {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    // Dos por fila como mucho: los campos quedan legibles y no se estiran.
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px;
     align-content: start;
+
+    @media (max-width: 720px) { grid-template-columns: 1fr; }
   }
 
   &__cal { min-width: 0; }
+
+  // Los extras y las notas ocupan la fila entera.
+  .admin-campo--ancho { grid-column: 1 / -1; }
 
   &__sub {
     margin: 0 0 14px;
