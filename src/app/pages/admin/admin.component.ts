@@ -530,6 +530,24 @@ export class AdminComponent implements OnInit {
     }
   }
 
+  /** Vacia la papelera entera. Pide confirmacion: no tiene vuelta atras. */
+  async vaciarPapelera() {
+    const n = this.papelera().length;
+    if (!n) return;
+    if (!confirm(`Vas a borrar para siempre ${n} reserva${n === 1 ? '' : 's'} de la papelera. Esta accion no se puede deshacer. ¿Seguimos?`)) return;
+    this.error.set('');
+    for (const r of this.papelera()) {
+      this.borrandoId.set(r.id);
+      try {
+        if (!this.esDemo(r)) await this.admin.eliminarReserva(r.id);
+        this.reservas.update(list => list.filter(x => x.id !== r.id));
+      } catch {
+        this.error.set('No se han podido borrar todas: quedan algunas en la papelera.');
+      }
+    }
+    this.borrandoId.set(null);
+  }
+
   /** Borrado definitivo: pide confirmacion porque no tiene vuelta atras. */
   async borrarDefinitivo(r: ReservaAdmin) {
     const quien = r.nombre || r.numeroReserva || 'esta reserva';

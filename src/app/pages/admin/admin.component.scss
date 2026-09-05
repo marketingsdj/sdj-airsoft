@@ -859,6 +859,27 @@
   }
 }
 
+// ── Papelera ──────────────────────────────────────────────────────────────────
+// Una reserva por fila: son pocas y conviene leerlas enteras antes de borrar.
+.admin-papelera-lista { grid-template-columns: 1fr !important; }
+
+.admin-papelera__cab {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+
+  .admin-btn { width: auto; margin-left: auto; }
+}
+
+.admin-papelera__cuenta {
+  font-family: $font-mono;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba($crema, 0.5);
+}
+
 // ── Menu de ajustes ───────────────────────────────────────────────────────────
 .admin-ajustes {
   position: relative;

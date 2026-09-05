@@ -465,7 +465,14 @@
           </p>
 
           @if (papelera().length) {
-            <ul class="admin-extra-lista">
+            <div class="admin-papelera__cab">
+              <span class="admin-papelera__cuenta">
+                {{ papelera().length }} reserva{{ papelera().length === 1 ? '' : 's' }} en la papelera
+              </span>
+              <button class="admin-btn admin-btn--no" [disabled]="borrandoId()"
+                (click)="vaciarPapelera()">Vaciar papelera</button>
+            </div>
+            <ul class="admin-extra-lista admin-papelera-lista">
               @for (r of papelera(); track r.id) {
                 <li>
                   <span class="admin-extra-lista__fecha">{{ r.nombre || 'Sin nombre' }}</span>
