@@ -104,54 +104,36 @@ export class CalendarioGruposComponent implements OnInit {
   // franjas seguidas (2 h de juego). De momento no se ofrecen franjas a partir
   // de las 17:00.
   private readonly SLOTS_BASE = [
-    { hora: '09:00', horaFin: '10:00', pista: 'A' },
-    { hora: '09:00', horaFin: '10:00', pista: 'B' },
-    { hora: '10:00', horaFin: '11:00', pista: 'A' },
-    { hora: '10:00', horaFin: '11:00', pista: 'B' },
-    { hora: '11:00', horaFin: '12:00', pista: 'A' },
-    { hora: '11:00', horaFin: '12:00', pista: 'B' },
-    { hora: '12:00', horaFin: '13:00', pista: 'A' },
-    { hora: '12:00', horaFin: '13:00', pista: 'B' },
-    { hora: '13:00', horaFin: '14:00', pista: 'A' },
-    { hora: '13:00', horaFin: '14:00', pista: 'B' },
-    { hora: '14:00', horaFin: '15:00', pista: 'A' },
-    { hora: '14:00', horaFin: '15:00', pista: 'B' },
-    { hora: '15:00', horaFin: '16:00', pista: 'A' },
-    { hora: '15:00', horaFin: '16:00', pista: 'B' },
-    { hora: '16:00', horaFin: '17:00', pista: 'A' },
-    { hora: '16:00', horaFin: '17:00', pista: 'B' },
+    { hora: '09:00', horaFin: '11:00', pista: 'A' },
+    { hora: '09:00', horaFin: '11:00', pista: 'B' },
+    { hora: '11:00', horaFin: '13:00', pista: 'A' },
+    { hora: '11:00', horaFin: '13:00', pista: 'B' },
+    { hora: '13:00', horaFin: '15:00', pista: 'A' },
+    { hora: '13:00', horaFin: '15:00', pista: 'B' },
+    { hora: '15:00', horaFin: '17:00', pista: 'A' },
+    { hora: '15:00', horaFin: '17:00', pista: 'B' },
+    { hora: '17:00', horaFin: '19:00', pista: 'A' },
+    { hora: '17:00', horaFin: '19:00', pista: 'B' },
   ];
 
-  // Txikipaintball - sabados, domingos y festivos: mismas franjas de 1 h.
+  // Txikipaintball — sábados, domingos y festivos (09:00–17:00) en franjas de 2 h.
   private readonly SLOTS_TXIKI_FINDE = [
-    { hora: '09:00', horaFin: '10:00', pista: 'A' },
-    { hora: '09:00', horaFin: '10:00', pista: 'B' },
-    { hora: '10:00', horaFin: '11:00', pista: 'A' },
-    { hora: '10:00', horaFin: '11:00', pista: 'B' },
-    { hora: '11:00', horaFin: '12:00', pista: 'A' },
-    { hora: '11:00', horaFin: '12:00', pista: 'B' },
-    { hora: '12:00', horaFin: '13:00', pista: 'A' },
-    { hora: '12:00', horaFin: '13:00', pista: 'B' },
-    { hora: '13:00', horaFin: '14:00', pista: 'A' },
-    { hora: '13:00', horaFin: '14:00', pista: 'B' },
-    { hora: '14:00', horaFin: '15:00', pista: 'A' },
-    { hora: '14:00', horaFin: '15:00', pista: 'B' },
-    { hora: '15:00', horaFin: '16:00', pista: 'A' },
-    { hora: '15:00', horaFin: '16:00', pista: 'B' },
-    { hora: '16:00', horaFin: '17:00', pista: 'A' },
-    { hora: '16:00', horaFin: '17:00', pista: 'B' },
+    { hora: '09:00', horaFin: '11:00', pista: 'A' },
+    { hora: '09:00', horaFin: '11:00', pista: 'B' },
+    { hora: '11:00', horaFin: '13:00', pista: 'A' },
+    { hora: '11:00', horaFin: '13:00', pista: 'B' },
+    { hora: '13:00', horaFin: '15:00', pista: 'A' },
+    { hora: '13:00', horaFin: '15:00', pista: 'B' },
+    { hora: '15:00', horaFin: '17:00', pista: 'A' },
+    { hora: '15:00', horaFin: '17:00', pista: 'B' },
   ];
 
-  // Txikipaintball - viernes (horario de tarde), franjas de 1 h.
+  // Txikipaintball — viernes (16:00–20:00) en franjas de 2 h.
   private readonly SLOTS_TXIKI_VIERNES = [
-    { hora: '16:00', horaFin: '17:00', pista: 'A' },
-    { hora: '16:00', horaFin: '17:00', pista: 'B' },
-    { hora: '17:00', horaFin: '18:00', pista: 'A' },
-    { hora: '17:00', horaFin: '18:00', pista: 'B' },
-    { hora: '18:00', horaFin: '19:00', pista: 'A' },
-    { hora: '18:00', horaFin: '19:00', pista: 'B' },
-    { hora: '19:00', horaFin: '20:00', pista: 'A' },
-    { hora: '19:00', horaFin: '20:00', pista: 'B' },
+    { hora: '16:00', horaFin: '18:00', pista: 'A' },
+    { hora: '16:00', horaFin: '18:00', pista: 'B' },
+    { hora: '18:00', horaFin: '20:00', pista: 'A' },
+    { hora: '18:00', horaFin: '20:00', pista: 'B' },
   ];
 
   // Horas aproximadas de llegada para grupos +10 entre semana, cada media hora.
