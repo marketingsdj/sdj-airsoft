@@ -327,7 +327,8 @@ export class ReservaComponent implements OnInit, OnDestroy {
   //  · día entre semana ("a consultar"): sin franja fija, hora por acordar
   //  · evento con menú: el precio del menú se cierra con el cliente
   get requiereConfirmacion(): boolean {
-    return this.form.laborableConsulta || (this.form.tipo === 'evento' && this.form.menu);
+    // Todas las reservas las confirma el equipo desde el panel.
+    return true;
   }
 
   get resumen() {
@@ -622,7 +623,7 @@ export class ReservaComponent implements OnInit, OnDestroy {
 
     const payload = this.form.tipo === 'individual'
       ? {
-          gestion: 'CONFIRMADA',
+          gestion: 'PENDIENTE DE CONFIRMAR',
           tipo: 'individual',
           fecha: this.form.fecha,
           personas: this.form.personas,

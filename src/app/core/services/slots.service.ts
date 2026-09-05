@@ -105,7 +105,8 @@ export class SlotsService {
   }): Promise<string | null> {
     if (!isFirebaseConfigured || !db) return null;
     const email = this.normEmail(datos.email);
-    const ref = await addDoc(collection(db, 'reservas'), { ...datos, email, estado: datos.gestion === 'pendiente' ? 'pendiente' : 'confirmada', creado: serverTimestamp() });
+    // Toda reserva entra como pendiente: la confirma el equipo desde /admin.
+    const ref = await addDoc(collection(db, 'reservas'), { ...datos, email, estado: 'pendiente', creado: serverTimestamp() });
     // Los limites por persona van por email: sin email no hay a quien contarle
     // la reserva, pero la reserva si queda guardada.
     if (!email) return ref.id;
