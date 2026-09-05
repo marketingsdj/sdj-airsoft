@@ -80,9 +80,11 @@
   gap: 8px;
   font-size: 13px;
   color: rgba($crema, 0.8);
-  align-self: flex-end;
-  padding-bottom: 10px;
   cursor: pointer;
+  // Misma altura que un campo, para que quede centrada con ellos.
+  align-self: flex-end;
+  min-height: 41px;
+  padding: 0 2px;
 
   input { accent-color: $naranja; width: 16px; height: 16px; }
 }
@@ -394,7 +396,10 @@
   margin-bottom: 20px;
 
   &__limpiar {
-    align-self: flex-end;
+    // Fila propia y pegado a la derecha del bloque.
+    width: 100%;
+    text-align: right;
+    margin-top: 4px;
     background: none;
     border: none;
     color: $naranja;
@@ -403,7 +408,7 @@
     text-transform: uppercase;
     letter-spacing: 0.1em;
     cursor: pointer;
-    padding-bottom: 12px;
+    padding: 0;
 
     &:hover { text-decoration: underline; }
   }
