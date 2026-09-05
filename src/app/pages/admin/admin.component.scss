@@ -616,21 +616,28 @@
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 5px;
+
+    .admin-btn { width: 100%; }
   }
 }
 
 .admin-btn {
-  display: inline-block;
-  vertical-align: middle;
-  width: 100%;
+  // Todos iguales: mismo alto, texto centrado en vertical y horizontal aunque
+  // la palabra sea larga ("Recordatorio") y ocupe dos líneas.
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
-
+  vertical-align: middle;
+  min-height: 30px;
+  line-height: 1.15;
+  box-sizing: border-box;
 
   font-family: $font-mono;
-  font-size: 10px;
-  letter-spacing: 0.08em;
+  font-size: 9.5px;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  padding: 6px 8px;
+  padding: 5px 6px;
   border-radius: $radius-sm;
   border: 1px solid $line;
   background: transparent;

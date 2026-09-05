@@ -201,6 +201,13 @@
             </div>
           </div>
         } @else {
+          <p class="cal__horario-nota">
+            La franja que eliges es <strong>tu hora de juego</strong>. Llega 30 min antes para
+            equiparte y recibir la explicación; al terminar tienes otros 30 min para ducharte.
+            Ejemplo: llegada 09:00 → partida 09:30–10:30 → salida sobre las 11:00.
+            Además, <strong>tu entrada te da acceso a la partida abierta durante todo el día</strong>:
+            aunque reserves por la tarde puedes venir desde por la mañana.
+          </p>
           <div class="cal__slots-grid">
             @for (slot of diaSeleccionado()!.slots; track slot.hora + slot.pista) {
               <button
@@ -210,7 +217,8 @@
                 [class.cal__slot--inactivo]="!slot.reservada && doble && !puedeIniciar(diaSeleccionado()!, slot) && !slotEsActivo(diaSeleccionado()!, slot)"
                 [disabled]="!puedeIniciar(diaSeleccionado()!, slot) && !slotEsActivo(diaSeleccionado()!, slot)"
                 (click)="reservarSlot(diaSeleccionado()!, slot)">
-                <span class="cal__slot-hora">{{ slot.hora }} – {{ slotHoraFinMostrada(diaSeleccionado()!, slot) }}</span>
+                <span class="cal__slot-hora">Llegada {{ slot.hora }}</span>
+                <span class="cal__slot-juego">Juego {{ slotJuego(diaSeleccionado()!, slot) }}</span>
                 <span class="cal__slot-pista">Pista {{ slot.pista }}</span>
                 <span class="cal__slot-estado">{{ slotEstadoTexto(diaSeleccionado()!, slot) }}</span>
               </button>

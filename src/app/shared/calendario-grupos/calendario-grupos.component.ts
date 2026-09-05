@@ -96,39 +96,60 @@ export class CalendarioGruposComponent implements OnInit {
     '2027-12-25', // Navidad
   ]);
 
-  // Franjas de 2 h desde la apertura (09:00) hasta el cierre (19:00). La doble
-  // partida (4 h) junta dos consecutivas; la última doble válida es 15:00–19:00.
+  // Franjas de 1 h de juego. Cada reserva ocupa la pista unas 2 h en total
+  // (30' de cambio y explicacion + 1 h de partida + 30' de duchas), pero lo
+  // que se reserva es la hora de juego. La doble partida privada encadena dos
+  // franjas seguidas (2 h de juego). De momento no se ofrecen franjas a partir
+  // de las 17:00.
   private readonly SLOTS_BASE = [
-    { hora: '09:00', horaFin: '11:00', pista: 'A' },
-    { hora: '09:00', horaFin: '11:00', pista: 'B' },
-    { hora: '11:00', horaFin: '13:00', pista: 'A' },
-    { hora: '11:00', horaFin: '13:00', pista: 'B' },
-    { hora: '13:00', horaFin: '15:00', pista: 'A' },
-    { hora: '13:00', horaFin: '15:00', pista: 'B' },
-    { hora: '15:00', horaFin: '17:00', pista: 'A' },
-    { hora: '15:00', horaFin: '17:00', pista: 'B' },
-    { hora: '17:00', horaFin: '19:00', pista: 'A' },
-    { hora: '17:00', horaFin: '19:00', pista: 'B' },
+    { hora: '09:00', horaFin: '10:00', pista: 'A' },
+    { hora: '09:00', horaFin: '10:00', pista: 'B' },
+    { hora: '10:00', horaFin: '11:00', pista: 'A' },
+    { hora: '10:00', horaFin: '11:00', pista: 'B' },
+    { hora: '11:00', horaFin: '12:00', pista: 'A' },
+    { hora: '11:00', horaFin: '12:00', pista: 'B' },
+    { hora: '12:00', horaFin: '13:00', pista: 'A' },
+    { hora: '12:00', horaFin: '13:00', pista: 'B' },
+    { hora: '13:00', horaFin: '14:00', pista: 'A' },
+    { hora: '13:00', horaFin: '14:00', pista: 'B' },
+    { hora: '14:00', horaFin: '15:00', pista: 'A' },
+    { hora: '14:00', horaFin: '15:00', pista: 'B' },
+    { hora: '15:00', horaFin: '16:00', pista: 'A' },
+    { hora: '15:00', horaFin: '16:00', pista: 'B' },
+    { hora: '16:00', horaFin: '17:00', pista: 'A' },
+    { hora: '16:00', horaFin: '17:00', pista: 'B' },
   ];
 
-  // Txikipaintball — Sábado, Domingo y festivos (09:00–18:00) en franjas de 2 h.
+  // Txikipaintball - sabados, domingos y festivos: mismas franjas de 1 h.
   private readonly SLOTS_TXIKI_FINDE = [
-    { hora: '09:00', horaFin: '11:00', pista: 'A' },
-    { hora: '09:00', horaFin: '11:00', pista: 'B' },
-    { hora: '11:00', horaFin: '13:00', pista: 'A' },
-    { hora: '11:00', horaFin: '13:00', pista: 'B' },
-    { hora: '13:00', horaFin: '15:00', pista: 'A' },
-    { hora: '13:00', horaFin: '15:00', pista: 'B' },
-    { hora: '15:00', horaFin: '17:00', pista: 'A' },
-    { hora: '15:00', horaFin: '17:00', pista: 'B' },
+    { hora: '09:00', horaFin: '10:00', pista: 'A' },
+    { hora: '09:00', horaFin: '10:00', pista: 'B' },
+    { hora: '10:00', horaFin: '11:00', pista: 'A' },
+    { hora: '10:00', horaFin: '11:00', pista: 'B' },
+    { hora: '11:00', horaFin: '12:00', pista: 'A' },
+    { hora: '11:00', horaFin: '12:00', pista: 'B' },
+    { hora: '12:00', horaFin: '13:00', pista: 'A' },
+    { hora: '12:00', horaFin: '13:00', pista: 'B' },
+    { hora: '13:00', horaFin: '14:00', pista: 'A' },
+    { hora: '13:00', horaFin: '14:00', pista: 'B' },
+    { hora: '14:00', horaFin: '15:00', pista: 'A' },
+    { hora: '14:00', horaFin: '15:00', pista: 'B' },
+    { hora: '15:00', horaFin: '16:00', pista: 'A' },
+    { hora: '15:00', horaFin: '16:00', pista: 'B' },
+    { hora: '16:00', horaFin: '17:00', pista: 'A' },
+    { hora: '16:00', horaFin: '17:00', pista: 'B' },
   ];
 
-  // Txikipaintball — Viernes (16:00–20:00) en franjas de 2 h.
+  // Txikipaintball - viernes (horario de tarde), franjas de 1 h.
   private readonly SLOTS_TXIKI_VIERNES = [
-    { hora: '16:00', horaFin: '18:00', pista: 'A' },
-    { hora: '16:00', horaFin: '18:00', pista: 'B' },
-    { hora: '18:00', horaFin: '20:00', pista: 'A' },
-    { hora: '18:00', horaFin: '20:00', pista: 'B' },
+    { hora: '16:00', horaFin: '17:00', pista: 'A' },
+    { hora: '16:00', horaFin: '17:00', pista: 'B' },
+    { hora: '17:00', horaFin: '18:00', pista: 'A' },
+    { hora: '17:00', horaFin: '18:00', pista: 'B' },
+    { hora: '18:00', horaFin: '19:00', pista: 'A' },
+    { hora: '18:00', horaFin: '19:00', pista: 'B' },
+    { hora: '19:00', horaFin: '20:00', pista: 'A' },
+    { hora: '19:00', horaFin: '20:00', pista: 'B' },
   ];
 
   // Horas aproximadas de llegada para grupos +10 entre semana, cada media hora.
@@ -140,10 +161,10 @@ export class CalendarioGruposComponent implements OnInit {
   ];
 
   // Txikipaintball entre semana: 30' para cambiarse, 1 h de juego y 30' de
-  // ducha (~2 h en total), así que se puede llegar hasta las 17:00.
+  // ducha (~2 h en total). De momento no se aceptan llegadas a partir de las 17:00.
   readonly HORAS_LLEGADA_TXIKI = [
     '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00',
-    '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00',
+    '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30',
   ];
 
   // Horas de llegada para la partida extraordinaria (16:00–20:00). La última
@@ -389,18 +410,17 @@ export class CalendarioGruposComponent implements OnInit {
     return false;
   }
 
-  // Hora de fin a MOSTRAR. En doble, la 2ª franja del par (la consecutiva a la
-  // de inicio) solo usa 1 h de sus 2 (la última es margen), así que se enseña
-  // una hora menos: el total visible es 3 h, no 4.
-  slotHoraFinMostrada(dia: Dia, slot: Slot): string {
-    if (this.doble) {
+  // La franja marca la hora de LLEGADA. La partida empieza 30 min despues y
+  // dura 1 h (2 h si es doble partida); luego quedan 30 min para las duchas.
+  slotJuego(dia: Dia, slot: Slot): string {
+    const [h] = slot.hora.split(':').map(Number);
+    const segundaDeDoble = this.doble && (() => {
       const inicio = this.franjaInicioActiva(dia);
-      if (inicio && slot.pista === inicio.pista && slot.hora === inicio.horaFin) {
-        const [h, m] = slot.horaFin.split(':').map(Number);
-        return `${String(h - 1).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
-      }
-    }
-    return slot.horaFin;
+      return !!inicio && slot.pista === inicio.pista && slot.hora === inicio.horaFin;
+    })();
+    const inicio = segundaDeDoble ? h - 1 : h;
+    const fin = inicio + (this.doble ? 2 : 1);
+    return `${String(inicio).padStart(2, '0')}:30 – ${String(fin).padStart(2, '0')}:30`;
   }
 
   slotEstadoTexto(dia: Dia, slot: Slot): string {

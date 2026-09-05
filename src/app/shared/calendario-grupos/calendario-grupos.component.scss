@@ -600,6 +600,26 @@
     transition: color $transition;
   }
 
+  &__slot-juego {
+    font-family: $font-mono;
+    font-size: 9px;
+    letter-spacing: 0.06em;
+    color: rgba($crema, 0.6);
+    margin-top: 1px;
+    transition: color $transition;
+
+    .cal__slot--reservada & { color: rgba($crema, 0.35); }
+  }
+
+  &__horario-nota {
+    font-size: 12px;
+    line-height: 1.5;
+    color: rgba($crema, 0.75);
+    margin: 0 0 14px;
+
+    strong { color: $naranja; }
+  }
+
   &__slot-pista {
     font-family: $font-mono;
     font-size: 9px;

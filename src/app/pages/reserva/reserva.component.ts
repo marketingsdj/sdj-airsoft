@@ -666,10 +666,10 @@ export class ReservaComponent implements OnInit, OnDestroy {
     // hueco en la lista compartida. Individual no tiene pista, así que no entra.
     if (this.form.fecha && this.form.hora && this.form.pista) {
       this.slotsService.bloquear(this.form.fecha, this.form.hora, this.form.pista);
-      // La doble partida ocupa también la franja consecutiva (misma pista, +2 h).
+      // La doble partida ocupa también la franja consecutiva (misma pista, +1 h).
       if (this.form.doblePartida) {
         const [h, m] = this.form.hora.split(':').map(Number);
-        const horaSiguiente = `${String(h + 2).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+        const horaSiguiente = `${String(h + 1).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
         this.slotsService.bloquear(this.form.fecha, horaSiguiente, this.form.pista);
       }
     }
