@@ -328,7 +328,8 @@
                     [class.admin-fila--recordatorio]="recordatorioCercano(r) && !requiereAccion(r)"
                     [class.admin-fila--confirmada]="r.estado === 'confirmada' && !requiereAccion(r) && !esPasada(r)">
                   <td class="c-fecha">
-                    <button class="admin-fecha" (click)="toggleDetalle(r.id)">{{ fechaLarga(r.fecha) }}</button>
+                    <!-- Pulsar la fecha abre la reserva lista para editar. -->
+                    <button class="admin-fecha" (click)="modificar(r)">{{ fechaLarga(r.fecha) }}</button>
                     <span class="admin-hora">
                       @if (horaAproximada(r)) {
                         <!-- Día a consultar: el cliente propuso una hora; puedes fijar
