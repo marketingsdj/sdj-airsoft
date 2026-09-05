@@ -604,6 +604,9 @@
                           </button>
                           <button type="button" class="btn btn--ghost admin-aviso-cliente__cancelar"
                             (click)="detalle.set(null)">Cancelar</button>
+                          <!-- Confirma que ya lo has enviado y avanza de fase. -->
+                          <button type="button" class="btn admin-aviso-cliente__avisado"
+                            [disabled]="guardando() === r.id" (click)="marcarAvisadoYAvanzar(r)">Avisado</button>
                         </div>
                       </div>
                     </td>

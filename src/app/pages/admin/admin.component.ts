@@ -758,6 +758,34 @@ export class AdminComponent implements OnInit {
     }
   }
 
+  /**
+   * "Ya lo he mandado": deja de estar pendiente y avanza de fase. Si el aviso
+   * era el recordatorio, la reserva queda confirmada (verde); si estaba por
+   * gestionar, pasa a aceptada (gris hasta la semana previa).
+   */
+  async marcarAvisadoYAvanzar(r: ReservaAdmin) {
+    this.guardando.set(r.id);
+    try {
+      const motivo = this.motivo(r);
+      const nuevo: EstadoReserva | null =
+        motivo === 'recordatorio' ? 'confirmada'
+        : r.estado === 'pendiente' ? 'aceptada'
+        : null;
+
+      if (nuevo) await this.admin.cambiarEstado(r.id, nuevo);
+      await this.admin.marcarAviso(r.id, false);
+
+      this.reservas.update(list => list.map(x => (x.id === r.id
+        ? { ...x, avisoPendiente: false, ...(nuevo ? { estado: nuevo } : {}) }
+        : x)));
+      this.detalle.set(null);
+    } catch {
+      this.error.set('No se ha podido guardar.');
+    } finally {
+      this.guardando.set(null);
+    }
+  }
+
   async copiarAviso(r: ReservaAdmin) {
     try {
       await navigator.clipboard.writeText(this.textoAviso(r));

@@ -863,6 +863,15 @@
 
   // El de cancelar se separa a la derecha del todo.
   &__cancelar { margin-left: auto; }
+
+  // "Ya lo he mandado": avanza de fase.
+  &__avisado {
+    border: 1px solid rgba(#6bd08a, 0.7);
+    background: rgba(#6bd08a, 0.15);
+    color: #6bd08a;
+
+    &:hover:not(:disabled) { background: rgba(#6bd08a, 0.28); color: #8fe0a8; }
+  }
   padding-top: 16px;
   border-top: 1px solid $line;
 
