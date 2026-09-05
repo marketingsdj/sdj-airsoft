@@ -175,10 +175,13 @@
   }
 
   &__opciones {
-    display: flex;
+    // Los dos botones, siempre en la misma línea.
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 10px;
-    flex-wrap: wrap;
     margin-top: 8px;
+
+    .btn { justify-content: center; text-align: center; }
   }
 
   &__cambio {
