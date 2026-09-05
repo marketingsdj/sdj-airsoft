@@ -3,10 +3,10 @@
 :host { display: block; background: $gris; min-height: 100vh; }
 
 .admin {
-  // Solo el hueco del header fijo (100 px / 68 px en movil), sin aire extra.
-  padding: 108px 0 64px;
+  // Justo la altura del header fijo (100 px / 68 px en movil), ni un pixel mas.
+  padding: 100px 0 64px;
 
-  @media (max-width: $bp-md) { padding: 76px 0 40px; }
+  @media (max-width: $bp-md) { padding: 68px 0 40px; }
 }
 
 // ── Acceso ────────────────────────────────────────────────────────────────────
@@ -125,13 +125,15 @@
   align-items: flex-end;
   gap: 16px;
   flex-wrap: wrap;
-  margin-bottom: 28px;
+  margin-bottom: 20px;
+  padding-top: 12px;
 
   h1 {
     font-family: $font-tight;
     font-weight: 900;
     text-transform: uppercase;
     font-size: clamp(28px, 4vw, 44px);
+    line-height: 1;
     margin: 0;
   }
 
