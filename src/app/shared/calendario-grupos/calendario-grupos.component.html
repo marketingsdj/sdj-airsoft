@@ -201,6 +201,8 @@
             </div>
           </div>
         } @else {
+          <!-- Explicación solo para el cliente: en el panel sobra. -->
+          @if (!compacto) {
           <p class="cal__horario-nota">
             La franja que eliges es <strong>tu hora de juego</strong>. Llega 30 min antes para
             equiparte y recibir la explicación; al terminar tienes otros 30 min para ducharte.
@@ -208,6 +210,7 @@
             Además, <strong>tu entrada te da acceso a la partida abierta durante todo el día</strong>:
             aunque reserves por la tarde puedes venir desde por la mañana.
           </p>
+          }
           <div class="cal__slots-grid">
             @for (slot of diaSeleccionado()!.slots; track slot.hora + slot.pista) {
               <button
