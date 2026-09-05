@@ -650,9 +650,9 @@
                 <span class="upgrade-card__body">
                   <span class="upgrade-card__top">
                     <span class="upgrade-card__title">Añadir menú</span>
-                    <span class="upgrade-card__price">Precio por confirmar</span>
+                    <span class="upgrade-card__price">15,90 €/persona</span>
                   </span>
-                  <span class="upgrade-card__desc">Menú para completar tu evento. Te confirmamos el precio al gestionar la reserva.</span>
+                  <span class="upgrade-card__desc">Hamburguesa a elegir de la carta con bebida incluida, para completar tu evento.</span>
                 </span>
                 <span class="upgrade-card__toggle" aria-hidden="true">
                   {{ form.menu ? 'Añadido ✓' : 'Añadir +' }}
@@ -826,7 +826,7 @@
             <div class="resumen-row"><span>Tarifa reducida</span><strong>{{ precioReducidaFmt }} €/persona</strong></div>
           }
           @if (form.menu) {
-            <div class="resumen-row"><span>Menú</span><strong>Sí (precio por confirmar)</strong></div>
+            <div class="resumen-row"><span>Menú</span><strong>15,90 €/persona</strong></div>
           }
           @if (form.tipo === 'txiki' && form.merienda) {
             <div class="resumen-row"><span>Merienda</span><strong>+9,90 €/niño</strong></div>

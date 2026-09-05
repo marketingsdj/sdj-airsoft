@@ -299,6 +299,13 @@ export class ReservaComponent implements OnInit, OnDestroy {
     return '';
   }
 
+  // Menú del evento: hamburguesa de la carta con bebida incluida.
+  readonly PRECIO_MENU = 15.90;
+
+  get menuTotal(): string {
+    return (this.PRECIO_MENU * this.form.personas).toFixed(2).replace('.', ',');
+  }
+
   // El menú del evento se ofrece a partir de 10 personas.
   get muestraMenu(): boolean {
     return this.form.tipo === 'evento' && this.form.personas >= 10;
@@ -655,7 +662,7 @@ export class ReservaComponent implements OnInit, OnDestroy {
             tarifa_reducida: this.form.tarifaReducida ? `Sí (${this.precioReducidaFmt} €/persona)` : 'No',
           } : {}),
           ...(this.form.tipo === 'evento' ? {
-            menu: this.form.menu ? 'Sí (precio por confirmar)' : 'No',
+            menu: this.form.menu ? `Sí · hamburguesa + bebida (15,90 €/persona · ${this.menuTotal} €)` : 'No',
           } : {}),
           ...(this.form.tipo === 'txiki' ? {
             num_ninos:    this.form.personas,
@@ -930,7 +937,7 @@ export class ReservaComponent implements OnInit, OnDestroy {
     // Grupos (privada / evento): base a consultar + extras conocidos.
     lineas.push({ concepto: `${this.resumen.tipo} · ${n} personas`, importe: 'A consultar' });
     if (this.form.doblePartida) lineas.push({ concepto: `Hora extra de partida privada · +10 € × ${n}`, importe: fmt(10 * n) });
-    if (this.form.menu) lineas.push({ concepto: 'Menú', importe: 'Por confirmar' });
+    if (this.form.menu) lineas.push({ concepto: `Menú hamburguesa + bebida · 15,90 € × ${n}`, importe: fmt(this.PRECIO_MENU * n) });
     return lineas;
   }
 
@@ -961,7 +968,7 @@ export class ReservaComponent implements OnInit, OnDestroy {
     const extras: string[] = [];
     if (this.form.tipo === 'txiki' && this.form.merienda) extras.push('Merienda infantil (+9,90 €/niño)');
     if (this.form.tipo === 'individual' && this.form.premium) extras.push('Pack Premium (+5 €)');
-    if (this.form.menu) extras.push('Menú (precio por confirmar)');
+    if (this.form.menu) extras.push('Menú hamburguesa + bebida (15,90 €/persona)');
     if (this.form.subtipoEvento === 'despedidas' && this.form.monoRosa) extras.push('Mono rosa para el/la protagonista');
     if (this.form.subtipoEvento === 'colectivos') {
       if (this.form.camisetasEquipo) extras.push('Camisetas por equipo');

@@ -29,7 +29,7 @@ export interface FormData {
   tarifaReducida: boolean;      // tarifa reducida (tarde)
   esExtraordinaria: boolean;    // el día elegido es una partida extraordinaria (16–20)
   extraTarifa: string;          // tarifa elegida en la extraordinaria: ''|socio|propio|alquiler|premium
-  menu: boolean;                // menú del evento (precio pendiente de confirmar)
+  menu: boolean;                // menú del evento: hamburguesa + bebida, 15,90 €/persona
   monoRosa: boolean;            // despedidas: mono rosa para el/la protagonista, sin suplemento
   camisetasEquipo: boolean;     // colectivos: camisetas/brazaletes de color por equipo, sin suplemento
   autorizacionLote: boolean;    // colectivos: plantilla única de autorización para todo el grupo
