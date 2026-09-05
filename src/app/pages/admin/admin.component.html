@@ -70,7 +70,7 @@
         </div>
         <div class="admin-top__acciones">
           <button class="btn btn--primary" (click)="abrirNueva()">+ Nueva reserva</button>
-          <button class="btn btn--ghost" (click)="toggleExtraordinarias()">Partidas extraordinarias</button>
+          <button class="btn btn--ghost" (click)="toggleExtraordinarias()">+ Partidas extraordinarias</button>
           <button class="btn btn--ghost admin-recargar" (click)="cargar()" [disabled]="cargando()"
             [class.admin-recargar--girando]="cargando()"
             [title]="cargando() ? 'Actualizando…' : 'Actualizar'" aria-label="Actualizar">
