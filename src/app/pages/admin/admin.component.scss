@@ -120,6 +120,20 @@
   .btn { font-size: 11px; padding: 10px 16px; }
 }
 
+// Botón de recargar: solo el icono, que gira mientras carga.
+.admin-recargar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 9px 12px !important;
+
+  &--girando svg { animation: admin-girar 0.9s linear infinite; }
+}
+
+@keyframes admin-girar {
+  to { transform: rotate(360deg); }
+}
+
 // ── Resumen ───────────────────────────────────────────────────────────────────
 .admin-kpis {
   display: grid;
