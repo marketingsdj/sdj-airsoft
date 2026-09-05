@@ -44,7 +44,21 @@
     .cal__dias-semana span { font-size: 8px; padding: 2px 0; }
     .cal__dia-num { font-size: 11px; }
     .cal__dia-slots { display: none; }   // el número de franjas sobra aquí
-    .cal__leyenda { gap: 6px 10px; font-size: 9px; margin-top: 6px; }
+    // Leyenda en columna, debajo del calendario, no en una sola linea.
+    .cal__leyenda {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      margin: 8px 0 0;
+
+      span { font-size: 8.5px; }
+    }
+
+    // La hora de llegada, en cuerpo pequeño como el resto del panel.
+    .cal__consulta-label { font-size: 9px; }
+    .cal__dropdown-toggle { font-size: 12px; padding: 7px 10px; }
+    .cal__dropdown-option { font-size: 12px; padding: 6px 10px; }
+    .cal__consulta-aviso { font-size: 11px; }
     .cal__aviso { font-size: 10px; }
     .cal__slots-titulo { font-size: 12px; }
     .cal__slot { padding: 6px 8px; font-size: 11px; }
