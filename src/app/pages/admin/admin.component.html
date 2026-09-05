@@ -512,7 +512,11 @@
 
                       <!-- Aviso al cliente: se prepara el texto y lo envías tú. -->
                       <div class="admin-aviso-cliente">
-                        <p class="admin-aviso-cliente__titulo">Avisar al cliente</p>
+                        <div class="admin-aviso-cliente__top">
+                          <p class="admin-aviso-cliente__titulo">Avisar al cliente</p>
+                          <button type="button" class="admin-cerrar" (click)="detalle.set(null)"
+                            aria-label="Cerrar" title="Cerrar">×</button>
+                        </div>
 
                         <div class="admin-aviso-cliente__motivos">
                           @for (m of motivosDe(r); track m.key) {
@@ -540,6 +544,8 @@
                           <button type="button" class="btn btn--ghost" (click)="copiarAviso(r)">
                             {{ copiado() === r.id ? '¡Copiado!' : 'Copiar texto' }}
                           </button>
+                          <button type="button" class="btn btn--ghost admin-aviso-cliente__cancelar"
+                            (click)="detalle.set(null)">Cancelar</button>
                         </div>
                       </div>
                     </td>

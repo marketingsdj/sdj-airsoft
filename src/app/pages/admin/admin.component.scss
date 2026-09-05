@@ -749,6 +749,16 @@
 // ── Aviso al cliente (dentro del detalle) ─────────────────────────────────────
 .admin-aviso-cliente {
   margin-top: 20px;
+
+  &__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  // El de cancelar se separa a la derecha del todo.
+  &__cancelar { margin-left: auto; }
   padding-top: 16px;
   border-top: 1px solid $line;
 
