@@ -88,7 +88,9 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     const [a, m, d] = iso.split('-').map(Number);
     return {
       iso,
-      fecha: new Date(a, m - 1, d).toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' }),
+      // Con inicial en mayúscula (el componente no usa el pipe titlecase).
+      fecha: (txt => txt.charAt(0).toUpperCase() + txt.slice(1))(
+        new Date(a, m - 1, d).toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' })),
       hora: EXTRA_CONFIG.horaLabel,
     };
   });
