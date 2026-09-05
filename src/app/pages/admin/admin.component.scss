@@ -741,6 +741,13 @@
     right: 10px;
   }
 
+  // Editar va arriba del todo, sobre la fila de datos.
+  &__editar {
+    margin-bottom: 14px;
+    font-size: 11px;
+    padding: 8px 14px;
+  }
+
   &__grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));

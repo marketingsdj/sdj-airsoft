@@ -397,6 +397,10 @@
                     <td colspan="7">
                       <button type="button" class="admin-cerrar admin-detalle__cerrar"
                         (click)="detalle.set(null)" aria-label="Cerrar" title="Cerrar">×</button>
+                      @if (editando() !== r.id) {
+                        <button class="btn btn--ghost admin-detalle__editar" (click)="editar(r)">Editar reserva</button>
+                      }
+
                       <div class="admin-detalle__grid">
                         <div><span>Nº de reserva</span><strong>{{ r.numeroReserva || '—' }}</strong></div>
                         <div><span>Recibida</span><strong>{{ r.creado ? (r.creado | date:'dd/MM/yyyy HH:mm') : '—' }}</strong></div>
@@ -505,8 +509,6 @@
                             <button class="btn btn--ghost" (click)="cancelarEdicion()">Cancelar</button>
                           </div>
                         </div>
-                      } @else {
-                        <button class="btn btn--ghost" (click)="editar(r)">Editar reserva</button>
                       }
 
                       <label class="admin-campo admin-campo--ancho">
