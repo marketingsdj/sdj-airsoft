@@ -878,6 +878,9 @@ export class AdminComponent implements OnInit {
     const lista = this.reservas().filter(r => {
       // Lo que esta en la papelera no se lista con el resto.
       if (r.borrada) return false;
+      // En modo borrar solo se ensenan las que se pueden borrar (anuladas y
+      // canceladas), sin que las escondan los filtros ni la fecha.
+      if (this.modoBorrado()) return this.sePuedeBorrar(r);
       const fe = this.filtroEstadoSignal();
       if (fe === 'pendiente') {
         if (!this.requiereAccion(r)) return false;
