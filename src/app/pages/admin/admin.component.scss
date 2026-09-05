@@ -461,29 +461,62 @@
   }
 }
 
-// Selector de extras (checkboxes + campo libre).
-.admin-extras-lista {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-  gap: 2px 10px;
-  margin-bottom: 8px;
-  max-height: 132px;
-  overflow-y: auto;
-  padding: 6px 8px;
-  border: 1px solid $line;
-  border-radius: $radius-sm;
-  background: rgba(0, 0, 0, 0.2);
+// Desplegable de extras: se abre y se marcan las casillas.
+.admin-desplegable {
+  position: relative;
+
+  &__toggle {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid $line;
+    border-radius: $radius-sm;
+    color: $crema;
+    padding: 10px 12px;
+    font: inherit;
+    font-size: 14px;
+    cursor: pointer;
+    text-align: left;
+
+    &:hover { border-color: rgba($naranja, 0.5); }
+  }
+
+  &__flecha { color: rgba($crema, 0.5); font-size: 11px; }
+
+  &__panel {
+    position: absolute;
+    z-index: 20;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    padding: 10px 12px;
+    background: #1f1f1f;
+    border: 1px solid rgba($naranja, 0.45);
+    border-radius: $radius-sm;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+    max-height: 260px;
+    overflow-y: auto;
+  }
 
   &__op {
     display: flex;
     align-items: center;
-    gap: 7px;
-    font-size: 12px;
-    color: rgba($crema, 0.8);
+    gap: 8px;
+    font-size: 12.5px;
+    color: rgba($crema, 0.85);
+    padding: 4px 0;
     cursor: pointer;
-    padding: 2px 0;
 
     input { accent-color: $naranja; width: 14px; height: 14px; }
+  }
+
+  &__otros {
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 8px;
   }
 }
 

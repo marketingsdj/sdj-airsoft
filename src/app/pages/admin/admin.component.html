@@ -141,17 +141,26 @@
             </label>
             <div class="admin-campo admin-campo--ancho">
               <span>Extras</span>
-              <div class="admin-extras-lista">
-                @for (e of extrasDisponibles; track e) {
-                  <label class="admin-extras-lista__op">
-                    <input type="checkbox" [checked]="tieneExtra(nueva.extras, e)"
-                      (change)="nueva.extras = toggleExtra(nueva.extras, e)" />
-                    <span>{{ e }}</span>
-                  </label>
+              <div class="admin-desplegable">
+                <button type="button" class="admin-desplegable__toggle"
+                  (click)="extrasAbierto.set(!extrasAbierto())">
+                  <span>{{ resumenExtras(nueva.extras) }}</span>
+                  <span class="admin-desplegable__flecha">▾</span>
+                </button>
+                @if (extrasAbierto()) {
+                  <div class="admin-desplegable__panel">
+                    @for (e of extrasDisponibles; track e) {
+                      <label class="admin-desplegable__op">
+                        <input type="checkbox" [checked]="tieneExtra(nueva.extras, e)"
+                          (change)="nueva.extras = toggleExtra(nueva.extras, e)" />
+                        <span>{{ e }}</span>
+                      </label>
+                    }
+                    <input type="text" class="admin-desplegable__otros" [(ngModel)]="nueva.extras"
+                      placeholder="Otros (separados por comas)" />
+                  </div>
                 }
               </div>
-              <input type="text" [(ngModel)]="nueva.extras"
-                placeholder="Otros (escríbelos separados por comas)" />
             </div>
             <label class="admin-campo admin-campo--ancho">
               <span>Notas internas</span>
@@ -428,17 +437,26 @@
                             </label>
                             <div class="admin-campo admin-campo--ancho">
                               <span>Extras</span>
-                              <div class="admin-extras-lista">
-                                @for (e of extrasDisponibles; track e) {
-                                  <label class="admin-extras-lista__op">
-                                    <input type="checkbox" [checked]="tieneExtra(edicion.extras, e)"
-                                      (change)="edicion.extras = toggleExtra(edicion.extras, e)" />
-                                    <span>{{ e }}</span>
-                                  </label>
+                              <div class="admin-desplegable">
+                                <button type="button" class="admin-desplegable__toggle"
+                                  (click)="extrasAbiertoEdicion.set(!extrasAbiertoEdicion())">
+                                  <span>{{ resumenExtras(edicion.extras) }}</span>
+                                  <span class="admin-desplegable__flecha">▾</span>
+                                </button>
+                                @if (extrasAbiertoEdicion()) {
+                                  <div class="admin-desplegable__panel">
+                                    @for (e of extrasDisponibles; track e) {
+                                      <label class="admin-desplegable__op">
+                                        <input type="checkbox" [checked]="tieneExtra(edicion.extras, e)"
+                                          (change)="edicion.extras = toggleExtra(edicion.extras, e)" />
+                                        <span>{{ e }}</span>
+                                      </label>
+                                    }
+                                    <input type="text" class="admin-desplegable__otros" [(ngModel)]="edicion.extras"
+                                      placeholder="Otros (separados por comas)" />
+                                  </div>
                                 }
                               </div>
-                              <input type="text" [(ngModel)]="edicion.extras"
-                                placeholder="Otros (escríbelos separados por comas)" />
                             </div>
                             <label class="admin-campo admin-campo--ancho">
                               <span>Notas internas</span>

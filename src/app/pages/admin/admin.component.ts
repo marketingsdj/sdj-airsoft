@@ -73,6 +73,17 @@ export class AdminComponent implements OnInit {
     'Certificado de la actividad',
   ];
 
+  // Desplegables de extras (alta y edición), cerrados por defecto.
+  extrasAbierto = signal(false);
+  extrasAbiertoEdicion = signal(false);
+
+  /** Resumen para el botón del desplegable. */
+  resumenExtras(lista: string): string {
+    const n = lista.split(',').map(e => e.trim()).filter(Boolean).length;
+    if (!n) return 'Sin extras';
+    return n === 1 ? '1 extra' : n + ' extras';
+  }
+
   /** Marca o desmarca un extra en la lista separada por comas. */
   toggleExtra(lista: string, extra: string): string {
     const actuales = lista.split(',').map(e => e.trim()).filter(Boolean);
