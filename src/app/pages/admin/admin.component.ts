@@ -800,7 +800,7 @@ export class AdminComponent implements OnInit {
     { key: 'denegada',     label: 'Anulada' },
     { key: 'cancelada',    label: 'Cancelada' },
     { key: 'cambios',      label: 'Cambios pedidos' },
-    { key: 'proximas',     label: 'Próximas (hoy en adelante)' },
+    { key: 'proximas',     label: 'Próximas (sin anuladas)' },
     { key: 'expirada',     label: 'Fecha expirada' },
   ];
   readonly tipos = [
