@@ -1,10 +1,12 @@
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AdminService, EstadoReserva, ReservaAdmin } from '../../core/services/admin.service';
 import { CalendarioGruposComponent } from '../../shared/calendario-grupos/calendario-grupos.component';
 import { ExtraordinariasService } from '../../core/services/extraordinarias.service';
 import { EXTRA_CONFIG, EXTRA_DEFECTO, EXTRA_PRECIOS, ExtraTarifaTipo } from '../../core/data/partidas-extraordinarias';
+import { PlantillasService } from '../../core/services/plantillas.service';
+import { MARCADORES } from '../../core/data/plantillas-aviso';
 
 type Orden = 'fecha' | 'creado' | 'nombre';
 
@@ -169,6 +171,146 @@ export class AdminComponent implements OnInit {
     }
   }
 
+  // ── Menu de ajustes ─────────────────────────────────────────────────────────
+  // Agrupa lo que no se usa a diario: textos de los avisos, exportar y salir.
+  ajustesAbierto = signal(false);
+  private hostEl = inject(ElementRef);
+
+  toggleAjustes() {
+    this.ajustesAbierto.update(v => !v);
+  }
+
+  /** Cerrar el menu al clicar fuera. */
+  @HostListener('document:click', ['$event'])
+  onClickFuera(ev: MouseEvent) {
+    if (!this.ajustesAbierto()) return;
+    const menu = (this.hostEl.nativeElement as HTMLElement).querySelector('.admin-ajustes');
+    if (menu && !menu.contains(ev.target as Node)) this.ajustesAbierto.set(false);
+  }
+
+  // ── Borrar reservas y papelera ──────────────────────────────────────────────
+  // Las anuladas o canceladas se pueden mandar a la papelera (siguen guardadas)
+  // y desde ahi restaurarlas o borrarlas del todo.
+  modoBorrado = signal(false);
+  papeleraAbierta = signal(false);
+  borrandoId = signal<string | null>(null);
+
+  toggleModoBorrado() {
+    this.modoBorrado.update(v => !v);
+    this.ajustesAbierto.set(false);
+  }
+
+  togglePapelera() {
+    const abrir = !this.papeleraAbierta();
+    this.cerrarPaneles('papelera');
+    this.papeleraAbierta.set(abrir);
+    this.ajustesAbierto.set(false);
+  }
+
+  /** Solo se pueden borrar las que ya no estan en juego. */
+  sePuedeBorrar(r: ReservaAdmin): boolean {
+    return r.estado === 'denegada' || r.estado === 'cancelada';
+  }
+
+  papelera = computed(() => this.reservas().filter(r => r.borrada));
+
+  async aPapelera(r: ReservaAdmin) {
+    if (!this.sePuedeBorrar(r)) return;
+    this.borrandoId.set(r.id);
+    try {
+      await this.admin.marcarBorrada(r.id, true);
+      this.reservas.update(list => list.map(x => (x.id === r.id ? { ...x, borrada: true } : x)));
+      if (this.detalle() === r.id) this.detalle.set(null);
+    } catch {
+      this.error.set('No se ha podido mover a la papelera.');
+    } finally {
+      this.borrandoId.set(null);
+    }
+  }
+
+  async restaurarDePapelera(r: ReservaAdmin) {
+    this.borrandoId.set(r.id);
+    try {
+      await this.admin.marcarBorrada(r.id, false);
+      this.reservas.update(list => list.map(x => (x.id === r.id ? { ...x, borrada: false } : x)));
+    } catch {
+      this.error.set('No se ha podido restaurar.');
+    } finally {
+      this.borrandoId.set(null);
+    }
+  }
+
+  /** Borrado definitivo: pide confirmacion porque no tiene vuelta atras. */
+  async borrarDefinitivo(r: ReservaAdmin) {
+    const quien = r.nombre || r.numeroReserva || 'esta reserva';
+    if (!confirm(`Vas a borrar ${quien} para siempre. Esta accion no se puede deshacer. ¿Seguimos?`)) return;
+    this.borrandoId.set(r.id);
+    try {
+      await this.admin.eliminarReserva(r.id);
+      this.reservas.update(list => list.filter(x => x.id !== r.id));
+    } catch {
+      this.error.set('No se ha podido borrar la reserva.');
+    } finally {
+      this.borrandoId.set(null);
+    }
+  }
+
+  // ── Textos de los avisos ────────────────────────────────────────────────────
+  // Las plantillas de los mensajes al cliente se editan desde aquí, sin tocar
+  // el código. Lo guardado manda sobre el texto de fábrica.
+  plantillas = inject(PlantillasService);
+  readonly MARCADORES = MARCADORES;
+  textosAbierto = signal(false);
+  guardandoTexto = signal<string | null>(null);
+  /** Motivo cuya plantilla estás editando (o null). */
+  textoEditandoMotivo = signal<string | null>(null);
+  borradorTexto = '';
+
+  /** Todos los textos editables: los motivos del aviso más el asunto del correo. */
+  get textosEditables(): { key: string; label: string }[] {
+    return [...this.motivos.map(m => ({ key: m.key, label: m.label })),
+      { key: 'asunto', label: 'Asunto del correo' }];
+  }
+
+  toggleTextos() {
+    const abrir = !this.textosAbierto();
+    this.cerrarPaneles('textos');
+    this.textosAbierto.set(abrir);
+    this.ajustesAbierto.set(false);
+  }
+
+  editarTexto(motivo: string) {
+    if (this.textoEditandoMotivo() === motivo) { this.textoEditandoMotivo.set(null); return; }
+    this.borradorTexto = this.plantillas.texto(motivo);
+    this.textoEditandoMotivo.set(motivo);
+  }
+
+  async guardarTexto(motivo: string) {
+    this.guardandoTexto.set(motivo);
+    this.error.set('');
+    try {
+      await this.plantillas.guardar(motivo, this.borradorTexto);
+      this.textoEditandoMotivo.set(null);
+    } catch {
+      this.error.set('No se ha podido guardar el texto.');
+    } finally {
+      this.guardandoTexto.set(null);
+    }
+  }
+
+  async restaurarTexto(motivo: string) {
+    this.guardandoTexto.set(motivo);
+    this.error.set('');
+    try {
+      await this.plantillas.restaurar(motivo);
+      if (this.textoEditandoMotivo() === motivo) this.borradorTexto = this.plantillas.original(motivo);
+    } catch {
+      this.error.set('No se ha podido restaurar el texto.');
+    } finally {
+      this.guardandoTexto.set(null);
+    }
+  }
+
   // ── Partidas extraordinarias ────────────────────────────────────────────────
   // Socios gratis. El horario por defecto es la tarde (16:00–20:00) con tarifa
   // reducida, pero cada fecha puede llevar el suyo y la tarifa normal.
@@ -276,9 +418,11 @@ export class AdminComponent implements OnInit {
    * (alta manual, partidas extraordinarias y la reserva desplegada), para no
    * dejar paneles a medias por el camino.
    */
-  private cerrarPaneles(salvo: 'nueva' | 'extra' | 'detalle') {
+  private cerrarPaneles(salvo: 'nueva' | 'extra' | 'detalle' | 'textos' | 'papelera') {
     if (salvo !== 'nueva') this.nuevaAbierta.set(false);
     if (salvo !== 'extra') { this.extraAbierto.set(false); this.extraEditando.set(null); }
+    if (salvo !== 'textos') { this.textosAbierto.set(false); this.textoEditandoMotivo.set(null); }
+    if (salvo !== 'papelera') this.papeleraAbierta.set(false);
     if (salvo !== 'detalle') { this.detalle.set(null); this.editando.set(null); }
   }
 
@@ -439,11 +583,13 @@ export class AdminComponent implements OnInit {
     const hoy = new Date().toISOString().slice(0, 10);
 
     const lista = this.reservas().filter(r => {
+      // Lo que esta en la papelera no se lista con el resto.
+      if (r.borrada) return false;
       const fe = this.filtroEstadoSignal();
       if (fe === 'pendiente') {
         if (!this.requiereAccion(r)) return false;
       } else if (fe === 'recordatorio') {
-        if (!this.recordatorioCercano(r)) return false;
+        if (!this.soloRecordatorio(r)) return false;
       } else if (fe === 'cambios') {
         if (!r.cambio) return false;
       } else if (fe === 'proximas') {
@@ -541,13 +687,24 @@ export class AdminComponent implements OnInit {
     return r.estado === 'aceptada' && !this.esPasada(r) && this.diasPara(r) <= 7;
   }
 
+  /**
+   * Solo recordatorio: toca avisar de que se acerca la partida y no hay nada
+   * mas que gestionar. Son las filas amarillas; las que ademas requieren
+   * accion salen en naranja y cuentan en 'Pendientes de gestionar'.
+   */
+  soloRecordatorio(r: ReservaAdmin): boolean {
+    return this.recordatorioCercano(r) && !this.requiereAccion(r);
+  }
+
   // ── Contadores del resumen ──────────────────────────────────────────────────
-  totalPendientes = computed(() => this.reservas().filter(r => this.requiereAccion(r)).length);
-  totalRecordatorios = computed(() => this.reservas().filter(r => this.recordatorioCercano(r)).length);
-  totalCambios = computed(() => this.reservas().filter(r => !!r.cambio).length);
+  // Lo que esta en la papelera no cuenta en ningun recuadro.
+  private activas = computed(() => this.reservas().filter(r => !r.borrada));
+  totalPendientes = computed(() => this.activas().filter(r => this.requiereAccion(r)).length);
+  totalRecordatorios = computed(() => this.activas().filter(r => this.soloRecordatorio(r)).length);
+  totalCambios = computed(() => this.activas().filter(r => !!r.cambio).length);
   totalProximas = computed(() => {
     const hoy = new Date().toISOString().slice(0, 10);
-    return this.reservas().filter(r => (r.fecha || '') >= hoy && r.estado !== 'denegada' && r.estado !== 'cancelada').length;
+    return this.activas().filter(r => (r.fecha || '') >= hoy && r.estado !== 'denegada' && r.estado !== 'cancelada').length;
   });
   totalPersonas = computed(() => this.filtradas().reduce((s, r) => s + (r.personas || 0), 0));
 
@@ -597,6 +754,18 @@ export class AdminComponent implements OnInit {
     } finally {
       this.guardando.set(null);
     }
+  }
+
+  /**
+   * Deja listo el mensaje de 'reserva anulada' y abre la ficha. Es lo que
+   * queda por hacer en una anulada: decirselo al cliente.
+   */
+  avisarAnulacion(r: ReservaAdmin) {
+    if (this.detalle() === r.id) { this.detalle.set(null); return; }
+    this.motivoPorReserva[r.id] = 'anulada';
+    delete this.textoEditado[r.id];
+    this.cerrarPaneles('detalle');
+    this.detalle.set(r.id);
   }
 
   /** Deja listo el mensaje de recordatorio, sin tocar el estado. */
@@ -738,60 +907,34 @@ export class AdminComponent implements OnInit {
     delete this.textoEditado[r.id];   // el texto se vuelve a generar
   }
 
-  /** Texto del aviso: el generado para ese motivo, o el que hayas retocado. */
+  /**
+   * Texto del aviso: el que hayas retocado a mano en esta ficha, o la plantilla
+   * de ese motivo (la reescrita desde «Textos de los avisos», o la de fábrica)
+   * con los datos de la reserva ya puestos.
+   */
   textoAviso(r: ReservaAdmin): string {
     if (this.textoEditado[r.id] !== undefined) return this.textoEditado[r.id];
+    return this.rellenar(this.plantillas.texto(this.motivo(r)), r);
+  }
 
-    const nombre = (r.nombre || '').split(' ')[0] || 'hola';
+  /** Sustituye los marcadores {nombre}, {cuando}… por los datos de la reserva. */
+  rellenar(plantilla: string, r: ReservaAdmin): string {
+    const faltan = this.diasPara(r);
     const dia = this.fechaLarga(r.fecha);
-    const cuando = dia + (r.hora ? ' a las ' + r.hora : '');
-    // Referencia que se le manda al cliente: el codigo con el que EL gestiona
-    // su reserva en /cancelar. El numero interno solo se usa si no hay codigo.
-    const ref = r.codigoCancelacion ? ' (código ' + r.codigoCancelacion + ')'
-      : r.numeroReserva ? ' (reserva ' + r.numeroReserva + ')' : '';
-
-    switch (this.motivo(r)) {
-      case 'recordatorio': {
-        // Tono cercano y con lo práctico: cuánto falta, qué traer y cuándo llegar.
-        const faltan = this.diasPara(r);
-        const cuenta = faltan <= 0 ? '¡es hoy!'
-          : faltan === 1 ? '¡es mañana!'
-          : 'ya queda nada: faltan ' + faltan + ' días.';
-        return '¡Hola ' + nombre + '! Somos de Soldados de Juguete y ' + cuenta
-          + ' Tenéis la partida el ' + cuando + ref + '.\n\n'
-          + 'Un par de cosas para que salga redondo:\n'
-          + '· Venid 30 minutos antes para equiparos con calma.\n'
-          + '· Traed ropa de cambio y calzado deportivo cerrado; el buzo lo ponemos nosotros.\n'
-          + '· Estamos en Larrabetzu, Barrio Legina, con parking gratuito en la puerta.\n\n'
-          + 'Si os surge cualquier cosa, respondednos por aquí. ¡Con ganas de veros!';
-      }
-      case 'hora':
-        return 'Hola ' + nombre + ', te escribimos de Soldados de Juguete. Hemos fijado la hora de vuestra reserva del '
-          + dia + ': os esperamos a las ' + r.hora + ref
-          + '. Si no os viene bien, decidnos y lo ajustamos. ¡Nos vemos en el campo!';
-      case 'cambio-ok':
-        return 'Hola ' + nombre + ', te escribimos de Soldados de Juguete. Hemos aplicado el cambio que pediste: tu reserva queda para el '
-          + cuando + ref + '. ¡Nos vemos en el campo!';
-      case 'cambio-no':
-        return 'Hola ' + nombre + ', te escribimos de Soldados de Juguete. No podemos aplicar el cambio que pediste porque no tenemos disponibilidad. Tu reserva sigue en pie para el '
-          + cuando + ref + '. Si necesitas otra fecha, dínoslo y buscamos alternativa.';
-      case 'extra':
-        return 'Hola ' + nombre + ', te escribimos de Soldados de Juguete por tu reserva del ' + cuando + ref
-          + '. No vamos a poder ofrecerte uno de los extras que habías pedido, así que no se te cobrará. La reserva se mantiene igual. Cualquier duda, aquí estamos.';
-      case 'autorizacion':
-        return 'Hola ' + nombre + ', te escribimos de Soldados de Juguete por vuestra reserva de Txikipaintball del '
-          + cuando + ref + '. Necesitamos que cada niño o niña traiga su autorización firmada por el padre, madre o tutor legal. '
-          + 'Puedes descargarla aquí: ' + this.urlAutorizacion + ' — Sin ella no podrán participar. ¡Gracias!';
-      case 'anulada':
-        return 'Hola ' + nombre + ', te escribimos de Soldados de Juguete. Lamentamos decirte que no podemos atender tu reserva del '
-          + cuando + ref + '. Si quieres, buscamos otra fecha que os venga bien.';
-      default:
-        // Confirmación: sobria, con los datos de la reserva.
-        return 'Hola ' + nombre + ', te escribimos de Soldados de Juguete. Tu reserva queda confirmada para el '
-          + cuando + ref + (r.personas ? ', para ' + r.personas + ' personas' : '') + '. '
-          + 'Estamos en Larrabetzu, Barrio Legina. Unos días antes te escribiremos para recordártelo. '
-          + 'Si necesitas cambiar algo, avísanos y lo vemos. ¡Nos vemos en el campo!';
-    }
+    const valores: Record<string, string> = {
+      nombre:   (r.nombre || '').split(' ')[0] || 'hola',
+      fecha:    dia,
+      hora:     r.hora || '',
+      cuando:   dia + (r.hora ? ' a las ' + r.hora : ''),
+      // Referencia que usa el cliente para gestionar su reserva en /cancelar.
+      ref:      r.codigoCancelacion ? ' (código ' + r.codigoCancelacion + ')'
+                : r.numeroReserva ? ' (reserva ' + r.numeroReserva + ')' : '',
+      personas: String(r.personas || ''),
+      cuenta:   faltan <= 0 ? '¡es hoy!' : faltan === 1 ? '¡es mañana!'
+                : 'ya queda nada: faltan ' + faltan + ' días.',
+      autorizacion: this.urlAutorizacion,
+    };
+    return plantilla.replace(/{(w+)}/g, (todo, clave) => valores[clave] ?? todo);
   }
 
   /** Enlace de WhatsApp con el mensaje ya escrito. */
@@ -804,7 +947,7 @@ export class AdminComponent implements OnInit {
   /** Asunto común de los avisos. */
   private asuntoAviso(r: ReservaAdmin): string {
     const ref = r.codigoCancelacion || r.numeroReserva;
-    return 'Tu reserva en Soldados de Juguete' + (ref ? ' · ' + ref : '');
+    return this.plantillas.texto('asunto').replace('{ref}', ref || '').replace(/ · $/, '').trim();
   }
 
   /**

@@ -81,10 +81,45 @@
               <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
             </svg>
           </button>
-          <button class="btn btn--ghost" (click)="exportarCsv()" [disabled]="!filtradas().length">Exportar CSV</button>
-          <button class="btn btn--ghost" (click)="salir()">Salir</button>
+          <div class="admin-ajustes">
+            <button class="btn btn--ghost admin-ajustes__btn" (click)="toggleAjustes()"
+              [class.admin-ajustes__btn--abierto]="ajustesAbierto()"
+              title="Ajustes" aria-label="Ajustes" [attr.aria-expanded]="ajustesAbierto()">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="3" />
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+              </svg>
+            </button>
+
+            @if (ajustesAbierto()) {
+              <div class="admin-ajustes__menu">
+                <button type="button" class="admin-ajustes__opcion" (click)="toggleTextos()">Textos de los avisos</button>
+                <button type="button" class="admin-ajustes__opcion" (click)="toggleModoBorrado()">
+                  ✎ {{ modoBorrado() ? 'Terminar de borrar' : 'Borrar reservas anuladas' }}
+                </button>
+                <button type="button" class="admin-ajustes__opcion" (click)="togglePapelera()">
+                  🗑 Papelera ({{ papelera().length }})
+                </button>
+                <button type="button" class="admin-ajustes__opcion" [disabled]="!filtradas().length"
+                  (click)="exportarCsv(); ajustesAbierto.set(false)"
+                  title="Exporta lo que estas viendo: usa los filtros Desde y Hasta para acotar por fechas">
+                  Exportar CSV ({{ filtradas().length }})
+                </button>
+                <button type="button" class="admin-ajustes__opcion admin-ajustes__opcion--salir"
+                  (click)="salir()">Salir</button>
+              </div>
+            }
+          </div>
         </div>
       </div>
+
+      @if (modoBorrado()) {
+        <p class="admin-modo-borrado">
+          Modo borrar activo: las reservas anuladas y canceladas muestran el botón 🗑 para mandarlas a la papelera.
+          <button type="button" class="admin-btn" (click)="toggleModoBorrado()">Terminar</button>
+        </p>
+      }
 
       <!-- ── Resumen ──────────────────────────────────────────────────────── -->
       <div class="admin-kpis">
@@ -200,6 +235,94 @@
           } @else {
             <p class="admin-vacio">No hay ninguna partida extraordinaria abierta.</p>
           }
+        </div>
+      }
+
+      <!-- ── Papelera ─────────────────────────────────────────────────────── -->
+      @if (papeleraAbierta()) {
+        <div class="admin-nueva">
+          <div class="admin-nueva__top">
+            <p class="admin-nueva__titulo">Papelera</p>
+            <button class="admin-cerrar" (click)="papeleraAbierta.set(false)" aria-label="Cerrar" title="Cerrar">×</button>
+          </div>
+
+          <p class="admin-nueva__sub">
+            Reservas anuladas o canceladas que has quitado del listado. Siguen guardadas hasta que
+            las borres del todo, y eso no tiene vuelta atrás.
+          </p>
+
+          @if (papelera().length) {
+            <ul class="admin-extra-lista">
+              @for (r of papelera(); track r.id) {
+                <li>
+                  <span class="admin-extra-lista__fecha">{{ r.nombre || 'Sin nombre' }}</span>
+                  <span class="admin-extra-lista__detalle">
+                    {{ r.fecha ? fechaLarga(r.fecha) : 'sin fecha' }}{{ r.hora ? ' · ' + r.hora : '' }} ·
+                    {{ r.numeroReserva || r.codigoCancelacion || '—' }}
+                  </span>
+                  <button class="admin-btn" [disabled]="borrandoId() === r.id"
+                    (click)="restaurarDePapelera(r)">Restaurar</button>
+                  <button class="admin-btn admin-btn--no" [disabled]="borrandoId() === r.id"
+                    (click)="borrarDefinitivo(r)">Borrar del todo</button>
+                </li>
+              }
+            </ul>
+          } @else {
+            <p class="admin-vacio">La papelera está vacía.</p>
+          }
+        </div>
+      }
+
+      <!-- ── Textos de los avisos al cliente ──────────────────────────────── -->
+      @if (textosAbierto()) {
+        <div class="admin-nueva">
+          <div class="admin-nueva__top">
+            <p class="admin-nueva__titulo">Textos de los avisos</p>
+            <button class="admin-cerrar" (click)="textosAbierto.set(false)" aria-label="Cerrar" title="Cerrar">×</button>
+          </div>
+
+          <p class="admin-nueva__sub">
+            Son los mensajes que el panel prepara para WhatsApp y para el correo. Al editarlos aquí
+            cambian para todas las reservas; «Restaurar» devuelve el texto original.
+          </p>
+
+          <p class="admin-textos__marcadores">
+            @for (m of MARCADORES; track m.clave) {
+              <span class="admin-textos__marcador" [title]="m.ayuda">{{ m.clave }}</span>
+            }
+          </p>
+
+          <ul class="admin-textos-lista">
+            @for (t of textosEditables; track t.key) {
+              <li class="admin-textos-lista__item">
+                <div class="admin-textos-lista__cab">
+                  <span class="admin-textos-lista__label">
+                    {{ t.label }}
+                    @if (plantillas.esPropio(t.key)) { <span class="admin-textos__editado">editado</span> }
+                  </span>
+                  <button class="admin-btn" (click)="editarTexto(t.key)">
+                    {{ textoEditandoMotivo() === t.key ? 'Cerrar' : 'Editar' }}
+                  </button>
+                  @if (plantillas.esPropio(t.key)) {
+                    <button class="admin-btn admin-btn--gris" [disabled]="guardandoTexto() === t.key"
+                      (click)="restaurarTexto(t.key)">Restaurar</button>
+                  }
+                </div>
+
+                @if (textoEditandoMotivo() === t.key) {
+                  <textarea class="admin-textos__area" rows="7" [(ngModel)]="borradorTexto"></textarea>
+                  <div class="admin-textos__acciones">
+                    <button class="btn btn--primary" [disabled]="guardandoTexto() === t.key"
+                      (click)="guardarTexto(t.key)">
+                      {{ guardandoTexto() === t.key ? 'Guardando…' : 'Guardar' }}
+                    </button>
+                  </div>
+                } @else {
+                  <p class="admin-textos__vista">{{ plantillas.texto(t.key) }}</p>
+                }
+              </li>
+            }
+          </ul>
         </div>
       }
 
@@ -374,7 +497,7 @@
               @for (r of filtradas(); track r.id) {
                 <tr [class.admin-fila--pasada]="esPasada(r)"
                     [class.admin-fila--pendiente]="requiereAccion(r)"
-                    [class.admin-fila--recordatorio]="recordatorioCercano(r) && !requiereAccion(r)"
+                    [class.admin-fila--recordatorio]="soloRecordatorio(r)"
                     [class.admin-fila--confirmada]="r.estado === 'confirmada' && !requiereAccion(r) && !esPasada(r)">
                   <td class="c-fecha">
                     <!-- Pulsar la fecha abre la reserva lista para editar. -->
@@ -437,13 +560,26 @@
                     <span class="admin-estado" [class]="'admin-estado--' + r.estado">{{ r.estado }}</span>
                   </td>
                   <td class="c-acciones admin-acciones">
-                    @if (r.estado === 'pendiente' || r.estado === 'denegada') {
+                    @if (modoBorrado() && sePuedeBorrar(r)) {
+                      <button class="admin-btn admin-btn--no admin-btn--papelera" [disabled]="borrandoId() === r.id"
+                        (click)="aPapelera(r)" title="Mover a la papelera">🗑 Borrar</button>
+                    }
+                    @if (r.estado === 'pendiente') {
                       <!-- Por gestionar: solo aceptar o anular. -->
                       <span class="admin-acciones__grid">
                         <button class="admin-btn admin-btn--aceptar" [disabled]="guardando() === r.id"
                           (click)="marcar(r, 'aceptada')">Aceptar</button>
                         <button class="admin-btn admin-btn--no" [disabled]="guardando() === r.id"
                           (click)="marcar(r, 'denegada')">Anular</button>
+                      </span>
+                    } @else if (r.estado === 'denegada') {
+                      <!-- Ya anulada: lo que falta es avisar al cliente. -->
+                      <span class="admin-acciones__grid">
+                        <button class="admin-btn admin-btn--aceptar" [disabled]="guardando() === r.id"
+                          (click)="marcar(r, 'aceptada')">Aceptar</button>
+                        <button class="admin-btn admin-btn--avisar" (click)="avisarAnulacion(r)">
+                          {{ detalle() === r.id ? 'Cerrar' : 'Avisar de la anulación' }}
+                        </button>
                       </span>
                     } @else if (r.estado === 'aceptada') {
                       <!-- Aceptada: anular / avisar arriba, recordatorio / confirmar debajo. -->

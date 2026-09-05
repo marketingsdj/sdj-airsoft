@@ -44,7 +44,6 @@ service cloud.firestore {
           request.resource.data.cambio.estado == 'pendiente' &&
           resource.data.cancelada == false
         );
-      allow delete: if false;
     }
 
     // Autorización para liberar una franja: se crea al cancelar y solo se
@@ -64,6 +63,12 @@ service cloud.firestore {
       allow write: if esAdmin();
     }
 
+    // Textos de los avisos al cliente, editables desde el panel. Solo los usa
+    // el equipo, asi que ni se leen ni se escriben desde fuera de /admin.
+    match /plantillas_aviso/{motivo} {
+      allow read, write: if esAdmin();
+    }
+
     // Registro de reservas (email, nombre, teléfono, etc.). Contiene datos
     // personales: el navegador SOLO puede CREAR, nunca leer/editar/borrar.
     // Tú lo consultas desde la consola de Firebase.
@@ -78,7 +83,8 @@ service cloud.firestore {
         request.resource.data.estado == 'cancelada' &&
         request.resource.data.codigoUsado == resource.data.codigoCancelacion
       );
-      allow delete: if false;
+      // Borrado definitivo desde la papelera del panel.
+      allow delete: if esAdmin();
     }
 
     // Contador diario por persona (email + fecha + nº), para el límite de

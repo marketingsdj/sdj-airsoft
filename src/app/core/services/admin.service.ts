@@ -47,6 +47,8 @@ export interface ReservaAdmin {
   extrasAnulados?: string[];
   /** Por qué quedó pendiente el aviso (para poder deshacerlo del todo). */
   avisoMotivo?: string;
+  /** Enviada a la papelera desde el panel (no se lista con las demas). */
+  borrada?: boolean;
   /** Cómo era la reserva tal y como la hizo el cliente (si la has editado). */
   original?: Record<string, unknown> | null;
   /** Cambio pedido por el cliente desde /cancelar, pendiente de revisar. */
@@ -127,6 +129,7 @@ export class AdminService {
         avisoPendiente: !!x['avisoPendiente'],
         extrasAnulados: (x['extrasAnulados'] as string[]) || [],
         avisoMotivo: x['avisoMotivo'] as string | undefined,
+        borrada: !!x['borrada'],
         original: (x['original'] as Record<string, unknown>) || null,
         creado,
       };
@@ -288,6 +291,18 @@ export class AdminService {
   }
 
   /** Guarda una nota interna sobre la reserva. */
+  /** Manda una reserva a la papelera, o la saca de ella. */
+  async marcarBorrada(id: string, borrada: boolean): Promise<void> {
+    if (!db) return;
+    await updateDoc(doc(db, 'reservas', id), { borrada });
+  }
+
+  /** Borrado definitivo: solo desde la papelera y sin vuelta atras. */
+  async eliminarReserva(id: string): Promise<void> {
+    if (!db) return;
+    await deleteDoc(doc(db, 'reservas', id));
+  }
+
   async guardarNota(id: string, notas: string): Promise<void> {
     if (!db) return;
     await updateDoc(doc(db, 'reservas', id), { notas });

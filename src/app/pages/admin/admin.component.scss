@@ -477,6 +477,167 @@
   .admin-extra-precios { width: 100%; margin: 0; }
 }
 
+.admin-btn--papelera {
+  width: 100% !important;
+  margin-bottom: 6px;
+}
+
+.admin-modo-borrado {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 0 0 16px;
+  padding: 10px 14px;
+  border: 1px solid rgba($naranja, 0.5);
+  border-radius: $radius-sm;
+  background: rgba($naranja, 0.1);
+  font-size: 12.5px;
+
+  .admin-btn { width: auto; margin-left: auto; }
+}
+
+// ── Menu de ajustes ───────────────────────────────────────────────────────────
+.admin-ajustes {
+  position: relative;
+
+  &__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 12px;
+  }
+
+  &__btn--abierto {
+    border-color: rgba($naranja, 0.6);
+    color: $naranja;
+  }
+
+  &__menu {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    z-index: 20;
+    min-width: 200px;
+    display: flex;
+    flex-direction: column;
+    padding: 6px;
+    border: 1px solid rgba($naranja, 0.4);
+    border-radius: $radius-sm;
+    background: $ink;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
+  }
+
+  &__opcion {
+    background: none;
+    border: none;
+    text-align: left;
+    padding: 9px 10px;
+    border-radius: $radius-sm;
+    color: $crema;
+    font-family: $font-mono;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+
+    &:hover:not(:disabled) { background: rgba($naranja, 0.14); color: $naranja; }
+    &:disabled { opacity: 0.4; cursor: default; }
+  }
+
+  &__opcion--salir {
+    margin-top: 4px;
+    border-top: 1px solid $line;
+    border-radius: 0 0 $radius-sm $radius-sm;
+  }
+}
+
+// ── Textos de los avisos ──────────────────────────────────────────────────────
+.admin-textos__marcadores {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0 0 16px;
+}
+
+.admin-textos__marcador {
+  font-family: $font-mono;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  color: $naranja;
+  border: 1px solid rgba($naranja, 0.4);
+  border-radius: $radius-sm;
+  padding: 3px 7px;
+  cursor: help;
+}
+
+.admin-textos-lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+
+  &__item {
+    border: 1px solid $line;
+    border-radius: $radius-sm;
+    padding: 12px 14px;
+  }
+
+  &__cab {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+
+    .admin-btn { width: auto; }
+  }
+
+  &__label {
+    font-family: $font-tight;
+    font-weight: 700;
+    font-size: 13px;
+    margin-right: auto;
+  }
+}
+
+.admin-textos__editado {
+  font-family: $font-mono;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: $naranja;
+  margin-left: 6px;
+}
+
+// Vista previa del texto en uso, con los saltos de linea tal cual.
+.admin-textos__vista {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: rgba($crema, 0.65);
+  white-space: pre-wrap;
+}
+
+.admin-textos__area {
+  width: 100%;
+  resize: vertical;
+  padding: 10px 12px;
+  border: 1px solid rgba($naranja, 0.4);
+  border-radius: $radius-sm;
+  background: rgba(255, 255, 255, 0.04);
+  color: $crema;
+  font-family: inherit;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.admin-textos__acciones {
+  margin-top: 10px;
+
+  .btn { font-size: 11px; padding: 9px 16px; }
+}
+
 // ── Filtros ───────────────────────────────────────────────────────────────────
 .admin-filtros {
   display: flex;
