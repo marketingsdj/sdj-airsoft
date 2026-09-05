@@ -64,6 +64,14 @@
     gap: 10px;
     align-items: flex-end;
     flex-wrap: wrap;
+
+    // El botón iguala la altura del campo del código (18 px + paddings).
+    .btn {
+      height: 51px;
+      padding-top: 0;
+      padding-bottom: 0;
+      align-items: center;
+    }
   }
 
   &__campo {
