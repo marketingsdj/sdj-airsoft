@@ -1350,9 +1350,10 @@
   transition: border-color $transition;
   min-width: 0;   // sin esto el contenido largo desborda la tarjeta
 
-  // Móvil: menos hueco interno para que quepa todo sin desbordar.
+  // Móvil: menos hueco interno y las piezas pueden bajar de línea.
   @media (max-width: $bp-md) {
-    gap: 14px;
+    flex-wrap: wrap;
+    gap: 12px 14px;
     padding: 14px 16px;
   }
 
@@ -1456,6 +1457,13 @@
     font-size: 11px;
     padding: 10px 14px;
     white-space: nowrap;
+
+    // Móvil: debajo del texto y a todo el ancho, nunca encima de él.
+    @media (max-width: $bp-md) {
+      width: 100%;
+      justify-content: center;
+      margin-top: 2px;
+    }
   }
 
   // Partida extraordinaria: resaltada en naranja (horario y precio distintos).
