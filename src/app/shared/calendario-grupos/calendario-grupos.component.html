@@ -220,8 +220,7 @@
                 [class.cal__slot--inactivo]="!slot.reservada && doble && !puedeIniciar(diaSeleccionado()!, slot) && !slotEsActivo(diaSeleccionado()!, slot)"
                 [disabled]="!puedeIniciar(diaSeleccionado()!, slot) && !slotEsActivo(diaSeleccionado()!, slot)"
                 (click)="reservarSlot(diaSeleccionado()!, slot)">
-                <span class="cal__slot-hora">Llegada {{ slot.hora }}</span>
-                <span class="cal__slot-juego">Juego {{ slotJuego(diaSeleccionado()!, slot) }}</span>
+                <span class="cal__slot-hora">{{ slot.hora }} – {{ slotHoraFinMostrada(diaSeleccionado()!, slot) }}</span>
                 <span class="cal__slot-pista">Pista {{ slot.pista }}</span>
                 <span class="cal__slot-estado">{{ slotEstadoTexto(diaSeleccionado()!, slot) }}</span>
               </button>

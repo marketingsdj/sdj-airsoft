@@ -414,6 +414,18 @@ export class CalendarioGruposComponent implements OnInit {
 
   // La franja marca la hora de LLEGADA. La partida empieza 30 min despues y
   // dura 1 h (2 h si es doble partida); luego quedan 30 min para las duchas.
+  /** Hora de fin que se muestra en la franja (con la hora extra, 1 h más). */
+  slotHoraFinMostrada(dia: Dia, slot: Slot): string {
+    if (this.doble) {
+      const inicio = this.franjaInicioActiva(dia);
+      if (inicio && slot.pista === inicio.pista && slot.hora === inicio.horaFin) {
+        const [h, m] = slot.horaFin.split(':').map(Number);
+        return ;
+      }
+    }
+    return slot.horaFin;
+  }
+
   slotJuego(dia: Dia, slot: Slot): string {
     const [h] = slot.hora.split(':').map(Number);
     const segundaDeDoble = this.doble && (() => {
