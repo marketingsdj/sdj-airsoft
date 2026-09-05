@@ -779,13 +779,12 @@
     right: 10px;
   }
 
-  // Editar va arriba a la derecha, en la misma línea que el aspa de cerrar.
+  // Editar va arriba del todo a la izquierda, en su propia línea.
   &__editar {
-    position: absolute;
-    top: 6px;
-    right: 42px;
+    display: inline-block;
+    margin-bottom: 14px;
     font-size: 11px;
-    padding: 6px 14px;
+    padding: 7px 14px;
   }
 
   &__grid {
