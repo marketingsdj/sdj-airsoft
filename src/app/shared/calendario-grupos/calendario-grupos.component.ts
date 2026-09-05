@@ -47,6 +47,8 @@ export class CalendarioGruposComponent implements OnInit {
   // Txikipaintball: abre también los viernes y usa horarios propios
   // (Viernes 16–20, Sábado/Domingo/festivo 9–18) en franjas de 2 h.
   @Input() txiki = false;
+  // Versión reducida para el panel de gestión: ocupa mucho menos alto.
+  @Input() compacto = false;
   @Output() slotSeleccionado = new EventEmitter<{ fecha: string; hora: string; horaFin: string; pista: string }>();
   @Output() fechaSeleccionada = new EventEmitter<string>();
   @Output() laborableSeleccionado = new EventEmitter<{ fecha: string; horaAprox: string }>();

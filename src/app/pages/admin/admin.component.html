@@ -114,6 +114,7 @@
             <button class="admin-btn" (click)="nuevaAbierta.set(false)">Cerrar</button>
           </div>
 
+          <div class="admin-nueva__cols">
           <div class="admin-nueva__campos">
             <label class="admin-campo">
               <span>Tipo</span>
@@ -147,6 +148,7 @@
             </label>
           </div>
 
+          <div class="admin-nueva__cal">
           <p class="admin-nueva__sub">
             @if (nueva.fecha) {
               Elegido: <strong>{{ fechaLarga(nueva.fecha) }}</strong>
@@ -159,6 +161,7 @@
 
           <app-calendario-grupos
             modo="seleccion"
+            [compacto]="true"
             [txiki]="nueva.tipo === 'txiki' || nueva.tipo === 'evento'"
             [permitirLaborables]="nueva.tipo !== 'individual'"
             [mostrarSlots]="nueva.tipo !== 'individual'"
@@ -166,6 +169,8 @@
             (fechaSeleccionada)="nueva.fecha = $event; nueva.hora = ''; nueva.pista = ''"
             (laborableSeleccionado)="nuevoLaborable($event)">
           </app-calendario-grupos>
+          </div>
+          </div>
 
           <div class="admin-nueva__acciones">
             <button class="btn btn--primary" [disabled]="!nuevaValida || creando()" (click)="guardarNueva()">
@@ -432,6 +437,7 @@
                           @if (calendarioEdicion()) {
                             <app-calendario-grupos
                               modo="seleccion"
+                              [compacto]="true"
                               [txiki]="edicion.tipo === 'txiki' || edicion.tipo === 'evento'"
                               [permitirLaborables]="edicion.tipo !== 'individual'"
                               [mostrarSlots]="edicion.tipo !== 'individual'"

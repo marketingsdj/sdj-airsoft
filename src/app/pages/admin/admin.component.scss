@@ -261,12 +261,24 @@
     font-size: 18px;
   }
 
+  // Campos a la izquierda y calendario a la derecha: todo cabe sin scroll.
+  &__cols {
+    display: grid;
+    grid-template-columns: 1fr 360px;
+    gap: 20px;
+    align-items: start;
+
+    @media (max-width: 1100px) { grid-template-columns: 1fr; }
+  }
+
   &__campos {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
     gap: 12px;
-    margin-bottom: 16px;
+    align-content: start;
   }
+
+  &__cal { min-width: 0; }
 
   &__sub {
     margin: 0 0 14px;

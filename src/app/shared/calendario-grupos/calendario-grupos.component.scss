@@ -17,6 +17,25 @@
 
   &--simple &__izq { border-bottom: none; }
 
+  // ── Versión compacta (panel de gestión) ─────────────────────────────────────
+  &--compacto {
+    max-width: 340px;
+
+    .cal__izq, .cal__der { padding: 12px; }
+    .cal__header { margin-bottom: 8px; }
+    .cal__mes { font-size: 12px; }
+    .cal__nav { width: 26px; height: 26px; font-size: 16px; }
+    .cal__grid { gap: 2px; margin-bottom: 10px; }
+    .cal__dias-semana span { font-size: 8px; padding: 2px 0; }
+    .cal__dia-num { font-size: 11px; }
+    .cal__dia-slots { display: none; }   // el número de franjas sobra aquí
+    .cal__leyenda { gap: 6px 10px; font-size: 9px; margin-top: 6px; }
+    .cal__aviso { font-size: 10px; }
+    .cal__slots-titulo { font-size: 12px; }
+    .cal__slot { padding: 6px 8px; font-size: 11px; }
+    .cal__consulta-lista { font-size: 11px; }
+  }
+
   &__izq {
     padding: 24px;
     border-bottom: 1px solid $line;
