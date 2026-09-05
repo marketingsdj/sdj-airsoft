@@ -19,7 +19,22 @@
 
   // ── Versión compacta (panel de gestión) ─────────────────────────────────────
   &--compacto {
-    max-width: 440px;
+    max-width: 620px;
+
+    // Calendario a la izquierda y franjas a la derecha, para ganar alto.
+    &:not(.cal--simple) {
+      grid-template-columns: minmax(0, 260px) minmax(0, 1fr);
+
+      .cal__izq { border-bottom: none; border-right: 1px solid $line; }
+    }
+
+    @media (max-width: 900px) {
+      &:not(.cal--simple) {
+        grid-template-columns: 1fr;
+
+        .cal__izq { border-right: none; border-bottom: 1px solid $line; }
+      }
+    }
 
     .cal__izq, .cal__der { padding: 12px; }
     .cal__header { margin-bottom: 8px; }
