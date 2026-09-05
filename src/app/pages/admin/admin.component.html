@@ -561,14 +561,6 @@
                         </div>
                       }
 
-                      <label class="admin-campo admin-campo--ancho">
-                        <span>Notas internas</span>
-                        <textarea rows="2" #nota [value]="r.notas || ''"
-                          placeholder="Anota aquí lo que acuerdes con el cliente…"></textarea>
-                      </label>
-                      <button class="btn btn--ghost" [disabled]="guardando() === r.id"
-                        (click)="guardarNota(r, nota.value)">Guardar nota</button>
-
                       <!-- Aviso al cliente: se prepara el texto y lo envías tú. -->
                       <div class="admin-aviso-cliente">
                         <p class="admin-aviso-cliente__titulo">Avisar al cliente</p>
