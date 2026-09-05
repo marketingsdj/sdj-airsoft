@@ -741,11 +741,13 @@
     right: 10px;
   }
 
-  // Editar va arriba del todo, sobre la fila de datos.
+  // Editar va arriba a la derecha, en la misma línea que el aspa de cerrar.
   &__editar {
-    margin-bottom: 14px;
+    position: absolute;
+    top: 6px;
+    right: 42px;
     font-size: 11px;
-    padding: 8px 14px;
+    padding: 6px 14px;
   }
 
   &__grid {
