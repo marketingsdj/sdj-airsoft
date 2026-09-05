@@ -212,7 +212,7 @@
             </div>
             <label class="admin-campo admin-campo--ancho">
               <span>Notas internas</span>
-              <input type="text" [(ngModel)]="nueva.notas" placeholder="Reserva por teléfono, paga en efectivo…" />
+              <textarea rows="2" [(ngModel)]="nueva.notas" placeholder="Reserva por teléfono, paga en efectivo…"></textarea>
             </label>
           </div>
 
@@ -527,7 +527,8 @@
                             </div>
                             <label class="admin-campo admin-campo--ancho">
                               <span>Notas internas</span>
-                              <input type="text" [(ngModel)]="edicion.notas" />
+                              <textarea rows="2" [(ngModel)]="edicion.notas"
+                                placeholder="Lo que acuerdes con el cliente…"></textarea>
                             </label>
                           </div>
 

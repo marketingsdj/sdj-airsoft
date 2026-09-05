@@ -72,6 +72,9 @@
   }
 
   &--ancho { flex: 1 1 260px; }
+
+  // Notas y otros campos anchos: ocupan toda la fila disponible.
+  textarea { width: 100%; box-sizing: border-box; resize: vertical; }
 }
 
 .admin-check {
@@ -270,6 +273,9 @@
     grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
     gap: 10px;
     margin-bottom: 14px;
+
+    // Extras y notas, a todo el ancho del formulario.
+    .admin-campo--ancho { grid-column: 1 / -1; }
   }
 
   &__fecha {
