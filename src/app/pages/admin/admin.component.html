@@ -397,7 +397,7 @@
                       <span class="admin-acciones__grid">
                         <button class="admin-btn admin-btn--no" [disabled]="guardando() === r.id"
                           (click)="marcar(r, 'denegada')">Anular</button>
-                        <button class="admin-btn admin-btn--avisar" (click)="toggleDetalle(r.id)">
+                        <button class="admin-btn admin-btn--avisar" (click)="avisar(r)">
                           {{ detalle() === r.id ? 'Cerrar' : 'Avisar' }}
                         </button>
                         <button class="admin-btn admin-btn--recordatorio"
@@ -412,12 +412,12 @@
                           <button class="admin-btn admin-btn--no" [disabled]="guardando() === r.id"
                             (click)="marcar(r, 'denegada')">Anular</button>
                         }
-                        <button class="admin-btn admin-btn--avisar" (click)="toggleDetalle(r.id)">
+                        <button class="admin-btn admin-btn--avisar" (click)="avisar(r)">
                           {{ detalle() === r.id ? 'Cerrar' : 'Avisar' }}
                         </button>
                         @if (r.estado === 'confirmada') {
                           <!-- Hueco de la izquierda: entrar a cambiar datos. -->
-                          <button class="admin-btn admin-btn--gris" (click)="toggleDetalle(r.id); editar(r)">Modificar</button>
+                          <button class="admin-btn admin-btn--gris" (click)="modificar(r)">Modificar</button>
                           <!-- Por si se ha confirmado sin querer. -->
                           <button class="admin-btn admin-btn--col2" [disabled]="guardando() === r.id"
                             (click)="reabrir(r)">Deshacer</button>

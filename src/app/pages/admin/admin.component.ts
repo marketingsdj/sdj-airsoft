@@ -766,6 +766,18 @@ export class AdminComponent implements OnInit {
     } catch { /* si el navegador lo impide, el texto se puede seleccionar a mano */ }
   }
 
+  /** Abre el detalle para avisar: nunca con el formulario de edición abierto. */
+  avisar(r: ReservaAdmin) {
+    this.editando.set(null);
+    this.toggleDetalle(r.id);
+  }
+
+  /** Abre el detalle directamente en modo edición. */
+  modificar(r: ReservaAdmin) {
+    this.detalle.set(r.id);
+    this.editar(r);
+  }
+
   toggleDetalle(id: string) {
     this.detalle.set(this.detalle() === id ? null : id);
   }
