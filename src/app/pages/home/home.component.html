@@ -322,7 +322,7 @@
       <a routerLink="/partidas" class="btn btn--ghost hide-mobile">Ver todas →</a>
     </div>
     <div class="agenda-cards">
-      @for (p of partidas; track p.fecha) {
+      @for (p of partidas(); track p.fecha) {
       <div class="agenda-card" [class.agenda-card--extra]="p.esExtraordinaria">
         <div class="agenda-card__fecha">
           <span class="agenda-card__dia">{{ p.fecha.split(' ')[1] }}</span>
