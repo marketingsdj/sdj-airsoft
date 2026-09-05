@@ -71,6 +71,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     fecha: p.fecha.toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', month: 'short' }),
     iso: fechaLocalISO(p.fecha),
     hora: p.horaLabel,
+    // Partes del horario (una o dos), para poder apilarlas sin guion en móvil.
+    horas: p.horaLabel.split(/[–-]/).map(h => h.trim()).filter(Boolean),
     tipo: p.esExtraordinaria ? 'Partida extraordinaria' : 'Partida abierta',
     modo: p.modo,
     plazas: p.plazas,
