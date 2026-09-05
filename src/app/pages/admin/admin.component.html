@@ -680,7 +680,7 @@
         <label class="admin-check"
           title="Oculta las reservas de fechas ya pasadas. Se aplica junto al resto de filtros; el recuadro «Próximas» de arriba, además, descarta las anuladas y canceladas.">
           <input type="checkbox" [(ngModel)]="soloProximas" (ngModelChange)="onFiltroCambiado()" />
-          <span>Solo próximas</span>
+          <span>Solo próximas (con anuladas)</span>
         </label>
 
         <button class="admin-filtros__limpiar" type="button" (click)="limpiarFiltros()">Limpiar filtros</button>
