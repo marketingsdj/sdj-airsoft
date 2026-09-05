@@ -19,20 +19,20 @@
       </div>
       <div class="hero__col-right">
         <p class="hero__sub">El campo más grande del norte.</p>
-        @if (proximaExtraordinaria(); as extra) {
-          <!-- Aviso de partida extraordinaria abierta desde el panel. -->
-          <a class="hero__extra" routerLink="/reserva" [queryParams]="{ tipo: 'individual', fecha: extra.iso }">
-            <span class="hero__extra-badge">Partida extraordinaria</span>
-            <span class="hero__extra-fecha">{{ extra.fecha }} · {{ extra.hora }}</span>
-            <span class="hero__extra-texto">Socios gratis · equipo propio {{ EXTRA_PRECIO }} € · con alquiler {{ EXTRA_PRECIO_ALQUILER }} €</span>
-          </a>
-        }
-
         <div class="hero__cta-row">
           <a routerLink="/reserva" class="btn btn--primary" (click)="onHeroCtaClick()">Reservar mi primera partida →</a>
           <a routerLink="/campo" class="btn btn--ghost">Ver el campo</a>
           <a href="https://t.me/sdj_airsoft" target="_blank" rel="noopener" class="btn btn--ghost">Encuentra tus fotos</a>
         </div>
+        @if (proximaExtraordinaria(); as extra) {
+          <!-- Aviso de partida extraordinaria abierta desde el panel. -->
+          <a class="hero__extra" routerLink="/reserva" [queryParams]="{ tipo: 'individual', fecha: extra.iso }">
+            <span class="hero__extra-badge">Partida extraordinaria</span>
+            <span class="hero__extra-fecha">{{ extra.fecha }} · {{ extra.hora }}</span>
+            <span class="hero__extra-texto">Socios gratis · equipo propio {{ extra.precioPropio }} € · con alquiler {{ extra.precioAlquiler }} €</span>
+          </a>
+        }
+
         <div class="hero__stats">
           <div class="hero__stat"><span class="hero__stat-num">45.000</span><span class="hero__stat-lbl">m² de campo</span>
           </div>
@@ -343,7 +343,7 @@
             <span class="agenda-card__tipo">{{ p.tipo }}</span>
           </p>
           @if (p.esExtraordinaria) {
-            <p class="agenda-card__precio">Socios gratis · No socios {{ EXTRA_PRECIO }} €</p>
+            <p class="agenda-card__precio">Socios gratis · No socios {{ p.precio }} €</p>
           }
         </div>
         <a routerLink="/reserva" [queryParams]="{tipo:'individual', fecha:p.iso}" class="btn btn--primary agenda-card__btn">Reservar →</a>

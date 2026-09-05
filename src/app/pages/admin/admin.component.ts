@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { AdminService, EstadoReserva, ReservaAdmin } from '../../core/services/admin.service';
 import { CalendarioGruposComponent } from '../../shared/calendario-grupos/calendario-grupos.component';
 import { ExtraordinariasService } from '../../core/services/extraordinarias.service';
-import { EXTRA_CONFIG } from '../../core/data/partidas-extraordinarias';
+import { EXTRA_CONFIG, EXTRA_DEFECTO, EXTRA_PRECIOS, ExtraTarifaTipo } from '../../core/data/partidas-extraordinarias';
 
 type Orden = 'fecha' | 'creado' | 'nombre';
 
@@ -170,24 +170,83 @@ export class AdminComponent implements OnInit {
   }
 
   // ── Partidas extraordinarias ────────────────────────────────────────────────
-  // Tarde de 16:00 a 20:00, tarifa reducida y gratis para socios. Se abren
-  // desde aquí y aparecen al momento en el calendario y en la portada.
+  // Socios gratis. El horario por defecto es la tarde (16:00–20:00) con tarifa
+  // reducida, pero cada fecha puede llevar el suyo y la tarifa normal.
   extras = inject(ExtraordinariasService);
   readonly EXTRA_HORARIO = EXTRA_CONFIG.horaLabel;
   readonly EXTRA_PRECIO = EXTRA_CONFIG.precioNoSocio.toFixed(2).replace('.', ',');
+  readonly EXTRA_TARIFAS = [
+    { key: 'reducida' as ExtraTarifaTipo, label: 'Reducida' },
+    { key: 'normal'   as ExtraTarifaTipo, label: 'Normal' },
+  ];
+
   extraFecha = '';
+  extraTarifa: ExtraTarifaTipo = EXTRA_DEFECTO.tarifa;
+  extraHoraInicio = EXTRA_DEFECTO.horaInicio;
+  extraHoraFin = EXTRA_DEFECTO.horaFin;
   extraAbierto = signal(false);
   guardandoExtra = signal(false);
 
+  // Fecha que se está editando en la lista (o null si no hay ninguna).
+  extraEditando = signal<string | null>(null);
+  edicionExtra = { tarifa: EXTRA_DEFECTO.tarifa as ExtraTarifaTipo, horaInicio: '', horaFin: '' };
+
+  /** Precios por persona de una tarifa, para enseñarlos en el panel. */
+  extraPreciosLabel(tarifa: ExtraTarifaTipo): string {
+    const p = EXTRA_PRECIOS[tarifa];
+    const f = (n: number) => n.toFixed(2).replace('.', ',');
+    return `socios gratis · propio ${f(p.propio)} € · alquiler ${f(p.alquiler)} € · premium ${f(p.premium)} €`;
+  }
+
+  extraTarifaLabel(tarifa: ExtraTarifaTipo): string {
+    return this.EXTRA_TARIFAS.find(t => t.key === tarifa)?.label ?? tarifa;
+  }
+
   async abrirExtraordinaria() {
     if (!this.extraFecha) return;
+    if (this.extraHoraFin <= this.extraHoraInicio) {
+      this.error.set('La hora de fin tiene que ser posterior a la de inicio.');
+      return;
+    }
     this.guardandoExtra.set(true);
     this.error.set('');
     try {
-      await this.extras.abrir(this.extraFecha);
+      await this.extras.abrir(this.extraFecha, {
+        tarifa: this.extraTarifa,
+        horaInicio: this.extraHoraInicio,
+        horaFin: this.extraHoraFin,
+      });
       this.extraFecha = '';
+      this.extraTarifa = EXTRA_DEFECTO.tarifa;
+      this.extraHoraInicio = EXTRA_DEFECTO.horaInicio;
+      this.extraHoraFin = EXTRA_DEFECTO.horaFin;
     } catch {
       this.error.set('No se ha podido abrir la partida extraordinaria.');
+    } finally {
+      this.guardandoExtra.set(false);
+    }
+  }
+
+  /** Abre el editor de una fecha ya publicada, con sus valores actuales. */
+  editarExtraordinaria(fecha: string) {
+    if (this.extraEditando() === fecha) { this.extraEditando.set(null); return; }
+    const d = this.extras.dia(fecha);
+    this.edicionExtra = { tarifa: d.tarifa, horaInicio: d.horaInicio, horaFin: d.horaFin };
+    this.extraEditando.set(fecha);
+  }
+
+  async guardarExtraordinaria(fecha: string) {
+    if (this.edicionExtra.horaFin <= this.edicionExtra.horaInicio) {
+      this.error.set('La hora de fin tiene que ser posterior a la de inicio.');
+      return;
+    }
+    this.guardandoExtra.set(true);
+    this.error.set('');
+    try {
+      await this.extras.guardar(fecha, { ...this.edicionExtra });
+      this.extraEditando.set(null);
+    } catch {
+      this.error.set('No se han podido guardar los cambios de la partida extraordinaria.');
     } finally {
       this.guardandoExtra.set(false);
     }
@@ -212,7 +271,27 @@ export class AdminComponent implements OnInit {
     nombre: '', email: '', telefono: '', extras: '', notas: '', laborable: false,
   };
 
+  /**
+   * Solo un apartado abierto a la vez: al abrir uno se cierran los demas
+   * (alta manual, partidas extraordinarias y la reserva desplegada), para no
+   * dejar paneles a medias por el camino.
+   */
+  private cerrarPaneles(salvo: 'nueva' | 'extra' | 'detalle') {
+    if (salvo !== 'nueva') this.nuevaAbierta.set(false);
+    if (salvo !== 'extra') { this.extraAbierto.set(false); this.extraEditando.set(null); }
+    if (salvo !== 'detalle') { this.detalle.set(null); this.editando.set(null); }
+  }
+
+  /** Abre o cierra el apartado de partidas extraordinarias. */
+  toggleExtraordinarias() {
+    const abrir = !this.extraAbierto();
+    this.cerrarPaneles('extra');
+    this.extraAbierto.set(abrir);
+    if (!abrir) this.extraEditando.set(null);
+  }
+
   abrirNueva() {
+    this.cerrarPaneles('nueva');
     this.nuevaAbierta.set(true);
     this.nueva = {
       tipo: 'privada', fecha: '', hora: '', pista: '', personas: 8,
@@ -283,6 +362,8 @@ export class AdminComponent implements OnInit {
     { key: 'confirmada',   label: 'Confirmada' },
     { key: 'denegada',     label: 'Anulada' },
     { key: 'cancelada',    label: 'Cancelada' },
+    { key: 'cambios',      label: 'Cambios pedidos' },
+    { key: 'proximas',     label: 'Próximas (hoy en adelante)' },
     { key: 'expirada',     label: 'Fecha expirada' },
   ];
   readonly tipos = [
@@ -363,6 +444,11 @@ export class AdminComponent implements OnInit {
         if (!this.requiereAccion(r)) return false;
       } else if (fe === 'recordatorio') {
         if (!this.recordatorioCercano(r)) return false;
+      } else if (fe === 'cambios') {
+        if (!r.cambio) return false;
+      } else if (fe === 'proximas') {
+        if ((r.fecha || '') < hoy) return false;
+        if (r.estado === 'denegada' || r.estado === 'cancelada') return false;
       } else if (fe === 'expirada') {
         if (!this.esPasada(r)) return false;
       } else if (fe && r.estado !== fe) return false;
@@ -417,11 +503,19 @@ export class AdminComponent implements OnInit {
     this.onFiltroCambiado();
   }
 
-  // Atajo: solo las que están pendientes de gestionar.
-  verPendientes() {
+  // Atajo desde los recuadros del resumen: deja solo el grupo que has clicado.
+  // Volver a clicarlo quita el filtro, para poder ver de nuevo el listado entero.
+  verFiltro(key: string) {
+    const yaActivo = this.filtroEstado === key;
     this.limpiarFiltros();
-    this.filtroEstado = 'pendiente';
-    this.onFiltroCambiado();
+    if (!yaActivo) {
+      this.filtroEstado = key;
+      this.onFiltroCambiado();
+    }
+  }
+
+  filtroActivo(key: string): boolean {
+    return this.filtroEstado === key;
   }
 
   /**
@@ -485,6 +579,7 @@ export class AdminComponent implements OnInit {
   private prepararAviso(r: ReservaAdmin, motivo: string) {
     this.motivoPorReserva[r.id] = motivo;
     delete this.textoEditado[r.id];
+    this.cerrarPaneles('detalle');
     this.detalle.set(r.id);
     this.reservas.update(list => list.map(x => (x.id === r.id ? { ...x, avisoPendiente: true } : x)));
   }
@@ -508,6 +603,7 @@ export class AdminComponent implements OnInit {
   prepararRecordatorio(r: ReservaAdmin) {
     this.motivoPorReserva[r.id] = 'recordatorio';
     delete this.textoEditado[r.id];
+    this.cerrarPaneles('detalle');
     this.detalle.set(r.id);
   }
 
@@ -649,7 +745,10 @@ export class AdminComponent implements OnInit {
     const nombre = (r.nombre || '').split(' ')[0] || 'hola';
     const dia = this.fechaLarga(r.fecha);
     const cuando = dia + (r.hora ? ' a las ' + r.hora : '');
-    const ref = r.numeroReserva ? ' (reserva ' + r.numeroReserva + ')' : '';
+    // Referencia que se le manda al cliente: el codigo con el que EL gestiona
+    // su reserva en /cancelar. El numero interno solo se usa si no hay codigo.
+    const ref = r.codigoCancelacion ? ' (código ' + r.codigoCancelacion + ')'
+      : r.numeroReserva ? ' (reserva ' + r.numeroReserva + ')' : '';
 
     switch (this.motivo(r)) {
       case 'recordatorio': {
@@ -704,7 +803,8 @@ export class AdminComponent implements OnInit {
 
   /** Asunto común de los avisos. */
   private asuntoAviso(r: ReservaAdmin): string {
-    return 'Tu reserva en Soldados de Juguete' + (r.numeroReserva ? ' · ' + r.numeroReserva : '');
+    const ref = r.codigoCancelacion || r.numeroReserva;
+    return 'Tu reserva en Soldados de Juguete' + (ref ? ' · ' + ref : '');
   }
 
   /**
@@ -720,7 +820,7 @@ export class AdminComponent implements OnInit {
 
   /** Enlace de correo con asunto y cuerpo preparados. */
   enlaceEmail(r: ReservaAdmin): string {
-    const asunto = 'Tu reserva en Soldados de Juguete' + (r.numeroReserva ? ' · ' + r.numeroReserva : '');
+    const asunto = this.asuntoAviso(r);
     return 'mailto:' + (r.email || '') + '?subject=' + encodeURIComponent(asunto)
       + '&body=' + encodeURIComponent(this.textoAviso(r));
   }
@@ -819,12 +919,15 @@ export class AdminComponent implements OnInit {
 
   /** Abre el detalle directamente en modo edición. */
   modificar(r: ReservaAdmin) {
+    this.cerrarPaneles('detalle');
     this.detalle.set(r.id);
     this.editar(r);
   }
 
   toggleDetalle(id: string) {
-    this.detalle.set(this.detalle() === id ? null : id);
+    const abrir = this.detalle() !== id;
+    this.cerrarPaneles('detalle');
+    this.detalle.set(abrir ? id : null);
   }
 
   /** Descarga lo que se está viendo en formato CSV (Excel). */

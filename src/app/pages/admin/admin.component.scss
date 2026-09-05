@@ -210,6 +210,22 @@
     .admin-kpi__num { color: $naranja; }
   }
 
+  // Recuadro del resumen que filtra el listado al clicarlo (sin cambiar de
+  // color: conserva el suyo de recordatorio/alerta si lo tiene).
+  &--clic {
+    cursor: pointer;
+    color: inherit;
+    font: inherit;
+
+    &:hover { background: rgba($naranja, 0.08); }
+  }
+
+  // El grupo por el que esta filtrando ahora mismo.
+  &--activo {
+    border-color: $naranja;
+    background: rgba($naranja, 0.14);
+  }
+
   &--accion {
     cursor: pointer;
     border-color: rgba($naranja, 0.5);
@@ -385,6 +401,15 @@
   .btn { font-size: 11px; padding: 10px 16px; }
 }
 
+.admin-extra-lista__detalle {
+  font-family: $font-mono;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba($crema, 0.5);
+  margin-right: auto;
+}
+
 .admin-extra-lista {
   list-style: none;
   margin: 0;
@@ -405,6 +430,27 @@
 
     .admin-btn { width: auto; }
   }
+}
+
+.admin-extra-precios {
+  margin: 0 0 16px;
+  font-family: $font-mono;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba($crema, 0.5);
+}
+
+// Editor de una fecha ya abierta: ocupa toda la fila de la lista.
+.admin-extra-editor {
+  grid-column: 1 / -1;
+  flex-wrap: wrap;
+  align-items: flex-end !important;
+  justify-content: flex-start !important;
+  border-color: rgba($naranja, 0.5) !important;
+
+  .btn { font-size: 11px; padding: 10px 16px; }
+  .admin-extra-precios { width: 100%; margin: 0; }
 }
 
 // ── Filtros ───────────────────────────────────────────────────────────────────
@@ -857,12 +903,13 @@
     right: 10px;
   }
 
-  // Editar va arriba del todo a la izquierda, en su propia línea.
+  // Editar va arriba del todo a la izquierda, en su propia línea, con la
+  // misma altura que los botones de aviso (WhatsApp, Gmail…).
   &__editar {
     display: inline-block;
     margin-bottom: 14px;
     font-size: 11px;
-    padding: 7px 14px;
+    padding: 9px 16px;
   }
 
   &__grid {
@@ -952,6 +999,14 @@
 
     .btn { font-size: 11px; padding: 9px 16px; }
   }
+}
+
+.admin-btn-wa {
+  background: $crema;
+  border-color: $crema;
+  color: $ink;
+
+  &:hover { background: #fff; border-color: #fff; color: $ink; }
 }
 
 // ── Mensajes ──────────────────────────────────────────────────────────────────

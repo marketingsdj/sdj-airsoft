@@ -117,14 +117,27 @@
 
       <div class="reserva-exito">
         <span class="reserva-exito__icon">✓</span>
-        @if (requiereConfirmacion) {
-          <h2>¡Solicitud enviada!</h2>
-          <p>Te contactamos en menos de 24h para cerrar los detalles de tu reserva. Revisa tu email y WhatsApp.</p>
-        } @else {
-          <h2>¡Reserva confirmada!</h2>
-          <p>Tu plaza ya está reservada. Guarda el justificante y nos vemos en el campo.</p>
-        }
+        <h2>Reserva realizada</h2>
+        <p>Tu plaza ya está reservada pendiente de confirmación. Guarda el justificante y nos vemos en el campo.</p>
 
+        <div class="exito-pdf-wrap">
+          <button class="exito-pdf-btn" (click)="imprimirResumen()">
+            <span class="exito-pdf-btn__left">
+              <span class="exito-pdf-btn__icono">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="7 10 12 15 17 10"/>
+                  <line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+              </span>
+            </span>
+            <span class="exito-pdf-btn__center">
+              <strong>Guardar copia de la reserva</strong>
+              <span>Guárdalo — es tu único justificante</span>
+            </span>
+            <span class="exito-pdf-btn__badge">PDF</span>
+          </button>
+        </div>
         <div class="exito-resumen">
           <p class="exito-resumen__titulo">Resumen de tu reserva</p>
           <div class="exito-resumen__filas">
@@ -213,24 +226,7 @@
           </div>
         </div>
 
-        <div class="exito-pdf-wrap">
-          <button class="exito-pdf-btn" (click)="imprimirResumen()">
-            <span class="exito-pdf-btn__left">
-              <span class="exito-pdf-btn__icono">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                  <polyline points="7 10 12 15 17 10"/>
-                  <line x1="12" y1="15" x2="12" y2="3"/>
-                </svg>
-              </span>
-            </span>
-            <span class="exito-pdf-btn__center">
-              <strong>Guardar copia de la reserva</strong>
-              <span>Guárdalo — es tu único justificante</span>
-            </span>
-            <span class="exito-pdf-btn__badge">PDF</span>
-          </button>
-        </div>
+
 
         <div class="exito-pdf-wrap">
           <div class="exito-cal-card">
@@ -521,6 +517,22 @@
               Te esperamos en el campo.
             </p>
 
+            <div class="form-field">
+              <label class="form-label">Nombre y apellidos <span class="form-label__req">*</span></label>
+              <input class="form-input" type="text" [(ngModel)]="form.nombre" name="nombreIndividual" placeholder="Tu nombre completo" />
+            </div>
+
+            <div class="form-row">
+              <div class="form-field">
+                <label class="form-label">Email <span class="form-label__req">*</span></label>
+                <input class="form-input" type="email" [(ngModel)]="form.email" name="emailIndividual" placeholder="tu@email.com" />
+              </div>
+              <div class="form-field">
+                <label class="form-label">Teléfono <span class="form-label__req">*</span></label>
+                <input class="form-input" type="tel" [ngModel]="form.telefono" (beforeinput)="onTelefonoBeforeInput($event)" (input)="onTelefonoInput($event)" name="telefonoIndividual" inputmode="tel" placeholder="+34 600 000 000" />
+              </div>
+            </div>
+
             <label class="form-check" style="margin-top: 12px;">
               <input type="checkbox" [(ngModel)]="form.aceptaComunicaciones" name="aceptaComunicaciones" />
               <span>Acepto recibir comunicaciones comerciales de SDJ.</span>
@@ -807,7 +819,7 @@
             <strong>{{ form.personas }}</strong>
           </div>
           @if (form.doblePartida) {
-            <div class="resumen-row"><span>Hora extra de partida privada</span><strong>+10 €/persona</strong></div>
+            <div class="resumen-row"><span>Hora extra</span><strong>+10 €/persona</strong></div>
           }
           @if (form.tarifaReducida) {
             <div class="resumen-row"><span>Tarifa reducida</span><strong>{{ precioReducidaFmt }} €/persona</strong></div>

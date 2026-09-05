@@ -903,8 +903,11 @@
     font-size: 10px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    flex-shrink: 0;
-    white-space: nowrap;
+    // Las etiquetas largas parten en dos lineas antes que aplastar el valor
+    // de la derecha, que es lo que tiene que leerse.
+    flex-shrink: 1;
+    min-width: 0;
+    overflow-wrap: anywhere;
   }
   strong {
     color: $crema;

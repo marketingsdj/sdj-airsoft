@@ -2,7 +2,7 @@ import { Component, signal, computed, OnInit, Input, Output, EventEmitter, injec
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SlotsService } from '../../core/services/slots.service';
-import { EXTRA_CONFIG } from '../../core/data/partidas-extraordinarias';
+import { EXTRA_CONFIG, EXTRA_PRECIOS, extraHoraLabel } from '../../core/data/partidas-extraordinarias';
 import { ExtraordinariasService } from '../../core/services/extraordinarias.service';
 
 export type ExtraTarifa = 'socio' | 'propio' | 'alquiler' | 'premium';
@@ -151,9 +151,20 @@ export class CalendarioGruposComponent implements OnInit {
     '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30',
   ];
 
-  // Horas de llegada para la partida extraordinaria (16:00–20:00). La última
-  // llegada razonable es a las 19:00 (queda 1 h de juego).
-  readonly HORAS_LLEGADA_EXTRA = ['16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00'];
+  // Horas de llegada de la partida extraordinaria, cada media hora dentro de
+  // su horario. La ultima es una hora antes del cierre (queda 1 h de juego).
+  get HORAS_LLEGADA_EXTRA(): string[] {
+    const d = this.diaSeleccionado();
+    const cfg = d ? this.extraordinarias.dia(this.localFecha(d.fecha)) : null;
+    const min = (hhmm: string) => { const [h, m] = hhmm.split(':').map(Number); return h * 60 + m; };
+    const inicio = min(cfg?.horaInicio || EXTRA_CONFIG.horaInicio);
+    const fin = min(cfg?.horaFin || EXTRA_CONFIG.horaFin) - 60;
+    const out: string[] = [];
+    for (let t = inicio; t <= fin; t += 30) {
+      out.push(`${String(Math.floor(t / 60)).padStart(2, '0')}:${String(t % 60).padStart(2, '0')}`);
+    }
+    return out.length ? out : [cfg?.horaInicio || EXTRA_CONFIG.horaInicio];
+  }
 
   // Horas a mostrar en el desplegable según el día seleccionado.
   get horasLlegadaActivas(): string[] {
@@ -169,10 +180,24 @@ export class CalendarioGruposComponent implements OnInit {
 
   private el = inject(ElementRef);
 
-  readonly EXTRA_PRECIO = EXTRA_CONFIG.precioNoSocio.toFixed(2).replace('.', ',');
-  readonly EXTRA_PRECIO_ALQUILER = EXTRA_CONFIG.precioAlquiler.toFixed(2).replace('.', ',');
-  readonly EXTRA_PRECIO_PREMIUM = EXTRA_CONFIG.precioPremium.toFixed(2).replace('.', ',');
+  // Precios y horario del dia extraordinario seleccionado: cada fecha puede
+  // llevar tarifa reducida o normal, y su propio horario.
+  private extraPrecios() {
+    const d = this.diaSeleccionado();
+    return EXTRA_PRECIOS[d ? this.extraordinarias.dia(this.localFecha(d.fecha)).tarifa : 'reducida'];
+  }
+  private eur(n: number): string { return n.toFixed(2).replace('.', ','); }
+
+  get EXTRA_PRECIO(): string { return this.eur(this.extraPrecios().propio); }
+  get EXTRA_PRECIO_ALQUILER(): string { return this.eur(this.extraPrecios().alquiler); }
+  get EXTRA_PRECIO_PREMIUM(): string { return this.eur(this.extraPrecios().premium); }
   readonly EXTRA_DESC = EXTRA_CONFIG.descripcion;
+
+  /** Horario del dia extraordinario seleccionado (p. ej. '16:00 – 20:00'). */
+  get extraHorario(): string {
+    const d = this.diaSeleccionado();
+    return d ? extraHoraLabel(this.extraordinarias.dia(this.localFecha(d.fecha))) : EXTRA_CONFIG.horaLabel;
+  }
 
   // Tarifa elegida en el día extraordinario (socio gratis | propio | alquiler | premium).
   extraTarifa = signal<ExtraTarifa | null>(null);

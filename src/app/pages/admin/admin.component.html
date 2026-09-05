@@ -70,7 +70,7 @@
         </div>
         <div class="admin-top__acciones">
           <button class="btn btn--primary" (click)="abrirNueva()">+ Nueva reserva</button>
-          <button class="btn btn--ghost" (click)="extraAbierto.set(!extraAbierto())">Partidas extraordinarias</button>
+          <button class="btn btn--ghost" (click)="toggleExtraordinarias()">Partidas extraordinarias</button>
           <button class="btn btn--ghost admin-recargar" (click)="cargar()" [disabled]="cargando()"
             [class.admin-recargar--girando]="cargando()"
             [title]="cargando() ? 'Actualizando…' : 'Actualizar'" aria-label="Actualizar">
@@ -88,22 +88,26 @@
 
       <!-- ── Resumen ──────────────────────────────────────────────────────── -->
       <div class="admin-kpis">
-        <button class="admin-kpi admin-kpi--accion" (click)="verPendientes()">
+        <button class="admin-kpi admin-kpi--accion" [class.admin-kpi--activo]="filtroActivo('pendiente')"
+                (click)="verFiltro('pendiente')">
           <span class="admin-kpi__num">{{ totalPendientes() }}</span>
           <span class="admin-kpi__lbl">Pendientes de gestionar</span>
         </button>
-        <div class="admin-kpi" [class.admin-kpi--recordatorio]="totalRecordatorios() > 0">
+        <button class="admin-kpi admin-kpi--clic" [class.admin-kpi--recordatorio]="totalRecordatorios() > 0"
+                [class.admin-kpi--activo]="filtroActivo('recordatorio')" (click)="verFiltro('recordatorio')">
           <span class="admin-kpi__num">{{ totalRecordatorios() }}</span>
           <span class="admin-kpi__lbl">Recordatorios por enviar</span>
-        </div>
-        <div class="admin-kpi" [class.admin-kpi--alerta]="totalCambios() > 0">
+        </button>
+        <button class="admin-kpi admin-kpi--clic" [class.admin-kpi--alerta]="totalCambios() > 0"
+                [class.admin-kpi--activo]="filtroActivo('cambios')" (click)="verFiltro('cambios')">
           <span class="admin-kpi__num">{{ totalCambios() }}</span>
           <span class="admin-kpi__lbl">Cambios pedidos</span>
-        </div>
-        <div class="admin-kpi">
+        </button>
+        <button class="admin-kpi admin-kpi--clic" [class.admin-kpi--activo]="filtroActivo('proximas')"
+                (click)="verFiltro('proximas')">
           <span class="admin-kpi__num">{{ totalProximas() }}</span>
           <span class="admin-kpi__lbl">Próximas (hoy en adelante)</span>
-        </div>
+        </button>
         <div class="admin-kpi">
           <span class="admin-kpi__num">{{ filtradas().length }}</span>
           <span class="admin-kpi__lbl">Mostradas ahora</span>
@@ -123,8 +127,9 @@
           </div>
 
           <p class="admin-nueva__sub">
-            Horario {{ EXTRA_HORARIO }} · socios gratis · resto con tarifa reducida (desde {{ EXTRA_PRECIO }} €).
-            Al abrir una fecha aparece al momento en el calendario de reservas y en la portada.
+            Socios gratis. Por defecto {{ EXTRA_HORARIO }} con tarifa reducida (desde {{ EXTRA_PRECIO }} €),
+            pero puedes cambiar tarifa y horario en cada fecha. Al abrir una fecha aparece al momento
+            en el calendario de reservas y en la portada.
           </p>
 
           <div class="admin-extra-alta">
@@ -132,20 +137,64 @@
               <span>Fecha</span>
               <input type="date" [(ngModel)]="extraFecha" />
             </label>
+            <label class="admin-campo">
+              <span>Tarifa</span>
+              <select [(ngModel)]="extraTarifa">
+                @for (t of EXTRA_TARIFAS; track t.key) { <option [value]="t.key">{{ t.label }}</option> }
+              </select>
+            </label>
+            <label class="admin-campo">
+              <span>Desde</span>
+              <input type="time" step="1800" [(ngModel)]="extraHoraInicio" />
+            </label>
+            <label class="admin-campo">
+              <span>Hasta</span>
+              <input type="time" step="1800" [(ngModel)]="extraHoraFin" />
+            </label>
             <button class="btn btn--primary" [disabled]="!extraFecha || guardandoExtra()"
               (click)="abrirExtraordinaria()">
               {{ guardandoExtra() ? 'Guardando…' : 'Abrir partida' }}
             </button>
           </div>
+          <p class="admin-extra-precios">{{ extraPreciosLabel(extraTarifa) }}</p>
 
           @if (extras.proximas().length) {
             <ul class="admin-extra-lista">
               @for (f of extras.proximas(); track f) {
                 <li>
-                  <span>{{ fechaLarga(f) }}</span>
+                  <span class="admin-extra-lista__fecha">{{ fechaLarga(f) }}</span>
+                  <span class="admin-extra-lista__detalle">
+                    {{ extras.dia(f).horaInicio }} – {{ extras.dia(f).horaFin }} ·
+                    tarifa {{ extraTarifaLabel(extras.dia(f).tarifa) }}
+                  </span>
+                  <button class="admin-btn" [disabled]="guardandoExtra()"
+                    (click)="editarExtraordinaria(f)">{{ extraEditando() === f ? 'Cerrar' : 'Editar' }}</button>
                   <button class="admin-btn admin-btn--no" [disabled]="guardandoExtra()"
                     (click)="quitarExtraordinaria(f)">Quitar</button>
                 </li>
+                @if (extraEditando() === f) {
+                  <li class="admin-extra-editor">
+                    <label class="admin-campo">
+                      <span>Tarifa</span>
+                      <select [(ngModel)]="edicionExtra.tarifa">
+                        @for (t of EXTRA_TARIFAS; track t.key) { <option [value]="t.key">{{ t.label }}</option> }
+                      </select>
+                    </label>
+                    <label class="admin-campo">
+                      <span>Desde</span>
+                      <input type="time" step="1800" [(ngModel)]="edicionExtra.horaInicio" />
+                    </label>
+                    <label class="admin-campo">
+                      <span>Hasta</span>
+                      <input type="time" step="1800" [(ngModel)]="edicionExtra.horaFin" />
+                    </label>
+                    <button class="btn btn--primary" [disabled]="guardandoExtra()"
+                      (click)="guardarExtraordinaria(f)">
+                      {{ guardandoExtra() ? 'Guardando…' : 'Guardar' }}
+                    </button>
+                    <p class="admin-extra-precios">{{ extraPreciosLabel(edicionExtra.tarifa) }}</p>
+                  </li>
+                }
               }
             </ul>
           } @else {
@@ -587,7 +636,7 @@
 
                         <div class="admin-aviso-cliente__envios">
                           @if (r.telefono) {
-                            <a class="btn btn--primary" [href]="enlaceWhatsapp(r)" target="_blank" rel="noopener">WhatsApp</a>
+                            <a class="btn btn--primary admin-btn-wa" [href]="enlaceWhatsapp(r)" target="_blank" rel="noopener">WhatsApp</a>
                           } @else {
                             <span class="btn btn--ghost admin-btn-inactivo" title="Esta reserva no tiene teléfono">WhatsApp</span>
                           }

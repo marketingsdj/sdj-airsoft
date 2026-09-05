@@ -41,7 +41,7 @@ export class PartidasComponent {
   // Genera automáticamente las próximas partidas (fines de semana +
   // extraordinarias de la lista compartida), en orden cronológico.
   private extraordinarias = inject(ExtraordinariasService);
-  todasLasPartidas = computed(() => generarProximasPartidas(24, this.extraordinarias.fechas()).map(p => ({
+  todasLasPartidas = computed(() => generarProximasPartidas(24, this.extraordinarias.fechas(), this.extraordinarias.dias()).map(p => ({
     fecha: p.fecha.toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', month: 'short' }),
     iso: fechaLocalISO(p.fecha),
     hora: p.horaLabel,
@@ -50,6 +50,7 @@ export class PartidasComponent {
     plazas: p.plazas,
     total: p.total,
     precio: p.precio,
+    precioFmt: p.precio.toFixed(2).replace('.', ','),
     esExtraordinaria: p.esExtraordinaria,
   })));
 

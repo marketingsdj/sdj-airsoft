@@ -7,7 +7,7 @@ import { SlotsService } from '../../core/services/slots.service';
 import { ReservaStateService, TipoReserva, SubtipoEvento } from '../../core/services/reserva-state.service';
 import { AnalyticsService } from '../../core/services/analytics.service';
 import { CancelacionService } from '../../core/services/cancelacion.service';
-import { EXTRA_CONFIG } from '../../core/data/partidas-extraordinarias';
+import { EXTRA_PRECIOS } from '../../core/data/partidas-extraordinarias';
 import { ExtraordinariasService } from '../../core/services/extraordinarias.service';
 
 @Component({
@@ -255,9 +255,8 @@ export class ReservaComponent implements OnInit, OnDestroy {
     if (this.paso() === 3) {
       if (!this.form.aceptaEdad) return false;
       if (!this.form.aceptaPrivacidad) return false;
-      if (this.form.tipo === 'individual') {
-        return !!this.form.acepta;
-      }
+      // Todos los tipos piden los datos de contacto: sin ellos no se puede
+      // avisar al cliente ni darle codigo de cancelacion.
       return !!this.form.nombre && !!this.form.email && !!this.form.telefono && this.form.acepta;
     }
     return false;
@@ -456,11 +455,13 @@ export class ReservaComponent implements OnInit, OnDestroy {
 
   // Precio por persona de la tarifa extraordinaria elegida (o null si falta).
   get extraPrecio(): number | null {
+    // Los precios salen de la tarifa (reducida o normal) de ese dia concreto.
+    const precios = EXTRA_PRECIOS[this.extraordinarias.dia(this.form.fecha).tarifa];
     switch (this.form.extraTarifa) {
-      case 'socio':    return EXTRA_CONFIG.precioSocio;
-      case 'propio':   return EXTRA_CONFIG.precioNoSocio;
-      case 'alquiler': return EXTRA_CONFIG.precioAlquiler;
-      case 'premium':  return EXTRA_CONFIG.precioPremium;
+      case 'socio':    return precios.socio;
+      case 'propio':   return precios.propio;
+      case 'alquiler': return precios.alquiler;
+      case 'premium':  return precios.premium;
       default:         return null;
     }
   }
@@ -625,6 +626,10 @@ export class ReservaComponent implements OnInit, OnDestroy {
           tipo: 'individual',
           fecha: this.form.fecha,
           personas: this.form.personas,
+          modalidad: this.form.modalidad,
+          nombre: this.form.nombre,
+          email: this.form.email,
+          telefono: this.form.telefono,
           tarifa_reducida: this.form.tarifaReducida ? `Sí (${this.precioReducidaFmt} €/persona)` : 'No',
         }
       : {
@@ -680,8 +685,10 @@ export class ReservaComponent implements OnInit, OnDestroy {
     const rand = String(Math.floor(Math.random() * 9000) + 1000);
     this.numeroReserva.set(`SDJ-${ds}-${rand}`);
 
-    // Registro de la reserva (quién reservó) para el límite diario y el historial.
-    if (email) {
+    // Registro de la reserva para el panel y el historial. Se guarda siempre,
+    // tenga email o no (la partida abierta no lo pide): sin este registro la
+    // reserva no llega al panel de administracion.
+    {
       try {
         const codigo = this.cancelacion.generarCodigo();
         const reservaId = await this.slotsService.registrarReserva({

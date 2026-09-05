@@ -167,11 +167,11 @@
   // Aviso de partida extraordinaria (solo aparece si hay una próxima).
   &__extra {
     display: block;
-    // Pegado a "El campo más grande del norte.", sin hueco de más.
-    margin: -12px 0 0;
+    // Va justo debajo de los botones del hero; el gap de la columna basta.
+    margin: 0;
     padding: 14px 16px;
 
-    @media (max-width: $bp-md) { margin-top: -6px; padding: 10px 12px; }
+    @media (max-width: $bp-md) { padding: 10px 12px; }
     border: 1px solid rgba($naranja, 0.7);
     border-radius: $radius-md;
     // Fondo sólido: sobre el vídeo el translúcido no se leía.

@@ -62,7 +62,7 @@
     <!-- Info de la partida extraordinaria seleccionada (cuando no hay panel de franjas) -->
     @if (!mostrarSlots && diaSeleccionado()?.esExtraordinaria) {
       <div class="cal__extra-info">
-        <span class="cal__extra-info__badge">Partida extraordinaria · 16:00–20:00</span>
+        <span class="cal__extra-info__badge">Partida extraordinaria · {{ extraHorario }}</span>
         <p class="cal__extra-info__texto">{{ EXTRA_DESC }}</p>
 
         <p class="cal__extra-info__label">Elige tu tarifa</p>

@@ -2,7 +2,7 @@ import { Component, signal, computed, OnInit, OnDestroy, AfterViewInit, ElementR
 import { isPlatformBrowser } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { AnalyticsService } from '../../core/services/analytics.service';
-import { generarProximasPartidas, EXTRA_CONFIG, fechaLocalISO } from '../../core/data/partidas-extraordinarias';
+import { generarProximasPartidas, EXTRA_CONFIG, EXTRA_PRECIOS, extraHoraLabel, fechaLocalISO } from '../../core/data/partidas-extraordinarias';
 import { ExtraordinariasService } from '../../core/services/extraordinarias.service';
 import { RedesSeguirComponent } from '../../shared/redes-seguir/redes-seguir';
 
@@ -67,7 +67,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   // Próximas partidas (fin de semana + extraordinarias) desde la lista compartida.
   private extraordinarias = inject(ExtraordinariasService);
-  partidas = computed(() => generarProximasPartidas(2, this.extraordinarias.fechas()).map(p => ({
+  partidas = computed(() => generarProximasPartidas(2, this.extraordinarias.fechas(), this.extraordinarias.dias()).map(p => ({
     fecha: p.fecha.toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', month: 'short' }),
     iso: fechaLocalISO(p.fecha),
     hora: p.horaLabel,
@@ -78,6 +78,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     plazas: p.plazas,
     total: p.total,
     esExtraordinaria: p.esExtraordinaria,
+    // Precio no socio del dia (la extraordinaria puede ir en tarifa normal).
+    precio: p.precio.toFixed(2).replace('.', ','),
   })));
 
   /**
@@ -88,12 +90,16 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     const iso = this.extraordinarias.proximas()[0];
     if (!iso) return null;
     const [a, m, d] = iso.split('-').map(Number);
+    const cfg = this.extraordinarias.dia(iso);
+    const eur = (n: number) => n.toFixed(2).replace('.', ',');
     return {
       iso,
       // Con inicial en mayúscula (el componente no usa el pipe titlecase).
       fecha: (txt => txt.charAt(0).toUpperCase() + txt.slice(1))(
         new Date(a, m - 1, d).toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' })),
-      hora: EXTRA_CONFIG.horaLabel,
+      hora: extraHoraLabel(cfg),
+      precioPropio: eur(EXTRA_PRECIOS[cfg.tarifa].propio),
+      precioAlquiler: eur(EXTRA_PRECIOS[cfg.tarifa].alquiler),
     };
   });
 
