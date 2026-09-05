@@ -71,7 +71,9 @@
     // huecos muertos entre los bloques.
     @media (max-width: $bp-md) {
       gap: 20px;
-      padding: 32px 0 72px;
+      // Solo arriba y abajo: los márgenes laterales los pone .wrap.
+      padding-top: 32px;
+      padding-bottom: 72px;
     }
   }
 
