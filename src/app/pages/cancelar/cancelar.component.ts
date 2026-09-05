@@ -76,6 +76,19 @@ export class CancelarComponent implements OnInit {
     this.cambio.fecha = ev.fecha;
     this.cambio.hora  = ev.hora;
     this.cambio.pista = ev.pista;
+    // Ya está elegida la franja: se cierra el calendario.
+    this.calendarioAbierto.set(false);
+  }
+
+  /**
+   * Día pulsado en el calendario. Si esa reserva usa franjas, el calendario
+   * sigue abierto para elegirla; si no, con el día basta.
+   */
+  onNuevaFecha(fecha: string, tieneFranjas: boolean) {
+    this.cambio.fecha = fecha;
+    this.cambio.hora = '';
+    this.cambio.pista = '';
+    if (!tieneFranjas) this.calendarioAbierto.set(false);
   }
 
   /** Día entre semana: no hay franjas, solo hora aproximada de llegada. */
@@ -83,6 +96,7 @@ export class CancelarComponent implements OnInit {
     this.cambio.fecha = ev.fecha;
     this.cambio.hora  = ev.horaAprox;
     this.cambio.pista = '';
+    this.calendarioAbierto.set(false);
   }
 
   quitarFechaNueva() {

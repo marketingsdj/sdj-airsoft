@@ -98,7 +98,7 @@
             <form class="cancelar__cambio" (ngSubmit)="enviarCambio()">
               <div class="cancelar__bloque">
                 <p class="cancelar__bloque-titulo">¿Quieres cambiar el día o la hora?</p>
-                @if (cambio.fecha) {
+                @if (cambio.fecha && !calendarioAbierto()) {
                   <p class="cancelar__elegido">
                     Nueva fecha: <strong>{{ fechaLarga(cambio.fecha) | titlecase }}</strong>
                     @if (cambio.hora) { · <strong>{{ cambio.hora }}</strong> }
@@ -114,14 +114,15 @@
                   <p class="cancelar__bloque-ayuda">Elige una franja disponible:</p>
                 }
 
-                @if (calendarioAbierto() && !cambio.fecha) {
+                <!-- El calendario sigue abierto hasta elegir la franja. -->
+                @if (calendarioAbierto()) {
                 <app-calendario-grupos
                   modo="seleccion"
                   [txiki]="r.tipo === 'txiki' || r.tipo === 'evento'"
                   [permitirLaborables]="r.tipo !== 'individual'"
                   [mostrarSlots]="!!r.pista"
                   (slotSeleccionado)="onNuevoSlot($event)"
-                  (fechaSeleccionada)="cambio.fecha = $event; cambio.hora = ''; cambio.pista = ''"
+                  (fechaSeleccionada)="onNuevaFecha($event, !!r.pista)"
                   (laborableSeleccionado)="onNuevoLaborable($event)">
                 </app-calendario-grupos>
                 }
