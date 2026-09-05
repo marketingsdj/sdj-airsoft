@@ -70,7 +70,10 @@ export function generarProximasPartidas(cantidad: number, extras: string[] = [])
   const out: PartidaItem[] = [];
   const hoy = new Date();
   hoy.setHours(0, 0, 0, 0);
+  // La agenda mira hacia delante: el día en curso ya no se ofrece (a media
+  // jornada no tiene sentido anunciarlo), así entran las siguientes fechas.
   const cursor = new Date(hoy);
+  cursor.setDate(cursor.getDate() + 1);
   let modoIdx = 0;
   let guard = 0;
 
