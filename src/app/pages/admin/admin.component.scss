@@ -884,6 +884,15 @@
   // El de cancelar se separa a la derecha del todo.
   &__cancelar { margin-left: auto; }
 
+  // Sin teléfono o sin email: se ve, pero apagado y sin poder pulsarlo.
+  .admin-btn-inactivo {
+    border-color: rgba($crema, 0.18);
+    color: rgba($crema, 0.3);
+    background: transparent;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
   // "Ya lo he mandado": avanza de fase.
   &__avisado {
     border: 1px solid rgba(#6bd08a, 0.7);

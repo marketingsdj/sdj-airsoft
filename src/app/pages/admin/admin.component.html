@@ -589,14 +589,14 @@
                           @if (r.telefono) {
                             <a class="btn btn--primary" [href]="enlaceWhatsapp(r)" target="_blank" rel="noopener">WhatsApp</a>
                           } @else {
-                            <span class="btn btn--ghost btn--disabled" title="Esta reserva no tiene teléfono">WhatsApp</span>
+                            <span class="btn btn--ghost admin-btn-inactivo" title="Esta reserva no tiene teléfono">WhatsApp</span>
                           }
                           @if (r.email) {
                             <a class="btn btn--ghost" [href]="enlaceGmail(r)" target="_blank" rel="noopener">Gmail</a>
                             <a class="btn btn--ghost" [href]="enlaceEmail(r)"
                               title="Abre el programa de correo del equipo">Correo</a>
                           } @else {
-                            <span class="btn btn--ghost btn--disabled" title="Esta reserva no tiene email">Gmail</span>
+                            <span class="btn btn--ghost admin-btn-inactivo" title="Esta reserva no tiene email">Gmail</span>
                           }
                           @if (r.tipo === 'txiki') {
                             <a class="btn btn--ghost" [href]="urlAutorizacion" target="_blank" rel="noopener">Ver autorización</a>
