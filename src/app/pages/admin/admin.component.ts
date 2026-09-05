@@ -765,7 +765,8 @@ export class AdminComponent implements OnInit {
             ...(avisoLimpio ? { avisoPendiente: false } : {}),
           }
         : x)));
-      if (avisoLimpio && this.detalle() === r.id) this.detalle.set(null);
+      // Deshacer no requiere avisar a nadie: se cierra el detalle sin más.
+      if (this.detalle() === r.id) this.detalle.set(null);
       if (this.extraAnulado[r.id] === extra) delete this.extraAnulado[r.id];
     } catch {
       this.error.set('No se ha podido restaurar el extra.');
