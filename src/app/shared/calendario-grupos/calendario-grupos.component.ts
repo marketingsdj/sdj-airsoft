@@ -420,7 +420,7 @@ export class CalendarioGruposComponent implements OnInit {
       const inicio = this.franjaInicioActiva(dia);
       if (inicio && slot.pista === inicio.pista && slot.hora === inicio.horaFin) {
         const [h, m] = slot.horaFin.split(':').map(Number);
-        return ;
+        return `${String(h - 1).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
       }
     }
     return slot.horaFin;
