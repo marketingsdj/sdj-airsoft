@@ -254,50 +254,111 @@
           </p>
 
           <div class="admin-cal__nav">
-            <button class="admin-btn" (click)="cambiarMesCalendario(-1)" aria-label="Mes anterior">←</button>
-            <strong class="admin-cal__mes">{{ mesCalendarioLabel }}</strong>
-            <button class="admin-btn" (click)="cambiarMesCalendario(1)" aria-label="Mes siguiente">→</button>
+            <button class="admin-btn" (click)="moverCalendario(-1)" aria-label="Anterior">←</button>
+            <strong class="admin-cal__mes">{{ periodoCalendarioLabel }}</strong>
+            <button class="admin-btn" (click)="moverCalendario(1)" aria-label="Siguiente">→</button>
             <button class="admin-btn admin-btn--gris" (click)="mesCalendarioHoy()">Hoy</button>
+
+            <span class="admin-cal__vistas">
+              @for (v of VISTAS_CAL; track v.key) {
+                <button class="admin-btn" [class.admin-btn--activo]="vistaCalendario() === v.key"
+                  (click)="cambiarVista(v.key)">{{ v.label }}</button>
+              }
+            </span>
           </div>
 
-          <div class="admin-cal__grid">
-            @for (d of ['L', 'M', 'X', 'J', 'V', 'S', 'D']; track d) {
-              <span class="admin-cal__dow">{{ d }}</span>
-            }
-            @for (semana of semanasCalendario(); track $index) {
-              @for (c of semana; track c.iso) {
-                <button type="button" class="admin-cal__dia"
-                  [class.admin-cal__dia--otro]="c.otroMes"
-                  [class.admin-cal__dia--hoy]="c.hoy"
-                  [class.admin-cal__dia--activo]="diaCalendario() === c.iso"
-                  [class.admin-cal__dia--lleno]="reservasDelDia(c.iso).length > 0"
-                  (click)="diaCalendario.set(c.iso)">
-                  <span class="admin-cal__num">{{ c.dia }}</span>
-                  @if (reservasDelDia(c.iso).length) {
-                    <span class="admin-cal__resumen">
-                      {{ reservasDelDia(c.iso).length }} · {{ personasDelDia(c.iso) }}p
-                    </span>
-                    <span class="admin-cal__horas">
-                      @for (r of reservasDelDia(c.iso).slice(0, 3); track r.id) {
-                        <span class="admin-cal__chip">{{ r.hora || '—' }}</span>
-                      }
-                      @if (reservasDelDia(c.iso).length > 3) {
-                        <span class="admin-cal__chip admin-cal__chip--mas">+{{ reservasDelDia(c.iso).length - 3 }}</span>
-                      }
-                    </span>
+          <!-- ── Vista de MES ── -->
+          @if (vistaCalendario() === 'mes') {
+            <div class="admin-cal__grid">
+              @for (d of ['L', 'M', 'X', 'J', 'V', 'S', 'D']; track d) {
+                <span class="admin-cal__dow">{{ d }}</span>
+              }
+              @for (semana of semanasCalendario(); track $index) {
+                @for (c of semana; track c.iso) {
+                  <button type="button" class="admin-cal__dia"
+                    [class.admin-cal__dia--otro]="c.otroMes"
+                    [class.admin-cal__dia--hoy]="c.hoy"
+                    [class.admin-cal__dia--activo]="diaCalendario() === c.iso"
+                    [class.admin-cal__dia--lleno]="reservasDelDia(c.iso).length > 0"
+                    (click)="abrirDia(c.iso)">
+                    <span class="admin-cal__num">{{ c.dia }}</span>
+                    @if (reservasDelDia(c.iso).length) {
+                      <span class="admin-cal__resumen">
+                        {{ reservasDelDia(c.iso).length }} · {{ personasDelDia(c.iso) }}p
+                      </span>
+                      <span class="admin-cal__horas">
+                        @for (r of reservasDelDia(c.iso).slice(0, 3); track r.id) {
+                          <span class="admin-cal__chip">{{ r.hora || '—' }}</span>
+                        }
+                        @if (reservasDelDia(c.iso).length > 3) {
+                          <span class="admin-cal__chip admin-cal__chip--mas">+{{ reservasDelDia(c.iso).length - 3 }}</span>
+                        }
+                      </span>
+                    }
+                  </button>
+                }
+              }
+            </div>
+          }
+
+          <!-- ── Vista de SEMANA: horas en filas, dias en columnas ── -->
+          @if (vistaCalendario() === 'semana') {
+            <div class="admin-cal__semana">
+              <span class="admin-cal__hueco"></span>
+              @for (d of semanaActual(); track d.iso) {
+                <button type="button" class="admin-cal__col-cab" [class.admin-cal__col-cab--hoy]="d.hoy"
+                  (click)="abrirDia(d.iso)">
+                  {{ d.label }}
+                  @if (reservasDelDia(d.iso).length) {
+                    <span>{{ personasDelDia(d.iso) }}p</span>
                   }
                 </button>
               }
-            }
-          </div>
 
-          @if (diaCalendario(); as dia) {
-            <div class="admin-cal__dia-detalle">
+              <span class="admin-cal__hora-lbl">Sin hora</span>
+              @for (d of semanaActual(); track d.iso) {
+                <span class="admin-cal__celda">
+                  @for (r of reservasSinHora(d.iso); track r.id) {
+                    <button type="button" class="admin-cal__evento"
+                      [class.admin-cal__evento--pendiente]="requiereAccion(r)"
+                      (click)="abrirDesdeCalendario(r)">
+                      {{ r.nombre || 'Sin nombre' }} · {{ r.personas || 0 }}p
+                    </button>
+                  }
+                </span>
+              }
+
+              @for (h of HORAS_CAL; track h) {
+                <span class="admin-cal__hora-lbl">{{ h }}</span>
+                @for (d of semanaActual(); track d.iso) {
+                  <span class="admin-cal__celda">
+                    @for (r of reservasEn(d.iso, h); track r.id) {
+                      <button type="button" class="admin-cal__evento"
+                        [class.admin-cal__evento--pendiente]="requiereAccion(r)"
+                        (click)="abrirDesdeCalendario(r)"
+                        [title]="(r.nombre || 'Sin nombre') + ' · ' + tipoLabel(r.tipo)">
+                        {{ r.hora }} {{ r.nombre || 'Sin nombre' }} · {{ r.personas || 0 }}p
+                      </button>
+                    }
+                  </span>
+                }
+              }
+            </div>
+          }
+
+          @if (vistaCalendario() === 'dia' && diaCalendario()) {
+            @if (diaCalendario(); as dia) {
+            <div class="admin-cal__dia-detalle" id="parte-del-dia">
               <p class="admin-cal__dia-titulo">
                 {{ fechaLarga(dia) }}
                 <span class="admin-cal__dia-total">
                   {{ reservasDelDia(dia).length }} reserva{{ reservasDelDia(dia).length === 1 ? '' : 's' }}
                   · {{ personasDelDia(dia) }} personas
+                </span>
+                <span class="admin-cal__dia-acciones">
+                  <input type="date" class="admin-cal__fecha" [ngModel]="dia"
+                    (ngModelChange)="irADia($event)" title="Ir a otro día" />
+                  <button class="admin-btn" (click)="imprimirDia()">Imprimir</button>
                 </span>
               </p>
 
@@ -305,15 +366,33 @@
                 <ul class="admin-cal__horario">
                   @for (h of horasDelDia(); track h.hora) {
                     <li class="admin-cal__franja">
-                      <span class="admin-cal__franja-hora">{{ h.hora }}</span>
+                      <span class="admin-cal__franja-hora">
+                        {{ h.hora }}
+                        <span class="admin-cal__franja-total">{{ h.personas }}p</span>
+                      </span>
                       <span class="admin-cal__franja-lista">
                         @for (r of h.reservas; track r.id) {
-                          <button type="button" class="admin-cal__reserva"
-                            [class.admin-cal__reserva--pendiente]="requiereAccion(r)"
-                            (click)="abrirDesdeCalendario(r)">
-                            <strong>{{ r.nombre || 'Sin nombre' }}</strong>
-                            <span>{{ tipoLabel(r.tipo) }}{{ r.pista ? ' · pista ' + r.pista : '' }} · {{ r.personas || 0 }}p</span>
-                          </button>
+                          <span class="admin-cal__ficha"
+                            [class.admin-cal__ficha--pendiente]="requiereAccion(r)">
+                            <span class="admin-cal__ficha-cab">
+                              <strong>{{ r.nombre || 'Sin nombre' }}</strong>
+                              <span class="admin-estado" [class]="'admin-estado--' + r.estado">{{ r.estado }}</span>
+                            </span>
+                            <span class="admin-cal__ficha-dato">
+                              {{ tipoLabel(r.tipo) }} · {{ r.personas || 0 }} personas{{ r.pista ? ' · pista ' + r.pista : '' }}
+                            </span>
+                            @if (r.telefono || r.email) {
+                              <span class="admin-cal__ficha-dato">{{ r.telefono }}{{ r.telefono && r.email ? ' · ' : '' }}{{ r.email }}</span>
+                            }
+                            @if (r.extras?.length) {
+                              <span class="admin-cal__ficha-dato">Extras: {{ r.extras!.join(', ') }}</span>
+                            }
+                            @if (r.notas) {
+                              <span class="admin-cal__ficha-nota">{{ r.notas }}</span>
+                            }
+                            <button type="button" class="admin-btn admin-cal__ficha-btn"
+                              (click)="abrirDesdeCalendario(r)">Abrir ficha</button>
+                          </span>
                         }
                       </span>
                     </li>
@@ -323,6 +402,7 @@
                 <p class="admin-vacio">No hay reservas ese día.</p>
               }
             </div>
+            }
           }
         </div>
       }

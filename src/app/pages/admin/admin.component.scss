@@ -503,6 +503,93 @@
   color: $naranja;
 }
 
+.admin-cal__vistas {
+  display: flex;
+  gap: 4px;
+  margin-left: auto;
+
+  .admin-btn { width: auto; }
+}
+
+.admin-btn--activo {
+  border-color: $naranja !important;
+  color: $naranja !important;
+  background: rgba($naranja, 0.14) !important;
+}
+
+// ── Vista de semana: horas en filas, dias en columnas ──
+.admin-cal__semana {
+  display: grid;
+  grid-template-columns: 58px repeat(7, 1fr);
+  gap: 4px;
+  overflow-x: auto;
+}
+
+.admin-cal__hueco { display: block; }
+
+.admin-cal__col-cab {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 6px 4px;
+  border: 1px solid $line;
+  border-radius: $radius-sm;
+  background: rgba(255, 255, 255, 0.03);
+  color: $crema;
+  font-family: $font-tight;
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: capitalize;
+  cursor: pointer;
+
+  &:hover { background: rgba($naranja, 0.12); }
+  &--hoy { border-color: rgba($naranja, 0.6); color: $naranja; }
+
+  span {
+    font-family: $font-mono;
+    font-weight: 400;
+    font-size: 9px;
+    color: rgba($crema, 0.5);
+  }
+}
+
+.admin-cal__hora-lbl {
+  font-family: $font-mono;
+  font-size: 9.5px;
+  letter-spacing: 0.06em;
+  color: rgba($crema, 0.45);
+  padding-top: 6px;
+  text-align: right;
+}
+
+.admin-cal__celda {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-height: 34px;
+  padding: 3px;
+  border-top: 1px solid rgba($crema, 0.08);
+}
+
+.admin-cal__evento {
+  display: block;
+  width: 100%;
+  padding: 4px 6px;
+  border: 1px solid rgba($naranja, 0.35);
+  border-radius: 4px;
+  background: rgba($naranja, 0.12);
+  color: $crema;
+  font-size: 10.5px;
+  line-height: 1.3;
+  text-align: left;
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  &:hover { background: rgba($naranja, 0.22); }
+  &--pendiente { border-color: $naranja; background: rgba($naranja, 0.26); }
+}
+
 // ── Calendario de reservas ────────────────────────────────────────────────────
 .admin-cal__nav {
   display: flex;
@@ -648,30 +735,84 @@
   flex: 1;
 }
 
-.admin-cal__reserva {
+.admin-cal__ficha {
   display: flex;
   flex-direction: column;
-  gap: 1px;
-  padding: 6px 10px;
+  gap: 3px;
+  min-width: 230px;
+  flex: 1 1 240px;
+  padding: 10px 12px;
   border: 1px solid $line;
   border-radius: $radius-sm;
   background: rgba(255, 255, 255, 0.03);
-  color: $crema;
-  text-align: left;
-  cursor: pointer;
-  font-size: 12.5px;
+  font-size: 13px;
 
-  &:hover { background: rgba($naranja, 0.12); border-color: rgba($naranja, 0.5); }
+  // Naranja como en el listado: esa reserva pide algo de ti.
+  &--pendiente { border-color: rgba($naranja, 0.6); background: rgba($naranja, 0.1); }
 
-  span {
+  &-cab {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: space-between;
+  }
+
+  &-dato {
     font-family: $font-mono;
     font-size: 9.5px;
     letter-spacing: 0.05em;
-    color: rgba($crema, 0.55);
+    color: rgba($crema, 0.6);
   }
 
-  // Naranja como en el listado: esa reserva pide algo de ti.
-  &--pendiente { border-color: rgba($naranja, 0.6); background: rgba($naranja, 0.12); }
+  &-nota {
+    font-size: 12px;
+    color: rgba($crema, 0.75);
+    border-left: 2px solid rgba($naranja, 0.4);
+    padding-left: 8px;
+    margin-top: 2px;
+  }
+
+  &-btn {
+    width: auto !important;
+    align-self: flex-start;
+    margin-top: 6px;
+  }
+}
+
+.admin-cal__franja-total {
+  display: block;
+  color: rgba($crema, 0.45);
+  margin-top: 2px;
+}
+
+.admin-cal__dia-acciones {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+
+  .admin-btn { width: auto; }
+}
+
+.admin-cal__fecha {
+  padding: 6px 8px;
+  border: 1px solid $line;
+  border-radius: $radius-sm;
+  background: rgba(255, 255, 255, 0.04);
+  color: $crema;
+  font-family: $font-mono;
+  font-size: 11px;
+}
+
+// Al imprimir el parte solo sale el dia elegido.
+@media print {
+  body.imprimiendo-dia {
+    .admin-top, .admin-kpis, .admin-filtros, .admin-tabla-wrap, .admin-cal__nav,
+    .admin-cal__grid, .admin-nueva__top, .admin-nueva__sub, .admin-modo-borrado,
+    .admin-cal__dia-acciones, .admin-cal__ficha-btn { display: none !important; }
+
+    .admin-cal__ficha, .admin-cal__franja { break-inside: avoid; }
+  }
 }
 
 // ── Menu de ajustes ───────────────────────────────────────────────────────────

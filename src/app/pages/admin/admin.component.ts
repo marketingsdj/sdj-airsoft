@@ -196,6 +196,80 @@ export class AdminComponent implements OnInit {
   mesCalendario = signal(new Date());
   diaCalendario = signal<string | null>(null);
 
+  /** Vista activa, como en Google Calendar: mes, semana o dia. */
+  vistaCalendario = signal<'mes' | 'semana' | 'dia'>('mes');
+  readonly VISTAS_CAL = [
+    { key: 'mes' as const,    label: 'Mes' },
+    { key: 'semana' as const, label: 'Semana' },
+    { key: 'dia' as const,    label: 'Día' },
+  ];
+
+  /** Franjas horarias de la rejilla de semana y dia. */
+  readonly HORAS_CAL = [
+    '09:00', '10:00', '11:00', '12:00', '13:00', '14:00',
+    '15:00', '16:00', '17:00', '18:00', '19:00', '20:00',
+  ];
+
+  cambiarVista(v: 'mes' | 'semana' | 'dia') {
+    this.vistaCalendario.set(v);
+  }
+
+  /** Los 7 dias (lunes a domingo) de la semana del dia elegido. */
+  semanaActual = computed(() => {
+    const iso = this.diaCalendario() ?? this.isoLocal(new Date());
+    const [a, m, d] = iso.split('-').map(Number);
+    const ref = new Date(a, m - 1, d);
+    const lunes = new Date(ref);
+    lunes.setDate(lunes.getDate() - ((ref.getDay() + 6) % 7));
+    const hoy = this.isoLocal(new Date());
+    return Array.from({ length: 7 }, (_, i) => {
+      const f = new Date(lunes);
+      f.setDate(f.getDate() + i);
+      const isoDia = this.isoLocal(f);
+      return {
+        iso: isoDia,
+        hoy: isoDia === hoy,
+        label: f.toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric' }),
+      };
+    });
+  });
+
+  /** Reservas que empiezan en esa hora de ese dia. */
+  reservasEn(iso: string, hora: string): ReservaAdmin[] {
+    return this.reservasDelDia(iso).filter(r => (r.hora || '').slice(0, 2) === hora.slice(0, 2));
+  }
+
+  /** Las que no tienen hora fija (dias a consultar), para la fila de arriba. */
+  reservasSinHora(iso: string): ReservaAdmin[] {
+    return this.reservasDelDia(iso).filter(r => !r.hora);
+  }
+
+  /** Titulo del periodo que se esta viendo, segun la vista. */
+  get periodoCalendarioLabel(): string {
+    if (this.vistaCalendario() === 'mes') return this.mesCalendarioLabel;
+    if (this.vistaCalendario() === 'dia') return this.fechaLarga(this.diaCalendario() ?? undefined);
+    const sem = this.semanaActual();
+    return `${sem[0].label} – ${sem[6].label}`;
+  }
+
+  /** ← y → mueven mes, semana o dia segun la vista activa. */
+  moverCalendario(delta: number) {
+    if (this.vistaCalendario() === 'mes') { this.cambiarMesCalendario(delta); return; }
+    const paso = this.vistaCalendario() === 'semana' ? 7 : 1;
+    const iso = this.diaCalendario() ?? this.isoLocal(new Date());
+    const [a, m, d] = iso.split('-').map(Number);
+    const f = new Date(a, m - 1, d);
+    f.setDate(f.getDate() + delta * paso);
+    this.diaCalendario.set(this.isoLocal(f));
+    this.mesCalendario.set(new Date(f.getFullYear(), f.getMonth(), 1));
+  }
+
+  /** Pulsar un dia en la vista de mes lo abre en la vista de dia. */
+  abrirDia(iso: string) {
+    this.diaCalendario.set(iso);
+    this.vistaCalendario.set('dia');
+  }
+
   toggleCalendario() {
     const abrir = !this.calendarioAbierto();
     this.cerrarPaneles('calendario');
@@ -203,6 +277,7 @@ export class AdminComponent implements OnInit {
     if (abrir) {
       this.mesCalendario.set(new Date());
       this.diaCalendario.set(this.isoLocal(new Date()));
+      this.vistaCalendario.set('mes');
     }
     this.ajustesAbierto.set(false);
   }
@@ -299,6 +374,21 @@ export class AdminComponent implements OnInit {
         personas: reservas.reduce((n, r) => n + (r.personas || 0), 0),
       }));
   });
+
+  /** Salta a otro dia desde el selector de fecha del parte. */
+  irADia(iso: string) {
+    if (!iso) return;
+    this.diaCalendario.set(iso);
+    const [a, m] = iso.split('-').map(Number);
+    this.mesCalendario.set(new Date(a, m - 1, 1));
+  }
+
+  /** Imprime el parte del dia (solo esa parte, no todo el panel). */
+  imprimirDia() {
+    document.body.classList.add('imprimiendo-dia');
+    window.print();
+    document.body.classList.remove('imprimiendo-dia');
+  }
 
   /** Desde el calendario se salta a la ficha de esa reserva en el listado. */
   abrirDesdeCalendario(r: ReservaAdmin) {
