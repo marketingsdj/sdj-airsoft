@@ -165,6 +165,12 @@ export class CancelarComponent implements OnInit {
     });
   }
 
+  /** Como fechaLarga, pero solo con la primera letra en mayúscula. */
+  fechaLargaCap(f: string): string {
+    const txt = this.fechaLarga(f);
+    return txt ? txt.charAt(0).toUpperCase() + txt.slice(1) : '';
+  }
+
   tipoLabel(tipo?: string): string {
     return ({
       individual: 'Partida abierta',

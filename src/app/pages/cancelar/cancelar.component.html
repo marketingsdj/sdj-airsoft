@@ -39,7 +39,7 @@
           <div class="cancelar__resumen">
             <p class="cancelar__resumen-titulo">Tu reserva</p>
             <div class="cancelar__fila"><span>Tipo</span><strong>{{ tipoLabel(r.tipo) }}</strong></div>
-            <div class="cancelar__fila"><span>Fecha</span><strong>{{ fechaLarga(r.fecha) | titlecase }}</strong></div>
+            <div class="cancelar__fila"><span>Fecha</span><strong>{{ fechaLargaCap(r.fecha) }}</strong></div>
             @if (r.hora) {
               <div class="cancelar__fila"><span>Hora</span><strong>{{ r.hora }}{{ r.pista ? ' · Pista ' + r.pista : '' }}</strong></div>
             }
@@ -100,7 +100,7 @@
                 <p class="cancelar__bloque-titulo">¿Quieres cambiar el día o la hora?</p>
                 @if (cambio.fecha && !calendarioAbierto()) {
                   <p class="cancelar__elegido">
-                    Nueva fecha: <strong>{{ fechaLarga(cambio.fecha) | titlecase }}</strong>
+                    Nueva fecha: <strong>{{ fechaLargaCap(cambio.fecha) }}</strong>
                     @if (cambio.hora) { · <strong>{{ cambio.hora }}</strong> }
                     @if (cambio.pista) { · Pista {{ cambio.pista }} }
                     <button type="button" class="cancelar__quitar" (click)="quitarFechaNueva()">quitar</button>
