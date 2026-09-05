@@ -242,6 +242,27 @@
     app-calendario-grupos { display: block; max-width: 100%; }
   }
 
+  // Cabecera del bloque con el aspa de cerrar el calendario.
+  &__bloque-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  &__cerrar-cal {
+    border: none;
+    background: none;
+    color: rgba($crema, 0.5);
+    font-size: 24px;
+    line-height: 1;
+    padding: 0 2px;
+    cursor: pointer;
+    transition: color $transition;
+
+    &:hover { color: $naranja; }
+  }
+
   &__bloque-titulo {
     font-family: $font-mono;
     font-size: 10px;
