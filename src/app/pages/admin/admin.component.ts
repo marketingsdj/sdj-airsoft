@@ -466,7 +466,10 @@ export class AdminComponent implements OnInit {
 
   /** Desde el calendario se salta a la ficha de esa reserva en el listado. */
   abrirDesdeCalendario(r: ReservaAdmin) {
+    // El calendario es una vista aparte: al ir a una reserva se cierra y se
+    // abre su ficha en el listado, que es donde se gestiona.
     this.cerrarPaneles('detalle');
+    this.calendarioAbierto.set(false);
     this.detalle.set(r.id);
     setTimeout(() => document.getElementById('fila-' + r.id)?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 0);
   }
@@ -941,6 +944,8 @@ export class AdminComponent implements OnInit {
   // Atajo desde los recuadros del resumen: deja solo el grupo que has clicado.
   // Volver a clicarlo quita el filtro, para poder ver de nuevo el listado entero.
   verFiltro(key: string) {
+    // Sin clave es 'todas': limpia y ya esta.
+    if (!key) { this.limpiarFiltros(); return; }
     const yaActivo = this.filtroEstado === key;
     this.limpiarFiltros();
     if (!yaActivo) {
@@ -951,6 +956,11 @@ export class AdminComponent implements OnInit {
 
   filtroActivo(key: string): boolean {
     return this.filtroEstado === key;
+  }
+
+  /** ¿Se esta viendo el listado entero, sin ningun filtro puesto? */
+  get sinFiltros(): boolean {
+    return !this.filtroEstado && !this.filtroTipo && !this.desde && !this.hasta && !this.busqueda && !this.soloProximas;
   }
 
   /**
@@ -988,6 +998,7 @@ export class AdminComponent implements OnInit {
   // ── Contadores del resumen ──────────────────────────────────────────────────
   // Lo que esta en la papelera no cuenta en ningun recuadro.
   private activas = computed(() => this.reservas().filter(r => !r.borrada));
+  totalReservas = computed(() => this.activas().length);
   totalPendientes = computed(() => this.activas().filter(r => this.requiereAccion(r)).length);
   totalRecordatorios = computed(() => this.activas().filter(r => this.soloRecordatorio(r)).length);
   totalCambios = computed(() => this.activas().filter(r => !!r.cambio).length);

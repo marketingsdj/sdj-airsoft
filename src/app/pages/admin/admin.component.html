@@ -134,8 +134,14 @@
         </p>
       }
 
-      <!-- ── Resumen ──────────────────────────────────────────────────────── -->
+      <!-- ── Resumen (no aplica en la vista de calendario) ─────────────────── -->
+      @if (!calendarioAbierto()) {
       <div class="admin-kpis">
+        <button class="admin-kpi admin-kpi--clic" [class.admin-kpi--activo]="sinFiltros"
+                (click)="verFiltro('')">
+          <span class="admin-kpi__num">{{ totalReservas() }}</span>
+          <span class="admin-kpi__lbl">Todas las reservas</span>
+        </button>
         <button class="admin-kpi admin-kpi--accion" [class.admin-kpi--activo]="filtroActivo('pendiente')"
                 (click)="verFiltro('pendiente')">
           <span class="admin-kpi__num">{{ totalPendientes() }}</span>
@@ -165,6 +171,7 @@
           <span class="admin-kpi__lbl">Personas en lo mostrado</span>
         </div>
       </div>
+      }
 
       <!-- ── Partidas extraordinarias (16:00–20:00, socios gratis) ────────── -->
       @if (extraAbierto()) {
@@ -338,7 +345,14 @@
                     <button type="button" class="admin-cal__evento"
                       [class.admin-cal__evento--pendiente]="requiereAccion(r)"
                       (click)="abrirDesdeCalendario(r)">
-                      {{ r.nombre || 'Sin nombre' }} · {{ r.personas || 0 }}p
+                      <span class="admin-cal__evento-top">{{ r.personas || 0 }}p</span>
+                      <span class="admin-cal__evento-nombre">{{ r.nombre || 'Sin nombre' }}</span>
+                      @if (r.telefono) {
+                        <span class="admin-cal__evento-dato">{{ r.telefono }}</span>
+                      }
+                      @if (r.extras?.length) {
+                        <span class="admin-cal__evento-dato">+ {{ r.extras!.join(', ') }}</span>
+                      }
                     </button>
                   }
                 </span>
@@ -354,7 +368,14 @@
                         [class.admin-cal__evento--pendiente]="requiereAccion(r)"
                         (click)="abrirDesdeCalendario(r)"
                         [title]="(r.nombre || 'Sin nombre') + ' · ' + tipoLabel(r.tipo)">
-                        {{ r.hora }} {{ r.nombre || 'Sin nombre' }} · {{ r.personas || 0 }}p
+                        <span class="admin-cal__evento-top">{{ r.hora }} · {{ r.personas || 0 }}p{{ r.pista ? ' · ' + r.pista : '' }}</span>
+                        <span class="admin-cal__evento-nombre">{{ r.nombre || 'Sin nombre' }}</span>
+                        @if (r.telefono) {
+                          <span class="admin-cal__evento-dato">{{ r.telefono }}</span>
+                        }
+                        @if (r.extras?.length) {
+                          <span class="admin-cal__evento-dato">+ {{ r.extras!.join(', ') }}</span>
+                        }
                       </button>
                     }
                   </span>
@@ -607,7 +628,8 @@
         </div>
       }
 
-      <!-- ── Filtros ──────────────────────────────────────────────────────── -->
+      <!-- ── Filtros y listado: la gestion del dia a dia ───────────────────── -->
+      @if (!calendarioAbierto()) {
       <div class="admin-filtros">
         <label class="admin-campo admin-campo--ancho">
           <span>Buscar</span>
@@ -998,6 +1020,7 @@
             </tbody>
           </table>
         </div>
+      }
       }
     }
 

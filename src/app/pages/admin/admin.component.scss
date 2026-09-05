@@ -178,7 +178,9 @@
 // ── Resumen ───────────────────────────────────────────────────────────────────
 .admin-kpis {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(7, 1fr);
+
+  @media (max-width: 1200px) { grid-template-columns: repeat(4, 1fr); }
   gap: 12px;
   margin-bottom: 24px;
 
@@ -566,13 +568,15 @@
   display: flex;
   flex-direction: column;
   gap: 3px;
-  min-height: 34px;
+  min-height: 44px;
   padding: 3px;
   border-top: 1px solid rgba($crema, 0.08);
 }
 
 .admin-cal__evento {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
   width: 100%;
   padding: 4px 6px;
   border: 1px solid rgba($naranja, 0.35);
@@ -588,6 +592,28 @@
 
   &:hover { background: rgba($naranja, 0.22); }
   &--pendiente { border-color: $naranja; background: rgba($naranja, 0.26); }
+
+  &-top {
+    font-family: $font-mono;
+    font-size: 9px;
+    letter-spacing: 0.04em;
+    color: $naranja;
+  }
+
+  &-nombre {
+    font-weight: 700;
+    line-height: 1.25;
+  }
+
+  // Telefono y extras: lo que necesitas para llamar o preparar el dia.
+  &-dato {
+    font-family: $font-mono;
+    font-size: 8.5px;
+    letter-spacing: 0.03em;
+    color: rgba($crema, 0.6);
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
 
 // ── Calendario de reservas ────────────────────────────────────────────────────
