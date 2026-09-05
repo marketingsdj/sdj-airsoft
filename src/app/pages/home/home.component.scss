@@ -112,10 +112,10 @@
     // El hueco que antes quedaba entre "Disfruta..." y "El campo más
     // grande..." en móvil (al apilarse las columnas) pasa a ir arriba,
     // separando el logo del header.
-    @media (max-width: $bp-md) { margin-top: 28px; }
+    @media (max-width: $bp-md) { margin-top: 8px; }
 
     .hero--con-extra & {
-      @media (max-width: $bp-md) { margin-top: 12px; }
+      @media (max-width: $bp-md) { margin-top: 4px; }
     }
   }
 
