@@ -437,6 +437,21 @@ export class AdminComponent implements OnInit {
     this.reservas.update(list => list.map(x => (x.id === r.id ? { ...x, avisoPendiente: true } : x)));
   }
 
+  /** Vuelve una reserva confirmada al estado anterior. */
+  async reabrir(r: ReservaAdmin) {
+    this.guardando.set(r.id);
+    try {
+      await this.admin.reabrir(r.id);
+      this.reservas.update(list => list.map(x => (x.id === r.id
+        ? { ...x, estado: 'aceptada' as EstadoReserva, avisoPendiente: false }
+        : x)));
+    } catch {
+      this.error.set('No se ha podido deshacer.');
+    } finally {
+      this.guardando.set(null);
+    }
+  }
+
   /** Deja listo el mensaje de recordatorio, sin tocar el estado. */
   prepararRecordatorio(r: ReservaAdmin) {
     this.motivoPorReserva[r.id] = 'recordatorio';

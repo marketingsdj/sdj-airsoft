@@ -273,6 +273,17 @@ export class AdminService {
     });
   }
 
+  /** Deshace el paso a confirmada (por si se ha pulsado sin querer). */
+  async reabrir(id: string): Promise<void> {
+    if (!db) return;
+    await updateDoc(doc(db, 'reservas', id), {
+      estado: 'aceptada',
+      avisoPendiente: false,
+      avisoMotivo: '',
+      estadoActualizado: serverTimestamp(),
+    });
+  }
+
   /** Guarda una nota interna sobre la reserva. */
   async guardarNota(id: string, notas: string): Promise<void> {
     if (!db) return;
