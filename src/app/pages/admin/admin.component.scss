@@ -412,10 +412,10 @@
   margin-bottom: 20px;
 
   &__limpiar {
-    // Fila propia y pegado a la derecha del bloque.
-    width: 100%;
-    text-align: right;
-    margin-top: 4px;
+    // En la misma línea que la casilla, empujado a la derecha.
+    margin-left: auto;
+    align-self: flex-end;
+    min-height: 41px;
     background: none;
     border: none;
     color: $naranja;
