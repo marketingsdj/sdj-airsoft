@@ -20,9 +20,6 @@
     @media (max-width: $bp-sm) { padding: 24px 20px; }
 
     &--ok { text-align: center; border-color: rgba($naranja, 0.5); }
-
-    // Al modificar aparece el calendario: hace falta más ancho.
-    &--ancho { max-width: 720px; }
   }
 
   &__icon {
@@ -260,10 +257,8 @@
     border-radius: $radius-md;
     padding: 16px;
     background: rgba(0, 0, 0, 0.15);
-    // El calendario nunca se sale de la caja.
-    overflow-x: auto;
-
-    app-calendario-grupos { display: block; max-width: 100%; }
+    // El calendario se adapta al ancho de la tarjeta, sin ensancharla.
+    app-calendario-grupos { display: block; max-width: 100%; overflow-x: auto; }
   }
 
   // Cabecera del bloque con el aspa de cerrar el calendario.
