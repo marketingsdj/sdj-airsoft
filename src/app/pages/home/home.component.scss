@@ -1431,6 +1431,9 @@
   &__meta {
     display: flex;
     align-items: center;
+    // Si no cabe, salta de línea en vez de desbordar sobre el botón.
+    flex-wrap: wrap;
+    row-gap: 2px;
     gap: 8px;
     font-family: $font-mono;
     font-size: 10px;
