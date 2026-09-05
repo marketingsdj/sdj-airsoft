@@ -230,14 +230,24 @@ export class AdminComponent implements OnInit {
 
   // ── Filtros ─────────────────────────────────────────────────────────────────
   busqueda = '';                       // nombre, email, teléfono o nº de reserva
-  filtroEstado: '' | EstadoReserva = '';
+  filtroEstado = '';
   filtroTipo = '';
   desde = '';
   hasta = '';
   soloProximas = false;
   orden: Orden = 'fecha';
 
-  readonly estados: EstadoReserva[] = ['pendiente', 'aceptada', 'confirmada', 'denegada', 'cancelada'];
+  // Además de los estados guardados, dos filtros calculados: las que toca
+  // recordar esta semana y las que ya se han jugado.
+  readonly estados = [
+    { key: 'pendiente',    label: 'Pendiente' },
+    { key: 'aceptada',     label: 'Aceptada' },
+    { key: 'recordatorio', label: 'Recordatorio (esta semana)' },
+    { key: 'confirmada',   label: 'Confirmada' },
+    { key: 'denegada',     label: 'Anulada' },
+    { key: 'cancelada',    label: 'Cancelada' },
+    { key: 'expirada',     label: 'Fecha expirada' },
+  ];
   readonly tipos = [
     { key: 'individual', label: 'Partida abierta' },
     { key: 'privada',    label: 'Partida privada' },
@@ -311,9 +321,14 @@ export class AdminComponent implements OnInit {
     const hoy = new Date().toISOString().slice(0, 10);
 
     const lista = this.reservas().filter(r => {
-      if (this.filtroEstadoSignal() === 'pendiente') {
+      const fe = this.filtroEstadoSignal();
+      if (fe === 'pendiente') {
         if (!this.requiereAccion(r)) return false;
-      } else if (this.filtroEstadoSignal() && r.estado !== this.filtroEstadoSignal()) return false;
+      } else if (fe === 'recordatorio') {
+        if (!this.recordatorioCercano(r)) return false;
+      } else if (fe === 'expirada') {
+        if (!this.esPasada(r)) return false;
+      } else if (fe && r.estado !== fe) return false;
       if (this.filtroTipoSignal() && r.tipo !== this.filtroTipoSignal()) return false;
       if (this.desdeSignal() && (r.fecha || '') < this.desdeSignal()) return false;
       if (this.hastaSignal() && (r.fecha || '') > this.hastaSignal()) return false;
@@ -337,7 +352,7 @@ export class AdminComponent implements OnInit {
   // Los filtros son campos con ngModel; estas señales los hacen reactivos para
   // el computed de arriba (se actualizan desde onFiltroCambiado()).
   private busquedaSignal      = signal('');
-  private filtroEstadoSignal  = signal<'' | EstadoReserva>('');
+  private filtroEstadoSignal  = signal('');
   private filtroTipoSignal    = signal('');
   private desdeSignal         = signal('');
   private hastaSignal         = signal('');

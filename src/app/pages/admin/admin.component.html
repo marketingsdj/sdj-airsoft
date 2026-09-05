@@ -213,7 +213,7 @@
           <span>Estado</span>
           <select [(ngModel)]="filtroEstado" (ngModelChange)="onFiltroCambiado()">
             <option value="">Todos</option>
-            @for (e of estados; track e) { <option [value]="e">{{ e | titlecase }}</option> }
+            @for (e of estados; track e.key) { <option [value]="e.key">{{ e.label }}</option> }
           </select>
         </label>
 
