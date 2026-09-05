@@ -94,7 +94,21 @@
   position: relative;
   display: block;
 
-  input { width: 100%; box-sizing: border-box; padding-right: 44px; }
+  input {
+    width: 100%;
+    box-sizing: border-box;
+    padding-right: 44px;
+    color: $crema;
+    -webkit-text-fill-color: $crema;   // el autorrelleno lo pintaba invisible
+
+    // Edge añade su propio ojo, que se superponía al nuestro.
+    &::-ms-reveal, &::-ms-clear { display: none; }
+
+    &:-webkit-autofill {
+      -webkit-text-fill-color: $crema;
+      transition: background-color 9999s ease-in-out 0s;
+    }
+  }
 
   &__ojo {
     position: absolute;
