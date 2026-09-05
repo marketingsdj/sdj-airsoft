@@ -352,9 +352,9 @@ export class ReservaComponent implements OnInit, OnDestroy {
     };
   }
 
-  // Recargo de la doble partida privada: 15 € por persona.
+  // Recargo de la hora extra de partida privada: 10 € por persona.
   get doblePartidaTotal(): string {
-    return (15 * this.form.personas).toFixed(2).replace('.', ',');
+    return (10 * this.form.personas).toFixed(2).replace('.', ',');
   }
 
   irAPaso(n: number) {
@@ -643,7 +643,7 @@ export class ReservaComponent implements OnInit, OnDestroy {
           primera_vez:   this.form.primeraVez,
           mensaje:     this.form.mensaje,
           ...(this.form.tipo === 'privada' || this.form.tipo === 'evento' ? {
-            doble_partida: this.form.doblePartida ? `Sí (+15 €/persona · ${this.doblePartidaTotal} €)` : 'No',
+            hora_extra: this.form.doblePartida ? `Sí (+10 €/persona · ${this.doblePartidaTotal} €)` : 'No',
           } : {}),
           ...(this.muestraTarifaReducida ? {
             tarifa_reducida: this.form.tarifaReducida ? `Sí (${this.precioReducidaFmt} €/persona)` : 'No',
@@ -668,7 +668,7 @@ export class ReservaComponent implements OnInit, OnDestroy {
     // hueco en la lista compartida. Individual no tiene pista, así que no entra.
     if (this.form.fecha && this.form.hora && this.form.pista) {
       this.slotsService.bloquear(this.form.fecha, this.form.hora, this.form.pista);
-      // La doble partida ocupa también la franja consecutiva (misma pista, +1 h).
+      // La hora extra se toma de la franja siguiente, que queda ocupada entera.
       if (this.form.doblePartida) {
         const [h, m] = this.form.hora.split(':').map(Number);
         const horaSiguiente = `${String(h + 1).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
@@ -756,7 +756,7 @@ export class ReservaComponent implements OnInit, OnDestroy {
   get horaFin(): string {
     if (!this.form.hora) return '—';
     const [h, m] = this.form.hora.split(':').map(Number);
-    // Doble partida = 3 h de juego (la partida no dura las 2 h del hueco).
+    // Con la hora extra son 3 h en total (la franja base son 2 h).
     const fin = new Date(); fin.setHours(h + (this.form.doblePartida ? 3 : 2), m);
     return `${String(fin.getHours()).padStart(2,'0')}:${String(fin.getMinutes()).padStart(2,'0')}`;
   }
@@ -920,7 +920,7 @@ export class ReservaComponent implements OnInit, OnDestroy {
 
     // Grupos (privada / evento): base a consultar + extras conocidos.
     lineas.push({ concepto: `${this.resumen.tipo} · ${n} personas`, importe: 'A consultar' });
-    if (this.form.doblePartida) lineas.push({ concepto: `Doble partida · +15 € × ${n}`, importe: fmt(15 * n) });
+    if (this.form.doblePartida) lineas.push({ concepto: `Hora extra de partida privada · +10 € × ${n}`, importe: fmt(10 * n) });
     if (this.form.menu) lineas.push({ concepto: 'Menú', importe: 'Por confirmar' });
     return lineas;
   }
@@ -937,7 +937,7 @@ export class ReservaComponent implements OnInit, OnDestroy {
   // Extras contratados, en lista: se usan en el PDF, el resumen y el panel.
   get extrasLista(): string[] {
     const extras: string[] = [];
-    if (this.form.doblePartida) extras.push('Doble partida');
+    if (this.form.doblePartida) extras.push('Hora extra de partida privada');
     if (this.form.tarifaReducida) extras.push('Tarifa reducida');
     return [...extras, ...this.otrosExtras];
   }

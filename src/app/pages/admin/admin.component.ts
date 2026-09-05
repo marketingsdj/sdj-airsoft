@@ -64,7 +64,7 @@ export class AdminComponent implements OnInit {
   // Los mismos que puede contratar el cliente en la web, más un campo libre
   // para lo que no esté en la lista todavía.
   readonly extrasDisponibles = [
-    'Doble partida',
+    'Hora extra de partida privada',
     'Tarifa reducida',
     'Menú (precio por confirmar)',
     'Merienda infantil (+9,90 €/niño)',

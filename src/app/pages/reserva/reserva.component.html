@@ -50,7 +50,7 @@
             <tr><td>Entrada</td><td>{{ resumen.modalidad || resumen.tipo }}</td></tr>
             <tr><td>Alquiler de equipo</td><td>{{ alquilerEquipo }}</td></tr>
             @if (form.doblePartida) {
-              <tr><td>Doble partida privada</td><td>Sí · 2 franjas seguidas (+15 €/persona · {{ doblePartidaTotal }} €)</td></tr>
+              <tr><td>Hora extra de partida privada</td><td>Sí · 1 h más (+10 €/persona · {{ doblePartidaTotal }} €)</td></tr>
             }
             <tr><td>Otros extras</td><td>{{ otrosExtrasTexto }}</td></tr>
           </table>
@@ -164,8 +164,8 @@
             </div>
             @if (form.doblePartida) {
               <div class="exito-fila">
-                <span>Doble partida</span>
-                <strong>Sí (+15 €/persona)</strong>
+                <span>Hora extra</span>
+                <strong>Sí (+10 €/persona)</strong>
               </div>
             }
             @if (form.tipo === 'txiki' && form.edadesNinos) {
@@ -433,10 +433,10 @@
                 </span>
                 <span class="upgrade-card__body">
                   <span class="upgrade-card__top">
-                    <span class="upgrade-card__title">Doble partida privada</span>
-                    <span class="upgrade-card__price">+15 € / persona</span>
+                    <span class="upgrade-card__title">Hora extra de partida privada</span>
+                    <span class="upgrade-card__price">+10 € / persona</span>
                   </span>
-                  <span class="upgrade-card__desc">2 h de juego seguidas: eliges la hora de inicio y te reservamos también la franja siguiente.</span>
+                  <span class="upgrade-card__desc">Añade una hora extra de partida privada a tu franja de 2 h.</span>
                 </span>
                 <span class="upgrade-card__toggle" aria-hidden="true">
                   {{ form.doblePartida ? 'Añadido ✓' : 'Añadir +' }}
@@ -810,7 +810,7 @@
             <strong>{{ form.personas }}</strong>
           </div>
           @if (form.doblePartida) {
-            <div class="resumen-row"><span>Doble partida</span><strong>+15 €/persona</strong></div>
+            <div class="resumen-row"><span>Hora extra de partida privada</span><strong>+10 €/persona</strong></div>
           }
           @if (form.tarifaReducida) {
             <div class="resumen-row"><span>Tarifa reducida</span><strong>{{ precioReducidaFmt }} €/persona</strong></div>
