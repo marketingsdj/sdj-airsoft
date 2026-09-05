@@ -336,34 +336,34 @@
                     <span class="admin-estado" [class]="'admin-estado--' + r.estado">{{ r.estado }}</span>
                   </td>
                   <td class="c-acciones admin-acciones">
-                    @if (r.estado === 'cancelada') {
+                    @if (r.estado === 'pendiente' || r.estado === 'denegada') {
+                      <!-- Por gestionar: solo aceptar o anular. -->
                       <span class="admin-acciones__grid">
-                        <button class="admin-btn admin-btn--avisar" (click)="toggleDetalle(r.id)">Avisar</button>
+                        <button class="admin-btn admin-btn--aceptar" [disabled]="guardando() === r.id"
+                          (click)="marcar(r, 'aceptada')">Aceptar</button>
+                        <button class="admin-btn admin-btn--no" [disabled]="guardando() === r.id"
+                          (click)="marcar(r, 'denegada')">Anular</button>
+                      </span>
+                    } @else if (r.estado === 'aceptada') {
+                      <!-- Aceptada: anular / avisar arriba, recordatorio / confirmar debajo. -->
+                      <span class="admin-acciones__grid">
+                        <button class="admin-btn admin-btn--no" [disabled]="guardando() === r.id"
+                          (click)="marcar(r, 'denegada')">Anular</button>
+                        <button class="admin-btn admin-btn--avisar" (click)="toggleDetalle(r.id)">
+                          {{ detalle() === r.id ? 'Cerrar' : 'Avisar' }}
+                        </button>
+                        <button class="admin-btn admin-btn--recordatorio"
+                          (click)="prepararRecordatorio(r)">Recordatorio</button>
+                        <button class="admin-btn admin-btn--ok" [disabled]="guardando() === r.id"
+                          (click)="marcar(r, 'confirmada')">Confirmada</button>
                       </span>
                     } @else {
-                      <!-- Rejilla fija: cada botón ocupa siempre su columna, así
-                           quedan alineados aunque falte uno de los dos. -->
+                      <!-- Confirmada o cancelada: ya no hay nada que decidir. -->
                       <span class="admin-acciones__grid">
-                        <!-- 1. Por gestionar: se acepta la reserva. -->
-                        @if (r.estado === 'pendiente' || r.estado === 'denegada') {
-                          <button class="admin-btn admin-btn--aceptar" [disabled]="guardando() === r.id"
-                            (click)="marcar(r, 'aceptada')">Aceptar</button>
-                        }
-                        <!-- 2. Aceptada: la semana antes toca mandar el recordatorio. -->
-                        @if (r.estado === 'aceptada' && recordatorioCercano(r)) {
-                          <button class="admin-btn admin-btn--recordatorio"
-                            (click)="prepararRecordatorio(r)">Recordatorio</button>
-                        }
-                        <!-- 3. Ya recordada: se cierra a mano. -->
-                        @if (r.estado === 'aceptada') {
-                          <button class="admin-btn admin-btn--ok" [disabled]="guardando() === r.id"
-                            (click)="marcar(r, 'confirmada')">Confirmar</button>
-                        }
-                        @if (r.estado !== 'denegada') {
+                        @if (r.estado !== 'cancelada') {
                           <button class="admin-btn admin-btn--no" [disabled]="guardando() === r.id"
                             (click)="marcar(r, 'denegada')">Anular</button>
                         }
-                        <!-- Abre el detalle, donde está el mensaje para el cliente. -->
                         <button class="admin-btn admin-btn--avisar" (click)="toggleDetalle(r.id)">
                           {{ detalle() === r.id ? 'Cerrar' : 'Avisar' }}
                         </button>
