@@ -181,7 +181,14 @@
     gap: 10px;
     margin-top: 8px;
 
-    .btn { justify-content: center; text-align: center; }
+    // Cada botón llena su columna: el bloque queda del mismo ancho que el
+    // resumen de arriba.
+    .btn {
+      width: 100%;
+      box-sizing: border-box;
+      justify-content: center;
+      text-align: center;
+    }
   }
 
   &__cambio {
