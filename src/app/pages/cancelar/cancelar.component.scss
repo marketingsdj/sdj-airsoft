@@ -10,6 +10,7 @@
   &__inner { display: flex; justify-content: center; }
 
   &__card {
+    position: relative;
     width: 100%;
     // Ancha en todas las pantallas: así el calendario de "modificar" cabe
     // sin cambiar de formato al pasar de un paso a otro.
@@ -22,6 +23,23 @@
     @media (max-width: $bp-sm) { padding: 24px 20px; }
 
     &--ok { text-align: center; border-color: rgba($naranja, 0.5); }
+  }
+
+  // Aspa para salir de la gestión (esquina superior derecha de la tarjeta).
+  &__salir {
+    position: absolute;
+    top: 14px;
+    right: 16px;
+    border: none;
+    background: none;
+    color: rgba($crema, 0.5);
+    font-size: 26px;
+    line-height: 1;
+    padding: 0 2px;
+    cursor: pointer;
+    transition: color $transition;
+
+    &:hover { color: $naranja; }
   }
 
   &__icon {

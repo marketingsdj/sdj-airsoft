@@ -1,7 +1,7 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import {
   CancelacionService, DatosCancelacion, HORAS_MINIMAS_CANCELACION,
 } from '../../core/services/cancelacion.service';
@@ -18,6 +18,7 @@ export class CancelarComponent implements OnInit {
   private cancelacion = inject(CancelacionService);
   private analytics = inject(AnalyticsService);
   private route = inject(ActivatedRoute);
+  private router = inject(Router);
 
   readonly horasMinimas = HORAS_MINIMAS_CANCELACION;
 
@@ -45,6 +46,12 @@ export class CancelarComponent implements OnInit {
         this.buscar();
       }
     });
+  }
+
+  /** Cierra la gestión y vuelve por donde se llegó (o al inicio). */
+  salir() {
+    if (typeof history !== 'undefined' && history.length > 1) history.back();
+    else this.router.navigate(['/']);
   }
 
   async buscar() {
