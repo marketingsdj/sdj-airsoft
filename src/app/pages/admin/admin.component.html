@@ -594,7 +594,10 @@
                               (click)="marcarAvisado(r)">WhatsApp</a>
                           }
                           @if (r.email) {
-                            <a class="btn btn--ghost" [href]="enlaceEmail(r)" (click)="marcarAvisado(r)">Email</a>
+                            <a class="btn btn--ghost" [href]="enlaceGmail(r)" target="_blank" rel="noopener"
+                              (click)="marcarAvisado(r)">Gmail</a>
+                            <a class="btn btn--ghost" [href]="enlaceEmail(r)" (click)="marcarAvisado(r)"
+                              title="Abre el programa de correo del equipo">Correo</a>
                           }
                           @if (r.tipo === 'txiki') {
                             <a class="btn btn--ghost" [href]="urlAutorizacion" target="_blank" rel="noopener">Ver autorización</a>

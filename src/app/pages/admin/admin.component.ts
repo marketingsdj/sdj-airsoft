@@ -702,6 +702,22 @@ export class AdminComponent implements OnInit {
     return 'https://wa.me/' + num + '?text=' + encodeURIComponent(this.textoAviso(r));
   }
 
+  /** Asunto común de los avisos. */
+  private asuntoAviso(r: ReservaAdmin): string {
+    return 'Tu reserva en Soldados de Juguete' + (r.numeroReserva ? ' · ' + r.numeroReserva : '');
+  }
+
+  /**
+   * Redacción en Gmail, que funciona siempre desde el navegador (mailto:
+   * depende de que el equipo tenga un programa de correo configurado).
+   */
+  enlaceGmail(r: ReservaAdmin): string {
+    return 'https://mail.google.com/mail/?view=cm&fs=1'
+      + '&to=' + encodeURIComponent(r.email || '')
+      + '&su=' + encodeURIComponent(this.asuntoAviso(r))
+      + '&body=' + encodeURIComponent(this.textoAviso(r));
+  }
+
   /** Enlace de correo con asunto y cuerpo preparados. */
   enlaceEmail(r: ReservaAdmin): string {
     const asunto = 'Tu reserva en Soldados de Juguete' + (r.numeroReserva ? ' · ' + r.numeroReserva : '');
