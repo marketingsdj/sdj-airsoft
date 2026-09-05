@@ -92,6 +92,13 @@
     flex-direction: column;
     justify-content: center;
     gap: 32px;
+
+    // Con el aviso de extraordinaria hay un bloque más: se aprieta la columna.
+    .hero--con-extra & {
+      gap: 20px;
+
+      @media (max-width: $bp-md) { gap: 14px; }
+    }
   }
 
   &__eyebrow {
