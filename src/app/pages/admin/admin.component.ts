@@ -188,6 +188,125 @@ export class AdminComponent implements OnInit {
     if (menu && !menu.contains(ev.target as Node)) this.ajustesAbierto.set(false);
   }
 
+  // ── Vista de calendario ─────────────────────────────────────────────────────
+  // Todas las reservas repartidas por mes, dia y hora, para ver de un vistazo
+  // como queda la agenda. No usa los filtros del listado: se ve todo (salvo lo
+  // que este en la papelera).
+  calendarioAbierto = signal(false);
+  mesCalendario = signal(new Date());
+  diaCalendario = signal<string | null>(null);
+
+  toggleCalendario() {
+    const abrir = !this.calendarioAbierto();
+    this.cerrarPaneles('calendario');
+    this.calendarioAbierto.set(abrir);
+    if (abrir) {
+      this.mesCalendario.set(new Date());
+      this.diaCalendario.set(this.isoLocal(new Date()));
+    }
+    this.ajustesAbierto.set(false);
+  }
+
+  /** AAAA-MM-DD en hora local (evita el desfase de toISOString). */
+  private isoLocal(d: Date): string {
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  }
+
+  /** Reservas activas agrupadas por fecha, ordenadas por hora dentro del dia. */
+  private porFecha = computed(() => {
+    const mapa = new Map<string, ReservaAdmin[]>();
+    for (const r of this.reservas()) {
+      if (r.borrada || !r.fecha) continue;
+      // Anuladas y canceladas no ocupan: no ensucian la agenda.
+      if (r.estado === 'denegada' || r.estado === 'cancelada') continue;
+      const lista = mapa.get(r.fecha) ?? [];
+      lista.push(r);
+      mapa.set(r.fecha, lista);
+    }
+    for (const lista of mapa.values()) {
+      lista.sort((a, b) => (a.hora || '').localeCompare(b.hora || ''));
+    }
+    return mapa;
+  });
+
+  reservasDelDia(iso: string): ReservaAdmin[] {
+    return this.porFecha().get(iso) ?? [];
+  }
+
+  personasDelDia(iso: string): number {
+    return this.reservasDelDia(iso).reduce((n, r) => n + (r.personas || 0), 0);
+  }
+
+  /** Semanas del mes que se esta viendo, de lunes a domingo. */
+  semanasCalendario = computed(() => {
+    const ref = this.mesCalendario();
+    const primero = new Date(ref.getFullYear(), ref.getMonth(), 1);
+    // getDay(): 0 es domingo; la rejilla empieza en lunes.
+    const desplaz = (primero.getDay() + 6) % 7;
+    const inicio = new Date(primero);
+    inicio.setDate(inicio.getDate() - desplaz);
+
+    const semanas: { iso: string; dia: number; otroMes: boolean; hoy: boolean }[][] = [];
+    const hoy = this.isoLocal(new Date());
+    const cursor = new Date(inicio);
+    for (let sem = 0; sem < 6; sem++) {
+      const fila = [];
+      for (let d = 0; d < 7; d++) {
+        const iso = this.isoLocal(cursor);
+        fila.push({
+          iso,
+          dia: cursor.getDate(),
+          otroMes: cursor.getMonth() !== ref.getMonth(),
+          hoy: iso === hoy,
+        });
+        cursor.setDate(cursor.getDate() + 1);
+      }
+      semanas.push(fila);
+    }
+    return semanas;
+  });
+
+  get mesCalendarioLabel(): string {
+    const txt = this.mesCalendario().toLocaleDateString('es-ES', { month: 'long', year: 'numeric' });
+    return txt.charAt(0).toUpperCase() + txt.slice(1);
+  }
+
+  cambiarMesCalendario(delta: number) {
+    const d = new Date(this.mesCalendario());
+    d.setMonth(d.getMonth() + delta);
+    this.mesCalendario.set(d);
+  }
+
+  mesCalendarioHoy() {
+    this.mesCalendario.set(new Date());
+    this.diaCalendario.set(this.isoLocal(new Date()));
+  }
+
+  /** Reservas del dia elegido agrupadas por hora. Sin hora van en 'A consultar'. */
+  horasDelDia = computed(() => {
+    const iso = this.diaCalendario();
+    if (!iso) return [];
+    const grupos = new Map<string, ReservaAdmin[]>();
+    for (const r of this.reservasDelDia(iso)) {
+      const clave = r.hora || '';
+      grupos.set(clave, [...(grupos.get(clave) ?? []), r]);
+    }
+    return [...grupos.entries()]
+      .sort((a, b) => (a[0] || 'zz').localeCompare(b[0] || 'zz'))
+      .map(([hora, reservas]) => ({
+        hora: hora || 'Hora a consultar',
+        reservas,
+        personas: reservas.reduce((n, r) => n + (r.personas || 0), 0),
+      }));
+  });
+
+  /** Desde el calendario se salta a la ficha de esa reserva en el listado. */
+  abrirDesdeCalendario(r: ReservaAdmin) {
+    this.cerrarPaneles('detalle');
+    this.detalle.set(r.id);
+    setTimeout(() => document.getElementById('fila-' + r.id)?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 0);
+  }
+
   // ── Borrar reservas y papelera ──────────────────────────────────────────────
   // Las anuladas o canceladas se pueden mandar a la papelera (siguen guardadas)
   // y desde ahi restaurarlas o borrarlas del todo.
@@ -418,11 +537,12 @@ export class AdminComponent implements OnInit {
    * (alta manual, partidas extraordinarias y la reserva desplegada), para no
    * dejar paneles a medias por el camino.
    */
-  private cerrarPaneles(salvo: 'nueva' | 'extra' | 'detalle' | 'textos' | 'papelera') {
+  private cerrarPaneles(salvo: 'nueva' | 'extra' | 'detalle' | 'textos' | 'papelera' | 'calendario') {
     if (salvo !== 'nueva') this.nuevaAbierta.set(false);
     if (salvo !== 'extra') { this.extraAbierto.set(false); this.extraEditando.set(null); }
     if (salvo !== 'textos') { this.textosAbierto.set(false); this.textoEditandoMotivo.set(null); }
     if (salvo !== 'papelera') this.papeleraAbierta.set(false);
+    if (salvo !== 'calendario' && salvo !== 'detalle') this.calendarioAbierto.set(false);
     if (salvo !== 'detalle') { this.detalle.set(null); this.editando.set(null); }
   }
 

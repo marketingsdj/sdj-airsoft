@@ -497,6 +497,183 @@
   .admin-btn { width: auto; margin-left: auto; }
 }
 
+// Boton de la cabecera marcado mientras su panel esta abierto.
+.btn--activo {
+  border-color: rgba($naranja, 0.6);
+  color: $naranja;
+}
+
+// ── Calendario de reservas ────────────────────────────────────────────────────
+.admin-cal__nav {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+
+  .admin-btn { width: auto; }
+}
+
+.admin-cal__mes {
+  font-family: $font-tight;
+  font-weight: 800;
+  font-size: 15px;
+  min-width: 170px;
+}
+
+.admin-cal__grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+.admin-cal__dow {
+  font-family: $font-mono;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba($crema, 0.45);
+  text-align: center;
+  padding-bottom: 4px;
+}
+
+.admin-cal__dia {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-height: 76px;
+  padding: 6px;
+  border: 1px solid $line;
+  border-radius: $radius-sm;
+  background: rgba(255, 255, 255, 0.02);
+  color: $crema;
+  text-align: left;
+  cursor: pointer;
+  transition: background $transition, border-color $transition;
+
+  &:hover { background: rgba($naranja, 0.1); }
+
+  &--otro { opacity: 0.35; }
+  &--hoy { border-color: rgba($crema, 0.5); }
+  &--lleno { border-color: rgba($naranja, 0.45); }
+  &--activo { background: rgba($naranja, 0.16); border-color: $naranja; }
+}
+
+.admin-cal__num {
+  font-family: $font-tight;
+  font-weight: 800;
+  font-size: 14px;
+}
+
+.admin-cal__resumen {
+  font-family: $font-mono;
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  color: $naranja;
+}
+
+.admin-cal__horas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+}
+
+.admin-cal__chip {
+  font-family: $font-mono;
+  font-size: 8.5px;
+  padding: 1px 4px;
+  border-radius: 3px;
+  background: rgba($crema, 0.12);
+  color: rgba($crema, 0.8);
+
+  &--mas { background: none; color: rgba($crema, 0.5); }
+}
+
+// ── Detalle del dia elegido ──
+.admin-cal__dia-detalle {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid $line;
+}
+
+.admin-cal__dia-titulo {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 0 0 12px;
+  font-family: $font-tight;
+  font-weight: 800;
+  font-size: 15px;
+}
+
+.admin-cal__dia-total {
+  font-family: $font-mono;
+  font-weight: 400;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba($crema, 0.5);
+}
+
+.admin-cal__horario {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.admin-cal__franja {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 8px 10px;
+  border: 1px solid $line;
+  border-radius: $radius-sm;
+}
+
+.admin-cal__franja-hora {
+  font-family: $font-mono;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: $naranja;
+  min-width: 92px;
+  padding-top: 4px;
+}
+
+.admin-cal__franja-lista {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  flex: 1;
+}
+
+.admin-cal__reserva {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 6px 10px;
+  border: 1px solid $line;
+  border-radius: $radius-sm;
+  background: rgba(255, 255, 255, 0.03);
+  color: $crema;
+  text-align: left;
+  cursor: pointer;
+  font-size: 12.5px;
+
+  &:hover { background: rgba($naranja, 0.12); border-color: rgba($naranja, 0.5); }
+
+  span {
+    font-family: $font-mono;
+    font-size: 9.5px;
+    letter-spacing: 0.05em;
+    color: rgba($crema, 0.55);
+  }
+
+  // Naranja como en el listado: esa reserva pide algo de ti.
+  &--pendiente { border-color: rgba($naranja, 0.6); background: rgba($naranja, 0.12); }
+}
+
 // ── Menu de ajustes ───────────────────────────────────────────────────────────
 .admin-ajustes {
   position: relative;

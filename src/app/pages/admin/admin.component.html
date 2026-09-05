@@ -71,6 +71,8 @@
         <div class="admin-top__acciones">
           <button class="btn btn--primary" (click)="abrirNueva()">+ Nueva reserva</button>
           <button class="btn btn--ghost" (click)="toggleExtraordinarias()">+ Partidas extraordinarias</button>
+          <button class="btn btn--ghost" (click)="toggleCalendario()"
+            [class.btn--activo]="calendarioAbierto()">Calendario</button>
           <button class="btn btn--ghost admin-recargar" (click)="cargar()" [disabled]="cargando()"
             [class.admin-recargar--girando]="cargando()"
             [title]="cargando() ? 'Actualizando…' : 'Actualizar'" aria-label="Actualizar">
@@ -234,6 +236,93 @@
             </ul>
           } @else {
             <p class="admin-vacio">No hay ninguna partida extraordinaria abierta.</p>
+          }
+        </div>
+      }
+
+      <!-- ── Calendario de reservas ───────────────────────────────────────── -->
+      @if (calendarioAbierto()) {
+        <div class="admin-nueva">
+          <div class="admin-nueva__top">
+            <p class="admin-nueva__titulo">Calendario de reservas</p>
+            <button class="admin-cerrar" (click)="calendarioAbierto.set(false)" aria-label="Cerrar" title="Cerrar">×</button>
+          </div>
+
+          <p class="admin-nueva__sub">
+            Todas las reservas en pie repartidas por mes, día y hora. Las anuladas y canceladas no salen.
+            Pulsa un día para ver sus horas, y una reserva para abrir su ficha.
+          </p>
+
+          <div class="admin-cal__nav">
+            <button class="admin-btn" (click)="cambiarMesCalendario(-1)" aria-label="Mes anterior">←</button>
+            <strong class="admin-cal__mes">{{ mesCalendarioLabel }}</strong>
+            <button class="admin-btn" (click)="cambiarMesCalendario(1)" aria-label="Mes siguiente">→</button>
+            <button class="admin-btn admin-btn--gris" (click)="mesCalendarioHoy()">Hoy</button>
+          </div>
+
+          <div class="admin-cal__grid">
+            @for (d of ['L', 'M', 'X', 'J', 'V', 'S', 'D']; track d) {
+              <span class="admin-cal__dow">{{ d }}</span>
+            }
+            @for (semana of semanasCalendario(); track $index) {
+              @for (c of semana; track c.iso) {
+                <button type="button" class="admin-cal__dia"
+                  [class.admin-cal__dia--otro]="c.otroMes"
+                  [class.admin-cal__dia--hoy]="c.hoy"
+                  [class.admin-cal__dia--activo]="diaCalendario() === c.iso"
+                  [class.admin-cal__dia--lleno]="reservasDelDia(c.iso).length > 0"
+                  (click)="diaCalendario.set(c.iso)">
+                  <span class="admin-cal__num">{{ c.dia }}</span>
+                  @if (reservasDelDia(c.iso).length) {
+                    <span class="admin-cal__resumen">
+                      {{ reservasDelDia(c.iso).length }} · {{ personasDelDia(c.iso) }}p
+                    </span>
+                    <span class="admin-cal__horas">
+                      @for (r of reservasDelDia(c.iso).slice(0, 3); track r.id) {
+                        <span class="admin-cal__chip">{{ r.hora || '—' }}</span>
+                      }
+                      @if (reservasDelDia(c.iso).length > 3) {
+                        <span class="admin-cal__chip admin-cal__chip--mas">+{{ reservasDelDia(c.iso).length - 3 }}</span>
+                      }
+                    </span>
+                  }
+                </button>
+              }
+            }
+          </div>
+
+          @if (diaCalendario(); as dia) {
+            <div class="admin-cal__dia-detalle">
+              <p class="admin-cal__dia-titulo">
+                {{ fechaLarga(dia) }}
+                <span class="admin-cal__dia-total">
+                  {{ reservasDelDia(dia).length }} reserva{{ reservasDelDia(dia).length === 1 ? '' : 's' }}
+                  · {{ personasDelDia(dia) }} personas
+                </span>
+              </p>
+
+              @if (horasDelDia().length) {
+                <ul class="admin-cal__horario">
+                  @for (h of horasDelDia(); track h.hora) {
+                    <li class="admin-cal__franja">
+                      <span class="admin-cal__franja-hora">{{ h.hora }}</span>
+                      <span class="admin-cal__franja-lista">
+                        @for (r of h.reservas; track r.id) {
+                          <button type="button" class="admin-cal__reserva"
+                            [class.admin-cal__reserva--pendiente]="requiereAccion(r)"
+                            (click)="abrirDesdeCalendario(r)">
+                            <strong>{{ r.nombre || 'Sin nombre' }}</strong>
+                            <span>{{ tipoLabel(r.tipo) }}{{ r.pista ? ' · pista ' + r.pista : '' }} · {{ r.personas || 0 }}p</span>
+                          </button>
+                        }
+                      </span>
+                    </li>
+                  }
+                </ul>
+              } @else {
+                <p class="admin-vacio">No hay reservas ese día.</p>
+              }
+            </div>
           }
         </div>
       }
@@ -495,7 +584,7 @@
             </thead>
             <tbody>
               @for (r of filtradas(); track r.id) {
-                <tr [class.admin-fila--pasada]="esPasada(r)"
+                <tr [id]="'fila-' + r.id" [class.admin-fila--pasada]="esPasada(r)"
                     [class.admin-fila--pendiente]="requiereAccion(r)"
                     [class.admin-fila--recordatorio]="soloRecordatorio(r)"
                     [class.admin-fila--confirmada]="r.estado === 'confirmada' && !requiereAccion(r) && !esPasada(r)">
