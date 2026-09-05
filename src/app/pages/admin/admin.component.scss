@@ -684,11 +684,12 @@
     &:hover:not(:disabled) { background: rgba($naranja, 0.15); }
   }
 
-  // Motivo de aviso seleccionado.
+  // Motivo seleccionado: se marca con fondo y borde más vivo, conservando
+  // el color propio de cada acción.
   &--activo {
-    border-color: $naranja;
-    color: $naranja;
-    background: rgba($naranja, 0.12);
+    border-color: currentColor;
+    background: rgba(255, 255, 255, 0.1);
+    font-weight: 700;
   }
 }
 

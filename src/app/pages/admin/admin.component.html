@@ -526,6 +526,9 @@
                         <div class="admin-aviso-cliente__motivos">
                           @for (m of motivosDe(r); track m.key) {
                             <button type="button" class="admin-btn"
+                              [class.admin-btn--recordatorio]="m.key === 'recordatorio'"
+                              [class.admin-btn--no]="m.key === 'anulada'"
+                              [class.admin-btn--ok]="m.key === 'confirmada'"
                               [class.admin-btn--activo]="motivo(r) === m.key"
                               (click)="cambiarMotivo(r, m.key)">{{ m.label }}</button>
                           }
