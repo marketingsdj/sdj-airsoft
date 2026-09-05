@@ -661,8 +661,8 @@ export class AdminComponent implements OnInit {
         return '¡Hola ' + nombre + '! Somos de Soldados de Juguete y ' + cuenta
           + ' Tenéis la partida el ' + cuando + ref + '.\n\n'
           + 'Un par de cosas para que salga redondo:\n'
-          + '· Venid unos 20 minutos antes para equiparos con calma.\n'
-          + '· Ropa que se pueda manchar, calzado deportivo cerrado y ropa de cambio.\n'
+          + '· Venid 30 minutos antes para equiparos con calma.\n'
+          + '· Traed ropa de cambio y calzado deportivo cerrado; el buzo lo ponemos nosotros.\n'
           + '· Estamos en Larrabetzu, Barrio Legina, con parking gratuito en la puerta.\n\n'
           + 'Si os surge cualquier cosa, respondednos por aquí. ¡Con ganas de veros!';
       }
