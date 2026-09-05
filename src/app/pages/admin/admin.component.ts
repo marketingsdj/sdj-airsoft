@@ -21,6 +21,8 @@ export class AdminComponent implements OnInit {
   errorLogin = signal('');
   // Mostrar u ocultar la contraseña al escribirla.
   verPassword = signal(false);
+  /** Recordar el email y mantener la sesión abierta en este equipo. */
+  recordarme = true;
   entrando = signal(false);
 
   // ── Datos ───────────────────────────────────────────────────────────────────
@@ -204,7 +206,22 @@ export class AdminComponent implements OnInit {
     { key: 'txiki',      label: 'Txikipaintball' },
   ];
 
+  /** Guarda (o borra) el email para la próxima vez, según la casilla. */
+  private guardarEmailRecordado() {
+    try {
+      if (this.recordarme) localStorage.setItem('sdj_admin_email', this.email.trim());
+      else localStorage.removeItem('sdj_admin_email');
+    } catch { /* si el navegador bloquea el almacenamiento, no pasa nada */ }
+  }
+
   ngOnInit() {
+    // Email recordado de la última vez (la contraseña nunca se guarda).
+    try {
+      const guardado = localStorage.getItem('sdj_admin_email');
+      if (guardado) this.email = guardado;
+      else this.recordarme = false;
+    } catch { /* almacenamiento no disponible */ }
+
     // Si ya hay sesión guardada, se cargan los datos en cuanto se confirme.
     const revisar = setInterval(() => {
       if (!this.admin.cargandoSesion()) {
@@ -218,7 +235,8 @@ export class AdminComponent implements OnInit {
     this.errorLogin.set('');
     this.entrando.set(true);
     try {
-      await this.admin.entrar(this.email, this.password);
+      await this.admin.entrar(this.email, this.password, this.recordarme);
+      this.guardarEmailRecordado();
       this.password = '';
       await this.cargar();
     } catch {

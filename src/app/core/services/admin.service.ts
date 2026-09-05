@@ -4,7 +4,8 @@ import {
   serverTimestamp, Timestamp,
 } from 'firebase/firestore';
 import {
-  signInWithEmailAndPassword, signOut, onAuthStateChanged, type User,
+  signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence,
+  browserLocalPersistence, browserSessionPersistence, type User,
 } from 'firebase/auth';
 import { db, auth, isFirebaseConfigured } from '../firebase';
 
@@ -75,8 +76,13 @@ export class AdminService {
     }
   }
 
-  async entrar(email: string, password: string): Promise<void> {
+  /**
+   * Inicia sesión. Con `recordar` la sesión sobrevive al cerrar el navegador;
+   * sin él se olvida al cerrar la pestaña.
+   */
+  async entrar(email: string, password: string, recordar = true): Promise<void> {
     if (!auth) throw new Error('Firebase no está configurado.');
+    await setPersistence(auth, recordar ? browserLocalPersistence : browserSessionPersistence);
     await signInWithEmailAndPassword(auth, email.trim(), password);
   }
 

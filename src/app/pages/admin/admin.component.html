@@ -48,6 +48,11 @@
           </span>
         </label>
 
+        <label class="admin-check admin-check--login">
+          <input type="checkbox" name="recordarme" [(ngModel)]="recordarme" />
+          <span>Recordarme en este equipo</span>
+        </label>
+
         @if (errorLogin()) { <p class="admin-error">{{ errorLogin() }}</p> }
 
         <button class="btn btn--primary" type="submit" [disabled]="entrando() || !email || !password">
