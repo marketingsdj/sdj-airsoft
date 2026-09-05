@@ -77,8 +77,20 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     esExtraordinaria: p.esExtraordinaria,
   })));
 
-  // Aviso destacado en el hero cuando hay una extraordinaria a la vista.
-  proximaExtraordinaria = computed(() => this.partidas().find(p => p.esExtraordinaria) || null);
+  /**
+   * Aviso del hero: la primera extraordinaria que aún no ha pasado, esté o no
+   * entre las dos próximas partidas del listado.
+   */
+  proximaExtraordinaria = computed(() => {
+    const iso = this.extraordinarias.proximas()[0];
+    if (!iso) return null;
+    const [a, m, d] = iso.split('-').map(Number);
+    return {
+      iso,
+      fecha: new Date(a, m - 1, d).toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' }),
+      hora: EXTRA_CONFIG.horaLabel,
+    };
+  });
 
   faqs = [
     { q: '¿Duele?', a: 'Pica, sí. Como una goma elástica fuerte. El 90% no se siente en calor de partida. Con el equipo de protección adecuado —que está incluido en el alquiler— es perfectamente tolerable.' },
