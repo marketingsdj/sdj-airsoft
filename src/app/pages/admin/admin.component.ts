@@ -600,9 +600,20 @@ export class AdminComponent implements OnInit {
     const ref = r.numeroReserva ? ' (reserva ' + r.numeroReserva + ')' : '';
 
     switch (this.motivo(r)) {
-      case 'recordatorio':
-        return 'Hola ' + nombre + ', te recordamos que tienes tu reserva en Soldados de Juguete el ' + cuando + ref
-          + '. Te esperamos en Larrabetzu, Barrio Legina. Ven con ropa que se pueda manchar y calzado deportivo. ¡Nos vemos en el campo!';
+      case 'recordatorio': {
+        // Tono cercano y con lo práctico: cuánto falta, qué traer y cuándo llegar.
+        const faltan = this.diasPara(r);
+        const cuenta = faltan <= 0 ? '¡es hoy!'
+          : faltan === 1 ? '¡es mañana!'
+          : 'ya queda nada: faltan ' + faltan + ' días.';
+        return '¡Hola ' + nombre + '! Somos de Soldados de Juguete y ' + cuenta
+          + ' Tenéis la partida el ' + cuando + ref + '.\n\n'
+          + 'Un par de cosas para que salga redondo:\n'
+          + '· Venid unos 20 minutos antes para equiparos con calma.\n'
+          + '· Ropa que se pueda manchar, calzado deportivo cerrado y ropa de cambio.\n'
+          + '· Estamos en Larrabetzu, Barrio Legina, con parking gratuito en la puerta.\n\n'
+          + 'Si os surge cualquier cosa, respondednos por aquí. ¡Con ganas de veros!';
+      }
       case 'hora':
         return 'Hola ' + nombre + ', te escribimos de Soldados de Juguete. Hemos fijado la hora de vuestra reserva del '
           + dia + ': os esperamos a las ' + r.hora + ref
@@ -624,8 +635,11 @@ export class AdminComponent implements OnInit {
         return 'Hola ' + nombre + ', te escribimos de Soldados de Juguete. Lamentamos decirte que no podemos atender tu reserva del '
           + cuando + ref + '. Si quieres, buscamos otra fecha que os venga bien.';
       default:
-        return 'Hola ' + nombre + ', te confirmamos tu reserva en Soldados de Juguete para el ' + cuando + ref
-          + '. Te esperamos en Larrabetzu, Barrio Legina. ¡Nos vemos en el campo!';
+        // Confirmación: sobria, con los datos de la reserva.
+        return 'Hola ' + nombre + ', te escribimos de Soldados de Juguete. Tu reserva queda confirmada para el '
+          + cuando + ref + (r.personas ? ', para ' + r.personas + ' personas' : '') + '. '
+          + 'Estamos en Larrabetzu, Barrio Legina. Unos días antes te escribiremos para recordártelo. '
+          + 'Si necesitas cambiar algo, avísanos y lo vemos. ¡Nos vemos en el campo!';
     }
   }
 
