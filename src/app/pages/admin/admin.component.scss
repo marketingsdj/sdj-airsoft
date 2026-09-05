@@ -648,24 +648,27 @@
 }
 
 .admin-extra__quitar {
-  margin-left: 5px;
+  margin-left: 6px;
   padding: 0;
   border: none;
   background: none;
   color: inherit;
-  font-size: 11px;
+  font-size: 15px;
   line-height: 1;
+  vertical-align: middle;
   cursor: pointer;
-  opacity: 0.6;
+  opacity: 0.7;
 
   &:hover:not(:disabled) { opacity: 1; color: #e2685f; }
   &:disabled { cursor: default; }
 }
 
+// Anulado: se marca con el color apagado, sin tachar (el tachado se comía
+// la legibilidad y se confundía con un guion).
 .admin-extra--anulado {
   border-color: rgba($crema, 0.25);
-  color: rgba($crema, 0.4);
-  text-decoration: line-through;
+  color: rgba($crema, 0.45);
+  text-decoration: none;
 }
 
 .admin-sin-avisar {
