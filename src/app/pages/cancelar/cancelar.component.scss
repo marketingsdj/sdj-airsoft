@@ -180,6 +180,10 @@
     // Sin márgenes propios: la separación la marca el gap del formulario.
     > * { margin: 0; }
     label, textarea, input { margin: 0; }
+
+    // El formulario es una columna: aquí "flex: 1 1 220px" reservaría 220 px de
+    // ALTO en cada campo (ese era el hueco enorme). Se anula.
+    .cancelar__campo { flex: 0 0 auto; }
     border: 1px solid $line;
     border-radius: $radius-md;
     background: rgba(0, 0, 0, 0.15);
