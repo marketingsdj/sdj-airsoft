@@ -369,7 +369,7 @@
                         </button>
                         @if (r.estado === 'confirmada') {
                           <!-- Por si se ha confirmado sin querer. -->
-                          <button class="admin-btn" [disabled]="guardando() === r.id"
+                          <button class="admin-btn admin-btn--col2" [disabled]="guardando() === r.id"
                             (click)="reabrir(r)">Deshacer</button>
                         }
                       </span>

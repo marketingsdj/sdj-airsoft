@@ -684,6 +684,10 @@
     &:hover:not(:disabled) { background: rgba($naranja, 0.15); }
   }
 
+  // Ocupa siempre la segunda columna (abajo a la derecha, donde estaba
+  // "Confirmada") aunque sea el unico boton de su fila.
+  &--col2 { grid-column: 2; }
+
   // Motivo seleccionado: se marca con fondo y borde más vivo, conservando
   // el color propio de cada acción.
   &--activo {
