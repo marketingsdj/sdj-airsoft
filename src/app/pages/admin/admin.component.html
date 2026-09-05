@@ -590,13 +590,11 @@
 
                         <div class="admin-aviso-cliente__envios">
                           @if (r.telefono) {
-                            <a class="btn btn--primary" [href]="enlaceWhatsapp(r)" target="_blank" rel="noopener"
-                              (click)="marcarAvisado(r)">WhatsApp</a>
+                            <a class="btn btn--primary" [href]="enlaceWhatsapp(r)" target="_blank" rel="noopener">WhatsApp</a>
                           }
                           @if (r.email) {
-                            <a class="btn btn--ghost" [href]="enlaceGmail(r)" target="_blank" rel="noopener"
-                              (click)="marcarAvisado(r)">Gmail</a>
-                            <a class="btn btn--ghost" [href]="enlaceEmail(r)" (click)="marcarAvisado(r)"
+                            <a class="btn btn--ghost" [href]="enlaceGmail(r)" target="_blank" rel="noopener">Gmail</a>
+                            <a class="btn btn--ghost" [href]="enlaceEmail(r)"
                               title="Abre el programa de correo del equipo">Correo</a>
                           }
                           @if (r.tipo === 'txiki') {
