@@ -294,17 +294,21 @@
                     (click)="abrirDia(c.iso)">
                     <span class="admin-cal__num">{{ c.dia }}</span>
                     @if (reservasDelDia(c.iso).length) {
-                      <span class="admin-cal__resumen">
-                        {{ reservasDelDia(c.iso).length }} · {{ personasDelDia(c.iso) }}p
-                      </span>
-                      <span class="admin-cal__horas">
-                        @for (r of reservasDelDia(c.iso).slice(0, 3); track r.id) {
-                          <span class="admin-cal__chip">{{ r.hora || '—' }}</span>
-                        }
-                        @if (reservasDelDia(c.iso).length > 3) {
-                          <span class="admin-cal__chip admin-cal__chip--mas">+{{ reservasDelDia(c.iso).length - 3 }}</span>
-                        }
-                      </span>
+                      @if (personasAbiertaDia(c.iso)) {
+                        <span class="admin-cal__cuenta admin-cal__cuenta--abierta">
+                          Abierta · {{ personasAbiertaDia(c.iso) }}p
+                        </span>
+                      }
+                      @if (gruposDelDia(c.iso).length) {
+                        <span class="admin-cal__cuenta admin-cal__cuenta--privada">
+                          Privadas · {{ gruposDelDia(c.iso).length }} ({{ personasGruposDia(c.iso) }}p)
+                        </span>
+                      }
+                      @if (haySinHora(c.iso)) {
+                        <span class="admin-cal__cuenta admin-cal__cuenta--consulta">
+                          {{ reservasSinHora(c.iso).length }} a consultar
+                        </span>
+                      }
                     }
                   </button>
                 }
@@ -326,7 +330,8 @@
                 </button>
               }
 
-              <span class="admin-cal__hora-lbl">Sin hora</span>
+              @if (semanaTieneSinHora()) {
+              <span class="admin-cal__hora-lbl">A consultar</span>
               @for (d of semanaActual(); track d.iso) {
                 <span class="admin-cal__celda">
                   @for (r of reservasSinHora(d.iso); track r.id) {
@@ -337,6 +342,7 @@
                     </button>
                   }
                 </span>
+              }
               }
 
               @for (h of HORAS_CAL; track h) {

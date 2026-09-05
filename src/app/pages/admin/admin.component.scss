@@ -658,6 +658,24 @@
   color: $naranja;
 }
 
+.admin-cal__cuenta {
+  font-family: $font-mono;
+  font-size: 8.5px;
+  letter-spacing: 0.04em;
+  padding: 1px 4px;
+  border-radius: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  // Partida abierta: lo que importa es cuanta gente hay apuntada.
+  &--abierta { background: rgba(#6bd08a, 0.16); color: #9fe3b4; }
+  // Grupos con el campo para ellos.
+  &--privada { background: rgba($naranja, 0.18); color: $naranja; }
+  // Dias a consultar: la hora aun esta por cerrar.
+  &--consulta { background: rgba(#e8c547, 0.16); color: #e8c547; }
+}
+
 .admin-cal__horas {
   display: flex;
   flex-wrap: wrap;

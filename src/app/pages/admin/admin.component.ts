@@ -358,6 +358,30 @@ export class AdminComponent implements OnInit {
     return this.porFecha().get(iso) ?? [];
   }
 
+  /** Partida abierta: personas apuntadas ese dia (reservas de tipo individual). */
+  personasAbiertaDia(iso: string): number {
+    return this.reservasDelDia(iso)
+      .filter(r => r.tipo === 'individual')
+      .reduce((n, r) => n + (r.personas || 0), 0);
+  }
+
+  /** Grupos con el campo para ellos: privadas, eventos y txikis. */
+  gruposDelDia(iso: string): ReservaAdmin[] {
+    return this.reservasDelDia(iso).filter(r => r.tipo !== 'individual');
+  }
+
+  personasGruposDia(iso: string): number {
+    return this.gruposDelDia(iso).reduce((n, r) => n + (r.personas || 0), 0);
+  }
+
+  /** ¿Hay alguna reserva sin hora fija ese dia? (dias a consultar) */
+  haySinHora(iso: string): boolean {
+    return this.reservasSinHora(iso).length > 0;
+  }
+
+  /** ¿Alguna en toda la semana? Si no, la fila de arriba no se pinta. */
+  semanaTieneSinHora = computed(() => this.semanaActual().some(d => this.haySinHora(d.iso)));
+
   personasDelDia(iso: string): number {
     return this.reservasDelDia(iso).reduce((n, r) => n + (r.personas || 0), 0);
   }
