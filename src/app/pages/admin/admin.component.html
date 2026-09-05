@@ -395,6 +395,8 @@
                 @if (detalle() === r.id) {
                   <tr class="admin-detalle">
                     <td colspan="7">
+                      <button type="button" class="admin-cerrar admin-detalle__cerrar"
+                        (click)="detalle.set(null)" aria-label="Cerrar" title="Cerrar">×</button>
                       <div class="admin-detalle__grid">
                         <div><span>Nº de reserva</span><strong>{{ r.numeroReserva || '—' }}</strong></div>
                         <div><span>Recibida</span><strong>{{ r.creado ? (r.creado | date:'dd/MM/yyyy HH:mm') : '—' }}</strong></div>
@@ -517,11 +519,7 @@
 
                       <!-- Aviso al cliente: se prepara el texto y lo envías tú. -->
                       <div class="admin-aviso-cliente">
-                        <div class="admin-aviso-cliente__top">
-                          <p class="admin-aviso-cliente__titulo">Avisar al cliente</p>
-                          <button type="button" class="admin-cerrar" (click)="detalle.set(null)"
-                            aria-label="Cerrar" title="Cerrar">×</button>
-                        </div>
+                        <p class="admin-aviso-cliente__titulo">Avisar al cliente</p>
 
                         <div class="admin-aviso-cliente__motivos">
                           @for (m of motivosDe(r); track m.key) {
