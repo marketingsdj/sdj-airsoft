@@ -52,6 +52,18 @@
     &:focus { outline: none; border-color: rgba($naranja, 0.7); }
   }
 
+  // La flecha nativa se pega al borde: se dibuja aparte con el mismo margen
+  // que tiene el texto por la izquierda.
+  select {
+    appearance: none;
+    -webkit-appearance: none;
+    padding-right: 32px;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23EAE0D4' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 10px;
+  }
+
   &--ancho { flex: 1 1 260px; }
 }
 
