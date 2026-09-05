@@ -10,9 +10,9 @@ import {
 import { db, auth, isFirebaseConfigured } from '../firebase';
 
 /** Estado de gestión de una reserva. */
-// Flujo: pendiente (por gestionar) -> recordatorio (gestionada, falta avisar
-// unos dias antes) -> confirmada (recordatorio enviado).
-export type EstadoReserva = 'pendiente' | 'recordatorio' | 'confirmada' | 'denegada' | 'cancelada';
+// Flujo: pendiente (naranja, por gestionar) -> aceptada (gris; amarilla la
+// semana antes, cuando toca recordar) -> confirmada (verde, ya recordada).
+export type EstadoReserva = 'pendiente' | 'aceptada' | 'confirmada' | 'denegada' | 'cancelada';
 
 export interface ReservaAdmin {
   id: string;
@@ -98,8 +98,10 @@ export class AdminService {
       const x = d.data() as Record<string, unknown>;
       const creado = x['creado'] instanceof Timestamp ? (x['creado'] as Timestamp).toDate() : null;
       // Las reservas antiguas no tienen estado: se deducen del campo `gestion`.
-      const estado = (x['estado'] as EstadoReserva) ??
-        (x['gestion'] === 'pendiente' ? 'pendiente' : 'recordatorio');
+      // 'recordatorio' era el nombre anterior de 'aceptada'.
+      const guardado = x['estado'] as string | undefined;
+      const estado = (guardado === 'recordatorio' ? 'aceptada' : guardado) as EstadoReserva
+        ?? (x['gestion'] === 'pendiente' ? 'pendiente' : 'aceptada');
       return {
         id: d.id,
         numeroReserva: x['numeroReserva'] as string | undefined,
@@ -156,7 +158,7 @@ export class AdminService {
       codigoCancelacion: codigo,
       horaPedida: datos.hora || '',
       horaFijada: !!datos.hora,
-      estado: 'recordatorio',
+      estado: 'aceptada',
       gestion: 'CONFIRMADA',
       origen: 'admin',
       creado: serverTimestamp(),

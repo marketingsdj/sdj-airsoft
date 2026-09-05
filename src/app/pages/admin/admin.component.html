@@ -277,8 +277,7 @@
               @for (r of filtradas(); track r.id) {
                 <tr [class.admin-fila--pasada]="esPasada(r)"
                     [class.admin-fila--pendiente]="requiereAccion(r)"
-                    [class.admin-fila--recordatorio]="!requiereAccion(r) && r.estado === 'recordatorio' && !esPasada(r)"
-                    [class.admin-fila--recordatorio-ya]="recordatorioCercano(r) && !requiereAccion(r)"
+                    [class.admin-fila--recordatorio]="recordatorioCercano(r) && !requiereAccion(r)"
                     [class.admin-fila--confirmada]="r.estado === 'confirmada' && !requiereAccion(r) && !esPasada(r)">
                   <td class="c-fecha">
                     <button class="admin-fecha" (click)="toggleDetalle(r.id)">{{ fechaLarga(r.fecha) }}</button>
@@ -345,13 +344,20 @@
                       <!-- Rejilla fija: cada botón ocupa siempre su columna, así
                            quedan alineados aunque falte uno de los dos. -->
                       <span class="admin-acciones__grid">
+                        <!-- 1. Por gestionar: se acepta la reserva. -->
                         @if (r.estado === 'pendiente' || r.estado === 'denegada') {
-                          <button class="admin-btn admin-btn--recordatorio" [disabled]="guardando() === r.id"
-                            (click)="marcar(r, 'recordatorio')">Gestionada</button>
+                          <button class="admin-btn admin-btn--aceptar" [disabled]="guardando() === r.id"
+                            (click)="marcar(r, 'aceptada')">Aceptar</button>
                         }
-                        @if (r.estado === 'recordatorio') {
+                        <!-- 2. Aceptada: la semana antes toca mandar el recordatorio. -->
+                        @if (r.estado === 'aceptada' && recordatorioCercano(r)) {
+                          <button class="admin-btn admin-btn--recordatorio"
+                            (click)="prepararRecordatorio(r)">Recordatorio</button>
+                        }
+                        <!-- 3. Ya recordada: se cierra a mano. -->
+                        @if (r.estado === 'aceptada') {
                           <button class="admin-btn admin-btn--ok" [disabled]="guardando() === r.id"
-                            (click)="marcar(r, 'confirmada')">Recordada</button>
+                            (click)="marcar(r, 'confirmada')">Confirmar</button>
                         }
                         @if (r.estado !== 'denegada') {
                           <button class="admin-btn admin-btn--no" [disabled]="guardando() === r.id"

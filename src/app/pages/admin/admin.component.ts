@@ -237,7 +237,7 @@ export class AdminComponent implements OnInit {
   soloProximas = false;
   orden: Orden = 'fecha';
 
-  readonly estados: EstadoReserva[] = ['pendiente', 'recordatorio', 'confirmada', 'denegada', 'cancelada'];
+  readonly estados: EstadoReserva[] = ['pendiente', 'aceptada', 'confirmada', 'denegada', 'cancelada'];
   readonly tipos = [
     { key: 'individual', label: 'Partida abierta' },
     { key: 'privada',    label: 'Partida privada' },
@@ -392,7 +392,7 @@ export class AdminComponent implements OnInit {
 
   /** Gestionada pero con el recordatorio sin enviar, y la fecha ya cerca. */
   recordatorioCercano(r: ReservaAdmin): boolean {
-    return r.estado === 'recordatorio' && !this.esPasada(r) && this.diasPara(r) <= 7;
+    return r.estado === 'aceptada' && !this.esPasada(r) && this.diasPara(r) <= 7;
   }
 
   // ── Contadores del resumen ──────────────────────────────────────────────────
@@ -417,8 +417,8 @@ export class AdminComponent implements OnInit {
       this.reservas.update(list => list.map(x => (x.id === r.id ? { ...x, estado } : x)));
       const actualizada = { ...r, estado };
       if (estado === 'denegada') this.prepararAviso(actualizada, 'anulada');
-      if (estado === 'recordatorio') this.prepararAviso(actualizada, 'confirmada');
-      if (estado === 'confirmada') this.prepararAviso(actualizada, 'recordatorio');
+      // Aceptar: se le confirma la reserva. Confirmar: ya se le ha recordado.
+      if (estado === 'aceptada') this.prepararAviso(actualizada, 'confirmada');
     } catch {
       this.error.set('No se ha podido guardar el cambio.');
     } finally {
@@ -435,6 +435,13 @@ export class AdminComponent implements OnInit {
     delete this.textoEditado[r.id];
     this.detalle.set(r.id);
     this.reservas.update(list => list.map(x => (x.id === r.id ? { ...x, avisoPendiente: true } : x)));
+  }
+
+  /** Deja listo el mensaje de recordatorio, sin tocar el estado. */
+  prepararRecordatorio(r: ReservaAdmin) {
+    this.motivoPorReserva[r.id] = 'recordatorio';
+    delete this.textoEditado[r.id];
+    this.detalle.set(r.id);
   }
 
   /** ¿Es una reserva de día "a consultar" (hora aproximada, sin franja fija)? */
