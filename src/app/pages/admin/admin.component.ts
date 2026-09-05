@@ -782,11 +782,12 @@ export class AdminComponent implements OnInit {
 
   // ── Filtros ─────────────────────────────────────────────────────────────────
   busqueda = '';                       // nombre, email, teléfono o nº de reserva
-  filtroEstado = '';
+  // Al entrar se muestran solo las proximas (de hoy en adelante), que es lo
+  // que hay que gestionar; 'Todas las reservas' quita el filtro.
+  filtroEstado = 'proximas';
   filtroTipo = '';
   desde = '';
   hasta = '';
-  soloProximas = false;
   orden: Orden = 'fecha';
 
   // Además de los estados guardados, dos filtros calculados: las que toca
@@ -893,7 +894,6 @@ export class AdminComponent implements OnInit {
       if (this.filtroTipoSignal() && r.tipo !== this.filtroTipoSignal()) return false;
       if (this.desdeSignal() && (r.fecha || '') < this.desdeSignal()) return false;
       if (this.hastaSignal() && (r.fecha || '') > this.hastaSignal()) return false;
-      if (this.soloProximasSignal() && (r.fecha || '') < hoy) return false;
       if (texto) {
         const campos = [r.nombre, r.email, r.telefono, r.numeroReserva, r.codigoCancelacion, r.notas]
           .filter(Boolean).join(' ').toLowerCase();
@@ -913,11 +913,10 @@ export class AdminComponent implements OnInit {
   // Los filtros son campos con ngModel; estas señales los hacen reactivos para
   // el computed de arriba (se actualizan desde onFiltroCambiado()).
   private busquedaSignal      = signal('');
-  private filtroEstadoSignal  = signal('');
+  private filtroEstadoSignal  = signal('proximas');
   private filtroTipoSignal    = signal('');
   private desdeSignal         = signal('');
   private hastaSignal         = signal('');
-  private soloProximasSignal  = signal(false);
   private ordenSignal         = signal<Orden>('fecha');
 
   onFiltroCambiado() {
@@ -926,7 +925,6 @@ export class AdminComponent implements OnInit {
     this.filtroTipoSignal.set(this.filtroTipo);
     this.desdeSignal.set(this.desde);
     this.hastaSignal.set(this.hasta);
-    this.soloProximasSignal.set(this.soloProximas);
     this.ordenSignal.set(this.orden);
   }
 
@@ -936,7 +934,6 @@ export class AdminComponent implements OnInit {
     this.filtroTipo = '';
     this.desde = '';
     this.hasta = '';
-    this.soloProximas = false;
     this.orden = 'fecha';
     this.onFiltroCambiado();
   }
@@ -960,7 +957,7 @@ export class AdminComponent implements OnInit {
 
   /** ¿Se esta viendo el listado entero, sin ningun filtro puesto? */
   get sinFiltros(): boolean {
-    return !this.filtroEstado && !this.filtroTipo && !this.desde && !this.hasta && !this.busqueda && !this.soloProximas;
+    return !this.filtroEstado && !this.filtroTipo && !this.desde && !this.hasta && !this.busqueda;
   }
 
   /**
