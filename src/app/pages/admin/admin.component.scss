@@ -1086,6 +1086,13 @@
 .admin-tabla tbody tr.admin-fila--recordatorio:hover td { background: rgba(#e8c547, 0.22); }
 
 // Cerrada del todo: el recordatorio ya se ha enviado.
+// Anulada o cancelada: gris apagado aunque le falte el aviso, para que no se
+// confunda con una reserva en pie. El aviso pendiente se marca con la barra
+// naranja de la izquierda.
+.admin-fila--anulada td { background: rgba($crema, 0.05) !important; opacity: 0.75; }
+.admin-tabla tbody tr.admin-fila--anulada:hover td { background: rgba($crema, 0.09) !important; }
+.admin-fila--anulada.admin-fila--pendiente td:first-child { box-shadow: inset 3px 0 0 $naranja; }
+
 .admin-fila--confirmada td { background: rgba(#6bd08a, 0.09); }
 .admin-tabla tbody tr.admin-fila--confirmada:hover td { background: rgba(#6bd08a, 0.15); }
 

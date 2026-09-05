@@ -711,6 +711,7 @@
               @for (r of filtradas(); track r.id) {
                 <tr [id]="'fila-' + r.id" [class.admin-fila--pasada]="esPasada(r)"
                     [class.admin-fila--pendiente]="requiereAccion(r)"
+                    [class.admin-fila--anulada]="r.estado === 'denegada' || r.estado === 'cancelada'"
                     [class.admin-fila--recordatorio]="soloRecordatorio(r)"
                     [class.admin-fila--confirmada]="r.estado === 'confirmada' && !requiereAccion(r) && !esPasada(r)">
                   <td class="c-fecha">
