@@ -188,6 +188,56 @@ export class AdminComponent implements OnInit {
     if (menu && !menu.contains(ev.target as Node)) this.ajustesAbierto.set(false);
   }
 
+  // ── Datos de ejemplo ────────────────────────────────────────────────────────
+  // Reservas de mentira para ver como queda el calendario lleno. Viven solo en
+  // esta pestaña: no se guardan en la base ni las ve nadie mas.
+  demoActivo = signal(false);
+  private readonly DEMO_FECHA = '2026-09-05';
+
+  esDemo(r: ReservaAdmin): boolean {
+    return r.id.startsWith('demo-');
+  }
+
+  toggleDemo() {
+    const activar = !this.demoActivo();
+    this.demoActivo.set(activar);
+    this.ajustesAbierto.set(false);
+    if (activar) {
+      this.reservas.update(list => [...list, ...this.reservasDemo()]);
+      this.diaCalendario.set(this.DEMO_FECHA);
+      this.mesCalendario.set(new Date(2026, 8, 1));
+      this.calendarioAbierto.set(true);
+    } else {
+      this.reservas.update(list => list.filter(r => !this.esDemo(r)));
+    }
+  }
+
+  private reservasDemo(): ReservaAdmin[] {
+    const f = this.DEMO_FECHA;
+    const base = { fecha: f, creado: new Date(), borrada: false };
+    return [
+      { ...base, id: 'demo-1', estado: 'confirmada' as EstadoReserva, tipo: 'individual', hora: '09:00',
+        nombre: 'PRUEBA · Iker Zabala', personas: 4, telefono: '+34 600 111 222', email: 'iker@ejemplo.com', extras: [] },
+      { ...base, id: 'demo-2', estado: 'aceptada' as EstadoReserva, tipo: 'privada', hora: '10:00', pista: 'A',
+        nombre: 'PRUEBA · Cuadrilla Getxo', personas: 12, telefono: '+34 600 333 444', email: 'cuadrilla@ejemplo.com',
+        extras: ['Hora extra de partida privada'], notas: 'Piden dos equipos separados.' },
+      { ...base, id: 'demo-3', estado: 'pendiente' as EstadoReserva, tipo: 'evento', hora: '11:00', pista: 'B',
+        nombre: 'PRUEBA · Despedida de Ane', personas: 16, telefono: '+34 600 555 666', email: 'ane@ejemplo.com',
+        extras: ['Menú', 'Mono rosa'], avisoPendiente: true },
+      { ...base, id: 'demo-4', estado: 'confirmada' as EstadoReserva, tipo: 'txiki', hora: '12:00', pista: 'A',
+        nombre: 'PRUEBA · Cumple de Unai', personas: 14, telefono: '+34 600 777 888', email: 'unai@ejemplo.com',
+        extras: ['Merienda'], notas: 'Cumple 10 años. Tarta a las 14:00.' },
+      { ...base, id: 'demo-5', estado: 'aceptada' as EstadoReserva, tipo: 'individual', hora: '13:00',
+        nombre: 'PRUEBA · Marta Ruiz', personas: 2, telefono: '+34 600 999 000', email: 'marta@ejemplo.com', extras: [] },
+      { ...base, id: 'demo-6', estado: 'confirmada' as EstadoReserva, tipo: 'privada', hora: '16:00', pista: 'B',
+        nombre: 'PRUEBA · Empresa Bilbotek', personas: 20, telefono: '+34 601 222 333', email: 'rrhh@ejemplo.com',
+        extras: ['Menú'], notas: 'Factura con IVA a nombre de la empresa.' },
+      { ...base, id: 'demo-7', estado: 'pendiente' as EstadoReserva, tipo: 'evento',
+        nombre: 'PRUEBA · Colegio Larrea', personas: 25, telefono: '+34 601 444 555', email: 'ampa@ejemplo.com',
+        laborable: true, extras: [], notas: 'Sin hora todavia: dia a consultar.' },
+    ];
+  }
+
   // ── Vista de calendario ─────────────────────────────────────────────────────
   // Todas las reservas repartidas por mes, dia y hora, para ver de un vistazo
   // como queda la agenda. No usa los filtros del listado: se ve todo (salvo lo
@@ -425,6 +475,10 @@ export class AdminComponent implements OnInit {
 
   async aPapelera(r: ReservaAdmin) {
     if (!this.sePuedeBorrar(r)) return;
+    if (this.esDemo(r)) {
+      this.reservas.update(list => list.map(x => (x.id === r.id ? { ...x, borrada: true } : x)));
+      return;
+    }
     this.borrandoId.set(r.id);
     try {
       await this.admin.marcarBorrada(r.id, true);
@@ -453,6 +507,7 @@ export class AdminComponent implements OnInit {
   async borrarDefinitivo(r: ReservaAdmin) {
     const quien = r.nombre || r.numeroReserva || 'esta reserva';
     if (!confirm(`Vas a borrar ${quien} para siempre. Esta accion no se puede deshacer. ¿Seguimos?`)) return;
+    if (this.esDemo(r)) { this.reservas.update(list => list.filter(x => x.id !== r.id)); return; }
     this.borrandoId.set(r.id);
     try {
       await this.admin.eliminarReserva(r.id);
@@ -920,6 +975,10 @@ export class AdminComponent implements OnInit {
 
   // ── Acciones ────────────────────────────────────────────────────────────────
   async marcar(r: ReservaAdmin, estado: EstadoReserva) {
+    if (this.esDemo(r)) {
+      this.reservas.update(list => list.map(x => (x.id === r.id ? { ...x, estado } : x)));
+      return;
+    }
     this.guardando.set(r.id);
     try {
       await this.admin.cambiarEstado(r.id, estado);

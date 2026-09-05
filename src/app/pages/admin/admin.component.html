@@ -108,6 +108,9 @@
                   title="Exporta lo que estas viendo: usa los filtros Desde y Hasta para acotar por fechas">
                   ⬇ Exportar CSV ({{ filtradas().length }})
                 </button>
+                <button type="button" class="admin-ajustes__opcion" (click)="toggleDemo()">
+                  👁 {{ demoActivo() ? 'Quitar datos de ejemplo' : 'Ver datos de ejemplo' }}
+                </button>
                 <button type="button" class="admin-ajustes__opcion admin-ajustes__opcion--salir"
                   (click)="salir()">Salir</button>
               </div>
@@ -115,6 +118,14 @@
           </div>
         </div>
       </div>
+
+      @if (demoActivo()) {
+        <p class="admin-modo-borrado">
+          Estás viendo <strong>reservas de ejemplo</strong> del 5 de septiembre de 2026. Solo existen en esta pestaña:
+          no se han guardado en ningún sitio y desaparecen al recargar.
+          <button type="button" class="admin-btn" (click)="toggleDemo()">Quitar</button>
+        </p>
+      }
 
       @if (modoBorrado()) {
         <p class="admin-modo-borrado">
