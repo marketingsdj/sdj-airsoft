@@ -3,9 +3,10 @@
 :host { display: block; background: $gris; min-height: 100vh; }
 
 .admin {
-  padding: 120px 0 64px;
+  // Solo el hueco del header fijo (100 px / 68 px en movil), sin aire extra.
+  padding: 108px 0 64px;
 
-  @media (max-width: $bp-md) { padding: 88px 0 40px; }
+  @media (max-width: $bp-md) { padding: 76px 0 40px; }
 }
 
 // ── Acceso ────────────────────────────────────────────────────────────────────
