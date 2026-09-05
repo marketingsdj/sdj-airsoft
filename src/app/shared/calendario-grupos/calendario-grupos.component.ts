@@ -2,7 +2,8 @@ import { Component, signal, computed, OnInit, Input, Output, EventEmitter, injec
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SlotsService } from '../../core/services/slots.service';
-import { esExtraordinaria, EXTRA_CONFIG } from '../../core/data/partidas-extraordinarias';
+import { EXTRA_CONFIG } from '../../core/data/partidas-extraordinarias';
+import { ExtraordinariasService } from '../../core/services/extraordinarias.service';
 
 export type ExtraTarifa = 'socio' | 'propio' | 'alquiler' | 'premium';
 
@@ -32,6 +33,7 @@ interface Dia {
 })
 export class CalendarioGruposComponent implements OnInit {
   private slotsService = inject(SlotsService);
+  private extraordinarias = inject(ExtraordinariasService);
 
   @Input() modo: 'navegacion' | 'seleccion' = 'navegacion';
   @Input() mostrarSlots = true;
@@ -453,7 +455,7 @@ export class CalendarioGruposComponent implements OnInit {
       const esFinDeSemana = dow === 0 || dow === 6;
       const esViernes = dow === 5;
       const esFestivo = this.FESTIVOS.has(this.localFecha(fecha));
-      const esExtra = esExtraordinaria(fecha);
+      const esExtra = this.extraordinarias.esExtraordinaria(fecha);
       // Txiki abre también los viernes; el resto solo finde/festivo.
       // La partida extraordinaria se trata como día entre semana (laborable):
       // no genera franjas; se elige el día (tarifa individual o WhatsApp en grupo).

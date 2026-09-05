@@ -141,6 +141,36 @@
     margin: 0;
   }
 
+  // Aviso de partida extraordinaria (solo aparece si hay una próxima).
+  &__extra {
+    display: block;
+    margin-bottom: 14px;
+    padding: 10px 14px;
+    border: 1px solid rgba($naranja, 0.6);
+    border-radius: $radius-md;
+    background: rgba($naranja, 0.12);
+    text-decoration: none;
+    transition: background $transition;
+
+    &:hover { background: rgba($naranja, 0.2); }
+  }
+
+  &__extra-badge {
+    display: block;
+    font-family: $font-mono;
+    font-size: 9px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: $naranja;
+    margin-bottom: 2px;
+  }
+
+  &__extra-texto {
+    display: block;
+    font-size: 13px;
+    color: $crema;
+  }
+
   &__cta-row {
     display: flex;
     flex-direction: column;

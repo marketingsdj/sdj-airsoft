@@ -1,6 +1,7 @@
-import { Component, signal, computed } from '@angular/core';
+import { Component, signal, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { generarProximasPartidas, EXTRA_CONFIG, fechaLocalISO } from '../../core/data/partidas-extraordinarias';
+import { ExtraordinariasService } from '../../core/services/extraordinarias.service';
 import { RedesSeguirComponent } from '../../shared/redes-seguir/redes-seguir';
 
 @Component({
@@ -39,7 +40,8 @@ export class PartidasComponent {
 
   // Genera automáticamente las próximas partidas (fines de semana +
   // extraordinarias de la lista compartida), en orden cronológico.
-  todasLasPartidas = generarProximasPartidas(24).map(p => ({
+  private extraordinarias = inject(ExtraordinariasService);
+  todasLasPartidas = computed(() => generarProximasPartidas(24, this.extraordinarias.fechas()).map(p => ({
     fecha: p.fecha.toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', month: 'short' }),
     iso: fechaLocalISO(p.fecha),
     hora: p.horaLabel,
@@ -49,15 +51,15 @@ export class PartidasComponent {
     total: p.total,
     precio: p.precio,
     esExtraordinaria: p.esExtraordinaria,
-  }));
+  })));
 
   partidasPagina = computed(() => {
     const start = this.pagina() * this.PAGE_SIZE;
-    return this.todasLasPartidas.slice(start, start + this.PAGE_SIZE);
+    return this.todasLasPartidas().slice(start, start + this.PAGE_SIZE);
   });
 
   hayAnterior = computed(() => this.pagina() > 0);
-  haySiguiente = computed(() => (this.pagina() + 1) * this.PAGE_SIZE < this.todasLasPartidas.length);
+  haySiguiente = computed(() => (this.pagina() + 1) * this.PAGE_SIZE < this.todasLasPartidas().length);
 
   siguiente() { if (this.haySiguiente()) this.pagina.update(p => p + 1); }
   anterior()  { if (this.hayAnterior())  this.pagina.update(p => p - 1); }

@@ -70,6 +70,7 @@
         </div>
         <div class="admin-top__acciones">
           <button class="btn btn--primary" (click)="abrirNueva()">+ Nueva reserva</button>
+          <button class="btn btn--ghost" (click)="extraAbierto.set(!extraAbierto())">Partidas extraordinarias</button>
           <button class="btn btn--ghost admin-recargar" (click)="cargar()" [disabled]="cargando()"
             [class.admin-recargar--girando]="cargando()"
             [title]="cargando() ? 'Actualizando…' : 'Actualizar'" aria-label="Actualizar">
@@ -112,6 +113,46 @@
           <span class="admin-kpi__lbl">Personas en lo mostrado</span>
         </div>
       </div>
+
+      <!-- ── Partidas extraordinarias (16:00–20:00, socios gratis) ────────── -->
+      @if (extraAbierto()) {
+        <div class="admin-nueva">
+          <div class="admin-nueva__top">
+            <p class="admin-nueva__titulo">Partidas extraordinarias</p>
+            <button class="admin-cerrar" (click)="extraAbierto.set(false)" aria-label="Cerrar" title="Cerrar">×</button>
+          </div>
+
+          <p class="admin-nueva__sub">
+            Horario {{ EXTRA_HORARIO }} · socios gratis · resto con tarifa reducida (desde {{ EXTRA_PRECIO }} €).
+            Al abrir una fecha aparece al momento en el calendario de reservas y en la portada.
+          </p>
+
+          <div class="admin-extra-alta">
+            <label class="admin-campo">
+              <span>Fecha</span>
+              <input type="date" [(ngModel)]="extraFecha" />
+            </label>
+            <button class="btn btn--primary" [disabled]="!extraFecha || guardandoExtra()"
+              (click)="abrirExtraordinaria()">
+              {{ guardandoExtra() ? 'Guardando…' : 'Abrir partida' }}
+            </button>
+          </div>
+
+          @if (extras.proximas().length) {
+            <ul class="admin-extra-lista">
+              @for (f of extras.proximas(); track f) {
+                <li>
+                  <span>{{ fechaLarga(f) }}</span>
+                  <button class="admin-btn admin-btn--no" [disabled]="guardandoExtra()"
+                    (click)="quitarExtraordinaria(f)">Quitar</button>
+                </li>
+              }
+            </ul>
+          } @else {
+            <p class="admin-vacio">No hay ninguna partida extraordinaria abierta.</p>
+          }
+        </div>
+      }
 
       <!-- ── Alta manual (reservas por teléfono o presenciales) ───────────── -->
       @if (nuevaAbierta()) {

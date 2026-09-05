@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AdminService, EstadoReserva, ReservaAdmin } from '../../core/services/admin.service';
 import { CalendarioGruposComponent } from '../../shared/calendario-grupos/calendario-grupos.component';
+import { ExtraordinariasService } from '../../core/services/extraordinarias.service';
+import { EXTRA_CONFIG } from '../../core/data/partidas-extraordinarias';
 
 type Orden = 'fecha' | 'creado' | 'nombre';
 
@@ -164,6 +166,41 @@ export class AdminComponent implements OnInit {
       this.error.set('No se han podido guardar los cambios.');
     } finally {
       this.guardando.set(null);
+    }
+  }
+
+  // ── Partidas extraordinarias ────────────────────────────────────────────────
+  // Tarde de 16:00 a 20:00, tarifa reducida y gratis para socios. Se abren
+  // desde aquí y aparecen al momento en el calendario y en la portada.
+  extras = inject(ExtraordinariasService);
+  readonly EXTRA_HORARIO = EXTRA_CONFIG.horaLabel;
+  readonly EXTRA_PRECIO = EXTRA_CONFIG.precioNoSocio.toFixed(2).replace('.', ',');
+  extraFecha = '';
+  extraAbierto = signal(false);
+  guardandoExtra = signal(false);
+
+  async abrirExtraordinaria() {
+    if (!this.extraFecha) return;
+    this.guardandoExtra.set(true);
+    this.error.set('');
+    try {
+      await this.extras.abrir(this.extraFecha);
+      this.extraFecha = '';
+    } catch {
+      this.error.set('No se ha podido abrir la partida extraordinaria.');
+    } finally {
+      this.guardandoExtra.set(false);
+    }
+  }
+
+  async quitarExtraordinaria(fecha: string) {
+    this.guardandoExtra.set(true);
+    try {
+      await this.extras.quitar(fecha);
+    } catch {
+      this.error.set('No se ha podido quitar. Si la escribiste en el código, hay que borrarla ahí.');
+    } finally {
+      this.guardandoExtra.set(false);
     }
   }
 

@@ -7,7 +7,8 @@ import { SlotsService } from '../../core/services/slots.service';
 import { ReservaStateService, TipoReserva, SubtipoEvento } from '../../core/services/reserva-state.service';
 import { AnalyticsService } from '../../core/services/analytics.service';
 import { CancelacionService } from '../../core/services/cancelacion.service';
-import { esExtraordinaria as fechaEsExtra, EXTRA_CONFIG } from '../../core/data/partidas-extraordinarias';
+import { EXTRA_CONFIG } from '../../core/data/partidas-extraordinarias';
+import { ExtraordinariasService } from '../../core/services/extraordinarias.service';
 
 @Component({
   selector: 'app-reserva',
@@ -21,6 +22,7 @@ export class ReservaComponent implements OnInit, OnDestroy {
   analytics            = inject(AnalyticsService);
   private isBrowser    = isPlatformBrowser(inject(PLATFORM_ID));
   private cancelacion  = inject(CancelacionService);
+  private extraordinarias = inject(ExtraordinariasService);
 
   // Shared with the service — survives navigation
   form  = this.state.form;
@@ -147,7 +149,7 @@ export class ReservaComponent implements OnInit, OnDestroy {
           this.form.fecha = fecha;
           // Si se entra directo a un día extraordinario, se marca para exigir
           // (y esperar) la elección de tarifa especial antes de continuar.
-          this.form.esExtraordinaria = fechaEsExtra(fecha);
+          this.form.esExtraordinaria = this.extraordinarias.esExtraordinaria(fecha);
           if (this.form.esExtraordinaria) this.form.extraTarifa = '';
         }
         if (hora)  this.form.hora  = hora;
@@ -427,7 +429,7 @@ export class ReservaComponent implements OnInit, OnDestroy {
     this.form.laborableConsulta = false;
     // ¿El día elegido es una partida extraordinaria? Solo entonces se exige
     // (y se invalida cualquier tarifa previa) para elegir la tarifa especial.
-    this.form.esExtraordinaria = fechaEsExtra(fecha);
+    this.form.esExtraordinaria = this.extraordinarias.esExtraordinaria(fecha);
     this.form.extraTarifa = '';
     if (this.form.tipo !== 'individual') this.form.personas = Math.max(8, this.minPersonas);
     this.analytics.trackEvent('calendario_fecha_seleccionada', { fecha, tipo: this.form.tipo });

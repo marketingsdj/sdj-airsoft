@@ -56,6 +56,14 @@ service cloud.firestore {
       allow update, delete: if esAdmin();
     }
 
+    // Partidas extraordinarias abiertas desde el panel (id = fecha AAAA-MM-DD).
+    // Cualquiera las lee para pintar el calendario; solo el equipo las crea o
+    // las quita.
+    match /extraordinarias/{fecha} {
+      allow read: if true;
+      allow write: if esAdmin();
+    }
+
     // Registro de reservas (email, nombre, teléfono, etc.). Contiene datos
     // personales: el navegador SOLO puede CREAR, nunca leer/editar/borrar.
     // Tú lo consultas desde la consola de Firebase.

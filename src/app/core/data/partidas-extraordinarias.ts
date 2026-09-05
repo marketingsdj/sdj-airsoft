@@ -65,7 +65,8 @@ export interface PartidaItem {
 
 const MODOS = ['Captura de bandera', 'Dominación', 'Eliminación', 'Milsim corto'];
 
-export function generarProximasPartidas(cantidad: number): PartidaItem[] {
+// `extras`: fechas añadidas desde el panel (Firestore), además de las de arriba.
+export function generarProximasPartidas(cantidad: number, extras: string[] = []): PartidaItem[] {
   const out: PartidaItem[] = [];
   const hoy = new Date();
   hoy.setHours(0, 0, 0, 0);
@@ -77,7 +78,7 @@ export function generarProximasPartidas(cantidad: number): PartidaItem[] {
     const iso = fechaLocalISO(cursor);
     const dow = cursor.getDay();
 
-    if (esExtraordinaria(iso)) {
+    if (esExtraordinaria(iso) || extras.includes(iso)) {
       out.push({
         fecha: new Date(cursor),
         hora: EXTRA_CONFIG.horaInicio,

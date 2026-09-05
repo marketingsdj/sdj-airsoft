@@ -120,7 +120,7 @@
       </div>
       <div class="tabla-nav">
         <button class="tabla-nav__btn" (click)="anterior()" [disabled]="!hayAnterior()" aria-label="Partidas anteriores">‹</button>
-        <span class="tabla-nav__pag">{{ pagina() + 1 }} / {{ Math.ceil(todasLasPartidas.length / PAGE_SIZE) }}</span>
+        <span class="tabla-nav__pag">{{ pagina() + 1 }} / {{ Math.ceil(todasLasPartidas().length / PAGE_SIZE) }}</span>
         <button class="tabla-nav__btn" (click)="siguiente()" [disabled]="!haySiguiente()" aria-label="Partidas siguientes">›</button>
       </div>
     </div>

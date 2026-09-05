@@ -1,8 +1,9 @@
-import { Component, signal, OnInit, OnDestroy, AfterViewInit, ElementRef, ViewChild, inject, PLATFORM_ID } from '@angular/core';
+import { Component, signal, computed, OnInit, OnDestroy, AfterViewInit, ElementRef, ViewChild, inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { AnalyticsService } from '../../core/services/analytics.service';
 import { generarProximasPartidas, EXTRA_CONFIG, fechaLocalISO } from '../../core/data/partidas-extraordinarias';
+import { ExtraordinariasService } from '../../core/services/extraordinarias.service';
 import { RedesSeguirComponent } from '../../shared/redes-seguir/redes-seguir';
 
 @Component({
@@ -64,7 +65,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   readonly EXTRA_PRECIO = EXTRA_CONFIG.precioNoSocio.toFixed(2).replace('.', ',');
 
   // Próximas partidas (fin de semana + extraordinarias) desde la lista compartida.
-  partidas = generarProximasPartidas(2).map(p => ({
+  private extraordinarias = inject(ExtraordinariasService);
+  partidas = computed(() => generarProximasPartidas(2, this.extraordinarias.fechas()).map(p => ({
     fecha: p.fecha.toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', month: 'short' }),
     iso: fechaLocalISO(p.fecha),
     hora: p.horaLabel,
@@ -73,7 +75,10 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     plazas: p.plazas,
     total: p.total,
     esExtraordinaria: p.esExtraordinaria,
-  }));
+  })));
+
+  // Aviso destacado en el hero cuando hay una extraordinaria a la vista.
+  proximaExtraordinaria = computed(() => this.partidas().find(p => p.esExtraordinaria) || null);
 
   faqs = [
     { q: '¿Duele?', a: 'Pica, sí. Como una goma elástica fuerte. El 90% no se siente en calor de partida. Con el equipo de protección adecuado —que está incluido en el alquiler— es perfectamente tolerable.' },
