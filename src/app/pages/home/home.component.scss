@@ -1332,10 +1332,11 @@
 
 .agenda-cards {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 12px;
 
-  @media (max-width: $bp-sm) { grid-template-columns: 1fr; }
+  // Desde 880 px ya no caben dos tarjetas: una por fila.
+  @media (max-width: $bp-md) { grid-template-columns: minmax(0, 1fr); }
 }
 
 .agenda-card {
@@ -1347,6 +1348,13 @@
   border: 1px solid $line;
   border-radius: $radius-md;
   transition: border-color $transition;
+  min-width: 0;   // sin esto el contenido largo desborda la tarjeta
+
+  // Móvil: menos hueco interno para que quepa todo sin desbordar.
+  @media (max-width: $bp-md) {
+    gap: 14px;
+    padding: 14px 16px;
+  }
 
   &:hover { border-color: rgba($naranja, 0.4); }
 
@@ -1387,7 +1395,7 @@
     margin-top: 1px;
   }
 
-  &__body { flex: 1; }
+  &__body { flex: 1; min-width: 0; overflow-wrap: anywhere; }
 
   &__modo {
     font-family: $font-tight;
