@@ -705,6 +705,7 @@ export class ReservaComponent implements OnInit, OnDestroy {
           codigoCancelacion: codigo,
           extras: this.extrasLista,
           laborable: this.form.laborableConsulta,
+          mensaje: this.form.mensaje,
           horaPedida: this.form.hora,
         });
 

@@ -513,6 +513,14 @@
                         }
                         <div><span>Id interno</span><strong>{{ r.id }}</strong></div>
                       </div>
+                      @if (r.mensaje) {
+                        <!-- Lo que escribió el cliente al hacer la reserva. -->
+                        <div class="admin-mensaje">
+                          <p class="admin-mensaje__titulo">Mensaje del cliente</p>
+                          <p class="admin-mensaje__texto">{{ r.mensaje }}</p>
+                        </div>
+                      }
+
                       @if (cambiosSobreOriginal(r).length) {
                         <!-- Lo que pidió el cliente frente a lo que has dejado tú. -->
                         <div class="admin-original">

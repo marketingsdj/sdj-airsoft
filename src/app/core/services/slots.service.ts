@@ -101,6 +101,7 @@ export class SlotsService {
     codigoCancelacion?: string;
     extras?: string[];
     laborable?: boolean;   // dia entre semana: la hora es aproximada
+    mensaje?: string;      // lo que escribe el cliente al reservar
     horaPedida?: string;   // la que eligio el cliente, aunque luego se cambie
   }): Promise<string | null> {
     if (!isFirebaseConfigured || !db) return null;

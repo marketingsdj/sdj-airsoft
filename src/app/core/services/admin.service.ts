@@ -31,6 +31,8 @@ export interface ReservaAdmin {
   codigoCancelacion?: string;
   /** "cliente" si la canceló la propia persona desde /cancelar. */
   canceladaPor?: string;
+  /** Lo que escribió el cliente al reservar. */
+  mensaje?: string;
   /** Extras contratados (menú, merienda, doble partida…). */
   extras?: string[];
   /** Día entre semana: la hora es la de llegada aproximada, a cerrar con el cliente. */
@@ -117,6 +119,7 @@ export class AdminService {
         notas:    x['notas']    as string | undefined,
         codigoCancelacion: x['codigoCancelacion'] as string | undefined,
         canceladaPor: x['canceladaPor'] as string | undefined,
+        mensaje: x['mensaje'] as string | undefined,
         extras: (x['extras'] as string[]) || [],
         laborable: !!x['laborable'],
         horaFijada: !!x['horaFijada'],

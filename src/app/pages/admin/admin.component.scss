@@ -236,6 +236,30 @@
   }
 }
 
+// Mensaje que dejó el cliente al reservar.
+.admin-mensaje {
+  border-left: 2px solid rgba($naranja, 0.5);
+  padding: 4px 0 4px 12px;
+  margin-bottom: 16px;
+
+  &__titulo {
+    margin: 0 0 4px;
+    font-family: $font-mono;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: $naranja;
+  }
+
+  &__texto {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.5;
+    color: rgba($crema, 0.85);
+    white-space: pre-line;
+  }
+}
+
 // ── Reserva original del cliente ─────────────────────────────────────────────
 .admin-original {
   border-left: 2px solid rgba($crema, 0.25);
