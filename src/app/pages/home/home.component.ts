@@ -17,9 +17,9 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   publicoActivo = signal('');
   kitActivo = signal(0);
   kitImagenes = [
-    { src: 'Inicio/Kit%20inicio/Kit%20de%20inicio%202.svg', alt: 'Kit de inicio SDJ — equipamiento completo' },
-    { src: 'Inicio/Kit%20inicio/Kit%20de%20Inicio.svg', alt: 'Kit de inicio SDJ' },
-    { src: 'Inicio/Kit%20inicio/Kit-Basico-Gafas-Mascara.svg', alt: 'Kit básico — gafas y máscara SDJ' },
+    { src: 'Inicio/Kit%20inicio/Kit%20de%20inicio%202.webp', alt: 'Kit de inicio SDJ — equipamiento completo' },
+    { src: 'Inicio/Kit%20inicio/Kit%20de%20Inicio.webp', alt: 'Kit de inicio SDJ' },
+    { src: 'Inicio/Kit%20inicio/Kit-Basico-Gafas-Mascara.webp', alt: 'Kit básico — gafas y máscara SDJ' },
   ];
 
   private kitTimer: any;

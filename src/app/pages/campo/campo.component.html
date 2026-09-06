@@ -26,7 +26,7 @@
 
       @if (!zonaSeleccionada) {
       <!-- MAPA PRINCIPAL -->
-      <img src="Campo/Imagen aerea campo.svg" alt="Vista aérea del campo SDJ" loading="eager" fetchpriority="high" />
+      <img src="Campo/Imagen aerea campo.webp" alt="Vista aérea del campo SDJ" loading="eager" fetchpriority="high" />
       @for (z of zonas; track z.id) {
       @if (z.rw > 0 && z.rh > 0) {
       <div class="zona-rect" [class.zona-rect--activa]="zonaActiva === z.id"
