@@ -1,6 +1,5 @@
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { Title, Meta } from '@angular/platform-browser';
 import { EventoContactoComponent } from '../shared/evento-contacto.component';
 
 @Component({
@@ -10,8 +9,6 @@ import { EventoContactoComponent } from '../shared/evento-contacto.component';
   styleUrl: './cumpleanos.component.scss'
 })
 export class CumpleanosComponent {
-  private title = inject(Title);
-  private meta = inject(Meta);
 
   waUrl = 'https://wa.me/34688731474?text=' +
     encodeURIComponent('Hola! Quiero organizar un cumpleaños en SDJ Airsoft (Larrabetzu).');
@@ -63,11 +60,4 @@ export class CumpleanosComponent {
     { q: '¿Podemos traer tarta?', a: 'Sí. Tenéis zona de cafetería para la merienda y la tarta al terminar la partida.' },
   ];
 
-  ngOnInit() {
-    this.title.setTitle('Cumpleaños diferente en Bilbao | Airsoft en SDJ Larrabetzu');
-    this.meta.updateTag({
-      name: 'description',
-      content: 'Celebra el cumpleaños diferente cerca de Bilbao: airsoft en campo privado de 45.000 m² en Larrabetzu, con monitores y equipo completo incluido. Desde 8 personas, 39,90 €.'
-    });
-  }
 }

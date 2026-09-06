@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { RedesSeguirComponent } from '../../shared/redes-seguir/redes-seguir';
+import { SeoService } from '../../core/services/seo.service';
 
 // link.interno = ruta de la propia web (se navega con routerLink, sin abrir pestaña).
 interface Faq { q: string; a: string; open: boolean; link?: { url: string; label: string; interno?: boolean }; }
@@ -105,6 +106,22 @@ export class FaqComponent {
   categoriaData = computed(() =>
     this.categorias.find(c => c.key === this.categoriaActiva()) ?? this.categorias[0]
   );
+
+  private seo = inject(SeoService);
+
+  constructor() {
+    // FAQPage (schema.org) con todas las preguntas y respuestas, para Google y
+    // asistentes de IA. Las respuestas también están en el HTML de la página.
+    this.seo.setJsonLd('faq', {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: this.categorias.flatMap(c => c.faqs).map(f => ({
+        '@type': 'Question',
+        name: f.q,
+        acceptedAnswer: { '@type': 'Answer', text: f.a },
+      })),
+    }, '/faq');
+  }
 
   private get todasFaqs() {
     return this.categorias.flatMap(c => c.faqs.map(f => ({ ...f, cat: c.titulo })));

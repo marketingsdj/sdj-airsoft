@@ -77,14 +77,13 @@
             <span>{{ f.q }}</span>
             <span class="faq-item__arrow">{{ f.open ? '−' : '+' }}</span>
           </button>
-          @if (f.open) {
-            <div class="faq-item__body">
-              <p>{{ f.a }}</p>
-              @if (f.link) {
-                @if (f.link.interno) {<a class="faq-link" [routerLink]="f.link.url">{{ f.link.label }}</a>} @else {<a class="faq-link" [href]="f.link.url" target="_blank" rel="noopener">{{ f.link.label }}</a>}
-              }
-            </div>
-          }
+          <!-- Siempre en el HTML (Google e IA leen la respuesta); oculto hasta abrir. -->
+          <div class="faq-item__body" [hidden]="!f.open">
+            <p>{{ f.a }}</p>
+            @if (f.link) {
+              @if (f.link.interno) {<a class="faq-link" [routerLink]="f.link.url">{{ f.link.label }}</a>} @else {<a class="faq-link" [href]="f.link.url" target="_blank" rel="noopener">{{ f.link.label }}</a>}
+            }
+          </div>
         </div>
       }
 

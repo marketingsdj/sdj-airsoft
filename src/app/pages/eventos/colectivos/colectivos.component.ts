@@ -1,6 +1,5 @@
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { Title, Meta } from '@angular/platform-browser';
 import { EventoContactoComponent } from '../shared/evento-contacto.component';
 
 @Component({
@@ -10,8 +9,6 @@ import { EventoContactoComponent } from '../shared/evento-contacto.component';
   styleUrl: './colectivos.component.scss'
 })
 export class ColectivosComponent {
-  private title = inject(Title);
-  private meta = inject(Meta);
 
   waUrl = 'https://wa.me/34688731474?text=' +
     encodeURIComponent('Hola! Quiero info para una salida de grupo/colectivo en SDJ Airsoft (Larrabetzu).');
@@ -73,11 +70,4 @@ export class ColectivosComponent {
     { q: '¿Necesitamos llevar algo?', a: 'Solo ropa cómoda que se pueda manchar y calzado deportivo. El equipo lo ponemos nosotros.' },
   ];
 
-  ngOnInit() {
-    this.title.setTitle('Excursiones y colectivos en Bilbao | Airsoft escolar en SDJ Larrabetzu');
-    this.meta.updateTag({
-      name: 'description',
-      content: 'Excursiones que el grupo pide repetir cerca de Bilbao: airsoft para institutos, escuelas, scouts y colectivos en campo privado de 45.000 m² en Larrabetzu. Desde 14 años, hasta 120.'
-    });
-  }
 }

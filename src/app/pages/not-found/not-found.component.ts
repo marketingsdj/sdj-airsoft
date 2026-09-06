@@ -1,6 +1,5 @@
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { Meta } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-not-found',
@@ -8,9 +7,6 @@ import { Meta } from '@angular/platform-browser';
   templateUrl: './not-found.component.html',
   styleUrl: './not-found.component.scss'
 })
-export class NotFoundComponent {
-  constructor() {
-    // No indexar la página de error
-    inject(Meta).updateTag({ name: 'robots', content: 'noindex' });
-  }
-}
+// El título "Página no encontrada", el noindex y la ausencia de canonical los
+// fija SeoService para cualquier ruta que no esté en su mapa.
+export class NotFoundComponent {}

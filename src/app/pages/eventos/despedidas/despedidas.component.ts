@@ -1,6 +1,5 @@
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { Title, Meta } from '@angular/platform-browser';
 import { EventoContactoComponent } from '../shared/evento-contacto.component';
 
 @Component({
@@ -10,8 +9,6 @@ import { EventoContactoComponent } from '../shared/evento-contacto.component';
   styleUrl: './despedidas.component.scss'
 })
 export class DespedidasComponent {
-  private title = inject(Title);
-  private meta = inject(Meta);
 
   waUrl = 'https://wa.me/34688731474?text=' +
     encodeURIComponent('Hola! Quiero info para una despedida en SDJ Airsoft (Larrabetzu).');
@@ -64,11 +61,4 @@ export class DespedidasComponent {
     { q: '¿Qué llevamos puesto?', a: 'Ropa cómoda que se pueda manchar y calzado deportivo o de monte. El resto del equipo lo ponemos nosotros.' },
   ];
 
-  ngOnInit() {
-    this.title.setTitle('Despedidas de soltero/a en Bilbao | Airsoft en SDJ Larrabetzu');
-    this.meta.updateTag({
-      name: 'description',
-      content: 'La despedida que nadie olvida cerca de Bilbao: airsoft en campo privado de 45.000 m² en Larrabetzu. Equipo completo incluido, desde 8 personas. 39,90 €/persona.'
-    });
-  }
 }

@@ -1,6 +1,5 @@
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { Title, Meta } from '@angular/platform-browser';
 import { EventoContactoComponent } from '../shared/evento-contacto.component';
 
 @Component({
@@ -10,8 +9,6 @@ import { EventoContactoComponent } from '../shared/evento-contacto.component';
   styleUrl: './empresas.component.scss'
 })
 export class EmpresasComponent {
-  private title = inject(Title);
-  private meta = inject(Meta);
 
   waUrl = 'https://wa.me/34688731474?text=' +
     encodeURIComponent('Hola! Quiero info para un team building de empresa en SDJ Airsoft (Larrabetzu).');
@@ -71,11 +68,4 @@ export class EmpresasComponent {
     { q: '¿Hace falta estar en forma?', a: 'No. La actividad se adapta al grupo. Es intensa pero accesible para todos los niveles.' },
   ];
 
-  ngOnInit() {
-    this.title.setTitle('Team building en Bilbao | Airsoft para empresas en SDJ Larrabetzu');
-    this.meta.updateTag({
-      name: 'description',
-      content: 'La actividad de empresa que el equipo recuerda: airsoft para empresas en campo privado de 45.000 m² en Larrabetzu, cerca de Bilbao. De 8 a 120 personas, catering y parking.'
-    });
-  }
 }

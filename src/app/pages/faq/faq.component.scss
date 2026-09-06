@@ -499,3 +499,6 @@
     &:disabled { opacity: 0.4; cursor: not-allowed; }
   }
 }
+
+// Las respuestas están siempre en el HTML (SEO / IA) y se ocultan hasta abrir.
+.faq-item__body[hidden] { display: none; }

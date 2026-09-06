@@ -120,6 +120,11 @@
     text-transform: uppercase;
     color: $naranja;
     margin-bottom: 20px;
+    // El eyebrow inferior es ahora el <h1>: anula el negrita y el
+    // line-height de los títulos globales para que se vea igual que antes.
+    font-weight: 400;
+    line-height: inherit;
+    margin-top: 1em; // el margen que tenía como <p> (sin reset global de p)
   }
 
 
